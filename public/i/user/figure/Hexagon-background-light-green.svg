@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="200px" viewBox="0 0 168 192" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Polygon</title>
+    <g id="New-map" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="09" transform="translate(-988.000000, -28.000000)" fill="#A3DDBF">
+            <g id="BODY" transform="translate(108.000000, 28.000000)">
+                <g id="Group-2" transform="translate(868.000000, 0.000000)">
+                    <polygon id="Polygon" points="96 0 179.138439 48 179.138439 144 96 192 12.8615612 144 12.8615612 48"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,168 @@
+.f {
+    &-main {
+        box-sizing: border-box;
+        margin: 0;
+        width: 100%;
+        background-color: #E6E9ED;
+        background-image: url("/i/background-thunder.svg");
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Inter, sans-serif, Arial;
+
+        &-wrap {
+            width: 90%;
+        }
+    }
+
+    &-header-wrap-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 50px;
+        margin-top: 50px;
+    }
+
+    &-header-wrap-logo {
+        display: flex;
+        align-items: center;
+    }
+
+    &-sign-in {
+        font-size: 17px;
+        color: #AAB2BD;
+
+        &-lock {
+            width: 13px;
+            margin-left: 10px;
+        }
+    }
+
+    &-header-logo {
+        height: 25px;
+        margin-left: 15px;
+
+        &-wrapper {
+            display: flex;
+            height: 100%;
+            align-items: center;
+        }
+    }
+
+    &-section {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 50px;
+
+        &-wrap-text {
+            width: 75%;
+        }
+
+        &-wrap-p-text {
+            display: flex;
+            font-size: 96px;
+            font-weight: 500;
+            color: #1D1D1F;
+        }
+
+        &-wrap-button {
+            padding: 22px 32px 22px 32px;
+            border: 1px solid rgba(29, 29, 31, 0.08);
+            border-radius: 123123px;
+            color: #1D1D1F;
+            text-decoration: none;
+            vertical-align: baseline;
+        }
+
+        &-wrap-image {
+            width: 140px;
+            height: 140px;
+        }
+    }
+
+    &-nav {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 100px;
+
+        &-button {
+            padding: 28px 38px 28px 38px;
+            border: 1px solid #CCD1D9;
+            border-radius: 64px;
+            font-size: 24px;
+            color: #1D1D1D;
+
+            &-white {
+                padding: 28px 38px 28px 38px;
+                box-shadow: 0 24px 32px 4px rgba(101, 109, 119, 0.08);
+                border-radius: 64px;
+                font-size: 24px;
+                color: #1D1D1D;
+                background-color: white;
+            }
+
+            &-blur {
+                background: rgba(255, 255, 255, 0.48);
+                padding: 28px 38px 28px 38px;
+                border-radius: 64px;
+                font-size: 24px;
+                color: #1D1D1D;
+            }
+        }
+    }
+
+    &-cards {
+        display: inline-block;
+        flex-direction: column;
+        margin-bottom: 50px;
+        width: 40%;
+
+        &-inner {
+            background-color: #F5F7FA;
+            padding: 35px 50px 10px 40px;
+            border-radius: 24px;
+        }
+        
+        &-content-text {
+            font-size: 32px;
+            color: #1D1D1D;
+        }
+
+        &-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 100px;
+        }
+
+        &-avatar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        &-text {
+            margin-left: 10px;
+            font-size: 17px;
+            color: #656D77;
+            margin-bottom: 20px;
+        }
+
+        &-under-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: row;
+            margin-bottom: 20px;
+
+            &-comment {
+                color: #AAB2BD;
+                font-size: 17px;
+            }
+        }
+    }
+}

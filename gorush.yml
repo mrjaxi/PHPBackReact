@@ -1,0 +1,86 @@
+core:
+  enabled: true
+  address: ""
+  shutdown_timeout: 30
+  port: "8102"
+  worker_num: 0
+  queue_num: 0
+  max_notification: 100
+  sync: true # set true if you need get error message from fail push notification in API response.
+  feedback_hook_url: "" # set a hook url if you need get error message asynchronously from fail push notification in API response.
+  feedback_timeout: 10 # default is 10 second
+  mode: "release"
+  ssl: false
+  cert_path: "cert.pem"
+  key_path: "key.pem"
+  cert_base64: ""
+  key_base64: ""
+  http_proxy: ""
+  pid:
+    enabled: true
+    path: "/var/run/gorush_bsau.pid"
+    override: true
+  auto_tls:
+    enabled: false # Automatically install TLS certificates from Let's Encrypt.
+    folder: ".cache" # folder for storing TLS certificates
+    host: "" # which domains the Let's Encrypt will attempt
+
+grpc:
+  enabled: false # enable gRPC server
+  port: 9000
+
+api:
+  push_uri: "/gorush/api/push"
+  stat_go_uri: "/gorush/api/stat/go"
+  stat_app_uri: "/gorush/api/stat/app"
+  config_uri: "/gorush/api/config"
+  sys_stat_uri: "/gorush/sys/stats"
+  metric_uri: "/gorush/metrics"
+  health_uri: "/gorush/healthz"
+
+android:
+  enabled: true
+  apikey: "AAAAlbuYIXU:APA91bF2fXebxK4Q4AuP1ZweBpv_tKnmznCDYZTyeNkuH-gxbKq3KcPZkq1TmNcURaobSMOkVIFickawEqpKFmWKM3sva651bN7hhfctdfKHdbLDNTSVdZ8TgQbBXIyoo5mDJd-BCEqJ"
+  max_retry: 0 # resend fail notification, default value zero is disabled
+
+huawei:
+  enabled: false
+  appsecret: "YOUR_APP_SECRET"
+  appid: "YOUR_APP_ID"
+  max_retry: 0 # resend fail notification, default value zero is disabled
+
+ios:
+  enabled: false
+  key_path: "key.pem"
+  key_base64: "" # load iOS key from base64 input
+  key_type: "pem" # could be pem, p12 or p8 type
+  password: "" # certificate password, default as empty string.
+  production: false
+  max_concurrent_pushes: 100 # just for push ios notification
+  max_retry: 0 # resend fail notification, default value zero is disabled
+  key_id: "" # KeyID from developer account (Certificates, Identifiers & Profiles -> Keys)
+  team_id: "" # TeamID from developer account (View Account -> Membership)
+
+log:
+  format: "string" # string or json
+  access_log: "/var/log/gorush_bsau_access.log" # stdout: output to console, or define log path like "log/access_log"
+  access_level: "info"
+  error_log: "/var/log/gorush_bsau_error.log" # stderr: output to console, or define log path like "log/error_log"
+  error_level: "error"
+  hide_token: true
+
+stat:
+  engine: "memory" # support memory, redis, boltdb, buntdb or leveldb
+  redis:
+    addr: "localhost:6379"
+    password: ""
+    db: 0
+  boltdb:
+    path: "bolt.db"
+    bucket: "gorush"
+  buntdb:
+    path: "bunt.db"
+  leveldb:
+    path: "level.db"
+  badgerdb:
+    path: "badger.db"

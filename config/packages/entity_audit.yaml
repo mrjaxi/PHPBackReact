@@ -1,0 +1,16 @@
+simple_things_entity_audit:
+    audited_entities:
+        - App\Entity\Answer
+        - App\Entity\Exercise
+        - App\Entity\Lesson
+        - App\Entity\Testing
+        - App\Entity\Map
+        - App\Entity\MapItem
+        - App\Entity\LibraryAnswer
+        - App\Entity\LibraryExercise
+        - App\Entity\LibraryItem
+        - App\Entity\LibraryLesson
+        - App\Entity\LibraryTesting
+    global_ignore_columns:
+            - created_at
+            - updated_at

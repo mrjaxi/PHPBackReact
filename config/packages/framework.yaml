@@ -1,0 +1,24 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+    csrf_protection: true
+    #http_method_override: true
+    serializer:
+        circular_reference_handler: App\Utils\CircularReferenceHandler
+    
+    # Enables session support. Note that the session will ONLY be started if you read or write from it.
+    # Remove or comment this section to explicitly disable session support.
+    session:
+        enabled: true
+        handler_id: null
+        #        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
+        cookie_secure: auto
+        cookie_samesite: lax
+        name: atmagurumain
+    
+    #esi: true
+    #fragments: true
+    php_errors:
+        log: true
+    
+    

@@ -1,0 +1,16 @@
+env[APP_NAME] = #DOMAIN#
+env[APP_ENV] = prod
+env[APP_SECRET] = 835ed7c98a39f26474b74b6f9acd8b44
+
+;env[MAILER_DSN] = mailgun+https://9969ae085b521d205b0005d8fe81b6ef-c4d287b4-fb2a4860:mg.atma.company@default
+
+env[DATABASE_URL] = "mysql://#DB_USER#:#DB_PASSWORD#@127.0.0.1:3307/#DB_NAME#?serverVersion=8"
+env[REDIS_HOST] = "127.0.0.1"
+env[REDIS_PORT] = 6379
+
+env[CORS_ALLOW_ORIGIN] = '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+
+env[JWT_SECRET_KEY] = %kernel.project_dir%/config/jwt/private.pem
+env[JWT_PUBLIC_KEY] = %kernel.project_dir%/config/jwt/public.pem
+env[JWT_PASSPHRASE] = c9ff00583407fe275113badf858488c0
+
