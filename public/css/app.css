@@ -1208,6 +1208,32 @@ form#login .ant-col.ant-form-item-control input {
 .domain-input input {
   text-align: right !important;
 }
+.max_width {
+  margin: 0 auto;
+  max-width: 90%;
+  padding: 0 40px;
+}
+
+.f-new-idea {
+  position: absolute;
+  width: 280px;
+  height: 90px;
+  background-color: #3D72ED;
+  left: 0;
+  box-shadow: 0 16px 32px 4px rgba(61, 114, 237, 0.24);
+  right: 0;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  border-radius: 64px;
+  z-index: 2;
+  display: flex;
+  color: white;
+  font-size: 24px;
+  align-items: center;
+  justify-content: center;
+}
 .f-main {
   box-sizing: border-box;
   margin: 0;
@@ -1221,9 +1247,6 @@ form#login .ant-col.ant-form-item-control input {
   align-items: center;
   justify-content: center;
   font-family: Inter, sans-serif, Arial;
-}
-.f-main-wrap {
-  width: 90%;
 }
 .f-header-wrap-content {
   display: flex;
@@ -1239,9 +1262,17 @@ form#login .ant-col.ant-form-item-control input {
 .f-sign-in {
   font-size: 17px;
   color: #AAB2BD;
+  position: relative;
 }
-.f-sign-in-lock {
-  width: 13px;
+.f-sign-in:after {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  width: 12px;
+  height: 18px;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg%20width%3D%2212%22%20height%3D%2217%22%20viewBox%3D%220%200%2012%2017%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M1.68433%2016.8176H9.58667C10.6575%2016.8176%2011.1804%2016.2864%2011.1804%2015.1243V9.03149C11.1804%207.9856%2010.7488%207.44604%209.8606%207.35474V5.26294C9.8606%202.13354%207.8103%200.622803%205.6355%200.622803C3.46069%200.622803%201.4104%202.13354%201.4104%205.26294V7.39624C0.596924%207.52075%200.0905762%208.052%200.0905762%209.03149V15.1243C0.0905762%2016.2864%200.613525%2016.8176%201.68433%2016.8176ZM2.74683%205.08862C2.74683%203.00513%204.08325%201.90112%205.6355%201.90112C7.18774%201.90112%208.52417%203.00513%208.52417%205.08862V7.34644L2.74683%207.35474V5.08862Z%22%20fill%3D%22%23AAB2BD%22%2F%3E%0A%3C%2Fsvg%3E%0A");
+  background-repeat: no-repeat;
+  margin-top: 3px;
   margin-left: 10px;
 }
 .f-header-logo {
@@ -1263,7 +1294,7 @@ form#login .ant-col.ant-form-item-control input {
 }
 .f-section-wrap-p-text {
   display: flex;
-  font-size: 96px;
+  font-size: 5vw;
   font-weight: 500;
   color: #1D1D1F;
 }
@@ -1286,12 +1317,18 @@ form#login .ant-col.ant-form-item-control input {
   justify-content: space-between;
   margin-bottom: 100px;
 }
+.f-nav-wrap {
+  z-index: 1000;
+  position: sticky;
+  top: 15px;
+}
 .f-nav-button {
   padding: 28px 38px 28px 38px;
   border: 1px solid #CCD1D9;
   border-radius: 64px;
   font-size: 24px;
   color: #1D1D1D;
+  white-space: nowrap;
 }
 .f-nav-button-white {
   padding: 28px 38px 28px 38px;
@@ -1299,6 +1336,7 @@ form#login .ant-col.ant-form-item-control input {
   border-radius: 64px;
   font-size: 24px;
   color: #1D1D1D;
+  white-space: nowrap;
   background-color: white;
 }
 .f-nav-button-blur {
@@ -1306,22 +1344,55 @@ form#login .ant-col.ant-form-item-control input {
   padding: 28px 38px 28px 38px;
   border-radius: 64px;
   font-size: 24px;
+  white-space: nowrap;
   color: #1D1D1D;
 }
 .f-cards {
   display: inline-block;
   flex-direction: column;
-  margin-bottom: 50px;
-  width: 40%;
+  margin-bottom: 170px;
+  min-width: 40%;
+}
+.f-cards-card-wrap {
+  display: flex;
+  flex-direction: row;
+  z-index: 50;
+}
+.f-cards-border-image {
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  max-width: 400px;
+  z-index: 0;
+  border-radius: 24px;
+}
+.f-cards-border-image-wrap {
+  position: relative;
+  left: -60px;
+}
+.f-cards-hashtag {
+  font-size: 17px;
+  color: #AAB2BD;
 }
 .f-cards-inner {
   background-color: #F5F7FA;
   padding: 35px 50px 10px 40px;
   border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
 }
 .f-cards-content-text {
   font-size: 32px;
   color: #1D1D1D;
+  text-overflow: ellipsis;
+}
+.f-cards-div-wrap-text {
+  margin-bottom: 20px;
+}
+.f-cards-content-description {
+  font-size: 17px;
+  text-overflow: ellipsis;
 }
 .f-cards-image {
   width: 48px;
@@ -1337,18 +1408,76 @@ form#login .ant-col.ant-form-item-control input {
   margin-left: 10px;
   font-size: 17px;
   color: #656D77;
-  margin-bottom: 20px;
 }
 .f-cards-under-block {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-direction: row;
   margin-bottom: 20px;
 }
 .f-cards-under-block-comment {
   color: #AAB2BD;
   font-size: 17px;
+}
+.f-cards-under-block-like {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 88px;
+  background-color: #FFFFFFA3;
+  padding: 15px 20px 15px 20px;
+  margin-left: 30px;
+}
+.f-cards-under-block-like-text {
+  margin-left: 5px;
+  color: #AAB2BD;
+  font-size: 17px;
+}
+.f-row-type {
+  display: flex;
+  flex-direction: row;
+}
+.f-side-block {
+  position: sticky;
+  top: 130px;
+}
+.f-side-panel-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.f-side-panel-button {
+  border-radius: 100px;
+  border: 1px solid #CCD1D9;
+  padding: 15px 20px 15px 20px;
+  font-size: 17px;
+  color: #AAB2BD;
+  margin-bottom: 15px;
+}
+.f-side-panel-count {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-bottom: 50px;
+}
+.f-side-panel-count-text {
+  font-size: 96px;
+  font-weight: 600;
+  color: #1D1D1D;
+}
+.f-side-panel-count-subtext {
+  color: #AAB2BD;
+  font-size: 17px;
+}
+.f-side-panel-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 @charset "UTF-8";
 .u {
