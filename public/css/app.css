@@ -1347,11 +1347,15 @@ form#login .ant-col.ant-form-item-control input {
   white-space: nowrap;
   color: #1D1D1D;
 }
+.f-block-select {
+  color: #ffffff;
+}
 .f-cards {
-  display: inline-block;
+  display: flex;
   flex-direction: column;
   margin-bottom: 170px;
   min-width: 40%;
+  justify-content: center;
 }
 .f-cards-card-wrap {
   display: flex;
@@ -1399,15 +1403,37 @@ form#login .ant-col.ant-form-item-control input {
   height: 48px;
   border-radius: 100px;
 }
+.f-cards-row-wrap {
+  display: flex;
+  flex-direction: row;
+}
 .f-cards-avatar {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
-.f-cards-text {
+.f-cards-avatar-text {
+  display: flex;
+  flex-direction: column;
+}
+.f-cards-type {
+  background-color: #E6E9ED;
+  padding: 7px;
+  color: #AAB2BD;
+  border-radius: 6px;
+}
+.f-cards-wrap-text {
+  display: flex;
+  flex-direction: column;
   margin-left: 10px;
+}
+.f-cards-text {
   font-size: 17px;
-  color: #656D77;
+  color: #1D1D1F;
+}
+.f-cards-text-bottom {
+  font-size: 13px;
+  color: #AAB2BD;
 }
 .f-cards-under-block {
   display: flex;
@@ -1434,9 +1460,20 @@ form#login .ant-col.ant-form-item-control input {
   color: #AAB2BD;
   font-size: 17px;
 }
+.f-row-center-wrap {
+  display: flex;
+  justify-content: center;
+}
 .f-row-type {
   display: flex;
   flex-direction: row;
+}
+.f-selected {
+  background-color: #F6BA59;
+  border-radius: 66px;
+}
+.f-selected-block {
+  color: #FFFFFF;
 }
 .f-side-block {
   position: sticky;
@@ -1447,6 +1484,10 @@ form#login .ant-col.ant-form-item-control input {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  margin-bottom: 15px;
+}
+.f-side-panel-count {
+  color: #AAB2BD;
 }
 .f-side-panel-button {
   border-radius: 100px;
@@ -1455,6 +1496,14 @@ form#login .ant-col.ant-form-item-control input {
   font-size: 17px;
   color: #AAB2BD;
   margin-bottom: 15px;
+}
+.f-side-panel-button-section {
+  color: #1D1D1F;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 10px 20px 10px 20px;
+  font-size: 17px;
 }
 .f-side-panel-count {
   display: flex;
@@ -1466,18 +1515,13 @@ form#login .ant-col.ant-form-item-control input {
   margin-bottom: 50px;
 }
 .f-side-panel-count-text {
-  font-size: 96px;
   font-weight: 600;
   color: #1D1D1D;
 }
 .f-side-panel-count-subtext {
   color: #AAB2BD;
   font-size: 17px;
-}
-.f-side-panel-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-left: 5px;
 }
 @charset "UTF-8";
 .u {

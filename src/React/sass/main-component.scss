@@ -158,11 +158,16 @@
         }
     }
 
+    &-block-select {
+        color: #ffffff;
+    }
+
     &-cards {
-        display: inline-block;
+        display: flex;
         flex-direction: column;
         margin-bottom: 170px;
         min-width: 40%;
+        justify-content: center;
 
         &-card-wrap {
             display: flex;
@@ -219,16 +224,43 @@
             border-radius: 100px;
         }
 
+        &-row-wrap {
+            display: flex;
+            flex-direction: row;
+        }
+
         &-avatar {
             display: flex;
-            align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
+
+            &-text {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+
+        &-type {
+            background-color: #E6E9ED;
+            padding: 7px;
+            color: #AAB2BD;
+            border-radius: 6px;
+        }
+
+        &-wrap-text {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
         }
 
         &-text {
-            margin-left: 10px;
             font-size: 17px;
-            color: #656D77;
+            color: #1D1D1F;
+
+            &-bottom {
+                font-size: 13px;
+                color: #AAB2BD;
+            }
         }
 
         &-under-block {
@@ -261,9 +293,23 @@
         }
     }
 
+    &-row-center-wrap {
+        display: flex;
+        justify-content: center;
+    }
+
     &-row-type {
         display: flex;
         flex-direction: row;
+    }
+
+    &-selected {
+        background-color: #F6BA59;
+        border-radius: 66px;
+
+        &-block {
+            color: #FFFFFF;
+        }
     }
 
     &-side {
@@ -277,6 +323,11 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        &-panel-count {
+            color: #AAB2BD;
         }
 
         &-panel-button {
@@ -286,6 +337,15 @@
             font-size: 17px;
             color: #AAB2BD;
             margin-bottom: 15px;
+
+            &-section {
+                color: #1D1D1F;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                padding: 10px 20px 10px 20px;
+                font-size: 17px;
+            }
         }
 
         &-panel-count {
@@ -298,7 +358,6 @@
             margin-bottom: 50px;
 
             &-text {
-                font-size: 96px;
                 font-weight: 600;
                 color: #1D1D1D;
             }
@@ -306,13 +365,8 @@
             &-subtext {
                 color: #AAB2BD;
                 font-size: 17px;
+                margin-left: 5px;
             }
-        }
-
-        &-panel-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
     }
 }
