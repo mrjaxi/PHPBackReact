@@ -300,10 +300,7 @@ class App extends React.Component {
 
                             return (
                                 <>
-                                    {viewBreadcrumbs && breadcrumbs && <Breadcrumbs {...props}/>}
-                                        <Col className="f-main">
-                                            <Component {...props} />
-                                        </Col>
+                                    <Component {...props} />
                                 </>
                             );
 
