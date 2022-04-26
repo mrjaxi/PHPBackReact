@@ -1,26 +1,44 @@
 import React from "react";
 import {Button, Checkbox, Form, Input} from "antd";
 import {NavLink} from "react-router-dom";
+import { Typography } from 'antd';
+const { Title } = Typography;
 
 const Login = () => {
     return (
         <>
             <div className={"f-login"}>
-                <NavLink to={""} className={"f-login-close-btn"} />
-                <div className={"f-login-wrap"}>
-                    <span className={"f-login-text"}>Вход</span>
-                    <form>
-                        <div className={"f-login-wrap"}>
-                            <input className={"f-login-input"} placeholder={"Электронная почта"}/>
-                            <input className={"f-login-input"} placeholder={"Пароль"}/>
-                            <div className={"f-login-center"}>
-                                <input className={"f-login-checkbox-btn"} name={"checkbox"} type={"checkbox"}/>
-                                <label className={"f-login-checkbox"} htmlFor={"checkbox"}>Запомнить меня</label>
-                            </div>
-                            <a className={"f-login-btn"} href={"#"}>Войти</a>
-                        </div>
-                    </form>
-                </div>
+                <Form>
+                    <Title style={{ marginBottom: 48 }}>Вход</Title>
+                    <Form.Item
+                        name={"email"}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, укажите адрес электронной почты',
+                            },
+                        ]}
+                    >
+                        <Input style={{ padding: '10px 15px 10px 15px', fontSize: 19, width: '440px' }} placeholder={"Электронная почта"}/>
+                    </Form.Item>
+                    <Form.Item
+                        name={"password"}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, введите пароль',
+                            },
+                        ]}
+                    >
+                        <Input style={{ padding: '10px 15px 10px 15px', fontSize: 19, width: '440px' }} placeholder={"Пароль"}/>
+                    </Form.Item>
+                    <Form.Item>
+                        <Checkbox style={{ fontSize: 19 }}>Запомнить меня</Checkbox>
+                    </Form.Item>
+                    <Form.Item>
+                        <Button className={"f-login-btn"} type="primary" htmlType="submit" shape="round">Войти</Button>
+                    </Form.Item>
+                </Form>
             </div>
         </>
     )
