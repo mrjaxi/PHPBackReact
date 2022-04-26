@@ -12,7 +12,7 @@ const MainPage = () => {
         <>
             <Col className={"f-main"}>
                 <div>
-                    <a className={"f-new-idea"}><span>Новая идея</span></a>
+                    <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>Новая идея</NavLink>
                     <header className={"f-header-content"}>
                         <div className={'f-header-wrap-content max_width'}>
                             <div className={'f-header-wrap-logo'}>
@@ -21,7 +21,7 @@ const MainPage = () => {
                                 </a>
                             </div>
                             <div className={'f-header-logo-wrapper'}>
-                                <NavLink className={'f-sign-in'} to={global.lang + "/login"}>Войти</NavLink>
+                                <NavLink className={'f-sign-in'} to={global.lang + "/login/"}>Войти</NavLink>
                             </div>
                         </div>
                     </header>
