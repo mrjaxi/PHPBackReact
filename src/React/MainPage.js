@@ -1,23 +1,117 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import Comments from "./Main/Comments";
 import './sass/main-component.scss'
-import {Col} from "antd";
+import {Col, Skeleton} from "antd";
+import axios from "axios";
 
 const MainPage = () => {
 
-    const [showComments, setShowComments] = useState(false);
+    let data = [];
+    let commentsData = [];
+
+    let selectType = [
+        {type: "Запланировано", className: "-planned"},
+        {type: "В работе", className: "-inwork"},
+        {type: "Рассмотрено", className: "-viewed"},
+        {type: "Завершено", className: "-completed"}
+    ];
+
+    const [items, setItems] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [selectedPanelMenu, setSelectedPanelMenu] = useState(0);
+
+    const [loading, setLoading] = useState(false);
+    const [loadingComments, setLoadingComments] = useState(false);
+
+    const loadData = () => {
+        setLoading(true);
+        data = [];
+        axios.get("https://jsonplaceholder.typicode.com/posts").then(response => {
+            response.data.map(item => {
+                data.push({
+                    title: "Крайне не удобно работать \n" +
+                        "с множественным выделением \n" +
+                        "на карте, так как Ctrl и Shift+click \n" +
+                        "не работают",
+                    text: "Обычно ты работаешь следующим образом: Выдели модуль, \n" +
+                        "зажат Shift, выделил следующий модуль — все промежуточные \n" +
+                        "тоже выделились. Можешь выделить через Shift другой \n" +
+                        "и выделение сменится по тому же правилу. \n" +
+                        "\n" +
+                        "Выдели модуль, зажат Ctrl, выделил следующий модуль — только \n" +
+                        "эти 2 выделились. Можешь дальше через Ctrl выделять ещё. \n" +
+                        "Если было что-то выделено через Shift до этого, выделение \n" +
+                        "осталось. Клик на выделенном модуле убирает выделение. \n" +
+                        "\n" +
+                        "Если хочешь сделать 2 выделения через Shift, то веделяешь \n" +
+                        "модуль, через Shift другой — получаешь выделенный диапазон; \n" +
+                        "потом через Ctrl выделяешь другой модуль и через Ctrl + Shift \n" +
+                        "ещё — получаешь 2 выделенных диапазона",
+                    showComments: false,
+                    showFullText: false,
+                    like: getRandomInt(0, 200),
+                    dislike: getRandomInt(0, 200),
+                })
+            });
+
+            setItems(data);
+            setLoading(false)
+        })
+    };
+
+    const loadComments = () => {
+        setLoadingComments(true)
+        commentsData = [];
+        axios.get("https://jsonplaceholder.typicode.com/comments").then(comment => {
+            for (let i = 0; i < 10; i++){
+                commentsData.push({
+                    name: comment.data[i].name,
+                    text: comment.data[i].body,
+                })
+            }
+            setComments(commentsData);
+            setLoadingComments(false)
+        })
+    };
+
+    useEffect(() => {
+        loadData()
+    }, []);
+
+    const showText = (show, index) => {
+        let data = [...items];
+        data[index].showFullText = !show;
+
+        setItems(data)
+    };
+
+    const showComments = (show, index) => {
+        let data = [...items];
+        data[index].showComments = !show;
+        loadComments();
+        setItems(data)
+    };
+
+    const addLike = (index) => {
+        let data = [...items];
+        data[index].like += 1;
+
+        setItems(data)
+    };
 
     return (
         <>
             <Col className={"f-main"}>
                 <div>
-                    <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>Новая идея</NavLink>
                     <header className={"f-header-content"}>
-                        <div className={'f-header-wrap-content max_width'}>
+                        <div className={'f-header-wrap-content'}>
                             <div className={'f-header-wrap-logo'}>
-                                <a href="/" className={'anb main_logo'}>
-                                    <img src={'/i/atmaguru.svg'} />
+                                <a href="/" className={'f-header-wrap-logo'}>
+                                    <div className={"f-header-back-wrap"}>
+                                        <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'} />
+                                    </div>
+                                    <img className={"f-header-wrap-logo-logo"} src={"/i/atmaguru.svg"} />
                                 </a>
                             </div>
                             <div className={'f-header-logo-wrapper'}>
@@ -34,7 +128,6 @@ const MainPage = () => {
                                     когда вы делитесь
                                     им с нами
                                 </p>
-                                {/*<a href={"#"} className={'f-section-wrap-button'}>Больше не показывать</a>*/}
                             </div>
                             <img className={"f-section-wrap-image"} src={'/i/movie-text.png'} />
                         </div>
@@ -49,74 +142,89 @@ const MainPage = () => {
                             <img className={"f-nav-button-img"} src={"/i/search.svg"}/>
                         </div>
                     </navigation>
+
+                    <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>Новая идея</NavLink>
                     <div className={"f-row-type max_width"}>
                         <div className={"f-row-center-wrap"}>
-                            <section style={{ width: '60%' }}>
-                                <div className={"f-cards"}>
-                                    <div>
-                                        <p className={"f-cards-hashtag"}>#Вопрос</p>
-                                        <div className={"f-cards-card-wrap"}>
-                                            <div className={"f-cards-inner"}>
-                                                <div className={"f-cards-avatar"}>
-                                                    <div className={"f-cards-row-wrap"}>
-                                                        <img className={"f-cards-image"} src={"/i/avatar.png"}/>
-                                                        <div className={"f-cards-wrap-text"}>
-                                                            <span className={"f-cards-text"}>Константин Константинопольский</span>
-                                                            <span className={"f-cards-text-bottom"}>Генератор идей</span>
+                            <section style={{ width: '65%' }}>
+                                {
+                                    loading ?
+                                        <div className={"f-cards"}>
+                                            <div>
+                                                <div className={"f-cards-card-wrap"}>
+                                                    <Skeleton avatar active style={{ minWidth: 800, height: 400, backgroundColor: '#FFFFFF', padding: 40, borderRadius: 24 }}/>
+                                                </div>
+                                            </div>
+                                        </div> :
+                                    items.map((item, index) => (
+                                        <div className={"f-cards"}>
+                                            <div>
+                                                <p className={"f-cards-hashtag"}>#Вопрос</p>
+                                                <div className={"f-cards-card-wrap"}>
+                                                    <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("https://newcastlebeach.org/images/any-2.jpg")' }} />
+                                                    <div className={"f-cards-inner"}>
+                                                        <div className={"f-cards-avatar"}>
+                                                            <div className={"f-cards-row-wrap"}>
+                                                                <img className={"f-cards-image"} src={"/i/avatar.png"}/>
+                                                                <div className={"f-cards-wrap-text"}>
+                                                                    <span className={"f-cards-text"}>Константин Константинопольский</span>
+                                                                    <span className={"f-cards-text-bottom"}>Генератор идей</span>
+                                                                </div>
+                                                            </div>
+                                                            <p className={"f-cards-type" + selectType[selectedPanelMenu].className}>{ selectType[selectedPanelMenu].type }</p>
                                                         </div>
-                                                    </div>
-                                                    <p className={"f-cards-type"}>Запланировано</p>
-                                                </div>
-                                                <div className={"f-cards-div-wrap-text"}>
+                                                        <div className={"f-cards-div-wrap-text"}>
                                                     <span className={"f-cards-content-text"}>
-                                                        Крайне не удобно работать
-                                                        с множественным
-                                                        выделением на карте, так как
-                                                        Ctrl и Shift + click
-                                                        не работают
+                                                        { item.title }
                                                     </span>
-                                                </div>
-                                                <div className={"f-cards-div-wrap-text"}>
+                                                        </div>
+                                                        <div className={"f-cards-div-wrap-text"}>
                                                     <span className={"f-cards-content-description"}>
-                                                        Очень не удобно, что кнопка Сохранить не видна
-                                                        на экране постоянно, а прокручивается вместе
-                                                        с содержимым. Воз...
+                                                        {
+                                                            item.text.length > 400 && !item.showFullText ?
+                                                                <span>{item.text.slice(0, 400)}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
+                                                                <span>{item.text}... <a onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
+                                                        }
                                                     </span>
+                                                        </div>
+                                                        <div className={"f-cards-under-block"}>
+                                                            <div>
+                                                                <a onClick={() => showComments(item.showComments, index)} className={"f-cards-under-block-comment"}>5 комментариев</a>
+                                                            </div>
+                                                            <div>
+                                                                <a className={"f-cards-under-block-like"} onClick={() => addLike(index)}>
+                                                                    <i className="em em---1"
+                                                                       aria-label="THUMBS UP SIGN"></i>
+                                                                    <span className={"f-cards-under-block-like-text"}>{ item.like }</span>
+                                                                </a>
+                                                            </div>
+                                                            <div>
+                                                                <a className={"f-cards-under-block-like"} href={"#"}>
+                                                                    <i className="em em--1"
+                                                                       aria-label="THUMBS DOWN SIGN"></i>
+                                                                    <span className={"f-cards-under-block-like-text"}>Не нравится</span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        {
+                                                            item.showComments &&
+                                                            <Comments comments={comments} loading={loadingComments}/>
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <div className={"f-cards-under-block"}>
-                                                    <div>
-                                                        <a onClick={() => setShowComments(!showComments )} className={"f-cards-under-block-comment"}>5 комментариев</a>
-                                                    </div>
-                                                    <div>
-                                                        <a className={"f-cards-under-block-like"} href={"#"}>
-                                                            <img src={"/i/fire.svg"} />
-                                                            <span className={"f-cards-under-block-like-text"}>24</span>
-                                                        </a>
-                                                    </div>
-                                                    <div>
-                                                        <a className={"f-cards-under-block-like"} href={"#"}>
-                                                            <img src={"/i/fire.svg"} />
-                                                            <span className={"f-cards-under-block-like-text"}>Не нравится</span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                {
-                                                    showComments &&
-                                                        <Comments />
-                                                }
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    ))
+                                }
                             </section>
                         </div>
                         <section style={{ width: '20%' }}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"} style={{ marginTop: 100 }}>
-                                    <a className={"f-side-panel-button-section"} href={"#"}>В работе <span className={"f-side-panel-count-subtext"}>56</span></a>
-                                        <a className={"f-side-panel-button-section f-selected"} href={"#"}>Запланировано <span className={"f-side-panel-count-subtext f-block-select"}>72</span></a>
-                                    <a className={"f-side-panel-button-section"} href={"#"}>Рассмотрено <span className={"f-side-panel-count-subtext"}>2356</span></a>
-                                    <a className={"f-side-panel-button-section"} href={"#"}>Завершено <span className={"f-side-panel-count-subtext"}>532</span></a>
+                                    <a onClick={() => { setSelectedPanelMenu(0), loadData()}} className={"f-side-panel-button-section " + (selectedPanelMenu === 0 && "f-planned")}>В работе <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 0 && "f-block")}>56</span></a>
+                                    <a onClick={() => { setSelectedPanelMenu(1), loadData()}} className={"f-side-panel-button-section " + (selectedPanelMenu === 1 && "f-inwork")}>Запланировано <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 1 && "f-block")}>{ items.length }</span></a>
+                                    <a onClick={() => { setSelectedPanelMenu(2), loadData()}} className={"f-side-panel-button-section " + (selectedPanelMenu === 2 && "f-viewed")}>Рассмотрено <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 2 && "f-block")}>2356</span></a>
+                                    <a onClick={() => { setSelectedPanelMenu(3), loadData()}} className={"f-side-panel-button-section " + (selectedPanelMenu === 3 && "f-completed")}>Завершено <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 3 && "f-block")}>532</span></a>
                                 </div>
                                 <div className={"f-side-panel-wrap"}>
                                     <a className={"f-side-panel-button"} href={"#"}>#Вопрос</a>

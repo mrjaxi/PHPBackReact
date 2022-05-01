@@ -1,25 +1,29 @@
 import React from "react";
+import { Skeleton } from "antd";
 
-const Comments = () => {
+const Comments = ({ comments, loading }) => {
     return (
         <div className={"f-comments"}>
             <span className={"f-comments-tip-text"}>Комментарии</span>
             <div className={"f-comments-scroll"}>
-                <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{ marginTop: 20 }}>
-                    <div className={"f-cards-row-wrap"}>
-                        <img className={"f-cards-image"} src={"/i/avatar.png"}/>
-                        <div className={"f-cards-wrap-text"}>
-                            <span className={"f-cards-text"}>Константин Константинопольский</span>
-                            <span className={"f-cards-content-description"}>
-                                Если хочешь сделать 2 выделения через Shift,
-                                то веделяешь модуль, через Shift другой — получаешь
-                                выделенный диапазон; потом через Ctrl выделяешь
-                                другой модуль и через Ctrl + Shift  ещё — получаешь
-                                2 выделенных диапазона
-                            </span>
+                {
+                    loading ? <Skeleton active style={{ width: '100%', height: '200px' }} />:
+                    comments.map(comment => (
+                        <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{ marginTop: 20 }}>
+                            <div className={"f-cards-row-wrap"}>
+                                <img className={"f-cards-image"} src={"/i/avatar.png"}/>
+                                <div className={"f-cards-wrap-text"}>
+                                    <span className={"f-cards-text"}>Константин Константинопольский</span>
+                                    <span className={"f-cards-content-description"}>
+                                        {
+                                            comment.text
+                                        }
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    ))
+                }
             </div>
             <div className={"f-write-comments"}>
                 <span className={"f-write-comments-title"}>Написать</span>

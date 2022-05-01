@@ -1220,14 +1220,13 @@ body {
 }
 
 .f-new-idea {
-  position: absolute;
+  position: sticky;
   width: 280px;
   height: 90px;
   background-color: #3D72ED;
   left: 0;
   box-shadow: 0 16px 32px 4px rgba(61, 114, 237, 0.24);
   right: 0;
-  bottom: 0;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 20px;
@@ -1238,6 +1237,7 @@ body {
   font-size: 24px;
   align-items: center;
   justify-content: center;
+  top: calc(100vh - 140px);
 }
 .f-main {
   box-sizing: border-box;
@@ -1247,12 +1247,18 @@ body {
   background-color: #E6E9ED;
   background-image: url("/i/background-thunder.svg");
   background-repeat: no-repeat;
-  background-origin: border-box;
-  background-size: cover;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: Inter, sans-serif, Arial;
+}
+.f-header-back-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #D9F94B;
+  border-radius: 200px;
+  padding: 6px;
 }
 .f-header-wrap-content {
   display: flex;
@@ -1260,10 +1266,20 @@ body {
   justify-content: space-between;
   margin-bottom: 50px;
   margin-top: 50px;
+  padding-left: 50px;
+  padding-right: 70px;
+}
+.f-header-wrap-logo-element {
+  position: sticky;
+  top: 15px;
 }
 .f-header-wrap-logo {
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+.f-header-wrap-logo-logo {
+  margin-left: 10px;
 }
 .f-sign-in {
   font-size: 17px;
@@ -1399,13 +1415,23 @@ body {
 .f-cards {
   display: flex;
   flex-direction: column;
-  margin-bottom: 170px;
+  margin-bottom: 100px;
   min-width: 40%;
   justify-content: center;
 }
+.f-cards-image-type {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  bottom: -40px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 24px;
+  border: none;
+}
 .f-cards-card-wrap {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   z-index: 50;
 }
 .f-cards-border-image {
@@ -1468,10 +1494,36 @@ body {
   border-bottom-style: solid;
   padding-bottom: 20px;
 }
-.f-cards-type {
-  background-color: #F6BA59;
+.f-cards-type-planned {
+  background-color: #F5F0E7;
   padding: 7px;
-  color: #ffffff;
+  color: #F6BA59;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-radius: 6px;
+}
+.f-cards-type-inwork {
+  background-color: #DFE7F8;
+  padding: 7px;
+  color: #3D72ED;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-radius: 6px;
+}
+.f-cards-type-viewed {
+  background-color: #E6E9ED;
+  padding: 7px;
+  color: #AAB2BD;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-radius: 6px;
+}
+.f-cards-type-completed {
+  background-color: #DFF1E1;
+  padding: 7px;
+  color: #42C82C;
+  font-weight: 500;
+  text-transform: uppercase;
   border-radius: 6px;
 }
 .f-cards-wrap-text {
@@ -1516,28 +1568,22 @@ body {
 .f-row-type {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 .f-row-center-wrap {
   display: flex;
   justify-content: center;
 }
-.f-selected {
-  background-color: #F6BA59;
-  border-radius: 66px;
-}
-.f-selected-block {
-  color: #FFFFFF;
-}
 .f-side-block {
   position: sticky;
-  top: 130px;
+  top: 230px;
 }
 .f-side-panel-wrap {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 .f-side-panel-count {
   color: #AAB2BD;
@@ -1557,6 +1603,10 @@ body {
   justify-content: center;
   padding: 10px 20px 10px 20px;
   font-size: 17px;
+  margin-bottom: 10px;
+}
+.f-side-panel-button-section:hover {
+  color: #1D1D1F;
 }
 .f-side-panel-count {
   display: flex;
@@ -1575,6 +1625,32 @@ body {
   color: #AAB2BD;
   font-size: 17px;
   margin-left: 5px;
+}
+.f-block {
+  color: #ffffff;
+}
+.f-planned {
+  background-color: #F6BA59;
+  color: #FFFFFF;
+  border-radius: 66px;
+}
+.f-inwork {
+  background-color: #3D72ED;
+  color: #FFFFFF;
+  border-radius: 66px;
+}
+.f-viewed {
+  background-color: #CCD1D9;
+  color: #FFFFFF;
+  border-radius: 66px;
+}
+.f-completed {
+  background-color: #42C82C;
+  color: #FFFFFF;
+  border-radius: 66px;
+}
+.f-planned:hover, .f-completed:hover, .f-viewed:hover, .f-inwork:hover {
+  color: #FFFFFF;
 }
 .f-login {
   box-sizing: border-box;
