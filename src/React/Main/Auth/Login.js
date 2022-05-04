@@ -18,7 +18,7 @@ const Login = () => {
                             },
                         ]}
                     >
-                        <Input style={{ padding: '10px 15px 10px 15px', fontSize: 19, width: '440px' }} placeholder={"Электронная почта"}/>
+                        <Input size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Электронная почта"}/>
                     </Form.Item>
                     <Form.Item
                         name={"password"}
@@ -29,7 +29,7 @@ const Login = () => {
                             },
                         ]}
                     >
-                        <Input style={{ padding: '10px 15px 10px 15px', fontSize: 19, width: '440px' }} placeholder={"Пароль"}/>
+                        <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>
                     </Form.Item>
                     <Form.Item>
                         <Checkbox style={{ fontSize: 19 }}>Запомнить меня</Checkbox>

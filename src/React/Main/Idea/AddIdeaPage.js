@@ -21,12 +21,12 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Input style={{ fontSize: 17, width: '440px' }} placeholder={"Заголовок"}/>
+                        <Input size={"large"} style={{ fontSize: 17, width: '440px' }} placeholder={"Заголовок"}/>
                     </Form.Item>
                     <Form.Item
                         name={"category"}
                     >
-                        <Select style={{ fontSize: 17, width: '440px', }} placeholder={"Выберите категорию"}>
+                        <Select size={"large"} style={{ fontSize: 17, width: '440px', }} placeholder={"Выберите категорию"}>
                             <Option value="jack">Jack</Option>
                             <Option value="lucy">Lucy</Option>
                             <Option value="disabled" disabled>
@@ -37,7 +37,7 @@ const AddIdeaPage = () => {
                     <Form.Item
                         name={"type"}
                     >
-                        <Select style={{ fontSize: 17, width: '440px' }} placeholder={"Выберите тип"}>
+                        <Select size={"large"} style={{ fontSize: 17, width: '440px' }} placeholder={"Выберите тип"}>
                             <Option value="jack">Jack</Option>
                             <Option value="lucy">Lucy</Option>
                             <Option value="disabled" disabled>
