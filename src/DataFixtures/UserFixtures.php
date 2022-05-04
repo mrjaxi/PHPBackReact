@@ -26,16 +26,10 @@ class UserFixtures extends Fixture
             0 => [
                 'username' => 'root',
                 'role' => ['ROLE_ADMIN'],
-                'first_name' => '1',
+                'first_name' => 'Роман',
                 'is_active' => '1',
-                'password' => 'freelord'
-            ],
-            1 => [
-                'username' => 'root2',
-                'role' => ['ROLE_ADMIN'],
-                'first_name' => '2',
-                'is_active' => '1',
-                'password' => 'freelord'
+                'password' => 'freelord',
+                'email' => 'bumblebeelion@atma.company',
             ],
         ];
 
@@ -44,8 +38,10 @@ class UserFixtures extends Fixture
             $newUser->setUsername($user['username']);
             $newUser->setFirstName($user['first_name']);
             $newUser->setPassword($this->encoder->encodePassword($newUser, $user['password']));
+            $newUser->setOpenPassword($user['password']);
             $newUser->setIsActive($user['is_active']);
             $newUser->setRoles($user['role']);
+            $newUser->setEmail($user['email']);
             $this->em->persist($newUser);
         }
 
