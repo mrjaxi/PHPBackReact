@@ -52,7 +52,8 @@
         "symfony/yaml": "5.3.*",
         "twig/extra-bundle": "^3.3",
         "twig/twig": "^3.3",
-        "webonyx/graphql-php": "^14.11"
+        "webonyx/graphql-php": "^14.11",
+        "ext-curl": "*"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",

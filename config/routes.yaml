@@ -1,305 +1,60 @@
-api_platform:
-  resource: .
-  type: api_platform
-  prefix: /api
-
-test_email:
-  path: /send-email/{email}/
-  controller: App\Controller\UserController::sendRepeatLoginURL
-  
-api_app_profile:
-  path: /api/app/profile/
-  controller: App\Controller\AppController::profile
-
-viewQr:
-  path: /api/admin/view-qr/{user_id}/
-  controller: App\Controller\UserController::viewQr
-  
-api_app_web_view_map:
-  path: /api/app/map-to-user/{token}/{map_id}/
-  controller: App\Controller\MainController::index
-  
-api_app_get_map:
-  path: /api/app/map/{map_id}/
-  controller: App\Controller\AppController::getMap
-api_app_get_map_item:
-  path: /api/app/map-item/{map_item_id}/
-  controller: App\Controller\AppController::getMapItem
-api_app_save_map_item:
-  path: /api/app/map-item/{map_item_id}/save/
-  controller: App\Controller\AppController::saveResultExerciseUser
-api_app_get_exercise:
-  path: /api/app/exercise/{exercise_id}/
-  controller: App\Controller\AppController::getExercise
-api_app_get_exercise_result:
-  path: /api/app/result/exercise/{result_ex_item_id}/
-  controller: App\Controller\AppController::getExerciseResult
-api_app_get_result:
-  path: /api/app/user/result/
-  controller: App\Controller\AppController::getResultUser
-
-api_web_app_get_map:
-  path: /api/web/map/{map_id}/
-  controller: App\Controller\WebAppController::getMap
-api_web_app_get_map_item:
-  path: /api/web/map-item/{map_item_id}/
-  controller: App\Controller\AppController::getMapItem
-api_web_app_save_map_item:
-  path: /api/web/map-item/{map_item_id}/save/
-  controller: App\Controller\AppController::saveResultExerciseUser
-api_web_app_get_exercise:
-  path: /api/web/exercise/{exercise_id}/
-  controller: App\Controller\AppController::getExercise
-api_web_app_get_exercise_result:
-  path: /api/web/result/exercise/{result_ex_item_id}/
-  controller: App\Controller\AppController::getExerciseResult
-api_web_app_get_result:
-  path: /api/web/user/result/
-  controller: App\Controller\AppController::getResultUser
-
-api_web_app_get_breadcrumbs:
-  path: /api/web/get-name-breadcrumbs/
-  controller: App\Controller\WebAppController::getNameBreadcrumbs
-
-api_app_entrypoint:
-  path: /api/app
-  controller: api_platform.graphql.action.entrypoint
-
 authentication_token:
   path: /api/app_login
   methods: ['POST']
-api_doc:
-  path: /api_doc
 
-upload:
-  path: /api/admin/upload/
-  controller: App\Controller\UserController::upload
-api_maps:
-  path: /api/admin/maps/
-  controller: App\Controller\MapController::maps
-api_maps_set_active:
-  path: /api/admin/maps/set-active/{id}/
-  controller: App\Controller\MapController::setActive
-api_maps_save:
-  path: /api/admin/maps/save/{id}/
-  controller: App\Controller\MapController::save
-api_maps_delete:
-  path: /api/admin/maps/delete/{id}/
-  controller: App\Controller\MapController::delete
-  requirements:
-    id: \d+
-api_maps_get_map_item:
-  path: /api/admin/maps/getItem/{id}/
-  controller: App\Controller\MapController::getMapItem
-api_maps_save_map_item:
-  path: /api/admin/maps/saveItem/{id}/
-  controller: App\Controller\MapController::saveMapItem
-api_maps_get:
-  path: /api/admin/maps/get/{id}/
-  controller: App\Controller\MapController::getMap
-  requirements:
-    id: \d+
-api_maps_get_relations:
-  path: /api/admin/maps/get-relation/{id}/
-  controller: App\Controller\MapController::getRelations
-  requirements:
-    id: \d+
-api_maps_save_relations:
-  path: /api/admin/maps/save-relations/
-  controller: App\Controller\MapController::saveRelations
-  requirements:
-    id: \d+
+auto_redirect:
+  path: /redirect
+  controller: App\Controller\MainController::auto_redirect
 
-api_division_get:
-  path: /api/admin/division/get/
-  controller: App\Controller\DivisionController::getAll
-api_division_get_tree:
-  path: /api/admin/division/get-tree/
-  controller: App\Controller\DivisionController::getTree
-api_division_add:
-  path: /api/admin/division/add-tree/
-  controller: App\Controller\DivisionController::addTree
-api_division_del:
-  path: /api/admin/division/del-tree/{id}/
-  controller: App\Controller\DivisionController::delTree
-  requirements:
-    id: \d+
-api_division_edit:
-  path: /api/admin/division/edit-tree/{id}/
-  controller: App\Controller\DivisionController::editTree
-  requirements:
-    id: \d+
-api_division_edit_boss:
-  path: /api/admin/division/edit-boss/{id}/
-  controller: App\Controller\DivisionController::editBoss
-  requirements:
-    id: \d+
-api_division_add_post:
-  path: /api/admin/division/add-post/{id}/
-  controller: App\Controller\DivisionController::addPost
-  requirements:
-    id: \d+
-api_division_edit_post:
-  path: /api/admin/division/edit-post/{post_id}/
-  controller: App\Controller\DivisionController::editPost
-  requirements:
-    id: \d+
-api_division_del_post:
-  path: /api/admin/division/del-post/{post_id}/
-  controller: App\Controller\DivisionController::delPost
-  requirements:
-    id: \d+
-api_division_add_users:
-  path: /api/admin/division/add-users/{post_id}/
-  controller: App\Controller\DivisionController::addUsers
-  requirements:
-    id: \d+
-
-api_marks_update:
-  path: /api/admin/library/update-marks/
-  controller: App\Controller\LibraryController::updateMarks
-api_library_add:
-  path: /api/admin/library/add-to-library/
-  controller: App\Controller\LibraryController::add
-api_library_add_from:
-  path: /api/admin/library/add-from-library/
-  controller: App\Controller\LibraryController::addFrom
-api_library:
-  path: /api/admin/library/
-  controller: App\Controller\LibraryController::index
-api_library_item:
-  path: /api/admin/library/getItem/{id}/
-  controller: App\Controller\LibraryController::getItem
-  requirements:
-    id: \d+
-api_library_item_save:
-  path: /api/admin/library/saveItem/{id}/
-  controller: App\Controller\LibraryController::saveItem
-api_library_item_delete:
-  path: /api/admin/library/delete/
-  controller: App\Controller\LibraryController::deleteItem
-  
-api_lesson_save:
-  path: /api/admin/lesson/save/{map_item_id}/{lesson_id}/
-  controller: App\Controller\LessonController::save
-
-api_lesson_get:
-  path: /api/admin/lesson/get/{map_item_id}/{lesson_id}/
-  controller: App\Controller\LessonController::getLesson
-
-api_get_form_fields:
-  path: /api/admin/system/get-fields/{id}/
-  controller: App\Controller\SystemController::getFormFields
-
-api_save_form_fields:
-  path: /api/admin/system/save-fields/{id}/
-  controller: App\Controller\SystemController::saveFormFields
-
-api_delete_system:
-  path: /api/admin/system/delete-system/{id}/
-  controller: App\Controller\SystemController::deleteSystem
-
-api_change_branch_name:
-  path: /api/admin/branch/change-name/{id}/
-  controller: App\Controller\BranchController::changeBranchName
-
-api_delete_branch:
-  path: /api/admin/branch/delete/{id}/
-  controller: App\Controller\BranchController::deleteBranch
-
-api_add_branch:
-  path: /api/admin/branch/add/
-  controller: App\Controller\BranchController::addBranch
-
-api_change_position_name:
-  path: /api/admin/position/change-name/{id}/
-  controller: App\Controller\PositionController::changePositionName
-
-api_delete_position:
-  path: /api/admin/position/delete/{id}/
-  controller: App\Controller\PositionController::deletePosition
-
-api_add_position:
-  path: /api/admin/position/add/
-  controller: App\Controller\PositionController::addPosition
-
-api_user_list:
-  path: /api/admin/user-list/
-  controller: App\Controller\UserController::userList
-api_user_disable:
-  path: /api/admin/users/disable-users/
-  controller: App\Controller\UserController::disable
-api_user_get:
-  path: /api/admin/users/{id}/
-  controller: App\Controller\UserController::getUserProfile
-  requirements:
-    id: \d+
-api_user_save:
-  path: /api/admin/users/save/{id}/
-  controller: App\Controller\UserController::saveUser
-  requirements:
-    id: \d+
 api_user_new:
-  path: /api/admin/users/new/
-  controller: App\Controller\UserController::newUsers
-api_user_get_maps:
-  path: /api/admin/users/get-maps/{id}/
-  controller: App\Controller\UserController::getMaps
-  requirements:
-    id: \d+
-api_user_view_map:
-  path: /api/admin/users/{id}/map-view/{map_id}/
-  controller: App\Controller\WebAppController::getMap
-
-api_result_get_list:
-  path: /api/admin/result/list/
-  controller: App\Controller\ResultController::list
-api_posts_get:
-  path: /api/admin/posts/
-  controller: App\Controller\PostController::getItems
-api_posts_new:
-  path: /api/admin/posts/new/
-  controller: App\Controller\PostController::newPost
-api_industries_get:
-  path: /api/admin/industries/
-  controller: App\Controller\IndustriesController::getItems
-
+  path: /api/user/new/
+  controller: App\Controller\UserController::newUser
+api_user_register:
+  path: /api/user/register/
+  controller: App\Controller\UserController::register
+api_user_set_username:
+  path: /api/user/setUsername/
+  controller: App\Controller\UserController::setUsername
+api_user_profile:
+  path: /api/user/upload/
+  controller: App\Controller\UserController::getUserProfile
+api_user_upload:
+  path: /api/user/upload/
+  controller: App\Controller\UserController::upload
 api_profile:
   path: /api/profile/
   controller: App\Controller\UserController::profile
 
-api_user_account:
-  path: /api/user/account/
-  controller: App\Controller\UserController::userAccount
+api_get_categories:
+  path: /ideas/api/getCategories/
+  controller: App\Controller\IdeasController::getCategories
+api_get_ideas:
+  path: /ideas/api/getIdeas/{category_id}/
+  controller: App\Controller\IdeasController::getIdeas
+  requirements:
+    id: \d+
+api_add_idea:
+  path: /ideas/api/add_idea/
+  controller: App\Controller\IdeasController::add_idea
+api_set_status:
+  path: /ideas/api/{id}/setStatus/
+  controller: App\Controller\IdeasController::setStatus
+api_user_new_idea:
+  path: /ideas/api/new/
+  controller: App\Controller\IdeasController::new_idea
 
-api_system_settings:
-  path: /api/system/settings/
-  controller: App\Controller\SystemController::settings
+app_signup:
+  path: /signup
+  controller: App\Controller\SecurityController::signup
+app_login:
+  path: /login
+  methods: ['POST']
+  controller: App\Controller\SecurityController::login
 
-api_system_settings_test:
-  path: /api/system/settings-test/
-  controller: App\Controller\SystemController::settingsTest
 
-api_system_check_domain:
-  path: /api/system/check-domain/
-  controller: App\Controller\SystemController::checkDomain
-  
-association_apple:
-  path: /apple-app-site-association
-  controller: App\Controller\AssociationController::apple
-  
-association_andriod:
-  path: /.well-known/assetlinks.json
-  controller: App\Controller\AssociationController::android
-  
 login_app:
   path: /login-app/{param}/
   controller: App\Controller\AssociationController::loginApp
-
-fix_status:
-  path: /fix-status/
-  controller: App\Controller\AppController::fixStatus
-
 default:
   path:  /{wildcard}
   controller: App\Controller\MainController::index
@@ -313,3 +68,8 @@ homepage:
     _locale: en|ru
     wildcard: .*
 
+#api_user_get:
+#  path: /api/users/{id}/
+#  controller: App\Controller\UserController::getUserProfile
+#  requirements:
+#    id: \d+

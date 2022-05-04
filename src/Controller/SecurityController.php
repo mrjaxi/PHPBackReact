@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,17 +28,27 @@ class SecurityController extends AbstractController
      */
     public function signup(AuthenticationUtils $authenticationUtils, Request $request, UserPasswordEncoderInterface $encoder, AppAuthenticator $authenticator): Response
     {
-        //6LevtPkeAAAAAFZ5CkbGPUnsXmlaoYy6enPF5DNM
-
         $em = $this->getDoctrine()->getManager();
         $json = ['state' => 'error', 'message' => 'Ошибка регистрации'];
 
         if ($request->getMethod() == 'POST') {
-            $username = $request->get('username');
-            $first_name = $request->get('first_name');
-            $last_name = $request->get('last_name');
-            $phone = $request->get('phone');
-            $password = $request->get('password');
+            $data = json_decode($request->getContent(), true);
+            if(empty($data)){
+//                return var_dump("data null");
+                $username = $request->get('username');
+                $first_name = $request->get('first_name');
+                $last_name = $request->get('last_name');
+                $phone = $request->get('phone');
+                $password = $request->get('password');
+            } else {
+//                var_dump("data");
+//                return var_dump($data);
+                $username = $data['username'];
+                $first_name = $data['first_name'];
+                $last_name = $data['last_name'];
+                $phone = $data['phone'];
+                $password = $data['password'];
+            }
 
             if ($password != "undefined" && !empty($password) && $username != "username" && !empty($username)) {
                 $user = $this->getDoctrine()
@@ -99,9 +110,9 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils, Request $request, UserPasswordEncoderInterface $encoder): Response
     {
 
-        if (!$request->isXmlHttpRequest()) {
-            return $this->redirect('/');
-        }
+//        if (!$request->isXmlHttpRequest()) {
+//            return $this->redirect('/');
+//        }
 
         if ($this->getUser()) {
             return $this->json(['state' => 'success', 'profile' => $this->getUser()->getProfile()]);
