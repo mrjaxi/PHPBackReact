@@ -37,7 +37,7 @@ api_add_idea:
   path: /ideas/api/add_idea/
   controller: App\Controller\IdeasController::add_idea
 api_set_status:
-  path: /ideas/api/{id}/setStatus/
+  path: /ideas/api/setStatus/{id}/
   controller: App\Controller\IdeasController::setStatus
 api_user_new_idea:
   path: /ideas/api/new/

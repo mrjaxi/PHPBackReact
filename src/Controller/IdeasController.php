@@ -60,10 +60,18 @@ class IdeasController extends AbstractController
             ));
         }
         $data = json_decode($request->getContent(), true);
-        $title = $data['title'];
-        $desc = $data['description'];
-        $catid = $data['category'];
-        $typeid = $data['type'];
+//        return dd($data); // $request->get("title")
+        if ($data) {
+            $title = $data['title'];
+            $desc = $data['description'];
+            $catid = $data['category'];
+            $typeid = $data['type'];
+        } else {
+            $title = $request->get('title');
+            $desc = $request->get('description');
+            $catid = $request->get('category');
+            $typeid = $request->get('type');
+        }
         $files = $_FILES['file'];
 
         if(empty($files['name'][0])){
@@ -319,7 +327,7 @@ class IdeasController extends AbstractController
 
     // TODO: Апи изменения статуса идеи по id
     /**
-     * @Route("/ideas/api/{id}/setStatus/")
+     * @Route("/ideas/api/setStatus/{id}/")
      * @param Request $request
      * @return Response
      */
@@ -329,6 +337,8 @@ class IdeasController extends AbstractController
         if(empty($idea)){
             return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
         }
+        $newStatus = $request->get("status");
+
         /** TODO: Если это тип "Сообщить о проблеме" то кинуть его в issues в Atmaguru
          *  Это нужно сделать именно при подтверждении идеи, а как оно будет происходить пока не понятно
          */

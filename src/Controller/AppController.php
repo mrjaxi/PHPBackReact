@@ -240,10 +240,10 @@ class AppController extends AbstractController
                     continue;
                 }
 
-                $name = 'public\photo\\' . md5(microtime() . rand(0, 9999)) . "." . $mime;
+                $name = 'photo\\' . md5(microtime() . rand(0, 9999)) . "." . $mime;
 
                 $photo = $photo . $name . ";";
-                copy($files['tmp_name'][$i], __DIR__ . "/../../" . $name);
+                copy($files['tmp_name'][$i], __DIR__ . "/../../public/" . $name);
             }
         }
 
