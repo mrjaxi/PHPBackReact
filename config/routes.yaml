@@ -5,6 +5,9 @@ authentication_token:
 auto_redirect:
   path: /redirect
   controller: App\Controller\MainController::auto_redirect
+api_upload:
+  path: /api/upload/
+  controller: App\Controller\MainController::upload
 
 api_user_new:
   path: /api/user/new/
@@ -16,13 +19,10 @@ api_user_set_username:
   path: /api/user/setUsername/
   controller: App\Controller\UserController::setUsername
 api_user_profile:
-  path: /api/user/upload/
+  path: /api/users/{id}/
   controller: App\Controller\UserController::getUserProfile
-api_user_upload:
-  path: /api/user/upload/
-  controller: App\Controller\UserController::upload
 api_profile:
-  path: /api/profile/
+  path: /api/user/profile/
   controller: App\Controller\UserController::profile
 
 api_get_categories:
@@ -36,12 +36,22 @@ api_get_ideas:
 api_add_idea:
   path: /ideas/api/add_idea/
   controller: App\Controller\IdeasController::add_idea
-api_set_status:
-  path: /ideas/api/setStatus/{id}/
-  controller: App\Controller\IdeasController::setStatus
 api_user_new_idea:
   path: /ideas/api/new/
   controller: App\Controller\IdeasController::new_idea
+api_set_status:
+  path: /ideas/api/setStatus/{id}/
+  controller: App\Controller\IdeasController::setStatus
+api_new_vote:
+  path: /ideas/api/newVote/{id}/
+  controller: App\Controller\IdeasController::newVote
+api_new_comment:
+  path: /ideas/api/newComment/{id}/
+  controller: App\Controller\IdeasController::newComment
+
+idea_show:
+  path: /idea/
+
 
 app_signup:
   path: /signup

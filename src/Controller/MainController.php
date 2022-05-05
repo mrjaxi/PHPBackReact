@@ -46,6 +46,16 @@ class MainController extends AbstractController
     }
 
     /**
+     * @Route("/api/upload/")
+     * @param Request $request
+     * @return Response
+     */
+    public function upload(Request $request): Response
+    {
+        return $this->json(AppController::saveFile($request, $this->getParameter('kernel.project_dir') . '/public/' . $this->getParameter('app.name') . '/', $this->getDoctrine()->getManager()));
+    }
+
+    /**
      * @Route("/redirect")
      * @param Request $request
      * @return Response

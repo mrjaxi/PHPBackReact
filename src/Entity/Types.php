@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TypesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,7 +22,7 @@ class Types
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", unique=true, length=50)
      */
     private $name;
 
@@ -29,11 +31,23 @@ class Types
      */
     private $description;
 
-    public function __construct($name = null, $description = null){
-        $this->setName($name);
-        if(!empty($description)){
-            $this->setDescription($description);
-        }
+    /**
+     * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="type")
+     */
+    private $ideas;
+
+    public function __construct()
+    {
+        $this->ideas = new ArrayCollection();
+    }
+
+    public function getInfo(): ?array
+    {
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+            "description" => $this->description,
+        ];
     }
 
     public function getId(): ?int
@@ -61,6 +75,40 @@ class Types
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIdeas(): array
+    {
+        $ideasArray = array();
+        foreach ($this->ideas as $idea) {
+            $ideasArray[] = $idea->getInfo();
+        }
+        return $ideasArray;
+    }
+
+    public function addIdea(Ideas $idea): self
+    {
+        if (!$this->ideas->contains($idea)) {
+            $this->ideas[] = $idea;
+            $idea->setType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdea(Ideas $idea): self
+    {
+        if ($this->ideas->removeElement($idea)) {
+            // set the owning side to null (unless already changed)
+            if ($idea->getType() === $this) {
+                $idea->setType(null);
+            }
+        }
 
         return $this;
     }

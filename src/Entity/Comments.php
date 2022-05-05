@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommentsRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,19 +26,34 @@ class Comments
     private $content;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $idea_id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $user_id;
-
-    /**
-     * @ORM\Column(type="date")
+     * @var DateTimeInterface
+     * @ORM\Column(type="datetime")
      */
     private $date;
+
+    /**
+     * @var User|null
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $user;
+
+    /**
+     * @var Ideas|null
+     * @ORM\ManyToOne(targetEntity=Ideas::class, inversedBy="comments")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $idea;
+
+    public function getInfo(): ?array
+    {
+        return [
+            "id" => $this->id,
+            "content" => $this->content,
+            "date" => $this->date,
+            "user" => $this->getUserInfo(),
+        ];
+    }
 
     public function getId(): ?int
     {
@@ -56,30 +72,6 @@ class Comments
         return $this;
     }
 
-    public function getIdeaId(): ?int
-    {
-        return $this->idea_id;
-    }
-
-    public function setIdeaId(int $idea_id): self
-    {
-        $this->idea_id = $idea_id;
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): self
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
@@ -88,6 +80,30 @@ class Comments
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getUserInfo(): array
+    {
+        return $this->user->getProfile();
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIdeaInfo(): array
+    {
+        return $this->idea->getInfo();
+    }
+
+    public function setIdea(?Ideas $idea): self
+    {
+        $this->idea = $idea;
 
         return $this;
     }

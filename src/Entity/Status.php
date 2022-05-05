@@ -3,51 +3,42 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\CategoriesRepository;
+use App\Repository\StatusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CategoriesRepository::class)
+ * @ORM\Entity(repositoryClass=StatusRepository::class)
  */
 #[ApiResource]
-class Categories
+class Status
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", unique=true)
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", unique=true, length=50)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=255)
      */
-    private $description;
+    private $translate;
 
     /**
-     * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="status")
      */
     private $ideas;
 
     public function __construct()
     {
         $this->ideas = new ArrayCollection();
-    }
-
-    public function getInfo(): ?array
-    {
-        return [
-            "id" => $this->id,
-            "name" => $this->name,
-            "description" => $this->description,
-        ];
     }
 
     public function getId(): ?int
@@ -67,35 +58,31 @@ class Categories
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getTranslate(): ?string
     {
-        return $this->description;
+        return $this->translate;
     }
 
-    public function setDescription(string $description): self
+    public function setTranslate(string $translate): self
     {
-        $this->description = $description;
+        $this->translate = $translate;
 
         return $this;
     }
 
     /**
-     * @return array
+     * @return Collection|int
      */
-    public function getIdeasArray(): array
+    public function getIdeasCount()
     {
-        $ideasArray = array();
-        foreach ($this->ideas as $idea) {
-            $ideasArray[] = $idea->getInfo();
-        }
-        return $ideasArray;
+        return $this->ideas->count();
     }
 
     public function addIdea(Ideas $idea): self
     {
         if (!$this->ideas->contains($idea)) {
             $this->ideas[] = $idea;
-            $idea->setCategory($this);
+            $idea->setStatus($this);
         }
 
         return $this;
@@ -105,8 +92,8 @@ class Categories
     {
         if ($this->ideas->removeElement($idea)) {
             // set the owning side to null (unless already changed)
-            if ($idea->getCategory() === $this) {
-                $idea->setCategory(null);
+            if ($idea->getStatus() === $this) {
+                $idea->setStatus(null);
             }
         }
 

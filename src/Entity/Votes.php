@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\VotesRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,57 +21,62 @@ class Votes
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var DateTimeInterface
+     * @ORM\Column(type="datetime")
      */
-    private $idea_id;
+    private $date;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var User|null
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="votes")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-    private $user_id;
+    private $user;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var Ideas|null
+     * @ORM\ManyToOne(targetEntity=Ideas::class, inversedBy="votes")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-    private $number;
+    private $idea;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getIdeaId(): ?int
+    public function getDate(): ?DateTimeInterface
     {
-        return $this->idea_id;
+        return $this->date;
     }
 
-    public function setIdeaId(int $idea_id): self
+    public function setDate(DateTimeInterface $date): self
     {
-        $this->idea_id = $idea_id;
+        $this->date = $date;
 
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUserInfo(): array
     {
-        return $this->user_id;
+        return $this->user->getProfile();
     }
 
-    public function setUserId(int $user_id): self
+    public function setUser(?User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getNumber(): ?int
+    public function getIdeaInfo(): array
     {
-        return $this->number;
+        return $this->idea->getInfo();
     }
 
-    public function setNumber(int $number): self
+    public function setIdea(?Ideas $idea): self
     {
-        $this->number = $number;
+        $this->idea = $idea;
 
         return $this;
     }

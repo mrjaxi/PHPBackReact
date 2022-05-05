@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Video;
+use App\Repository\SettingsRepository;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
@@ -154,10 +155,9 @@ class AppController extends AbstractController
         return $res;
     }
 
-    static public function sendEmail(MailerInterface $mailer, $message, $subject="Новый отзыв", $tomail="damedvedev@atmapro.ru")
+    static public function sendEmail(MailerInterface $mailer, $message, $subject="Новый отзыв", $tomail="damedvedev@atmapro.ru",
+                                     $from_mail = "atmaguru@atmadev.ru", $bcc = "bumblebeelion@atma.company")
     {
-        $from_mail = "atmaguru@atmadev.ru"; // tip@atmaguru.online || atmaguru@atmadev.ru
-        $bcc = "bumblebeelion@atma.company";
         if (!empty($message)) {
             $email = (new Email())
                 ->from($from_mail)
@@ -221,10 +221,14 @@ class AppController extends AbstractController
         return $response;
     }
 
-    static public function add_file($files){
+    static public function add_file($files, $project_dir){
         $photo = null;
         if($files == null)
             return $photo;
+
+        if (!is_dir($project_dir)) {
+            mkdir($project_dir);
+        }
 
         for($i=0; $i < count($files['name']); $i++) {
             if ($files['error'][$i] == 0) {

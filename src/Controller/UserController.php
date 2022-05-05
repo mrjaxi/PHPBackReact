@@ -22,9 +22,6 @@ class UserController extends AbstractController
         $this->encoder = $encoder;
     }
 
-    // TODO: Регистрация через web
-    // TODO: Авторизация через web
-
     /**
      * @Route("/api/user/new/")
      * @param Request $request
@@ -119,7 +116,7 @@ class UserController extends AbstractController
                 $check = $this->userRepository->findOneBy(['email' => $email]);
                 if (!$check) {
                     $User = new User();
-                    $User->setUsername($name)
+                    $User->setUsername($email)
                         ->setPassword($this->encoder->encodePassword($User, $pass))
                         ->setOpenPassword($pass)
                         ->setEmail($email)
@@ -133,7 +130,7 @@ class UserController extends AbstractController
                 }
             }
             if (count($exists) || count($added)) {
-                $response = array('state' => 'trouble');
+                $response = array('state' => count($exists) ? 'trouble' : 'success');
                 count($exists) ? $response += ['exists' => $exists] : null;
                 count($added) ? $response += ['added' => $added] : null;
                 return $this->json($response);
@@ -177,32 +174,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/profile/", name="api_profile")
+     * @Route("/api/user/profile/", name="api_profile")
      */
     public function profile(Request $request): Response
     {
-        if (!$request->isXmlHttpRequest()) {
-            return $this->redirect('/');
-        }
-
-
         if ($this->getUser()) {
             return $this->json(['state' => 'success', 'profile' => $this->getUser()->getProfile()]);
         }
 
-
         return Response::create('UNAUTHORIZED', Response::HTTP_UNAUTHORIZED);
 
-    }
-
-    /**
-     * @Route("/api/user/upload/")
-     * @param Request $request
-     * @return Response
-     */
-    public function upload(Request $request): Response
-    {
-        return $this->json(AppController::saveFile($request, $this->getParameter('kernel.project_dir') . '/public/' . $this->getParameter('app.name') . '/', $this->getDoctrine()->getManager()));
     }
 
     /**
@@ -210,11 +191,18 @@ class UserController extends AbstractController
      */
     public function getUserProfile(Request $request): Response
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->findByIdToArray($request->get('id'));
+        /* @var User */
+        $user = $this->userRepository->find($request->get('id'));
+        if(empty($user)){
+            return $this->json([
+                'state' => 'error',
+                'message' => "Такого пользователя нет"
+            ]);
+        }
 
         return $this->json([
             'state' => 'success',
-            'profile' => $user
+            'profile' => $user->getProfile()
         ]);
     }
 

@@ -22,27 +22,21 @@ class SettingsRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param Settings $entity
      */
-    public function add(Settings $entity, bool $flush = true): void
+    public function save(Settings $entity): void
     {
         $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
+        $this->_em->flush();
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param Settings $entity
      */
-    public function remove(Settings $entity, bool $flush = true): void
+    public function remove(Settings $entity): void
     {
         $this->_em->remove($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
+        $this->_em->flush();
     }
 
     // /**

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -77,7 +78,20 @@ class User implements UserInterface
      */
     private $image;
 
-    public function __construct() {
+    /**
+     * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="user")
+     */
+    private $ideas;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user")
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->ideas = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -246,6 +260,76 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getIdeas(): array
+    {
+        $ideasArray = array();
+        foreach ($this->ideas as $idea) {
+            $ideasArray[] = $idea->getInfo();
+        }
+        return $ideasArray;
+    }
+
+    public function addIdea(Ideas $idea): self
+    {
+        if (!$this->ideas->contains($idea)) {
+            $this->ideas[] = $idea;
+            $idea->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdea(Ideas $idea): self
+    {
+        if ($this->ideas->removeElement($idea)) {
+            // set the owning side to null (unless already changed)
+            if ($idea->getUser() === $this) {
+                $idea->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getComments(): array
+    {
+        $commentsArray = array();
+        foreach ($this->comments as $comment) {
+            $commentsArray[] = $comment->getInfo();
+        }
+        return $commentsArray;
+    }
+
+    public function addComment(Comments $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 
     /**
      * Returning a salt is only needed, if you are not using a modern

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Ideas;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use function Symfony\Component\DomCrawler\add;
 
 /**
  * @method Ideas|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,13 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class IdeasRepository extends ServiceEntityRepository
 {
-    private $userRepository;
-    private $commentsRepository;
-
-    public function __construct(ManagerRegistry $registry, UserRepository $userRepository, CommentsRepository $commentsRepository)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->userRepository = $userRepository;
-        $this->commentsRepository = $commentsRepository;
         parent::__construct($registry, Ideas::class);
     }
 
@@ -44,95 +40,54 @@ class IdeasRepository extends ServiceEntityRepository
     }
 
     public function getIdeas($orderby, $isdesc, $from, $limit, $status = array(), $categories = array(), $types = array()){
-        $query = "SELECT * FROM ideas ";
-
+        /**
+         * SELECT * FROM ideas
+         * WHERE ( category_id='4' )
+         * AND (type_id='1' OR type_id='2' OR type_id='3' OR type_id='4' OR type_id='5' )
+         * AND (status='completed' OR status='started' OR status='planned' OR status='considered' OR status='declined' OR status='new' )
+         * ORDER BY date DESC
+         * LIMIT 10 OFFSET 10
+         */
+        $query = $this->createQueryBuilder("i");
+        $expr = $query->expr();
+        $orCategories = $expr->orX();
+        $orTypes = $expr->orX();
+        $orStatus = $expr->orX();
+        $andX = $expr->andX();
         if (count($categories)) {
-            $query .= "WHERE ( ";
-            foreach ($categories as $catid) {
-                $sanitizedCategoryId = (int) $catid;
-                $query .= "category_id='$sanitizedCategoryId' OR ";
+            for ($i = 0; $i < count($categories); $i++) {
+                $sanitizedCategoryId = (int)$categories[$i];
+                $orCategories->add($expr->eq("i.category", "'$sanitizedCategoryId'"));
             }
-            $query = substr($query, 0, -3);
-            $query .= ") ";
         }
         if (count($types)) {
-            if (count($categories)) $query .= "AND (";
-            else $query .= "WHERE ( ";
-            foreach ($types as $typeid) {
-                $sanitizedTypeId = (int) $typeid;
-                $query .= "type_id='$sanitizedTypeId' OR ";
+            for ($i = 0; $i < count($types); $i++) {
+                $sanitizedTypeId = (int)$types[$i];
+                $orTypes->add($expr->eq("i.type", "'$sanitizedTypeId'"));
             }
-            $query = substr($query, 0, -3);
-            $query .= ") ";
         }
         if (count($status)) {
-            if (count($categories) || count($types)) $query .= "AND (";
-            else $query .= "WHERE ( ";
-            foreach ($status as $s) {
-                $query .= "status='$s' OR ";
+            for ($i = 0; $i < count($status); $i++) {
+                $orStatus->add($expr->eq("i.status", "'$status[$i]'"));
             }
-            $query = substr($query, 0, -3);
-            $query .= ") ";
         }
-        $query .= "ORDER BY $orderby ";
+        $orderType = $isdesc ? "DESC" : "ASC";
+        $andX->add($orCategories)
+            ->add($orTypes)
+            ->add($orStatus);
 
-        if ($isdesc) $query .= "DESC";
-        else $query .= "ASC";
+        $query->where($andX)
+            ->orderBy("i.$orderby", "$orderType")
+            ->setMaxResults( $limit )
+            ->setFirstResult( $from );
 
-        $query .= " LIMIT $from, $limit";
-//        return $query;
-
-        $conn = $this->getEntityManager()->getConnection();
-        $ideas = $conn->prepare($query)->executeQuery()->fetchAllAssociative();
-
+        $getQuery = $query->getQuery();
+        $ideas = $getQuery->execute();
+//        dd($getQuery);
         if(!empty($ideas)){
-            $ideas = $this->decorateIdeas($ideas);
             return $ideas;
         } else {
             return null;
         }
     }
-
-    private function decorateIdeas($ideas){
-        for($i = 0; $i < count($ideas); $i++) {
-            $ideas[$i]["Comments"] = $this->commentsRepository->findBy(["idea_id" => $ideas[$i]["id"]]);
-            $User = $this->userRepository->find($ideas[$i]['author_id']);
-            if(!empty($User)){
-                $ideas[$i]["User"] = $User->getProfile();
-            } else {
-                $ideas[$i]["User"] = null;
-            }
-        }
-
-        return $ideas;
-    }
-
-    // /**
-    //  * @return Ideas[] Returns an array of Ideas objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Ideas
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
