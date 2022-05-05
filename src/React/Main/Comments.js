@@ -16,7 +16,7 @@ const Comments = ({ comments, loading }) => {
                                     <span className={"f-cards-text"}>Константин Константинопольский</span>
                                     <span className={"f-cards-content-description"}>
                                         {
-                                            comment.text
+                                            comment.content
                                         }
                                     </span>
                                 </div>
