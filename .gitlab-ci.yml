@@ -1,0 +1,30 @@
+stages:
+  - deploy_dev
+#  - deploy_prod
+
+Deploy to dev:
+  stage: deploy_dev
+  environment:
+    name: dev
+    url: https://phpback.atmadev.ru/
+  when: manual
+  tags:
+    - atmadev
+  only:
+    - master
+  script:
+    - rsync --exclude '.git' --exclude '.gitlab-ci.yml' -avzh . /www/phpback.atmadev.ru
+
+#Deploy to prod:
+#  stage: deploy_prod
+#  environment:
+#    name: prod
+#    url: https://feedback.atmaguru.online/
+#  when: manual
+#  tags:
+#    - all
+#  only:
+#    - master
+#  script:
+#    - rsync --exclude '.git' --exclude '.gitlab-ci.yml' -avzh . /www/feedback.atmaguru.online
+

@@ -45,9 +45,9 @@ class Votes
         return $this->id;
     }
 
-    public function getDate(): ?DateTimeInterface
+    public function getDate(): ?string
     {
-        return $this->date;
+        return $this->date->format('Y-m-d H:i:s');
     }
 
     public function setDate(DateTimeInterface $date): self
@@ -57,9 +57,13 @@ class Votes
         return $this;
     }
 
-    public function getUserInfo(): array
+    public function get_UserInfo(): array
     {
-        return $this->user->getProfile();
+        return $this->user->get_Profile();
+    }
+    public function get_User(): ?User
+    {
+        return $this->user;
     }
 
     public function setUser(?User $user): self
@@ -69,9 +73,13 @@ class Votes
         return $this;
     }
 
-    public function getIdeaInfo(): array
+    public function get_IdeaInfo(): array
     {
-        return $this->idea->getInfo();
+        return $this->idea->get_Info();
+    }
+    public function get_Idea(): Ideas
+    {
+        return $this->idea;
     }
 
     public function setIdea(?Ideas $idea): self

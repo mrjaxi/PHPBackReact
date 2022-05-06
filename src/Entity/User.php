@@ -88,10 +88,31 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Votes::class, mappedBy="user")
+     */
+    private $votes;
+
     public function __construct()
     {
         $this->ideas = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->votes = new ArrayCollection();
+    }
+
+    public function get_Profile(): ?array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'email' => $this->email,
+            'roles' => $this->roles,
+            'first_name' => $this->first_name,
+            "middle_name" => $this->middle_name,
+            "last_name" => $this->last_name,
+            "image" => $this->image,
+            "is_active" => $this->is_active
+        ];
     }
 
     public function getId(): ?int
@@ -198,21 +219,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getProfile(): ?array
-    {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'email' => $this->email,
-            'roles' => $this->roles,
-            'first_name' => $this->first_name,
-            "middle_name" => $this->middle_name,
-            "last_name" => $this->last_name,
-            "image" => $this->image,
-            "is_active" => $this->is_active
-        ];
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
@@ -264,13 +270,21 @@ class User implements UserInterface
     /**
      * @return array
      */
-    public function getIdeas(): array
+    public function get_IdeasArray(): array
     {
         $ideasArray = array();
+        /** @var Ideas $idea */
         foreach ($this->ideas as $idea) {
-            $ideasArray[] = $idea->getInfo();
+            $ideasArray[] = $idea->get_Info();
         }
         return $ideasArray;
+    }
+    /**
+     * @return Collection
+     */
+    public function get_Ideas(): Collection
+    {
+        return $this->ideas;
     }
 
     public function addIdea(Ideas $idea): self
@@ -287,7 +301,7 @@ class User implements UserInterface
     {
         if ($this->ideas->removeElement($idea)) {
             // set the owning side to null (unless already changed)
-            if ($idea->getUser() === $this) {
+            if ($idea->get_User() === $this) {
                 $idea->setUser(null);
             }
         }
@@ -298,13 +312,21 @@ class User implements UserInterface
     /**
      * @return array
      */
-    public function getComments(): array
+    public function get_CommentsArray(): array
     {
         $commentsArray = array();
+        /** @var Comments $comment */
         foreach ($this->comments as $comment) {
-            $commentsArray[] = $comment->getInfo();
+            $commentsArray[] = $comment->get_Info();
         }
         return $commentsArray;
+    }
+    /**
+     * @return ArrayCollection
+     */
+    public function get_Comments(): ArrayCollection
+    {
+        return $this->comments;
     }
 
     public function addComment(Comments $comment): self
@@ -321,7 +343,7 @@ class User implements UserInterface
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getUser() === $this) {
+            if ($comment->get_User() === $this) {
                 $comment->setUser(null);
             }
         }
@@ -329,7 +351,35 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function get_Votes(): ArrayCollection
+    {
+        return $this->votes;
+    }
 
+    public function addVote(Votes $vote): self
+    {
+        if (!$this->votes->contains($vote)) {
+            $this->votes[] = $vote;
+            $vote->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVote(Votes $vote): self
+    {
+        if ($this->votes->removeElement($vote)) {
+            // set the owning side to null (unless already changed)
+            if ($vote->get_User() === $this) {
+                $vote->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 
     /**
      * Returning a salt is only needed, if you are not using a modern

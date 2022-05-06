@@ -41,7 +41,7 @@ class Types
         $this->ideas = new ArrayCollection();
     }
 
-    public function getInfo(): ?array
+    public function get_Info(): ?array
     {
         return [
             "id" => $this->id,
@@ -82,13 +82,21 @@ class Types
     /**
      * @return array
      */
-    public function getIdeas(): array
+    public function get_IdeasArray(): array
     {
         $ideasArray = array();
+        /** @var Ideas $idea */
         foreach ($this->ideas as $idea) {
-            $ideasArray[] = $idea->getInfo();
+            $ideasArray[] = $idea->get_Info();
         }
         return $ideasArray;
+    }
+    /**
+     * @return ArrayCollection
+     */
+    public function get_Ideas(): ArrayCollection
+    {
+        return $this->ideas;
     }
 
     public function addIdea(Ideas $idea): self
@@ -105,7 +113,7 @@ class Types
     {
         if ($this->ideas->removeElement($idea)) {
             // set the owning side to null (unless already changed)
-            if ($idea->getType() === $this) {
+            if ($idea->get_Type() === $this) {
                 $idea->setType(null);
             }
         }

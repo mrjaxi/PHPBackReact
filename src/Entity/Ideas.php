@@ -41,11 +41,6 @@ class Ideas
     private $date;
 
     /**
-     * @ORM\Column(type="integer", options={"default" : 0})
-     */
-    private $votes = 0;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $photo;
@@ -54,6 +49,11 @@ class Ideas
      * @ORM\Column(type="text", nullable=true)
      */
     private $href;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : true})
+     */
+    private $allowComments = true;
 
     /**
      * @var User|null
@@ -89,25 +89,32 @@ class Ideas
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Votes::class, mappedBy="idea")
+     */
+    private $votes;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->votes = new ArrayCollection();
     }
 
-    public function getInfo(): array
+    public function get_Info(): array
     {
         return [
             "id" => $this->id,
             "title" => $this->title,
             "content" => $this->content,
-            "votes" => $this->votes,
+            "votes" => $this->votes->count(),
             "photo" => $this->photo,
             "href" => $this->href,
+            "allowComments" => $this->allowComments,
             "status" => $this->status->getName(),
             "date" => $this->date->format('Y-m-d H:i:s'),
-            "user" => $this->getUserInfo(),
-            "category" => $this->getCategoryInfo(),
-            "type" => $this->getTypeInfo(),
+            "user" => $this->get_UserInfo(),
+            "category" => $this->get_CategoryInfo(),
+            "type" => $this->get_TypeInfo(),
         ];
     }
 
@@ -140,26 +147,14 @@ class Ideas
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?string
     {
-        return $this->date;
+        return $this->date->format('Y-m-d H:i:s');
     }
 
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function getVotes(): ?int
-    {
-        return $this->votes;
-    }
-
-    public function setVotes(int $votes): self
-    {
-        $this->votes = $votes;
 
         return $this;
     }
@@ -188,11 +183,27 @@ class Ideas
         return $this;
     }
 
-    public function getUserInfo(): array
+    public function getAllowComments(): ?bool
     {
-        return $this->user->getProfile();
+        return $this->allowComments;
     }
 
+    public function setAllowComments(bool $allowComments): self
+    {
+        $this->allowComments = $allowComments;
+
+        return $this;
+    }
+
+    public function get_UserInfo(): array
+    {
+        return $this->user->get_Profile();
+    }
+
+    public function get_User(): User
+    {
+        return $this->user;
+    }
 
     public function setUser(?User $user): self
     {
@@ -201,14 +212,14 @@ class Ideas
         return $this;
     }
 
-    public function categoryEntity(): Categories
+    public function get_Category(): Categories
     {
         return $this->category;
     }
 
-    public function getCategoryInfo(): array
+    public function get_CategoryInfo(): array
     {
-        return $this->category->getInfo();
+        return $this->category->get_Info();
     }
 
     public function setCategory(?Categories $category): self
@@ -217,14 +228,14 @@ class Ideas
 
         return $this;
     }
-
-    public function typeEntity(): Types
+    public function get_Type(): Types
     {
         return $this->type;
     }
-    public function getTypeInfo(): array
+
+    public function get_TypeInfo(): array
     {
-        return $this->type->getInfo();
+        return $this->type->get_Info();
     }
 
     public function setType(?Types $type): self
@@ -234,7 +245,7 @@ class Ideas
         return $this;
     }
 
-    public function getStatus(): ?Status
+    public function get_Status(): ?Status
     {
         return $this->status;
     }
@@ -249,13 +260,22 @@ class Ideas
     /**
      * @return array
      */
-    public function getCommentsArray(): array
+    public function get_CommentsArray(): array
     {
         $commentsArray = array();
+        /** @var Comments $comment */
         foreach ($this->comments as $comment) {
-            $commentsArray[] = $comment->getInfo();
+            $commentsArray[] = $comment->get_Info();
         }
         return $commentsArray;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function get_Comments(): ArrayCollection
+    {
+        return $this->comments;
     }
 
     public function addComment(Comments $comment): self
@@ -272,8 +292,45 @@ class Ideas
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getIdea() === $this) {
+            if ($comment->get_Idea() === $this) {
                 $comment->setIdea(null);
+            }
+        }
+
+        return $this;
+    }
+    /**
+     * @return int|null
+     */
+    public function getVotes(): ?int
+    {
+        return $this->votes->count();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function get_Votes(): ArrayCollection
+    {
+        return $this->votes;
+    }
+
+    public function addVote(Votes $vote): self
+    {
+        if (!$this->votes->contains($vote)) {
+            $this->votes[] = $vote;
+            $vote->setIdea($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVote(Votes $vote): self
+    {
+        if ($this->votes->removeElement($vote)) {
+            // set the owning side to null (unless already changed)
+            if ($vote->get_Idea() === $this) {
+                $vote->setIdea(null);
             }
         }
 

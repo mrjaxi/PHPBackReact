@@ -73,9 +73,16 @@ class Status
     /**
      * @return Collection|int
      */
-    public function getIdeasCount()
+    public function getIdeasCount(): ?int
     {
         return $this->ideas->count();
+    }
+    /**
+     * @return Collection|int
+     */
+    public function get_Ideas(): Collection
+    {
+        return $this->ideas;
     }
 
     public function addIdea(Ideas $idea): self
@@ -92,7 +99,7 @@ class Status
     {
         if ($this->ideas->removeElement($idea)) {
             // set the owning side to null (unless already changed)
-            if ($idea->getStatus() === $this) {
+            if ($idea->get_Status() === $this) {
                 $idea->setStatus(null);
             }
         }

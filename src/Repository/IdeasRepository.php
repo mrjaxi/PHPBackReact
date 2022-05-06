@@ -44,7 +44,7 @@ class IdeasRepository extends ServiceEntityRepository
          * SELECT * FROM ideas
          * WHERE ( category_id='4' )
          * AND (type_id='1' OR type_id='2' OR type_id='3' OR type_id='4' OR type_id='5' )
-         * AND (status='completed' OR status='started' OR status='planned' OR status='considered' OR status='declined' OR status='new' )
+         * AND (i.status = '1' OR i.status = '2' OR i.status = '3' OR i.status = '4' OR i.status = '5')
          * ORDER BY date DESC
          * LIMIT 10 OFFSET 10
          */

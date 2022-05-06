@@ -179,7 +179,7 @@ class UserController extends AbstractController
     public function profile(Request $request): Response
     {
         if ($this->getUser()) {
-            return $this->json(['state' => 'success', 'profile' => $this->getUser()->getProfile()]);
+            return $this->json(['state' => 'success', 'profile' => $this->getUser()->get_Profile()]);
         }
 
         return Response::create('UNAUTHORIZED', Response::HTTP_UNAUTHORIZED);
@@ -202,7 +202,7 @@ class UserController extends AbstractController
 
         return $this->json([
             'state' => 'success',
-            'profile' => $user->getProfile()
+            'profile' => $user->get_Profile()
         ]);
     }
 

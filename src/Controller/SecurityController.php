@@ -115,7 +115,7 @@ class SecurityController extends AbstractController
 //        }
 
         if ($this->getUser()) {
-            return $this->json(['state' => 'success', 'profile' => $this->getUser()->getProfile()]);
+            return $this->json(['state' => 'success', 'profile' => $this->getUser()->get_Profile()]);
         }
 
         // get the login error if there is one

@@ -45,13 +45,13 @@ class Comments
      */
     private $idea;
 
-    public function getInfo(): ?array
+    public function get_Info(): ?array
     {
         return [
             "id" => $this->id,
             "content" => $this->content,
-            "date" => $this->date,
-            "user" => $this->getUserInfo(),
+            "date" => $this->date->format('Y-m-d H:i:s'),
+            "user" => $this->get_UserInfo(),
         ];
     }
 
@@ -72,9 +72,9 @@ class Comments
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?string
     {
-        return $this->date;
+        return $this->date->format('Y-m-d H:i:s');
     }
 
     public function setDate(\DateTimeInterface $date): self
@@ -84,9 +84,14 @@ class Comments
         return $this;
     }
 
-    public function getUserInfo(): array
+    public function get_UserInfo(): array
     {
-        return $this->user->getProfile();
+        return $this->user->get_Profile();
+    }
+
+    public function get_User(): User
+    {
+        return $this->user;
     }
 
     public function setUser(?User $user): self
@@ -96,9 +101,14 @@ class Comments
         return $this;
     }
 
-    public function getIdeaInfo(): array
+    public function get_IdeaInfo(): array
     {
-        return $this->idea->getInfo();
+        return $this->idea->get_Info();
+    }
+
+    public function get_Idea(): Ideas
+    {
+        return $this->idea;
     }
 
     public function setIdea(?Ideas $idea): self

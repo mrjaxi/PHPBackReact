@@ -73,12 +73,12 @@ class MainController extends AbstractController
         $password  = $user[1];
         $isLogin = $this->checkAuth($email, $password);
         if($isLogin){
-            // TODO: сделать чтоб это был post запрос
-            $this->redirectToRoute("app_login", array(
-                'username' => $email,
-                'password' => $password,
-                'remember' => 1
-            ));
+            // TODO: сделать авторизацию под аккаунтом через код
+//            $this->redirectToRoute("app_login", array(
+//                'username' => $email,
+//                'password' => $password,
+//                'remember' => 1
+//            ));
         }
         // TODO: сделать чтобы переход на redirectToRoute был с параметрами(к конкретной идее)
         return $this->redirect($url);
