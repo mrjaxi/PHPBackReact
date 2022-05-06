@@ -247,6 +247,7 @@ class AppController extends AbstractController
                 $name = 'photo\\' . md5(microtime() . rand(0, 9999)) . "." . $mime;
 
                 $photo = $photo . $name . ";";
+
                 copy($files['tmp_name'][$i], __DIR__ . "/../../public/" . $name);
             }
         }

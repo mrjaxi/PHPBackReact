@@ -1219,6 +1219,12 @@ body {
   padding: 0 40px;
 }
 
+.ant-upload-select-picture-card {
+  border-radius: 0;
+  width: inherit;
+  height: inherit;
+}
+
 .f-new-idea {
   position: sticky;
   width: 280px;
@@ -1316,7 +1322,7 @@ body {
 }
 .f-section-wrap-p-text {
   display: flex;
-  font-size: 5vw;
+  font-size: 96px;
   font-weight: 500;
   color: #1D1D1F;
 }
@@ -1414,9 +1420,9 @@ body {
 }
 .f-cards {
   display: flex;
+  width: 100%;
   flex-direction: column;
   margin-bottom: 100px;
-  min-width: 40%;
   justify-content: center;
 }
 .f-cards-image-type {
@@ -1576,7 +1582,7 @@ body {
 }
 .f-side-block {
   position: sticky;
-  top: 230px;
+  top: 200px;
 }
 .f-side-panel-wrap {
   display: flex;
