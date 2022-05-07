@@ -1,9 +1,24 @@
 stages:
-  - deploy_dev
-#  - deploy_prod
+  - build
+  - deploy
+
+build:
+  tags:
+    - atmadev
+  stage: build
+  script:
+    - echo Build
+    - yarn install
+    - yarn build
+  cache:
+    key: build-cache
+    paths:
+      - vendor/
+      - public/bundles/
+      - public/js/
 
 Deploy to dev:
-  stage: deploy_dev
+  stage: deploy
   environment:
     name: dev
     url: https://phpback.atmadev.ru/
@@ -13,18 +28,16 @@ Deploy to dev:
   only:
     - master
   script:
-    - rsync --exclude '.git' --exclude '.gitlab-ci.yml' -avzh . /www/phpback.atmadev.ru
-
-#Deploy to prod:
-#  stage: deploy_prod
-#  environment:
-#    name: prod
-#    url: https://feedback.atmaguru.online/
-#  when: manual
-#  tags:
-#    - all
-#  only:
-#    - master
-#  script:
-#    - rsync --exclude '.git' --exclude '.gitlab-ci.yml' -avzh . /www/feedback.atmaguru.online
-
+    - curl -sS https://getcomposer.org/installer | /usr/local/php-8/bin/php
+    - mv env .env
+    - /usr/local/php-8/bin/php composer.phar install
+    - rsync --exclude '.git' --exclude 'var/cache' --exclude '.env' --exclude '.gitlab-ci.yml' -avzh . /www/phpback.atmadev.ru
+    - cd /www/phpback.atmadev.ru
+    - /usr/local/php-8/bin/php bin/console doctrine:migrations:migrate --env=dev --no-interaction
+    - /usr/local/php-8/bin/php bin/console cache:clear
+  cache:
+    key: build-cache
+    paths:
+      - vendor/
+      - public/bundles/
+      - public/js/

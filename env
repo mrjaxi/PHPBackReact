@@ -29,7 +29,7 @@ MAILER_DSN=mailgun+https://9969ae085b521d205b0005d8fe81b6ef-c4d287b4-fb2a4860:mg
 #
 # DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
 
-DATABASE_URL="mysql://root:freelord@127.0.0.1:3306/symfony?serverVersion=8"
+DATABASE_URL="mysql://root:h7!nIay6HUtu@127.0.0.1:3306/feedback_atmaguru?serverVersion=8"
 #DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&charset=utf8"
 ###< doctrine/doctrine-bundle ###
 REDIS_HOST="127.0.0.1"
@@ -44,21 +44,3 @@ JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
 JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
 JWT_PASSPHRASE=c9ff00583407fe275113badf858488c0
 ###< lexik/jwt-authentication-bundle ###
-
-### settings configs ###
-DOMAIN_LENGTH=8
-DEFAULT_DB="atmaguru1"
-PREFIX_CONFIG="atmaguru"
-SERVER_DB="localhost"
-USER_DB="root"
-PASSWORD_DB=""
-NX_SERVER_NAME="atmaguru.ru"
-NX_ROOT_PATH="/Users/igoryudin/www/atmaguru"
-NX_PATH_CONF_TOTAL="/usr/local/etc/nginx/atmaguru_total.conf"
-PATH_PHP_CONF="/usr/local/etc/php/8.0/php-fpm.d/"
-PATH_NGINX_CONF="/usr/local/etc/nginx/servers/"
-EXEC_PHP_TEST="/usr/local/Cellar/php@8.0/8.0.16/sbin/php-fpm -t"
-EXEC_PHP_RELOAD="brew services reload php@8.0"
-EXEC_NGINX_TEST="nginx -t"
-EXEC_NGINX_RELOAD="nginx -s reload"
-### settings configs ###
