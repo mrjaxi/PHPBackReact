@@ -41,7 +41,7 @@ const AddIdeaPage = () => {
             description: data.description,
             category: data.category,
             type: data.type,
-            photo: data.file.fileList.map(item => item.response.filename).join(";")
+                photo: data.file.fileList.map(item => item.response.filename).join(";")
         }).then(response => {
             console.log(response.data)
         })
@@ -140,7 +140,7 @@ const AddIdeaPage = () => {
                         name={"file"}
                     >
                         <Upload
-                            action="http://127.0.0.1:8000/api/user/upload/"
+                            action="http://127.0.0.1:8000/api/upload/"
                             listType="picture-card"
                             fileList={fileList}
                             onChange={onChange}

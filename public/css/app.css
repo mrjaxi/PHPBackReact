@@ -1404,18 +1404,13 @@ body {
   color: #AAB2BD;
   font-size: 21px;
 }
-.f-write-comments-input:focus {
-  color: #1b1b1b;
-}
 .f-write-comments-button {
   border: none;
   outline: none;
   -moz-appearance: none;
   background-color: #E6E9ED;
   border-radius: 64px;
-  height: 81px;
-  width: 223px;
-  font-size: 24px;
+  font-size: 21px;
   color: #CCD1D9;
 }
 .f-cards {

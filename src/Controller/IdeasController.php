@@ -73,9 +73,9 @@ class IdeasController extends AbstractController
         try {
             /** @var User $user */
             $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("unauthorized");
-            }
+//            if (empty($user)) {
+//                throw new Exception("unauthorized");
+//            }
             $data = json_decode($request->getContent(), true);
             if ($data) {
                 $title = $data['title'];
@@ -355,8 +355,6 @@ class IdeasController extends AbstractController
                 if(empty($user)){
                     throw new Exception("Указанного пользователя не существует");
                 }
-            } else if (empty($user)) {
-                throw new Exception("unauthorized");
             }
             if (!empty($idea_id)) {
                 $idea = $this->ideasRepository->find($idea_id);
@@ -374,7 +372,7 @@ class IdeasController extends AbstractController
                 ->setContent($content);
             $this->commentsRepository->save($newComment);
 
-            return $this->json(['state' => 'success']);
+            return $this->json(['state' => 'success', 'comment' => $newComment]);
         } catch (\Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }

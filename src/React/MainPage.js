@@ -9,53 +9,48 @@ const MainPage = () => {
 
     let data = [];
 
-    let selectType = [
-        {type: "Запланировано", className: "-planned"},
-        {type: "В работе", className: "-inwork"},
-        {type: "Рассмотрено", className: "-viewed"},
-        {type: "Завершено", className: "-completed"}
-    ];
-
-    let selectStatus = [
-        "started",
-        "planned",
-        "considered",
-        "completed",
-        "new",
-        "declined",
-    ];
-
     const [items, setItems] = useState([]);
+
     const [types, setTypes] = useState([]);
-    const [selectedPanelMenu, setSelectedPanelMenu] = useState(0);
+    const [statuses, setStatus] = useState([]);
+    const [categories, setCategories] = useState([]);
+
+    const [selectedPanelMenu, setSelectedPanelMenu] = useState(1);
+    const [selectedType, setSelectedType] = useState(1);
+    const [selectedCategory, setSelectedCategory] = useState(1);
 
     const [loading, setLoading] = useState(false);
     const [loadingComments, setLoadingComments] = useState(false);
 
-    const loadData = (id = 0) => {
+    const loadData = (id = 1, type = 1, category = 1) => {
         setLoading(true);
         data = [];
         axios.get("http://127.0.0.1:8000/ideas/api/getCategories/").then(response => {
-            setTypes(response.data.types)
+            setTypes(response.data.types);
+            setStatus(response.data.statuses);
+            setCategories(response.data.categories)
         });
-        axios.get("http://127.0.0.1:8000/ideas/api/getIdeas/1/?" + global.serialize({
-            order: "votes",
+        axios.get("http://127.0.0.1:8000/ideas/api/getIdeas/" + category + "/?" + global.serialize({
+            order: "id",
             type: "asc",
             page: 1,
-            types: JSON.stringify(["1"]),
-            status: JSON.stringify([selectStatus[id]])
+            types: JSON.stringify([type]),
+            status: JSON.stringify([id])
         })).then(response => {
-            if (response.data.ideas !== null) {
+            console.log(response.data)
+            if (response.data?.ideas !== null) {
                 response.data.ideas.map(item => {
                     data.push({
+                        id: item.id,
                         title: item.title,
                         text: item.content,
-                        showComments: false,
+                        showComments: item.comments.length > 0,
                         showFullText: false,
-                        comments: item.Comments,
+                        photo: item.photo,
+                        comments: item.comments,
                         like: Number(item.votes),
                         dislike: getRandomInt(0, 200),
-                        username: item.User?.first_name,
+                        username: item.user?.first_name,
                     })
                 });
 
@@ -84,6 +79,22 @@ const MainPage = () => {
         let data = [...items];
         data[index].like += 1;
 
+        setItems(data)
+    };
+
+    const showComments = (index) => {
+        let data = [...items];
+        data[index].showComments = !data[index].showComments;
+        setItems(data)
+    };
+
+    const addCommentToIdea = (index, id, text, date) => {
+        let data = [...items];
+        data[index].comments.push({
+            id: id,
+            content: text,
+            date: date
+        });
         setItems(data)
     };
 
@@ -121,10 +132,11 @@ const MainPage = () => {
                     </section>
                     <navigation className={"f-nav-wrap"}>
                         <div className={"f-nav max_width"}>
-                            <a className={"f-nav-button f-nav-button-active"}>Методология</a>
-                            <a className={"f-nav-button"}>Мобильное приложение</a>
-                            <a className={"f-nav-button"}>Платформа</a>
-                            <a className={"f-nav-button"}>Прочее</a>
+                            {
+                                categories.map((category) => (
+                                    <a onClick={() => { setSelectedCategory(category.id), loadData(selectedPanelMenu, selectedType, category.id) }} className={"f-nav-button " + (category.id === selectedCategory && "f-nav-button-active")}>{ category.name }</a>
+                                ))
+                            }
                             <img className={"f-nav-button-img"} src={"/i/threedot.svg"}/>
                             <img className={"f-nav-button-img"} src={"/i/search.svg"}/>
                         </div>
@@ -165,7 +177,7 @@ const MainPage = () => {
                                                     <div className={"f-cards-inner"}>
                                                         <div className={"f-cards-div-wrap-text"}>
                                                             <span className={"f-cards-content-text"}>
-                                                                <div>В категории "{ selectType[selectedPanelMenu].type }" пока нет идей...</div>
+                                                                <div>Пока нет идей...</div>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -176,9 +188,12 @@ const MainPage = () => {
                                     items.map((item, index) => (
                                     <div className={"f-cards"}>
                                         <div>
-                                            <p className={"f-cards-hashtag"}>#Вопрос</p>
+                                            <p className={"f-cards-hashtag"}>#{types[selectedType - 1].name}</p>
                                             <div className={"f-cards-card-wrap"}>
-                                                <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("https://newcastlebeach.org/images/any-2.jpg")' }} />
+                                                {
+                                                    item.photo !== null &&
+                                                    <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("http://127.0.0.1:8000' + item.photo.split(";")[0] + '")' }} />
+                                                }
                                                 <div className={"f-cards-inner"}>
                                                     <div className={"f-cards-avatar"}>
                                                         <div className={"f-cards-row-wrap"}>
@@ -188,7 +203,7 @@ const MainPage = () => {
                                                                 <span className={"f-cards-text-bottom"}>Генератор идей</span>
                                                             </div>
                                                         </div>
-                                                        <p className={"f-cards-type" + selectType[selectedPanelMenu].className}>{ selectType[selectedPanelMenu].type }</p>
+                                                        <p className={"f-cards-type f-cards-type-viewed"}>{ statuses[selectedPanelMenu - 1].translate }</p>
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
                                                             <span className={"f-cards-content-text"}>
@@ -207,7 +222,7 @@ const MainPage = () => {
                                                     </div>
                                                     <div className={"f-cards-under-block"}>
                                                         <div>
-                                                            <span className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</span>
+                                                            <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</a>
                                                         </div>
                                                         <div>
                                                             <a className={"f-cards-under-block-like"} onClick={() => addLike(index)}>
@@ -225,8 +240,8 @@ const MainPage = () => {
                                                         </div>
                                                     </div>
                                                     {
-                                                        item.comments.length > 0 &&
-                                                        <Comments comments={item.comments} loading={loadingComments}/>
+                                                        (item.comments.length > 0 || item.showComments) &&
+                                                        <Comments item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} loading={loadingComments}/>
                                                     }
                                                 </div>
                                             </div>
@@ -234,87 +249,19 @@ const MainPage = () => {
                                     </div>
                                 ))}
                         </div>
-                    {/*    <div className={"f-row-center-wrap"}>*/}
-                    {/*        <section style={{ width: '65%' }}>*/}
-                    {/*            {*/}
-                    {/*                loading ?*/}
-                    {/*                    <div /> :*/}
-                    {/*                items.map((item, index) => (*/}
-                    {/*                    <div className={"f-cards"}>*/}
-                    {/*                        <div>*/}
-                    {/*                            <p className={"f-cards-hashtag"}>#Вопрос</p>*/}
-                    {/*                            <div className={"f-cards-card-wrap"}>*/}
-                    {/*                                <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("https://newcastlebeach.org/images/any-2.jpg")' }} />*/}
-                    {/*                                <div className={"f-cards-inner"}>*/}
-                    {/*                                    <div className={"f-cards-avatar"}>*/}
-                    {/*                                        <div className={"f-cards-row-wrap"}>*/}
-                    {/*                                            <img className={"f-cards-image"} src={"/i/avatar.png"}/>*/}
-                    {/*                                            <div className={"f-cards-wrap-text"}>*/}
-                    {/*                                                <span className={"f-cards-text"}>{ item.username }</span>*/}
-                    {/*                                                <span className={"f-cards-text-bottom"}>Генератор идей</span>*/}
-                    {/*                                            </div>*/}
-                    {/*                                        </div>*/}
-                    {/*                                        <p className={"f-cards-type" + selectType[selectedPanelMenu].className}>{ selectType[selectedPanelMenu].type }</p>*/}
-                    {/*                                    </div>*/}
-                    {/*                                    <div className={"f-cards-div-wrap-text"}>*/}
-                    {/*                                <span className={"f-cards-content-text"}>*/}
-                    {/*                                    { item.title }*/}
-                    {/*                                </span>*/}
-                    {/*                                    </div>*/}
-                    {/*                                    <div className={"f-cards-div-wrap-text"}>*/}
-                    {/*                                <span className={"f-cards-content-description"}>*/}
-                    {/*                                    {*/}
-                    {/*                                        item.text.length < 400 ? <span>{item.text}</span> :*/}
-                    {/*                                        item.text.length > 400 && !item.showFullText ?*/}
-                    {/*                                            <span>{item.text.slice(0, 400)}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :*/}
-                    {/*                                            <span>{item.text}... <a onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>*/}
-                    {/*                                    }*/}
-                    {/*                                </span>*/}
-                    {/*                                    </div>*/}
-                    {/*                                    <div className={"f-cards-under-block"}>*/}
-                    {/*                                        <div>*/}
-                    {/*                                            <span className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</span>*/}
-                    {/*                                        </div>*/}
-                    {/*                                        <div>*/}
-                    {/*                                            <a className={"f-cards-under-block-like"} onClick={() => addLike(index)}>*/}
-                    {/*                                                <i className="em em---1"*/}
-                    {/*                                                   aria-label="THUMBS UP SIGN"></i>*/}
-                    {/*                                                <span className={"f-cards-under-block-like-text"}>{ item.like }</span>*/}
-                    {/*                                            </a>*/}
-                    {/*                                        </div>*/}
-                    {/*                                        <div>*/}
-                    {/*                                            <a className={"f-cards-under-block-like"} href={"#"}>*/}
-                    {/*                                                <i className="em em--1"*/}
-                    {/*                                                   aria-label="THUMBS DOWN SIGN"></i>*/}
-                    {/*                                                <span className={"f-cards-under-block-like-text"}>Не нравится</span>*/}
-                    {/*                                            </a>*/}
-                    {/*                                        </div>*/}
-                    {/*                                    </div>*/}
-                    {/*                                    {*/}
-                    {/*                                        item.comments.length > 0 &&*/}
-                    {/*                                        <Comments comments={item.comments} loading={loadingComments}/>*/}
-                    {/*                                    }*/}
-                    {/*                                </div>*/}
-                    {/*                            </div>*/}
-                    {/*                        </div>*/}
-                    {/*                    </div>*/}
-                    {/*                ))*/}
-                    {/*            }*/}
-                    {/*        </section>*/}
-                    {/*    </div>*/}
                         <section style={{ width: '20%' }}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"} style={{ marginTop: 70 }}>
-                                    <a onClick={() => { setSelectedPanelMenu(4), loadData(4)}} style={{ marginBottom: 30 }} className={"f-side-panel-button-section " + (selectedPanelMenu === 4 && "f-planned")}>Непрочитанные <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 4 && "f-block")}>56</span></a>
-                                    <a onClick={() => { setSelectedPanelMenu(0), loadData(0)}} className={"f-side-panel-button-section " + (selectedPanelMenu === 0 && "f-planned")}>В работе <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 0 && "f-block")}>{ items.length }</span></a>
-                                    <a onClick={() => { setSelectedPanelMenu(1), loadData(1)}} className={"f-side-panel-button-section " + (selectedPanelMenu === 1 && "f-inwork")}>Запланировано <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 1 && "f-block")}>{ items.length }</span></a>
-                                    <a onClick={() => { setSelectedPanelMenu(2), loadData(2)}} className={"f-side-panel-button-section " + (selectedPanelMenu === 2 && "f-viewed")}>Рассмотрено <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 2 && "f-block")}>{ items.length }</span></a>
-                                    <a onClick={() => { setSelectedPanelMenu(3), loadData(3)}} className={"f-side-panel-button-section " + (selectedPanelMenu === 3 && "f-completed")}>Завершено <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === 3 && "f-block")}>{ items.length }</span></a>
+                                    {
+                                        statuses.map((status, index) => (
+                                            <a onClick={() => { setSelectedPanelMenu(status.id), loadData(status.id, selectedType, selectedCategory)}} className={"f-side-panel-button-section " + (selectedPanelMenu === status.id && "f-viewed")}>{status.translate} <span className={"f-side-panel-count-subtext " + (selectedPanelMenu === status.id && "f-block")}>{ status.ideasCount }</span></a>
+                                        ))
+                                    }
                                 </div>
                                 <div className={"f-side-panel-wrap"}>
                                     {
                                         types.map((type) => (
-                                            <a className={"f-side-panel-button"} href={"#"}>#{type.name}</a>
+                                            <a onClick={() => { setSelectedType(type.id), loadData(selectedPanelMenu, type.id, selectedCategory)}} className={"f-side-panel-button"} style={{ color: selectedType === type.id && "#3D72ED" }}>#{type.name}</a>
                                         ))
                                     }
                                 </div>

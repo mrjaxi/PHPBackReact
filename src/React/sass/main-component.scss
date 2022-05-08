@@ -224,19 +224,13 @@ body {
             font-size: 21px;
         }
 
-        &-input:focus {
-            color: #1b1b1b;
-        }
-
         &-button {
             border: none;
             outline: none;
             -moz-appearance: none;
             background-color: #E6E9ED;
             border-radius: 64px;
-            height: 81px;
-            width: 223px;
-            font-size: 24px;
+            font-size: 21px;
             color: #CCD1D9;
         }
     }
