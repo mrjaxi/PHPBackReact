@@ -90,6 +90,7 @@ class Ideas
     private $comments;
 
     /**
+     * @var Collection<int, Votes>
      * @ORM\OneToMany(targetEntity=Votes::class, mappedBy="idea")
      */
     private $votes;

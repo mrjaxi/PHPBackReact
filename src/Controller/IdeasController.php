@@ -110,9 +110,9 @@ class IdeasController extends AbstractController
             $this->ideasRepository->save($idea);
 
             // TODO: После добавления идеи отправить ссылку на почту диме
-            $urlIdea = $this->generateUrl("idea_show") . $idea->getId() . "/";
-            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
-            AppController::sendEmail($mailer, $message);
+//            $urlIdea = $this->generateUrl("idea_show") . $idea->getId() . "/";
+//            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
+//            AppController::sendEmail($mailer, $message);
 
             return $this->json([
                 "state" => "success",
@@ -185,8 +185,8 @@ class IdeasController extends AbstractController
             ));
 
             // TODO: После добавления идеи отправить ссылку на почту диме
-            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
-            AppController::sendEmail($mailer, $message);
+//            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
+//            AppController::sendEmail($mailer, $message);
 
             return $this->json([
                 "state" => "success",
@@ -287,8 +287,17 @@ class IdeasController extends AbstractController
                 throw new \Exception("Укажите существующие типы для поиска");
             }
 
-            $ideas = $this->ideasRepository->getIdeas($order, $type == 'desc'? 1 : 0, $from, $limit, $statuses, $categories, $types);
-            return $this->json(['state' => 'success', 'ideas' => $this->decorateIdeas($ideas)]); // $this->decorateIdeas($ideas)
+            if($order == "votes"){
+                $ideas = $this->ideasRepository->getIdeas("id", $type == 'desc'? 1 : 0, $from, $limit, $statuses, $categories, $types);
+                $ideas = $this->decorateIdeas($ideas);
+//                dd(count($ideas));
+                $ideas = $this->array_sort($ideas,"votes",$type == 'desc'? SORT_DESC : SORT_ASC);
+            } else {
+                $ideas = $this->ideasRepository->getIdeas($order, $type == 'desc'? 1 : 0, $from, $limit, $statuses, $categories, $types);
+                $ideas = $this->decorateIdeas($ideas);
+            }
+
+            return $this->json(['state' => 'success', 'ideas' => $ideas]); // $this->decorateIdeas($ideas)
         } catch (\Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
@@ -327,9 +336,6 @@ class IdeasController extends AbstractController
         try {
             /** @var User $user */
             $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("unauthorized");
-            }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
                 $idea_id = $data['idea_id'];
@@ -349,6 +355,8 @@ class IdeasController extends AbstractController
                 if(empty($user)){
                     throw new Exception("Указанного пользователя не существует");
                 }
+            } else if (empty($user)) {
+                throw new Exception("unauthorized");
             }
             if (!empty($idea_id)) {
                 $idea = $this->ideasRepository->find($idea_id);
@@ -411,9 +419,6 @@ class IdeasController extends AbstractController
         try {
             /** @var User $user */
             $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("unauthorized");
-            }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
                 $idea_id = $data['idea_id'];
@@ -427,6 +432,8 @@ class IdeasController extends AbstractController
                 if(empty($user)){
                     throw new Exception("Указанного пользователя не существует");
                 }
+            } else if (empty($user)) {
+                throw new Exception("unauthorized");
             }
             if (!empty($idea_id)) {
                 $idea = $this->ideasRepository->find($idea_id);
@@ -671,7 +678,43 @@ class IdeasController extends AbstractController
             return null;
         }
     }
-    private function decorateIdeas($ideas){
+    // array_sort($array, 'key', SORT_DESC);
+    private function array_sort($array, $on, $order=SORT_ASC)
+    {
+        $new_array = array();
+        $sortable_array = array();
+
+        if (!empty($array)) {
+            foreach ($array as $k => $v) {
+                if (is_array($v)) {
+                    foreach ($v as $k2 => $v2) {
+                        if ($k2 == $on) {
+                            $sortable_array[$k] = $v2;
+                        }
+                    }
+                } else {
+                    $sortable_array[$k] = $v;
+                }
+            }
+
+            switch ($order) {
+                case SORT_ASC:
+                    asort($sortable_array);
+                    break;
+                case SORT_DESC:
+                    arsort($sortable_array);
+                    break;
+            }
+
+            foreach ($sortable_array as $k => $v) {
+                $new_array[$k] = $array[$k];
+            }
+        }
+
+        return array_values((array)$new_array);
+    }
+    private function decorateIdeas($ideas): ?array
+    {
         if(empty($ideas)){
             return null;
         }
