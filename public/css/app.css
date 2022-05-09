@@ -1401,7 +1401,6 @@ body {
   border: 1px solid #ffffff00;
   padding: 15px;
   margin-bottom: 20px;
-  color: #AAB2BD;
   font-size: 21px;
 }
 .f-write-comments-button {
@@ -1410,7 +1409,7 @@ body {
   -moz-appearance: none;
   background-color: #E6E9ED;
   border-radius: 64px;
-  font-size: 21px;
+  font-size: 24px;
   color: #CCD1D9;
 }
 .f-cards {

@@ -63,6 +63,17 @@ const MainPage = () => {
         })
     };
 
+    const newVote = (id, user_id, index) => {
+        axios.post("http://127.0.0.1:8000/ideas/api/newVote/", {idea_id: id, user_id: user_id}).then(response => {
+            if (response.data.state === "success"){
+                let data = [...items];
+                data[index].like += 1;
+
+                setItems(data)
+            }
+        })
+    };
+
     useEffect(() => {
         loadData()
     }, []);
@@ -70,14 +81,6 @@ const MainPage = () => {
     const showText = (show, index) => {
         let data = [...items];
         data[index].showFullText = !show;
-
-        setItems(data)
-    };
-
-
-    const addLike = (index) => {
-        let data = [...items];
-        data[index].like += 1;
 
         setItems(data)
     };
@@ -225,19 +228,19 @@ const MainPage = () => {
                                                             <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</a>
                                                         </div>
                                                         <div>
-                                                            <a className={"f-cards-under-block-like"} onClick={() => addLike(index)}>
+                                                            <a className={"f-cards-under-block-like"} onClick={() => newVote(item.id, 1, index)}>
                                                                 <i className="em em---1"
                                                                    aria-label="THUMBS UP SIGN"></i>
                                                                 <span className={"f-cards-under-block-like-text"}>{ item.like }</span>
                                                             </a>
                                                         </div>
-                                                        <div>
-                                                            <a className={"f-cards-under-block-like"} href={"#"}>
-                                                                <i className="em em--1"
-                                                                   aria-label="THUMBS DOWN SIGN"></i>
-                                                                <span className={"f-cards-under-block-like-text"}>Не нравится</span>
-                                                            </a>
-                                                        </div>
+                                                        {/*<div>*/}
+                                                        {/*    <a className={"f-cards-under-block-like"} href={"#"}>*/}
+                                                        {/*        <i className="em em--1"*/}
+                                                        {/*           aria-label="THUMBS DOWN SIGN"></i>*/}
+                                                        {/*        <span className={"f-cards-under-block-like-text"}>Не нравится</span>*/}
+                                                        {/*    </a>*/}
+                                                        {/*</div>*/}
                                                     </div>
                                                     {
                                                         (item.comments.length > 0 || item.showComments) &&
