@@ -365,7 +365,7 @@ class IdeasController extends AbstractController
                 ->setContent($content);
             $this->commentsRepository->save($newComment);
 
-            return $this->json(['state' => 'success']);
+            return $this->json(['state' => 'success', 'comment' => $newComment]);
         } catch (\Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
