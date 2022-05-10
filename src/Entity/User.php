@@ -107,6 +107,7 @@ class User implements UserInterface
             'username' => $this->username,
             'email' => $this->email,
             'roles' => $this->roles,
+            'role_name' => $this->get_Role_Name(),
             'first_name' => $this->first_name,
             "middle_name" => $this->middle_name,
             "last_name" => $this->last_name,
@@ -173,13 +174,27 @@ class User implements UserInterface
         return $this;
     }
 
+    public function get_Role_Name(): ?string
+    {
+        $roles = $this->roles;
+        if(in_array("ROLE_USER", $roles)){
+            $name = "Генератор идей";
+        } else if(in_array("ROLE_DEVELOPER", $roles)){
+            $name = "Разработчик";
+        } else if(in_array("ROLE_ADMIN", $roles)){
+            $name = "Администратор";
+        } else {
+            $name = "Самозванец";
+        }
+
+        return $name;
+    }
     /**
      * @see UserInterface
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);

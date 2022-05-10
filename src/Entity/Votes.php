@@ -27,6 +27,12 @@ class Votes
     private $date;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", length=50)
+     */
+    private $type;
+
+    /**
      * @var User|null
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="votes")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
@@ -53,6 +59,18 @@ class Votes
     public function setDate(DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

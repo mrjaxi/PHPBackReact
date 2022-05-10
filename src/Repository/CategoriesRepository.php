@@ -20,22 +20,35 @@ class CategoriesRepository extends ServiceEntityRepository
         parent::__construct($registry, Categories::class);
     }
 
-    public function save(Categories $entity): void
+    /**
+     * @param Categories $entity
+     * @param bool $flush
+     */
+    public function save(Categories $entity, $flush=true): void
     {
         if (!$entity instanceof Categories) {
             throw new \RuntimeException(sprintf('Instances of "%s" are not supported.', \get_class($entity)));
         }
         $this->_em->persist($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 
-    public function remove(Categories $entity): bool
+    /**
+     * @param Categories $entity
+     * @param bool $flush
+     * @return bool
+     */
+    public function remove(Categories $entity, $flush=true): bool
     {
         if (!$entity instanceof Categories) {
             throw new \RuntimeException(sprintf('Instances of "%s" are not supported.', \get_class($entity)));
         }
         $this->_em->remove($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
         return true;
     }
 

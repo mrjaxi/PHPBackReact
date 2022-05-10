@@ -78,7 +78,10 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
         $this->user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['username']]);
 
         if (!$this->user) {
-            throw new CustomUserMessageAuthenticationException('Неверный логин или пароль');
+            $this->user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+            if (!$this->user) {
+                throw new CustomUserMessageAuthenticationException('Неверный логин или пароль');
+            }
         }
 
         return $this->user;

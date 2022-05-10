@@ -23,19 +23,25 @@ class StatusRepository extends ServiceEntityRepository
 
     /**
      * @param Status $entity
+     * @param bool $flush
      */
-    public function save(Status $entity): void
+    public function save(Status $entity, $flush=true): void
     {
         $this->_em->persist($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 
     /**
      * @param Status $entity
+     * @param bool $flush
      */
-    public function remove(Status $entity): void
+    public function remove(Status $entity, $flush=true): void
     {
         $this->_em->remove($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 }

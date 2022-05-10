@@ -23,20 +23,26 @@ class CommentsRepository extends ServiceEntityRepository
 
     /**
      * @param Comments $entity
+     * @param bool $flush
      */
-    public function save(Comments $entity): void
+    public function save(Comments $entity, $flush=true): void
     {
         $this->_em->persist($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 
     /**
      * @param Comments $entity
+     * @param bool $flush
      */
-    public function remove(Comments $entity): void
+    public function remove(Comments $entity, $flush=true): void
     {
         $this->_em->remove($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 
     // /**

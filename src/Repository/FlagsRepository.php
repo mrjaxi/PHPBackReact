@@ -22,25 +22,25 @@ class FlagsRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param Flags $entity
+     * @param bool $flush
      */
-    public function add(Flags $entity, bool $flush = true): void
+    public function save(Flags $entity, $flush=true): void
     {
         $this->_em->persist($entity);
-        if ($flush) {
+        if($flush){
             $this->_em->flush();
         }
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param Flags $entity
+     * @param bool $flush
      */
-    public function remove(Flags $entity, bool $flush = true): void
+    public function remove(Flags $entity, $flush=true): void
     {
         $this->_em->remove($entity);
-        if ($flush) {
+        if($flush){
             $this->_em->flush();
         }
     }

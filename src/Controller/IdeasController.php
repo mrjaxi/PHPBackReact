@@ -73,9 +73,9 @@ class IdeasController extends AbstractController
         try {
             /** @var User $user */
             $user = $this->getUser();
-//            if (empty($user)) {
-//                throw new Exception("unauthorized");
-//            }
+            if (empty($user)) {
+                throw new Exception("unauthorized");
+            }
             $data = json_decode($request->getContent(), true);
             if ($data) {
                 $title = $data['title'];
@@ -232,7 +232,7 @@ class IdeasController extends AbstractController
     public function getIdeas(Request $request): Response
     {
 //        return dd($_GET);
-        $categoryid = $request->get("category_id");
+        $categories = array($request->get("category_id"));
         $order = !empty($_GET["order"]) ? $_GET["order"] : 'date';
         $type = !empty($_GET["type"]) ? $_GET["type"] : 'desc';
         $page = (int)!empty($_GET["page"]) ? $_GET["page"] : 1;
@@ -240,41 +240,37 @@ class IdeasController extends AbstractController
         $limit = 10;
         $from = ($page - 1) * 10;
 
-        $data['categories'] = $this->categoriesRepository->findAll();
         $data['types'] = $this->typesRepository->findAll();
         $data['status'] = $this->statusRepository->findAll();
-
-        if(empty($_GET)){
-//            dd("БАЗА ЗАПРОС");
-            $categories = array($categoryid);
+        // Фильтры по типам
+        if(empty($_GET["types"])){
             $types = array();
-            foreach ($data['types'] as $type) {
-                $types[] = $type->getId();
+            foreach ($data['types'] as $typeOne) {
+                $types[] = $typeOne->getId();
             }
+        } else {
+            $typesGET = json_decode($_GET["types"]);
+            $types = array();
+            foreach ($data['types'] as $t) {
+                if(in_array($t->getId(), $typesGET)){
+                    $types[] = $t->getId();
+                }
+            }
+        }
+        // Фильтры по статусам
+        if(empty($_GET["status"])){
             $statuses = array();
             foreach ($data['status'] as $status) {
-//                if($status->getName() != "new"){
+                if($status->getName() != "new"){
                     $statuses[] = $status->getId();
-//                }
+                }
             }
-//            dd($statuses);
-
-        } else{
-//            return dd($_GET);
-            $categories = array($categoryid);
-            $typesGET = json_decode($_GET["types"]);
+        } else {
             $statusGET = json_decode($_GET["status"]);
             $statuses = array();
             foreach ($data['status'] as $status) {
                 if(in_array($status->getId(), $statusGET)){
                     $statuses[] = $status->getId();
-                }
-            }
-
-            $types = array();
-            foreach ($data['types'] as $t) {
-                if(in_array($t->getId(), $typesGET)){
-                    $types[] = $t->getId();
                 }
             }
         }
@@ -288,13 +284,15 @@ class IdeasController extends AbstractController
             }
 
             if($order == "votes"){
+//                dd($type);
                 $ideas = $this->ideasRepository->getIdeas("id", $type == 'desc'? 1 : 0, $from, $limit, $statuses, $categories, $types);
                 $ideas = $this->decorateIdeas($ideas);
 //                dd(count($ideas));
-                $ideas = $this->array_sort($ideas,"votes",$type == 'desc'? SORT_DESC : SORT_ASC);
+                $ideas = $this->array_sort($ideas,"likes",$type == 'desc'? SORT_DESC : SORT_ASC);
             } else {
                 $ideas = $this->ideasRepository->getIdeas($order, $type == 'desc'? 1 : 0, $from, $limit, $statuses, $categories, $types);
                 $ideas = $this->decorateIdeas($ideas);
+//                dd($ideas);
             }
 
             return $this->json(['state' => 'success', 'ideas' => $ideas]); // $this->decorateIdeas($ideas)
@@ -336,25 +334,20 @@ class IdeasController extends AbstractController
         try {
             /** @var User $user */
             $user = $this->getUser();
+            if (empty($user)) {
+                throw new Exception("unauthorized");
+            }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
                 $idea_id = $data['idea_id'];
-                $user_id = $data['user_id'];
                 $content = $data['content'];
 
             } else {
                 $idea_id = $request->get('idea_id');
-                $user_id = $request->get('user_id');
                 $content = $request->get('content');
             }
             if(empty($content)){
                 throw new Exception("Сообщение не должно быть пустым");
-            }
-            if(!empty($user_id)){
-                $user = $this->userRepository->find($user_id);
-                if(empty($user)){
-                    throw new Exception("Указанного пользователя не существует");
-                }
             }
             if (!empty($idea_id)) {
                 $idea = $this->ideasRepository->find($idea_id);
@@ -372,7 +365,7 @@ class IdeasController extends AbstractController
                 ->setContent($content);
             $this->commentsRepository->save($newComment);
 
-            return $this->json(['state' => 'success', 'comment' => $newComment]);
+            return $this->json(['state' => 'success']);
         } catch (\Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
@@ -385,10 +378,14 @@ class IdeasController extends AbstractController
     public function deleteComment(Request $request): Response
     {
         try {
+            /** @var User $user */
+            $user = $this->getUser();
+            if (empty($user)) {
+                throw new Exception("unauthorized");
+            }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
                 $comment_id = $data['comment_id'];
-
             } else {
                 $comment_id = $request->get('comment_id');
             }
@@ -399,9 +396,14 @@ class IdeasController extends AbstractController
             if(empty($comment)){
                 throw new Exception("Такого комментария не существует");
             }
-            $this->commentsRepository->remove($comment);
-
-            return $this->json(['state' => 'success']);
+            // Удалять если админ или автор комментария
+            if(in_array("ROLE_ADMIN", $user->getRoles())
+              or $user->getId() == $comment->get_User()->getId()){
+                $this->commentsRepository->remove($comment);
+                return $this->json(['state' => 'success']);
+            } else {
+                throw new Exception("Вы не можете удалить этот комментарий");
+            }
         } catch (\Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
@@ -417,21 +419,23 @@ class IdeasController extends AbstractController
         try {
             /** @var User $user */
             $user = $this->getUser();
+            if (empty($user)) {
+                throw new Exception("unauthorized");
+            }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
                 $idea_id = $data['idea_id'];
-                $user_id = $data['user_id'];
+                $type = $data["type"];
             } else {
                 $idea_id = $request->get('idea_id');
-                $user_id = $request->get('user_id');
+                $type = $request->get('type');
             }
-            if(!empty($user_id)){
-                $user = $this->userRepository->find($user_id);
-                if(empty($user)){
-                    throw new Exception("Указанного пользователя не существует");
+            if(!empty($type)){
+                if($type != "like" and $type != "dislike"){
+                    throw new Exception("Голос может быть только like или dislike");
                 }
-            } else if (empty($user)) {
-                throw new Exception("unauthorized");
+            } else {
+                throw new Exception("Передайте тип голоса");
             }
             if (!empty($idea_id)) {
                 $idea = $this->ideasRepository->find($idea_id);
@@ -450,13 +454,21 @@ class IdeasController extends AbstractController
 //            dd($votes);
             foreach ($votes as $vote){
                 if($vote->get_User()->getId() == $user->getId()){
-                    throw new Exception("Вы уже проголосовали за эту идею");
+                    if($vote->getType() == $type){
+                        throw new Exception("Вы уже поставили $type этой идее");
+                    } else {
+                        $vote->setType($type);
+                        $this->votesRepository->save($vote);
+                        return $this->json(['state' => 'success']);
+                    }
                 }
             }
+
             $newVote = new Votes();
             $newVote->setDate(new DateTime())
                 ->setIdea($idea)
-                ->setUser($user);
+                ->setUser($user)
+                ->setType($type);
             $this->votesRepository->save($newVote);
 
             return $this->json(['state' => 'success']);
@@ -480,16 +492,8 @@ class IdeasController extends AbstractController
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
                 $idea_id = $data['idea_id'];
-                $user_id = $data['user_id'];
             } else {
                 $idea_id = $request->get('idea_id');
-                $user_id = $request->get('user_id');
-            }
-            if(!empty($user_id)){
-                $user = $this->userRepository->find($user_id);
-                if(empty($user)){
-                    throw new Exception("Указанного пользователя не существует");
-                }
             }
             if (!empty($idea_id)) {
                 $idea = $this->ideasRepository->find($idea_id);
@@ -528,6 +532,11 @@ class IdeasController extends AbstractController
     public function setStatus(Request $request): Response
     {
         try {
+            /** @var User $user */
+            $user = $this->getUser();
+            if (empty($user)) {
+                throw new Exception("unauthorized");
+            }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
                 $idea_id = $data['idea_id'];
@@ -549,26 +558,28 @@ class IdeasController extends AbstractController
             if (empty($newStatus)) {
                 throw new Exception("Такого статуса не существует");
             }
+            if(in_array("ROLE_ADMIN", $user->getRoles())
+                or in_array("ROLE_DEVELOPER", $user->getRoles()))
+            {
+                $idea->setStatus($newStatus);
+                $this->ideasRepository->save($idea);
 
-            /** TODO: Если это тип "Сообщить о проблеме" то кинуть его в issues в Atmaguru
-             *  Это нужно сделать именно при подтверждении идеи.
-             */
-            if ($idea->get_Status()->getName() == "new") {
-                if ($newStatus->getName() == "new") {
-                    throw new Exception("Нельзя поменять статус на такой же как и прежде");
+                if ($idea->get_Status()->getName() == "new") {
+                    if ($newStatus->getName() == $idea->get_Status()->getName()) {
+                        throw new Exception("Нельзя поменять статус на такой же как и прежде");
+                    }
+                    if ($idea->get_Type()->getName() == "Сообщить о проблеме") {
+                        $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
+                            "title" => $idea->getTitle(),
+                            "description" => $idea->getContent()
+                        ));
+//                        dd($response);
+                    }
                 }
-                if ($idea->get_Type()->getName() == "Сообщить о проблеме") {
-                    $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
-                        "title" => $idea->getTitle(),
-                        "description" => $idea->getContent()
-                    ));
-//                    dd($response);
-                }
+                return $this->json(['state' => 'success']);
+            } else {
+                throw new Exception("Вы не можете изменить статус этой идеи");
             }
-            $idea->setStatus($newStatus);
-            $this->ideasRepository->save($idea);
-
-            return $this->json(['state' => 'success']);
         } catch (\Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }

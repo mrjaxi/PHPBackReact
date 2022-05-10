@@ -23,20 +23,26 @@ class SettingsRepository extends ServiceEntityRepository
 
     /**
      * @param Settings $entity
+     * @param bool $flush
      */
-    public function save(Settings $entity): void
+    public function save(Settings $entity, $flush=true): void
     {
         $this->_em->persist($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 
     /**
      * @param Settings $entity
+     * @param bool $flush
      */
-    public function remove(Settings $entity): void
+    public function remove(Settings $entity, $flush=true): void
     {
         $this->_em->remove($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 
     // /**

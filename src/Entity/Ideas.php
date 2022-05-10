@@ -84,13 +84,13 @@ class Ideas
     private $type;
 
     /**
-     * @var Collection<int, Comments>
+     * @var ArrayCollection<int, Comments>
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="idea")
      */
     private $comments;
 
     /**
-     * @var Collection<int, Votes>
+     * @var ArrayCollection<int, Votes>
      * @ORM\OneToMany(targetEntity=Votes::class, mappedBy="idea")
      */
     private $votes;
@@ -107,7 +107,7 @@ class Ideas
             "id" => $this->id,
             "title" => $this->title,
             "content" => $this->content,
-            "votes" => $this->votes->count(),
+            "likes" => $this->get_LikesCount(),
             "photo" => $this->photo,
             "href" => $this->href,
             "allowComments" => $this->allowComments,
@@ -306,6 +306,25 @@ class Ideas
     public function getVotes(): ?int
     {
         return $this->votes->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function get_LikesCount(): ?int
+    {
+        $likes = 0;
+        if($this->votes->count() == $likes) {
+            return $likes;
+        } else {
+            /** @var Votes $vote */
+            foreach ($this->votes as $id => $vote){
+                if($vote->getType() == 'like'){
+                    $likes++;
+                }
+            }
+            return $likes;
+        }
     }
 
     /**

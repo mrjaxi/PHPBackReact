@@ -23,19 +23,25 @@ class VotesRepository extends ServiceEntityRepository
 
     /**
      * @param Votes $entity
+     * @param bool $flush
      */
-    public function save(Votes $entity): void
+    public function save(Votes $entity, $flush=true): void
     {
         $this->_em->persist($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 
     /**
      * @param Votes $entity
+     * @param bool $flush
      */
-    public function remove(Votes $entity): void
+    public function remove(Votes $entity, $flush=true): void
     {
         $this->_em->remove($entity);
-        $this->_em->flush();
+        if($flush){
+            $this->_em->flush();
+        }
     }
 }
