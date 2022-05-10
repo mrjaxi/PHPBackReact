@@ -243,7 +243,6 @@ class IdeasController extends AbstractController
         $data['categories'] = $this->categoriesRepository->findAll();
         $data['types'] = $this->typesRepository->findAll();
         $data['status'] = $this->statusRepository->findAll();
-//        return dd($data['types']);
 
         if(empty($_GET)){
 //            dd("БАЗА ЗАПРОС");
@@ -254,10 +253,11 @@ class IdeasController extends AbstractController
             }
             $statuses = array();
             foreach ($data['status'] as $status) {
-                if($status->getName() != "new"){
+//                if($status->getName() != "new"){
                     $statuses[] = $status->getId();
-                }
+//                }
             }
+//            dd($statuses);
 
         } else{
 //            return dd($_GET);

@@ -3,6 +3,7 @@ import {Button, Checkbox, Form, Input, Modal, Select, Upload} from "antd";
 import { Typography } from 'antd';
 import {NavLink} from "react-router-dom";
 import axios from "axios";
+import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -41,9 +42,11 @@ const AddIdeaPage = () => {
             description: data.description,
             category: data.category,
             type: data.type,
-                photo: data.file.fileList.map(item => item.response.filename).join(";")
+            photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
         }).then(response => {
-            console.log(response.data)
+            if (response.data.state === "success"){
+                global._history.replace('/')
+            }
         })
     };
 
@@ -130,7 +133,8 @@ const AddIdeaPage = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Напишите описание',
+                                message: 'Описание не может быть меньше 10 символов',
+                                min: 10
                             },
                         ]}
                     >
@@ -141,12 +145,13 @@ const AddIdeaPage = () => {
                     >
                         <Upload
                             action="http://127.0.0.1:8000/api/upload/"
-                            listType="picture-card"
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}
+                            listType="picture"
+                            defaultFileList={[...fileList]}
                         >
-                            {fileList.length < 5 && '+ Upload'}
+                            <Button icon={<UploadOutlined />}>Upload</Button>
                         </Upload>
                     </Form.Item>
                     <Form.Item>

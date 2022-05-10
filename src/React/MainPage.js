@@ -15,21 +15,59 @@ const MainPage = () => {
     const [statuses, setStatus] = useState([]);
     const [categories, setCategories] = useState([]);
 
-    const [selectedPanelMenu, setSelectedPanelMenu] = useState(1);
-    const [selectedType, setSelectedType] = useState(1);
-    const [selectedCategory, setSelectedCategory] = useState(1);
+    const [selectedPanelMenu, setSelectedPanelMenu] = useState('');
+    const [selectedType, setSelectedType] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     const [loading, setLoading] = useState(false);
     const [loadingComments, setLoadingComments] = useState(false);
 
-    const loadData = (id = 1, type = 1, category = 1) => {
+    const firstLoad = () => {
         setLoading(true);
         data = [];
+
         axios.get("http://127.0.0.1:8000/ideas/api/getCategories/").then(response => {
             setTypes(response.data.types);
             setStatus(response.data.statuses);
-            setCategories(response.data.categories)
+            setCategories(response.data.categories);
+
+            axios.get("http://127.0.0.1:8000/ideas/api/getIdeas/" + response.data.categories[0].id + "/?" + global.serialize({
+                order: "id",
+                type: "asc",
+                page: 1,
+            })).then(response => {
+                console.log(response);
+                if (response.data?.ideas !== null) {
+                    response.data.ideas.map(item => {
+                        data.push({
+                            id: item.id,
+                            title: item.title,
+                            text: item.content,
+                            showComments: item.comments.length > 0,
+                            showFullText: false,
+                            photo: item.photo,
+                            comments: item.comments,
+                            like: Number(item.votes),
+                            dislike: getRandomInt(0, 200),
+                            username: item.user?.first_name,
+                        })
+                    });
+
+                    setItems(data);
+                    setLoading(false)
+                } else {
+                    setItems(data);
+                    setLoading(false)
+                }
+            })
         });
+
+    };
+
+    const loadData = (id, type, category) => {
+        setLoading(true);
+        data = [];
+
         axios.get("http://127.0.0.1:8000/ideas/api/getIdeas/" + category + "/?" + global.serialize({
             order: "id",
             type: "asc",
@@ -37,7 +75,7 @@ const MainPage = () => {
             types: JSON.stringify([type]),
             status: JSON.stringify([id])
         })).then(response => {
-            console.log(response.data)
+            console.log(response);
             if (response.data?.ideas !== null) {
                 response.data.ideas.map(item => {
                     data.push({
@@ -75,7 +113,8 @@ const MainPage = () => {
     };
 
     useEffect(() => {
-        loadData()
+        firstLoad();
+        console.log(global.user)
     }, []);
 
     const showText = (show, index) => {
@@ -116,7 +155,7 @@ const MainPage = () => {
                                 </a>
                             </div>
                             <div className={'f-header-logo-wrapper'}>
-                                <NavLink className={'f-sign-in'} to={global.lang + "/login/"}>Войти</NavLink>
+                                <NavLink className={'f-sign-in'} to={global.lang + "/auth/"}>Войти</NavLink>
                             </div>
                         </div>
                     </header>
@@ -141,7 +180,9 @@ const MainPage = () => {
                                 ))
                             }
                             <img className={"f-nav-button-img"} src={"/i/threedot.svg"}/>
-                            <img className={"f-nav-button-img"} src={"/i/search.svg"}/>
+                            <NavLink to={"/search"}>
+                                <img className={"f-nav-button-img"} src={"/i/search.svg"}/>
+                            </NavLink>
                         </div>
                     </navigation>
 
@@ -191,7 +232,7 @@ const MainPage = () => {
                                     items.map((item, index) => (
                                     <div className={"f-cards"}>
                                         <div>
-                                            <p className={"f-cards-hashtag"}>#{types[selectedType - 1].name}</p>
+                                            <p className={"f-cards-hashtag"}>#{types[index].name}</p>
                                             <div className={"f-cards-card-wrap"}>
                                                 {
                                                     item.photo !== null &&
@@ -206,7 +247,7 @@ const MainPage = () => {
                                                                 <span className={"f-cards-text-bottom"}>Генератор идей</span>
                                                             </div>
                                                         </div>
-                                                        <p className={"f-cards-type f-cards-type-viewed"}>{ statuses[selectedPanelMenu - 1].translate }</p>
+                                                        <p className={"f-cards-type f-cards-type-viewed"}>{ statuses[index].translate }</p>
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
                                                             <span className={"f-cards-content-text"}>
@@ -219,7 +260,7 @@ const MainPage = () => {
                                                                     item.text.length < 400 ? <span>{item.text}</span> :
                                                                         item.text.length > 400 && !item.showFullText ?
                                                                             <span>{item.text.slice(0, 400)}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
-                                                                            <span>{item.text}... <a onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
+                                                                            <span>{item.text} <a onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
                                                                 }
                                                             </span>
                                                     </div>

@@ -13,11 +13,26 @@ body {
 
 .ant-upload-select-picture-card {
     border-radius: 0;
-    width: inherit;
-    height: inherit;
+    width: 0;
+    height: 0;
 }
 
 .f {
+    &-search {
+        position: absolute;
+        left: 50px;
+        right: 50px;
+        top: 50px;
+        height: 90vh;
+        background-color: #ffffff;
+        z-index: 1999;
+        border-radius: 32px;
+
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
     &-new-idea {
         position: sticky;
         width: 280px;
