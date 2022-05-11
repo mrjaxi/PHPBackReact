@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use Exception;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,7 +84,7 @@ class UserController extends AbstractController
                 count($added) ? $response += ['added' => $added] : null;
                 return $this->json($response);
             }
-        } catch (\RuntimeException $e){
+        } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
     }
@@ -99,24 +100,34 @@ class UserController extends AbstractController
             $data = json_decode($request->getContent(), true);
             if ($data) {
                 $email = $data['email'];
-                $newName = $data['name'];
+                $first_name = $data['first_name'];
+                $middle_name = $data['middle_name'];
+                $last_name = $data['last_name'];
             } else {
                 $email = $request->get('email');
-                $newName = $request->get('name');
+                $first_name = $data['first_name'];
+                $middle_name = $data['middle_name'];
+                $last_name = $data['last_name'];
             }
-            if (empty($email) or empty($newName)) {
-                return $this->json(['state' => 'error', 'message' => 'Передайте email и name']);
+            if (empty($email) or empty($first_name)) {
+                throw new Exception('Передайте email, first_name');
             }
             /* @var User */
             $user = $this->userRepository->findOneBy(['email' => $email]);
-            if(!empty($user)){
-                $user->setFirstName($newName);
-                $this->userRepository->save($user);
-                return $this->json(['state' => 'success', 'message' => "Имя пользователя успешно изменено"]);
-            } else {
-                return $this->json(['state' => 'error', 'message' => "Такого пользователя не существует"]);
+            if(empty($user)){
+                throw new Exception("Такого пользователя не существует");
             }
-        } catch (\RuntimeException $e){
+            $user->setFirstName($first_name);
+            if(!empty($middle_name)) {
+                $user->setMiddleName($middle_name);
+            }
+            if(!empty($last_name)) {
+                $user->setLastName($last_name);
+            }
+            $this->userRepository->save($user);
+
+            return $this->json(['state' => 'success', 'message' => "Имя пользователя успешно изменено"]);
+        } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
     }
@@ -126,14 +137,95 @@ class UserController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function profile(Request $request): Response
+    public function getProfile(Request $request): Response
     {
-        if ($this->getUser()) {
-            return $this->json(['state' => 'success', 'profile' => $this->getUser()->get_Profile()]);
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($user) {
+            return $this->json(['state' => 'success', 'profile' => $user->get_Profile()]);
         }
 
         return Response::create('UNAUTHORIZED', Response::HTTP_UNAUTHORIZED);
 
+    }
+    /**
+     * @Route("/api/user/setProfile/")
+     * @param Request $request
+     * @return Response
+     */
+    public function setProfile(Request $request): Response
+    {
+        try {
+            /** @var User $user */
+            $user = $this->getUser();
+            if (empty($user)) {
+                throw new Exception("unauthorized");
+            }
+            $data = json_decode($request->getContent(), true);
+            if ($data) {
+                $email = $data['email'];
+                $username = $data['username'];
+                $first_name = $data['first_name'];
+                $middle_name = $data['middle_name'];
+                $last_name = $data['last_name'];
+                $image = $data['image'];
+                $roles = $data['roles'];
+                $phone = $data['phone'];
+            } else {
+                $email = $request->get('email');
+                $username = $request->get('username');
+                $first_name = $request->get('first_name');
+                $middle_name = $request->get('middle_name');
+                $last_name = $request->get('last_name');
+                $image = $request->get('image');
+                $roles = $request->get('roles');
+                $phone = $request->get('phone');
+            }
+            if (empty($email) or empty($first_name) or empty($username)) {
+                throw new Exception('Передайте email, username, first_name');
+            }
+            if($email != $user->getEmail()){
+                $userByUsername = $this->userRepository->findOneBy(["email" => $email]);
+                if(!empty($userByUsername)){
+                    throw new Exception('Пользователь с таким email уже существует');
+                }
+            }
+            if($username != $user->getUsername()){
+                $userByUsername = $this->userRepository->findOneBy(["username" => $username]);
+                if(!empty($userByUsername)){
+                    throw new Exception('Пользователь с таким username уже существует');
+                }
+            }
+
+            $user->setEmail($email)
+                ->setUsername($username)
+                ->setFirstName($first_name);
+            if(!empty($middle_name)){
+                $user->setMiddleName($middle_name);
+            }
+            if(!empty($last_name)){
+                $user->setLastName($last_name);
+            }
+            if(!empty($image)){
+                $user->setImage($image);
+            }
+            if(!empty($phone)){
+                $user->setPhone($phone);
+            }
+            if(!empty($roles)){
+                $roles = json_decode($roles, true);
+                if(!empty($roles) and is_array($roles)){
+                    $user->setRoles($roles);
+                } else {
+                    throw new Exception("Не удается декодировать роли");
+                }
+            }
+            $this->userRepository->save($user);
+
+            return $this->json(['state' => 'success', 'profile' => $user->get_Profile()]);
+        } catch (Exception $e){
+            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -143,19 +235,26 @@ class UserController extends AbstractController
      */
     public function getUserProfile(Request $request): Response
     {
-        /* @var User */
-        $user = $this->userRepository->find($request->get('id'));
-        if(empty($user)){
-            return $this->json([
-                'state' => 'error',
-                'message' => "Такого пользователя нет"
-            ]);
+        try {
+            /* @var User */
+            $user = $this->userRepository->find($request->get('id'));
+            if(empty($user)){
+                throw new Exception("Такого пользователя нет");
+            }
+            $ideas = $user->get_IdeasArray();
+            $comments = $user->get_CommentsArray();
+            $likes = $user->get_VotesArray();
+            $response = array(
+                'state' => 'success',
+                'profile' => $user->get_Profile(),
+                'ideas' => $ideas,
+                'comments' => $comments,
+                'likes' => $likes
+            );
+            return $this->json($response);
+        } catch (Exception $e){
+            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
-
-        return $this->json([
-            'state' => 'success',
-            'profile' => $user->get_Profile()
-        ]);
     }
 
 //    /**

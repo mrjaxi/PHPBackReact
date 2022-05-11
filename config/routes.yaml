@@ -18,16 +18,22 @@ api_user_new:
 api_user_register:
   path: /api/user/register/
   controller: App\Controller\UserController::register
+api_profile:
+  path: /api/profile/
+  controller: App\Controller\UserController::getProfile
+api_user_setProfile:
+  path: /api/user/setProfile/
+  controller: App\Controller\UserController::setProfile
 api_user_set_username:
   path: /api/user/setUsername/
   controller: App\Controller\UserController::setUsername
 api_user_profile:
   path: /api/users/{id}/
   controller: App\Controller\UserController::getUserProfile
-api_profile:
-  path: /api/profile/
-  controller: App\Controller\UserController::profile
 
+api_ideas_search:
+  path: /ideas/api/search/
+  controller: App\Controller\IdeasController::search
 api_get_categories:
   path: /ideas/api/getCategories/
   controller: App\Controller\IdeasController::getCategories
@@ -39,7 +45,7 @@ api_get_ideas:
 api_add_idea:
   path: /ideas/api/add_idea/
   controller: App\Controller\IdeasController::add_idea
-api_user_new_idea:
+api_new_idea:
   path: /ideas/api/new/
   controller: App\Controller\IdeasController::new_idea
 api_set_status:

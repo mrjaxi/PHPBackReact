@@ -79,16 +79,19 @@ class User implements UserInterface
     private $image;
 
     /**
+     * @var ArrayCollection<int, Ideas>
      * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="user")
      */
     private $ideas;
 
     /**
+     * @var ArrayCollection<int, Comments>
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user")
      */
     private $comments;
 
     /**
+     * @var ArrayCollection<int, Votes>
      * @ORM\OneToMany(targetEntity=Votes::class, mappedBy="user")
      */
     private $votes;
@@ -106,13 +109,14 @@ class User implements UserInterface
             'id' => $this->id,
             'username' => $this->username,
             'email' => $this->email,
+            'phone' => $this->phone,
             'roles' => $this->roles,
             'role_name' => $this->get_Role_Name(),
             'first_name' => $this->first_name,
             "middle_name" => $this->middle_name,
             "last_name" => $this->last_name,
             "image" => $this->image,
-            "is_active" => $this->is_active
+            "is_active" => $this->is_active,
         ];
     }
 
@@ -197,12 +201,12 @@ class User implements UserInterface
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
     public function setRoles(array $roles): self
     {
-        $this->roles = $roles;
+        $this->roles = array_values(array_unique($roles));
 
         return $this;
     }
@@ -366,6 +370,18 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return array|null
+     */
+    public function get_VotesArray(): ?array
+    {
+        $votesArray = array();
+        /** @var Votes $vote */
+        foreach ($this->votes as $vote) {
+            $votesArray[] = $vote->get_Info();
+        }
+        return $votesArray;
+    }
     /**
      * @return ArrayCollection
      */

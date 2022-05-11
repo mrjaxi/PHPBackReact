@@ -46,6 +46,17 @@ class Votes
      */
     private $idea;
 
+    public function get_Info(): array
+    {
+        return array(
+            'id' => $this->id,
+            'date' => $this->date,
+            'type' => $this->type,
+            'user' => $this->user->get_Profile(),
+            'idea' => $this->idea->get_Info(),
+        );
+    }
+
     public function getId(): ?int
     {
         return $this->id;

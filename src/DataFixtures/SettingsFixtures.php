@@ -27,16 +27,24 @@ class SettingsFixtures extends Fixture
                 'value' => 'Atmaguru FeedBack',
             ],
             1 => [
-                'name' => 'mainmail',
-                'value' => 'atmaguru@atmadev.ru',
-            ],
-            2 => [
                 'name' => 'smtp-host',
                 'value' => '127.0.0.1',
             ],
-            3 => [
+            2 => [
                 'name' => 'smtp-port',
                 'value' => '25',
+            ],
+            3 => [
+                'name' => 'MAIL-main',
+                'value' => 'atmaguru@atmadev.ru',
+            ],
+            4 => [
+                'name' => 'MAIL-bcc',
+                'value' => 'bumblebeelion@atma.company',
+            ],
+            5 => [
+                'name' => 'MAIL-admin',
+                'value' => 'damedvedev@atmapro.ru',
             ],
         ];
 

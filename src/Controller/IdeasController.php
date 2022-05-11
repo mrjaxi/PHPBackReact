@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\Categories;
 use App\Entity\Comments;
 use App\Entity\Ideas;
+use App\Entity\Settings;
 use App\Entity\Types;
 use App\Entity\User;
 use App\Entity\Votes;
 use App\Repository\CategoriesRepository;
 use App\Repository\CommentsRepository;
 use App\Repository\IdeasRepository;
+use App\Repository\SettingsRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TypesRepository;
 use App\Repository\UserRepository;
@@ -35,6 +37,7 @@ class IdeasController extends AbstractController
     private $statusRepository;
     private $votesRepository;
     private $commentsRepository;
+    private $settingsRepository;
     private $encoder;
 
     /**
@@ -45,11 +48,13 @@ class IdeasController extends AbstractController
      * @param StatusRepository $statusRepository
      * @param VotesRepository $votesRepository
      * @param CommentsRepository $commentsRepository
+     * @param SettingsRepository $settingsRepository
      * @param UserPasswordEncoderInterface $encoder
      */
     public function __construct(CategoriesRepository $categoriesRepository, TypesRepository $typesRepository, IdeasRepository $ideasRepository,
                                 UserRepository $userRepository, StatusRepository $statusRepository, VotesRepository $votesRepository,
-                                CommentsRepository $commentsRepository, UserPasswordEncoderInterface $encoder)
+                                CommentsRepository $commentsRepository, SettingsRepository $settingsRepository,
+                                UserPasswordEncoderInterface $encoder)
     {
         $this->categoriesRepository = $categoriesRepository;
         $this->typesRepository = $typesRepository;
@@ -58,6 +63,7 @@ class IdeasController extends AbstractController
         $this->statusRepository = $statusRepository;
         $this->votesRepository = $votesRepository;
         $this->commentsRepository = $commentsRepository;
+        $this->settingsRepository = $settingsRepository;
         $this->encoder = $encoder;
     }
 
@@ -112,7 +118,13 @@ class IdeasController extends AbstractController
             // TODO: После добавления идеи отправить ссылку на почту диме
 //            $urlIdea = $this->generateUrl("idea_show") . $idea->getId() . "/";
 //            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
-//            AppController::sendEmail($mailer, $message);
+//            // Берем почты из бд
+//            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
+//            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
+//            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+//            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
+//                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
+//            }
 
             return $this->json([
                 "state" => "success",
@@ -186,7 +198,13 @@ class IdeasController extends AbstractController
 
             // TODO: После добавления идеи отправить ссылку на почту диме
 //            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
-//            AppController::sendEmail($mailer, $message);
+//            // Берем почты из бд
+//            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
+//            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
+//            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+//            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
+//                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
+//            }
 
             return $this->json([
                 "state" => "success",
@@ -302,6 +320,34 @@ class IdeasController extends AbstractController
     }
 
     /**
+     * @Route("/ideas/api/search/")
+     * @param Request $request
+     * @return Response
+     */
+    public function search(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data)) {
+            $searchText = $data['searchText'];
+        } else {
+            $searchText = $request->get('searchText');
+        }
+        try {
+            if(empty($searchText)){
+                throw new Exception("Передайте строку поиска");
+            }
+            // TODO: реализовать поиск идей по строке поиска
+            $titleResult = $this->ideasRepository->findBy(['title' => $searchText]);
+            $contentResult = $this->ideasRepository->findBy(['content' => $searchText]);
+
+            $result = array();
+            return $this->json(['state' => 'success', 'result' => $result]);
+        } catch (\Exception $e){
+            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
+
+    /**
      * @Route("/ideas/api/getCategories/")
      * @param Request $request
      * @return Response
@@ -356,6 +402,9 @@ class IdeasController extends AbstractController
                 }
             } else {
                 throw new Exception("Передайте idea_id");
+            }
+            if(!$idea->getAllowComments()){
+                throw new Exception("Под этой идеей нельзя оставлять комментарии");
             }
 
             $newComment = new Comments();
@@ -561,6 +610,13 @@ class IdeasController extends AbstractController
             if(in_array("ROLE_ADMIN", $user->getRoles())
                 or in_array("ROLE_DEVELOPER", $user->getRoles()))
             {
+                if($newStatus->getName() == 'completed'
+                    or $newStatus->getName() == 'declined')
+                {
+                    $idea->setAllowComments(false);
+                } else {
+                    $idea->setAllowComments(true);
+                }
                 $idea->setStatus($newStatus);
                 $this->ideasRepository->save($idea);
 
