@@ -52,7 +52,18 @@ class IdeasRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function getIdeas($orderby, $isdesc, $from, $limit, $status = array(), $categories = array(), $types = array()){
+    /**
+     * @param $orderby
+     * @param $isdesc
+     * @param $from
+     * @param $limit
+     * @param array $status
+     * @param array $categories
+     * @param array $types
+     * @return array|null
+     */
+    public function getIdeas($orderby, $isdesc, $from, $limit, $status = array(), $categories = array(), $types = array()): ?array
+    {
         /**
          * SELECT * FROM ideas
          * WHERE ( category_id='4' )
@@ -95,8 +106,30 @@ class IdeasRepository extends ServiceEntityRepository
             ->setFirstResult( $from );
 
         $getQuery = $query->getQuery();
+        /** @var array $ideas */
         $ideas = $getQuery->execute();
-//        dd($getQuery);
+//        dd($ideas);
+        if(!empty($ideas)){
+            return $ideas;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param $searchText
+     * @return array|null
+     */
+    public function searchIdeas($searchText): ?array
+    {
+        $query = $this->createQueryBuilder("i");
+        $expr = $query->expr();
+//        $orColumn
+
+        $getQuery = $query->getQuery();
+        /** @var array $ideas */
+        $ideas = $getQuery->execute();
+        dd($ideas);
         if(!empty($ideas)){
             return $ideas;
         } else {

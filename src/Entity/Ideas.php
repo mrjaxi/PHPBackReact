@@ -111,7 +111,7 @@ class Ideas
             "photo" => $this->photo,
             "href" => $this->href,
             "allowComments" => $this->allowComments,
-            "status" => $this->status->getName(),
+            "status" => $this->status,
             "date" => $this->date->format('Y-m-d H:i:s'),
             "user" => $this->get_UserInfo(),
             "category" => $this->get_CategoryInfo(),
