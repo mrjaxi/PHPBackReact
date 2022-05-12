@@ -4,15 +4,14 @@ import axios from "axios";
 const { Title } = Typography;
 const { TextArea } = Input;
 
-const Comments = ({ comments, loading, addCommentToIdea, index, item }) => {
+const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComments }) => {
 
     const sendComment = (text) => {
         console.log(text)
         axios.post("http://127.0.0.1:8000/ideas/api/newComment/", {idea_id: item.id, content: text}).then(
             response => {
-                console.log(response.data)
                 if (response.data.state === "success"){
-                    addCommentToIdea(index, response.data.comment.id, text.trim(), response.data.comment.date)
+                    addCommentToIdea(index, response.data.comment)
                 }
             }
         )
@@ -36,7 +35,12 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item }) => {
                             <div className={"f-cards-row-wrap"}>
                                 <img className={"f-cards-image"} src={"/i/avatar.png"}/>
                                 <div className={"f-cards-wrap-text"}>
-                                    <span className={"f-cards-text"}>Константин Константинопольский</span>
+                                    <span className={"f-cards-text"}>{comment.user.first_name + " " + (comment.user.last_name ? comment.user.last_name : "") }
+                                        {
+                                            comment.user.roles.includes("ROLE_ADMIN") &&
+                                            <img style={{ marginBottom: 3, marginLeft: 5 }} src={"/i/official.svg"} width={15} height={15}/>
+                                        }
+                                    </span>
                                     <span className={"f-cards-content-description"}>
                                     {
                                         comment.content
@@ -48,27 +52,30 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item }) => {
                     ))
                 }
             </div>
-            <div className={"f-write-comments"}>
-                <Title>Написать</Title>
-                <Form
-                    onFinish={(values) => sendComment(values.comment)}
-                >
-                    <Form.Item
-                        name={"comment"}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Напишите комментарий',
-                            },
-                        ]}
+            {
+                allowComments &&
+                <div className={"f-write-comments"}>
+                    <Title>Написать</Title>
+                    <Form
+                        onFinish={(values) => sendComment(values.comment)}
                     >
-                        <TextArea className={"f-write-comments-input"} placeholder={"Напишите что-нибудь..."}/>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button className={"f-write-comments-button"} type="primary" htmlType="submit" shape="round">Отправить</Button>
-                    </Form.Item>
-                </Form>
-            </div>
+                        <Form.Item
+                            name={"comment"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Напишите комментарий',
+                                },
+                            ]}
+                        >
+                            <TextArea className={"f-write-comments-input"} placeholder={"Напишите что-нибудь..."}/>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button className={"f-write-comments-button"} type="primary" htmlType="submit" shape="round">Отправить</Button>
+                        </Form.Item>
+                    </Form>
+                </div>
+            }
         </div>
     )
 };
