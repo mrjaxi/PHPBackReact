@@ -2,8 +2,9 @@ import React, {useEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import Comments from "./Main/Comments";
 import './sass/main-component.scss'
-import {Col, Skeleton} from "antd";
+import { Col, Menu, Select, Skeleton} from "antd";
 import axios from "axios";
+const { Option } = Select;
 
 const MainPage = () => {
 
@@ -47,7 +48,7 @@ const MainPage = () => {
                             showFullText: false,
                             photo: item.photo,
                             comments: item.comments,
-                            like: Number(item.votes),
+                            like: Number(item.likes),
                             dislike: getRandomInt(0, 200),
                             username: item.user?.first_name,
                         })
@@ -86,9 +87,10 @@ const MainPage = () => {
                         showFullText: false,
                         photo: item.photo,
                         comments: item.comments,
-                        like: Number(item.votes),
+                        like: Number(item.likes),
                         dislike: getRandomInt(0, 200),
                         username: item.user?.first_name,
+                        currentUserIsVote: item.currentUserIsVote
                     })
                 });
 
@@ -101,15 +103,25 @@ const MainPage = () => {
         })
     };
 
-    const newVote = (id, user_id, index) => {
-        axios.post("http://127.0.0.1:8000/ideas/api/newVote/", {idea_id: id, user_id: user_id}).then(response => {
-            if (response.data.state === "success"){
-                let data = [...items];
-                data[index].like += 1;
+    const newVote = (id, index, currentUserIsVote) => {
+        currentUserIsVote ?
+            axios.post("http://127.0.0.1:8000/api/delete/vote/", {idea_id: id}).then(response => {
+                if (response.data.state === "success"){
+                    let data = [...items];
+                    data[index].like -= 1;
+                    data[index].currentUserIsVote = !currentUserIsVote;
 
-                setItems(data)
-            }
-        })
+                    setItems(data)
+                }
+            }) :
+            axios.post("http://127.0.0.1:8000/ideas/api/newVote/", {idea_id: id, type: "like"}).then(response => {
+                if (response.data.state === "success"){
+                    let data = [...items];
+                    data[index].like += 1;
+                    data[index].currentUserIsVote = !currentUserIsVote;
+                    setItems(data)
+                }
+            })
     };
 
     useEffect(() => {
@@ -137,6 +149,7 @@ const MainPage = () => {
             content: text,
             date: date
         });
+        console.log(data)
         setItems(data)
     };
 
@@ -247,7 +260,11 @@ const MainPage = () => {
                                                                 <span className={"f-cards-text-bottom"}>Генератор идей</span>
                                                             </div>
                                                         </div>
-                                                        <p className={"f-cards-type f-cards-type-viewed"}>{ statuses[index].translate }</p>
+                                                        <Select style={{ border: 'none' }} defaultValue="lucy" style={{ width: 120 }}>
+                                                            <Option value="jack">Jack</Option>
+                                                            <Option value="lucy">Lucy</Option>
+                                                            <Option value="Yiminghe">yiminghe</Option>
+                                                        </Select>
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
                                                             <span className={"f-cards-content-text"}>
@@ -269,7 +286,7 @@ const MainPage = () => {
                                                             <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</a>
                                                         </div>
                                                         <div>
-                                                            <a className={"f-cards-under-block-like"} onClick={() => newVote(item.id, 1, index)}>
+                                                            <a style={{ backgroundColor: item.currentUserIsVote === true ? "red" : "" }} className={"f-cards-under-block-like"} onClick={() => newVote(item.id, index, item.currentUserIsVote)}>
                                                                 <i className="em em---1"
                                                                    aria-label="THUMBS UP SIGN"></i>
                                                                 <span className={"f-cards-under-block-like-text"}>{ item.like }</span>
