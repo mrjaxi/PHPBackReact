@@ -117,19 +117,38 @@ class IdeasRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $searchText
+     * @param string $searchText
      * @return array|null
      */
-    public function searchIdeas($searchText): ?array
+    public function searchIdeas(string $searchText): ?array
     {
+        if(empty($searchText)){
+            return null;
+        }
+        $wordsArr = explode(" ", $searchText);
         $query = $this->createQueryBuilder("i");
         $expr = $query->expr();
-//        $orColumn
+        $orMain = $expr->orX()
+            ->add($expr->like("i.title", "'%$searchText%'"))
+            ->add($expr->like("i.content", "'%$searchText%'"));
+        $orTitle = $expr->orX();
+        $orContent = $expr->orX();
+        $orWhere = $expr->orX();
+        foreach ($wordsArr as $word){
+            $orTitle->add($expr->like("i.title", "'%$word%'"));
+        }
+        foreach ($wordsArr as $word){
+            $orContent->add($expr->like("i.content", "'%$word%'"));
+        }
+        $orWhere->add($orMain)
+            ->add($orTitle)
+            ->add($orContent);
+        $query->where($orWhere);
 
         $getQuery = $query->getQuery();
         /** @var array $ideas */
         $ideas = $getQuery->execute();
-        dd($ideas);
+//        dd($getQuery);
         if(!empty($ideas)){
             return $ideas;
         } else {

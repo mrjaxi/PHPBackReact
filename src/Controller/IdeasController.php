@@ -337,11 +337,15 @@ class IdeasController extends AbstractController
                 throw new Exception("Передайте строку поиска");
             }
             // TODO: реализовать поиск идей по строке поиска
-            $titleResult = $this->ideasRepository->findBy(['title' => $searchText]);
-            $contentResult = $this->ideasRepository->findBy(['content' => $searchText]);
+            $ideas = $this->ideasRepository->searchIdeas($searchText);
+            $ideas = $this->decorateIdeas($ideas);
+            if(!empty($ideas)){
+                foreach ($ideas as &$idea) {
+                    unset($idea['comments']);
+                }
+            }
 
-            $result = array();
-            return $this->json(['state' => 'success', 'result' => $result]);
+            return $this->json(['state' => 'success', 'ideas' => $ideas]);
         } catch (\Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
@@ -414,7 +418,7 @@ class IdeasController extends AbstractController
                 ->setContent($content);
             $this->commentsRepository->save($newComment);
 
-            return $this->json(['state' => 'success', 'comment' => $newComment]);
+            return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
         } catch (\Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
@@ -494,8 +498,7 @@ class IdeasController extends AbstractController
             } else {
                 throw new Exception("Передайте idea_id");
             }
-            $ideaStatusName = $idea->get_Status()->getName();
-            if($ideaStatusName == 'completed' or $ideaStatusName == 'declined'){
+            if(!$idea->getAllowComments()){
                 throw new Exception("За эту идею нельзя проголосовать");
             }
             // Проверка проголосовал ли он уже за эту идею
