@@ -38,7 +38,7 @@ const MainPage = () => {
 
         if (type){
             let prevIncludesType = [...includedTypes];
-
+            console.log(prevIncludesType);
             if (prevIncludesType.indexOf(type) >= 0){
                 prevIncludesType.length > 1 ?
                     prevIncludesType = prevIncludesType.filter(item => item !== type) : null
@@ -52,7 +52,7 @@ const MainPage = () => {
 
         if (id) {
             let prevIncludedId = [...includedId];
-
+            console.log(prevIncludedId)
             if (prevIncludedId.indexOf(id) >= 0){
                 prevIncludedId.length > 1 ?
                 prevIncludedId = prevIncludedId.filter(item => item !== id) : null
@@ -342,14 +342,14 @@ const MainPage = () => {
                                 <div className={"f-side-panel-wrap"} style={{ marginTop: 70 }}>
                                     {
                                         statuses.map((status, index) => (
-                                            <a onClick={() => { setSelectedPanelMenu(status.id), loadData(status.id, selectedType, selectedCategory)}} className={"f-side-panel-button-section " + (includedId.includes(status.id) && "f-viewed")}>{status.translate} <span className={"f-side-panel-count-subtext " + (includedId.includes(status.id) && "f-block")}>{ status.ideasCount }</span></a>
+                                            <a onClick={() => { setSelectedPanelMenu(status.id), loadData(status.id, null, selectedCategory)}} className={"f-side-panel-button-section " + (includedId.includes(status.id) && "f-viewed")}>{status.translate} <span className={"f-side-panel-count-subtext " + (includedId.includes(status.id) && "f-block")}>{ status.ideasCount }</span></a>
                                         ))
                                     }
                                 </div>
                                 <div className={"f-side-panel-wrap"}>
                                     {
                                         types.map((type) => (
-                                            <a onClick={() => { setSelectedType(type.id), loadData(selectedPanelMenu, type.id, selectedCategory)}} className={"f-side-panel-button"} style={{ color: includedTypes.includes(type.id) && "#3D72ED", borderColor: includedTypes.includes(type.id) && "#3D72ED" }}>#{type.name}</a>
+                                            <a onClick={() => { setSelectedType(type.id), loadData(null, type.id, selectedCategory)}} className={"f-side-panel-button"} style={{ color: includedTypes.includes(type.id) && "#3D72ED", borderColor: includedTypes.includes(type.id) && "#3D72ED" }}>#{type.name}</a>
                                         ))
                                     }
                                 </div>
