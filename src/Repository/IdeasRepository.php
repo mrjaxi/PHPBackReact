@@ -134,11 +134,17 @@ class IdeasRepository extends ServiceEntityRepository
         $orTitle = $expr->orX();
         $orContent = $expr->orX();
         $orWhere = $expr->orX();
-        foreach ($wordsArr as $word){
-            $orTitle->add($expr->like("i.title", "'%$word%'"));
-        }
-        foreach ($wordsArr as $word){
-            $orContent->add($expr->like("i.content", "'%$word%'"));
+        if(count($wordsArr) > 1) {
+            foreach ($wordsArr as $word) {
+                if (mb_strlen($word, 'utf-8') > 1) {
+                    $orTitle->add($expr->like("i.title", "'%$word%'"));
+                }
+            }
+            foreach ($wordsArr as $word) {
+                if (mb_strlen($word, 'utf-8') > 1) {
+                    $orContent->add($expr->like("i.content", "'%$word%'"));
+                }
+            }
         }
         $orWhere->add($orMain)
             ->add($orTitle)
