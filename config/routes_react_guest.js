@@ -5,8 +5,9 @@ import {default as Search} from "../src/React/Main/Search";
 
 export default [
     { path: "/", name: "Главная страница", Component: MainPage },
+    { path: "/redirect", name: "Главная страница", Component: MainPage },
     { path: "/auth/", name: "Главная", Component: Login },
     { path: "/idea/add/", name: "Добавить идею", Component: AddIdeaPage },
-    { path: '/search', name: "Поиск по идеям", Component: Search }
+    { path: '/search', name: "Поиск по идеям", Component: Search },
 ];
 

@@ -4,9 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Security\AppAuthenticator;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,13 +54,14 @@ class MainController extends AbstractController
         return $this->json(AppController::saveFile($request, $this->getParameter('kernel.project_dir') . '/public/' . $this->getParameter('app.name') . '/', $this->getDoctrine()->getManager()));
     }
 
-    /**
-     * @Route("/redirect")
-     * @param Request $request
-     * @return Response
-     */
+//    /**
+//     * @Route("/redirect")
+//     * @param Request $request
+//     * @return Response
+//     */
     public function auto_redirect(Request $request): Response
     {
+        // TODO: перевести редирект в реакт
         $url = $request->query->get('url');
         $userBase64 = $request->query->get('user');
         if (empty($userBase64) or empty($url)) {
@@ -73,15 +73,45 @@ class MainController extends AbstractController
         $password  = $user[1];
         $isLogin = $this->checkAuth($email, $password);
         if($isLogin){
-            // TODO: сделать авторизацию под аккаунтом через код
 //            $this->redirectToRoute("app_login", array(
 //                'username' => $email,
 //                'password' => $password,
 //                'remember' => 1
 //            ));
         }
-        // TODO: сделать чтобы переход на redirectToRoute был с параметрами(к конкретной идее)
         return $this->redirect($url);
+    }
+
+    /**
+     * @Route("/api/decode/user/")
+     * @param Request $request
+     * @return Response
+     */
+    public function decodeUserInfo(Request $request): Response
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+            if ($data) {
+                $userBase64 = $data['user'];
+            } else {
+                $userBase64 = $request->get('user');
+            }
+            if (empty($userBase64)) {
+                throw new Exception("Передайте закодированные данные пользователя");
+            }
+            $user = AppController::decodeBase64User($userBase64);
+            $email = $user[0];
+            $password  = $user[1];
+            return $this->json([
+                    "state" => "success",
+                    "user" => array(
+                        "username" => $email,
+                        "password" => $password
+                    )
+                ]);
+        } catch (Exception $e){
+            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 
     /**

@@ -79,6 +79,11 @@ class User implements UserInterface
     private $image;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $system_id;
+
+    /**
      * @var ArrayCollection<int, Ideas>
      * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="user")
      */
@@ -181,13 +186,13 @@ class User implements UserInterface
     public function get_Role_Name(): ?string
     {
         $roles = $this->roles;
-        if(in_array("ROLE_USER", $roles)){
-            $name = "Генератор идей";
+        if(in_array("ROLE_ADMIN", $roles)){
+            $name = "Администратор";
         } else if(in_array("ROLE_DEVELOPER", $roles)){
             $name = "Разработчик";
-        } else if(in_array("ROLE_ADMIN", $roles)){
-            $name = "Администратор";
-        } else {
+        } else if(in_array("ROLE_USER", $roles)){
+            $name = "Генератор идей";
+        } else  {
             $name = "Самозванец";
         }
 
@@ -286,6 +291,18 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getSystemId(): ?int
+    {
+        return $this->system_id;
+    }
+
+    public function setSystemId(?int $system_id): self
+    {
+        $this->system_id = $system_id;
+
+        return $this;
+    }
+
     /**
      * @return array
      */
@@ -298,6 +315,7 @@ class User implements UserInterface
         }
         return $ideasArray;
     }
+
     /**
      * @return Collection
      */
@@ -327,7 +345,6 @@ class User implements UserInterface
 
         return $this;
     }
-
     /**
      * @return array
      */
@@ -340,6 +357,7 @@ class User implements UserInterface
         }
         return $commentsArray;
     }
+
     /**
      * @return ArrayCollection
      */
@@ -369,7 +387,6 @@ class User implements UserInterface
 
         return $this;
     }
-
     /**
      * @return array|null
      */
@@ -382,6 +399,7 @@ class User implements UserInterface
         }
         return $votesArray;
     }
+
     /**
      * @return ArrayCollection
      */
@@ -431,7 +449,6 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
     public function __call($name, $arguments)
     {
         // Implement @method string getUserIdentifier()

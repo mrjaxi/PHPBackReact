@@ -32,7 +32,7 @@ class UserFixtures extends Fixture
                 'email' => 'bumblebeelion@atma.company',
             ],
             1 => [
-                'username' => 'Yakov',
+                'username' => 'yakov',
                 'role' => ['ROLE_ADMIN',"ROLE_DEVELOPER"],
                 'first_name' => 'Яков',
                 'is_active' => '1',

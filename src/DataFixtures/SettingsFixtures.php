@@ -46,6 +46,10 @@ class SettingsFixtures extends Fixture
                 'name' => 'MAIL-admin',
                 'value' => 'damedvedev@atmapro.ru',
             ],
+            6 => [
+                'name' => 'atmaguru-domen',
+                'value' => 'https://ag.atmadev.ru',
+            ],
         ];
 
         foreach ($settingsData as $settings) {

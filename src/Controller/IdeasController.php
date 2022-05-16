@@ -261,23 +261,28 @@ class IdeasController extends AbstractController
         $data['types'] = $this->typesRepository->findAll();
         $data['status'] = $this->statusRepository->findAll();
         // Фильтры по типам
+        $types = array();
         if(empty($_GET["types"])){
-            $types = array();
             foreach ($data['types'] as $typeOne) {
                 $types[] = $typeOne->getId();
             }
         } else {
             $typesGET = json_decode($_GET["types"]);
-            $types = array();
-            foreach ($data['types'] as $t) {
-                if(in_array($t->getId(), $typesGET)){
-                    $types[] = $t->getId();
+            if(empty($typesGET) or count($typesGET) < 1 or gettype($typesGET[0]) != "integer"){
+                foreach ($data['types'] as $typeOne) {
+                    $types[] = $typeOne->getId();
+                }
+            } else{
+                foreach ($data['types'] as $t) {
+                    if(in_array($t->getId(), $typesGET)){
+                        $types[] = $t->getId();
+                    }
                 }
             }
         }
         // Фильтры по статусам
+        $statuses = array();
         if(empty($_GET["status"])){
-            $statuses = array();
             foreach ($data['status'] as $status) {
                 if($status->getName() != "new"){
                     $statuses[] = $status->getId();
@@ -285,21 +290,32 @@ class IdeasController extends AbstractController
             }
         } else {
             $statusGET = json_decode($_GET["status"]);
-            $statuses = array();
-            foreach ($data['status'] as $status) {
-                if(in_array($status->getId(), $statusGET)){
-                    $statuses[] = $status->getId();
+            if(empty($statusGET) or count($statusGET) <= 1 or gettype($statusGET[0]) != "integer"){
+                foreach ($data['status'] as $status) {
+                    if($status->getName() != "new"){
+                        $statuses[] = $status->getId();
+                    }
+                }
+            } else {
+                foreach ($data['status'] as $status) {
+                    if(in_array($status->getId(), $statusGET)){
+                        $statuses[] = $status->getId();
+                    }
                 }
             }
         }
         try {
             $category = $this->categoriesRepository->find($categories[0]);
             if(empty($category)){
-                throw new \Exception("Такой категории не существует");
+                throw new Exception("Такой категории не существует");
             }
             if(empty($types)){
-                throw new \Exception("Укажите существующие типы для поиска");
+                throw new Exception("Укажите существующие типы для поиска");
             }
+            if(empty($statuses)){
+                throw new Exception("Укажите существующие статусы для поиска");
+            }
+//            dd($statuses);
 
             if($order == "votes"){
 //                dd($type);
@@ -314,7 +330,7 @@ class IdeasController extends AbstractController
             }
 
             return $this->json(['state' => 'success', 'ideas' => $ideas]); // $this->decorateIdeas($ideas)
-        } catch (\Exception $e){
+        } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
     }
@@ -346,7 +362,7 @@ class IdeasController extends AbstractController
             }
 
             return $this->json(['state' => 'success', 'ideas' => $ideas]);
-        } catch (\Exception $e){
+        } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
     }

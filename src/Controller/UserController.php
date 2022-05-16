@@ -35,13 +35,13 @@ class UserController extends AbstractController
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
                 if (empty($data['usersData'])) {
-                    return $this->json(['state' => 'error', 'message' => 'Передайте данные новых пользователей']);
+                    throw new Exception("Передайте данные новых пользователей");
                 }
                 $usersData = json_decode($data['usersData'], true);
             } else {
                 $users_data = $request->get('usersData');
                 if (empty($users_data)) {
-                    return $this->json(['state' => 'error', 'message' => 'Передайте данные новых пользователей']);
+                    throw new Exception("Передайте данные новых пользователей");
                 }
                 $usersData = json_decode($users_data, true);
             }
@@ -54,6 +54,7 @@ class UserController extends AbstractController
                 $pass = $user['pass'] ?: null;
                 $name = !empty($user['name']) ? $user['name'] : "Незнакомец";
                 $image = !empty($user['image']) ? $user['image'] : null;
+                $systemId = !empty($user['system_id']) ? $user['system_id'] : null;
                 if (empty($email) or empty($pass)) {
                     return $this->json([
                         "state" => "error",
@@ -71,7 +72,8 @@ class UserController extends AbstractController
                         ->setFirstName($name)
                         ->setRoles(['ROLE_USER'])
                         ->setIsActive(true)
-                        ->setImage($image);
+                        ->setImage($image)
+                        ->setSystemId($systemId);
                     $this->userRepository->save($User);
                     $added[] = $email;
                 } else {
@@ -156,11 +158,6 @@ class UserController extends AbstractController
     public function setProfile(Request $request): Response
     {
         try {
-            /** @var User $user */
-            $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("unauthorized");
-            }
             $data = json_decode($request->getContent(), true);
             if ($data) {
                 $email = $data['email'];
@@ -169,7 +166,6 @@ class UserController extends AbstractController
                 $middle_name = $data['middle_name'];
                 $last_name = $data['last_name'];
                 $image = $data['image'];
-                $roles = $data['roles'];
                 $phone = $data['phone'];
             } else {
                 $email = $request->get('email');
@@ -178,23 +174,15 @@ class UserController extends AbstractController
                 $middle_name = $request->get('middle_name');
                 $last_name = $request->get('last_name');
                 $image = $request->get('image');
-                $roles = $request->get('roles');
                 $phone = $request->get('phone');
             }
             if (empty($email) or empty($first_name) or empty($username)) {
                 throw new Exception('Передайте email, username, first_name');
             }
-            if($email != $user->getEmail()){
-                $userByUsername = $this->userRepository->findOneBy(["email" => $email]);
-                if(!empty($userByUsername)){
-                    throw new Exception('Пользователь с таким email уже существует');
-                }
-            }
-            if($username != $user->getUsername()){
-                $userByUsername = $this->userRepository->findOneBy(["username" => $username]);
-                if(!empty($userByUsername)){
-                    throw new Exception('Пользователь с таким username уже существует');
-                }
+            /** @var User $user */
+            $user = $this->userRepository->findOneBy(["email"=>$email]);
+            if(empty($user)){
+                throw new Exception('Такого пользователя не существует');
             }
 
             $user->setEmail($email)
@@ -211,14 +199,6 @@ class UserController extends AbstractController
             }
             if(!empty($phone)){
                 $user->setPhone($phone);
-            }
-            if(!empty($roles)){
-                $roles = json_decode($roles, true);
-                if(!empty($roles) and is_array($roles)){
-                    $user->setRoles($roles);
-                } else {
-                    throw new Exception("Не удается декодировать роли");
-                }
             }
             $this->userRepository->save($user);
 
