@@ -1,7 +1,6 @@
-import {default as Settings} from "../src/React/Admin/Settings";
-import {default as User} from "../src/React/Admin/User/User";
-import {default as UserEdit} from "../src/React/Admin/User/UserEdit";
-import {default as UserNew} from "../src/React/Admin/User/UserNew";
+import {default as MainPage} from "../src/React/MainPage";
+import {default as AddIdeaPage} from "../src/React/Main/Idea/AddIdeaPage";
+import {default as Search} from "../src/React/Main/Search";
 
 /*
 params:
@@ -13,30 +12,7 @@ params:
     viewBreadcrumbs - хлебные крошки
  */
 export default [
-    {
-        path: "/admin/users/new/",
-        name: "Новые пользователи",
-        Component: UserNew,
-        viewBreadcrumbs: true
-    },
-    {
-        path: "/admin/users/:id/",
-        name: "Сотрудник",
-        Component: User,
-        viewBreadcrumbs: true
-    },
-    {
-        path: "/admin/users/:id/edit/",
-        name: "Редактирование пользователя",
-        Component: UserEdit,
-        viewBreadcrumbs: true
-    },
-    {
-        path: "/admin/settings/",
-        name: "Настройки",
-        Component: Settings,
-        icon: 'SettingOutlined',
-        viewBreadcrumbs: false,
-        // disabled: true
-    }
+    { path: "/", name: "Главная страница", Component: MainPage },
+    { path: "/idea/add/", name: "Добавить идею", Component: AddIdeaPage },
+    { path: '/search', name: "Поиск по идеям", Component: Search }
 ];

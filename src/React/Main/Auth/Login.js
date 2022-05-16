@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Button, Checkbox, Form, Input} from "antd";
 import { Typography } from 'antd';
 import axios from "axios";
+import { CloseOutlined } from '@ant-design/icons';
 const { Title } = Typography;
 
 const Login = () => {
@@ -21,6 +22,9 @@ const Login = () => {
     return (
         <>
             <div className={"f-login"}>
+                <a onClick={() => global._history.replace("/")} style={{ position: 'absolute', top: 30, right: 30, height: 25, width: 25 }} >
+                    <img src={"/i/close-login.svg"} />
+                </a>
                 <Form
                     onFinish={(values) => loginUser(values)}
                 >

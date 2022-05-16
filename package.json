@@ -54,6 +54,7 @@
     "rc-animate": "^3.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-dropdown": "^1.10.0",
     "react-finder": "^0.2.0",
     "react-flow-renderer": "^9.3.2",
     "react-google-recaptcha": "^2.1.0",

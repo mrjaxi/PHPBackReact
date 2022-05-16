@@ -2,8 +2,9 @@ import React, {useEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import Comments from "./Main/Comments";
 import './sass/main-component.scss'
-import { Col, Menu, Select, Skeleton} from "antd";
+import {Avatar, Button, Col, Image, Menu, Select, Skeleton} from "antd";
 import axios from "axios";
+import {UserOutlined, DownOutlined, UpOutlined} from '@ant-design/icons';
 const { Option } = Select;
 
 const MainPage = () => {
@@ -38,35 +39,34 @@ const MainPage = () => {
 
         if (type){
             let prevIncludesType = [...includedTypes];
-            console.log(prevIncludesType);
+
             if (prevIncludesType.indexOf(type) >= 0){
-                prevIncludesType.length > 1 ?
-                    prevIncludesType = prevIncludesType.filter(item => item !== type) : null
+                prevIncludesType = prevIncludesType.filter(item => item !== type)
             } else {
                 prevIncludesType.push(type);
             }
             setIncludedTypes(prevIncludesType);
 
-            params["types"] = JSON.stringify(prevIncludesType);
+            prevIncludesType.length > 0 ?
+            params["types"] = JSON.stringify(prevIncludesType) : null;
         }
 
         if (id) {
             let prevIncludedId = [...includedId];
-            console.log(prevIncludedId)
+
             if (prevIncludedId.indexOf(id) >= 0){
-                prevIncludedId.length > 1 ?
-                prevIncludedId = prevIncludedId.filter(item => item !== id) : null
+                prevIncludedId = prevIncludedId.filter(item => item !== id)
             } else {
                 prevIncludedId.push(id);
             }
 
             setIncludedId(prevIncludedId);
 
-            params["status"] = JSON.stringify(prevIncludedId)
+            prevIncludedId.length > 0 ?
+            params["status"] = JSON.stringify(prevIncludedId) : null;
         }
 
         axios.get("http://127.0.0.1:8000/ideas/api/getIdeas/" + category + "/?" + global.serialize(params)).then(response => {
-            console.log(response);
             if (response.data?.ideas !== null) {
                 response.data.ideas.map(item => {
                     data.push({
@@ -121,6 +121,8 @@ const MainPage = () => {
                     data[index].currentUserIsVote = !currentUserIsVote;
 
                     setItems(data)
+                } else {
+                    global.openNotification("Ошибка", response.data.message, "error")
                 }
             }) :
             axios.post("http://127.0.0.1:8000/ideas/api/newVote/", {idea_id: id, type: "like"}).then(response => {
@@ -129,12 +131,15 @@ const MainPage = () => {
                     data[index].like += 1;
                     data[index].currentUserIsVote = !currentUserIsVote;
                     setItems(data)
+                } else {
+                    global.openNotification("Ошибка", response.data.message, "error")
                 }
             })
     };
 
     useEffect(() => {
         getCategory();
+        global.getProfile();
     }, []);
 
     const showText = (show, index) => {
@@ -146,7 +151,9 @@ const MainPage = () => {
 
     const showComments = (index) => {
         let data = [...items];
-        data[index].showComments = !data[index].showComments;
+
+        const flag = data[index].showComments;
+        data[index].showComments = !flag;
         setItems(data)
     };
 
@@ -157,7 +164,6 @@ const MainPage = () => {
     };
 
     const changeStatus = (idea_id, id, name) => {
-        console.log(name)
         axios.post("http://127.0.0.1:8000/ideas/api/setStatus/", {idea_id: idea_id, status_id: id}).then(response => {
             if (response.data.state === "success"){
                 let data = [...items];
@@ -169,6 +175,14 @@ const MainPage = () => {
                 setItems(data)
             } else {
                 global.openNotification("Ошибка", "Невозможно изменить статус идеи", "error")
+            }
+        })
+    };
+
+    const logout = () => {
+        axios.post("http://127.0.0.1:8000/ru/logout").then(response => {
+            if (response.data.state === "success"){
+                global._history.replace("/")
             }
         })
     };
@@ -187,9 +201,43 @@ const MainPage = () => {
                                     <img className={"f-header-wrap-logo-logo"} src={"/i/atmaguru.svg"} />
                                 </a>
                             </div>
-                            <div className={'f-header-logo-wrapper'}>
-                                <NavLink className={'f-sign-in'} to={global.lang + "/auth/"}>Войти</NavLink>
-                            </div>
+                            {
+                                global.layout !== "guest" ?
+                                    <div className="dropdown">
+                                        <button className="dropbtn">
+                                            <div style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                flexDirection: 'row'
+                                            }}>
+                                                <Avatar size={36} style={{ backgroundColor: '#AAB2BD' }} src={global.user.image !== null ? <img src={global.user.image}/> : <UserOutlined /> } />
+                                                <div style={{ marginLeft: 10 }}>
+                                                    <DownOutlined />
+                                                </div>
+                                            </div>
+                                        </button>
+                                        <div className="dropdown-content">
+                                            <a style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                flexDirection: 'row',
+                                            }}>
+                                                <span style={{ marginRight: 10, fontSize: 17 }}>{ global.user.first_name }</span>
+                                                <Avatar size={36} style={{ backgroundColor: '#AAB2BD' }} src={global.user.image !== null ? <img src={global.user.image}/> : <UserOutlined /> } />
+                                                <div style={{ marginLeft: 5 }}>
+                                                    <UpOutlined />
+                                                </div>
+                                            </a>
+                                            <a href={"/"} onClick={() => logout()}>Выход</a>
+                                        </div>
+                                    </div>
+                                     :
+                                    <div className={'f-header-logo-wrapper'}>
+                                        <NavLink className={'f-sign-in'} to={global.lang + "/auth/"}>Войти</NavLink>
+                                    </div>
+                            }
                         </div>
                     </header>
                     <section className={"max_width"}>
@@ -218,8 +266,7 @@ const MainPage = () => {
                             </NavLink>
                         </div>
                     </navigation>
-
-                    <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>Новая идея</NavLink>
+                    <NavLink to={ global.layout !== "guest" ? (global.lang + "/idea/add/") : (global.lang + "/auth/")} className={"f-new-idea"}>Новая идея</NavLink>
                     <div className={"f-row-type max_width"}>
                         <div style={{
                             width: '80%',
@@ -285,13 +332,17 @@ const MainPage = () => {
                                                                 <span className={"f-cards-text-bottom"}>{ item.role }</span>
                                                             </div>
                                                         </div>
-                                                        <Select onSelect={(id) => changeStatus(item.id, id, item.status.name)} defaultValue={ item.status.id } style={{ width: 130 }}>
-                                                            {
-                                                                statuses.map(status => (
-                                                                    <Option value={status.id}>{status.translate}</Option>
-                                                                ))
-                                                            }
-                                                        </Select>
+                                                        {
+                                                            global.layout === "admin" ?
+                                                            <Select onSelect={(id) => changeStatus(item.id, id, item.status.name)} defaultValue={ item.status.id } style={{ width: 130 }}>
+                                                                {
+                                                                    statuses.map(status => (
+                                                                        <Option value={status.id}>{status.translate}</Option>
+                                                                    ))
+                                                                }
+                                                            </Select> :
+                                                                <p className={"f-cards-type f-type-viewed"}>{ item.status.translate }</p>
+                                                        }
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
                                                             <span className={"f-cards-content-text"}>
@@ -328,7 +379,7 @@ const MainPage = () => {
                                                         {/*</div>*/}
                                                     </div>
                                                     {
-                                                        (item.comments.length > 0 || item.showComments) &&
+                                                        item.showComments &&
                                                         <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} loading={loadingComments}/>
                                                     }
                                                 </div>

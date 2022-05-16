@@ -12,6 +12,8 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
             response => {
                 if (response.data.state === "success"){
                     addCommentToIdea(index, response.data.comment)
+                } else {
+                    global.openNotification("Ошибка", response.data.error, "error")
                 }
             }
         )
@@ -67,11 +69,17 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
                                     message: 'Напишите комментарий',
                                 },
                             ]}
+                            onChange={(e) => console.log(e.target.value)}
                         >
-                            <TextArea className={"f-write-comments-input"} placeholder={"Напишите что-нибудь..."}/>
+                            <TextArea style={{ backgroundColor: '#FFFFFF' }} className={"f-write-comments-input"} placeholder={global.layout !== "guest" ?
+                                "Напишите что-нибудь..." : "Войти, чтобы оставлять комментарии, публиковать и оценивать идеи"}/>
                         </Form.Item>
                         <Form.Item>
-                            <Button className={"f-write-comments-button"} type="primary" htmlType="submit" shape="round">Отправить</Button>
+                            {
+                                global.layout !== "guest" ?
+                                <Button className={"f-write-comments-button"} type="primary" htmlType="submit" shape="round">Отправить</Button> :
+                                    <Button onClick={() => { global._history.replace(global.lang + "/auth/") }} className={"f-write-comments-button"} type="primary" htmlType="submit" shape="round">Войти</Button>
+                            }
                         </Form.Item>
                     </Form>
                 </div>

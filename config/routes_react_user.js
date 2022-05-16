@@ -1,6 +1,6 @@
-import {default as Profile} from "../src/React/User/Profile";
-import {default as SystemsList} from "../src/React/User/SystemsList";
-import {default as Settings} from "../src/React/User/Settings";
+import {default as AddIdeaPage} from "../src/React/Main/Idea/AddIdeaPage";
+import {default as MainPage} from "../src/React/MainPage";
+import {default as Search} from "../src/React/Main/Search";
 
 /*
 params:
@@ -12,13 +12,7 @@ params:
     viewBreadcrumbs - хлебные крошки
  */
 export default [
-    {
-        path: "/user/",
-        name: "Главная",
-        Component: Profile,
-        icon: 'HomeOutlined',
-        viewBreadcrumbs: false
-    },
-    { path: "/user/systems-list", name: "Список систем", Component: SystemsList },
-    { path: "/user/settings", name: "Настройки", Component: Settings },
+    { path: "/", name: "Главная страница", Component: MainPage },
+    { path: "/idea/add/", name: "Добавить идею", Component: AddIdeaPage },
+    { path: '/search', name: "Поиск по идеям", Component: Search }
 ];
