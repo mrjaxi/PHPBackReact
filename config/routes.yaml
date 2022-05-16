@@ -2,9 +2,6 @@ authentication_token:
   path: /api/app_login
   methods: ['POST']
 
-#auto_redirect:
-#  path: /redirect
-#  controller: App\Controller\MainController::auto_redirect
 api_decode_user:
   path: /api/decode/user/
   controller: App\Controller\MainController::decodeUserInfo
@@ -67,6 +64,9 @@ api_new_comment:
   path: /ideas/api/newComment/
   controller: App\Controller\IdeasController::newComment
 
+# роуты реакта
+auto_redirect:
+  path: /redirect
 idea_show:
   path: /idea/
 

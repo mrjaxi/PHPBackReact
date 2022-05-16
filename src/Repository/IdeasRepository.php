@@ -117,36 +117,70 @@ class IdeasRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $searchText
+     * @param string $searchTitle
+     * @param string $searchContent
      * @return array|null
      */
-    public function searchIdeas(string $searchText): ?array
+    public function searchIdeas($searchTitle = '', $searchContent = ''): ?array
     {
-        if(empty($searchText)){
+        if(empty($searchTitle) and empty($searchContent)){
             return null;
         }
-        $wordsArr = explode(" ", $searchText);
         $query = $this->createQueryBuilder("i");
         $expr = $query->expr();
-        $orMain = $expr->orX()
-            ->add($expr->like("i.title", "'%$searchText%'"))
-            ->add($expr->like("i.content", "'%$searchText%'"));
+        $orMain = $expr->orX();
         $orTitle = $expr->orX();
         $orContent = $expr->orX();
-        $orWhere = $expr->orX();
-        if(count($wordsArr) > 1) {
-            foreach ($wordsArr as $word) {
-                if (mb_strlen($word, 'utf-8') > 1) {
-                    $orTitle->add($expr->like("i.title", "'%$word%'"));
+        if(!empty($searchTitle) and !empty($searchContent)){
+            // Если оба не пустые
+            $titleWordsArr = explode(" ", $searchTitle);
+            $contentWordsArr = explode(" ", $searchContent);
+            $orMain->add($expr->like("i.title", "'%$searchTitle%'"));
+            $orMain->add($expr->like("i.content", "'%$searchContent%'"));
+            if(count($titleWordsArr) > 1) {
+                foreach ($titleWordsArr as $word) {
+                    // если слово больше 1 символа
+                    if (mb_strlen($word, 'utf-8') > 1) {
+                        $orTitle->add($expr->like("i.title", "'%$word%'"));
+                    }
                 }
             }
-            foreach ($wordsArr as $word) {
-                if (mb_strlen($word, 'utf-8') > 1) {
-                    $orContent->add($expr->like("i.content", "'%$word%'"));
+            if(count($contentWordsArr) > 1) {
+                foreach ($contentWordsArr as $word) {
+                    // если слово больше 1 символа
+                    if (mb_strlen($word, 'utf-8') > 1) {
+                        $orContent->add($expr->like("i.content", "'%$word%'"));
+                    }
+                }
+            }
+
+        } else {
+            // Если один не пустой
+            if(!empty($searchTitle)){
+                $titleWordsArr = explode(" ", $searchTitle);
+                $orMain->add($expr->like("i.title", "'%$searchTitle%'"));
+                if(count($titleWordsArr) > 1) {
+                    foreach ($titleWordsArr as $word) {
+                        if (mb_strlen($word, 'utf-8') > 1) {
+                            $orTitle->add($expr->like("i.title", "'%$word%'"));
+                        }
+                    }
+                }
+            }
+            if(!empty($searchContent)){
+                $contentWordsArr = explode(" ", $searchContent);
+                $orMain->add($expr->like("i.content", "'%$searchContent%'"));
+                if(count($contentWordsArr) > 1) {
+                    foreach ($contentWordsArr as $word) {
+                        if (mb_strlen($word, 'utf-8') > 1) {
+                            $orContent->add($expr->like("i.content", "'%$word%'"));
+                        }
+                    }
                 }
             }
         }
-        $orWhere->add($orMain)
+        $orWhere = $expr->orX()
+            ->add($orMain)
             ->add($orTitle)
             ->add($orContent);
         $query->where($orWhere);

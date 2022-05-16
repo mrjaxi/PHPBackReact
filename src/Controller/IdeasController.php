@@ -190,29 +190,28 @@ class IdeasController extends AbstractController
             $this->ideasRepository->save($idea);
 
             $userBase64 = AppController::encodeBase64User($user->getEmail(), $user->getOpenPassword());
-            $urlIdea = $this->generateUrl("idea_show") . $idea->getId() . "/";
+            $urlIdea = $this->generateUrl("idea_show") . $idea->getId();
             $redirectURL = $this->generateUrl("auto_redirect", array(
                 'url' => $urlIdea,
                 'user' => $userBase64
             ));
 
             // TODO: После добавления идеи отправить ссылку на почту диме
-//            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
-//            // Берем почты из бд
-//            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
-//            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
-//            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
-//            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
-//                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
-//            }
+            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
+            // Берем почты из бд
+            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
+            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
+            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
+                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
+            }
 
             return $this->json([
                 "state" => "success",
                 "url" => $redirectURL
             ]);
         } catch (TransportExceptionInterface $e) {
-            file_put_contents($this->getParameter('kernel.project_dir') . '/log/mail_error_log.txt', date('d-m-Y H:i:s') . ' ' . $e->getMessage() . "\n", FILE_APPEND);
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+            return $this->json(['state' => 'trouble', 'message' => $e->getMessage()]);
         } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
@@ -344,16 +343,26 @@ class IdeasController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         if (!empty($data)) {
-            $searchText = $data['searchText'];
+            $searchTitle = $data['title'];
+            $searchContent = $data['content'];
         } else {
-            $searchText = $request->get('searchText');
+            $searchTitle = $request->get('title');
+            $searchContent = $request->get('content');
         }
         try {
-            if(empty($searchText)){
-                throw new Exception("Передайте строку поиска");
+            if(empty($searchTitle) and empty($searchContent)){
+                throw new Exception("Передайте title или content");
             }
-            // TODO: реализовать поиск идей по строке поиска
-            $ideas = $this->ideasRepository->searchIdeas($searchText);
+            if(!empty($searchTitle) and !empty($searchContent)){
+                $ideas = $this->ideasRepository->searchIdeas($searchTitle, $searchContent);
+            } else {
+                if(!empty($searchTitle)){
+                    $ideas = $this->ideasRepository->searchIdeas($searchTitle,"");
+                }
+                if(!empty($searchContent)){
+                    $ideas = $this->ideasRepository->searchIdeas("", $searchContent);
+                }
+            }
             $ideas = $this->decorateIdeas($ideas);
             if(!empty($ideas)){
                 foreach ($ideas as &$idea) {
@@ -362,7 +371,7 @@ class IdeasController extends AbstractController
             }
 
             return $this->json(['state' => 'success', 'ideas' => $ideas]);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
     }
