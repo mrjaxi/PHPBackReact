@@ -76,11 +76,12 @@ class IdeasController extends AbstractController
      */
     public function new_idea(Request $request, MailerInterface $mailer): Response
     {
+        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
         try {
             /** @var User $user */
             $user = $this->getUser();
             if (empty($user)) {
-                throw new Exception("unauthorized");
+                throw new Exception("Не авторизован");
             }
             $data = json_decode($request->getContent(), true);
             if ($data) {
@@ -115,24 +116,22 @@ class IdeasController extends AbstractController
                 ->setPhoto($photo);
             $this->ideasRepository->save($idea);
 
-            // TODO: После добавления идеи отправить ссылку на почту диме
-//            $urlIdea = $this->generateUrl("idea_show") . $idea->getId() . "/";
-//            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
-//            // Берем почты из бд
-//            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
-//            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
-//            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
-//            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
-//                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
-//            }
+            $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId() . "/";
+            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
+            // Берем почты из бд
+            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
+            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
+            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
+                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
+            }
 
             return $this->json([
                 "state" => "success",
             ]);
-        } catch (Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         } catch (TransportExceptionInterface $e) {
-            file_put_contents($this->getParameter('kernel.project_dir') . '/log/mail_error_log.txt', date('d-m-Y H:i:s') . ' ' . $e->getMessage() . "\n", FILE_APPEND);
+            return $this->json(['state' => 'trouble', 'message' => $e->getMessage()]);
+        } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
     }
@@ -146,6 +145,7 @@ class IdeasController extends AbstractController
      */
     public function add_idea(Request $request, MailerInterface $mailer): Response
     {
+        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
         try {
             $data = json_decode($request->getContent(), true);
             if ($data) {
@@ -190,13 +190,12 @@ class IdeasController extends AbstractController
             $this->ideasRepository->save($idea);
 
             $userBase64 = AppController::encodeBase64User($user->getEmail(), $user->getOpenPassword());
-            $urlIdea = $this->generateUrl("idea_show") . $idea->getId();
-            $redirectURL = $this->generateUrl("auto_redirect", array(
+            $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId();
+            $redirectURL = $baseURL . $this->generateUrl("auto_redirect", array(
                 'url' => $urlIdea,
                 'user' => $userBase64
             ));
 
-            // TODO: После добавления идеи отправить ссылку на почту диме
             $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
             // Берем почты из бд
             $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
@@ -350,7 +349,7 @@ class IdeasController extends AbstractController
             $searchContent = $request->get('content');
         }
         try {
-            if(empty($searchTitle) and empty($searchContent)){
+            if(empty($searchTitle) or empty($searchContent)){
                 throw new Exception("Передайте title или content");
             }
             if(!empty($searchTitle) and !empty($searchContent)){
@@ -386,15 +385,34 @@ class IdeasController extends AbstractController
         try {
             $Categories = $this->categoriesRepository->findAll();
             $Types = $this->typesRepository->findAll();
-            $Status = $this->statusRepository->findAll();
+            $Statuses = $this->statusRepository->findAll();
+
+            /** @var User $user */
+            $user = $this->getUser();
+            if(!empty($user)) {
+                if (!in_array("ROLE_ADMIN", $user->getRoles())
+                    and !in_array("ROLE_DEVELOPER", $user->getRoles())) {
+                    foreach ($Statuses as $key => $status) {
+                        if ($status->getName() == "new") {
+                            unset($Statuses[$key]);
+                        }
+                    }
+                }
+            } else {
+                foreach ($Statuses as $key => $status) {
+                    if ($status->getName() == "new") {
+                        unset($Statuses[$key]);
+                    }
+                }
+            }
 
             return $this->json([
                 'state' => 'success',
                 'categories' => $Categories,
                 "types" => $Types,
-                'statuses' => $Status,
+                'statuses' => $Statuses,
             ]);
-        } catch (\Exception $e){
+        } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
     }
@@ -410,7 +428,7 @@ class IdeasController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             if (empty($user)) {
-                throw new Exception("unauthorized");
+                throw new Exception("Не авторизован");
             }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
@@ -459,7 +477,7 @@ class IdeasController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             if (empty($user)) {
-                throw new Exception("unauthorized");
+                throw new Exception("Не авторизован");
             }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
@@ -498,7 +516,7 @@ class IdeasController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             if (empty($user)) {
-                throw new Exception("unauthorized");
+                throw new Exception("Не авторизован");
             }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
@@ -564,7 +582,7 @@ class IdeasController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             if (empty($user)) {
-                throw new Exception("unauthorized");
+                throw new Exception("Не авторизован");
             }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
@@ -612,7 +630,7 @@ class IdeasController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             if (empty($user)) {
-                throw new Exception("unauthorized");
+                throw new Exception("Не авторизован");
             }
             $data = json_decode($request->getContent(), true);
             if (!empty($data)) {
@@ -622,18 +640,23 @@ class IdeasController extends AbstractController
                 $idea_id = $request->get('idea_id');
                 $status_id = $request->get('status_id');
             }
+            // проверка и поиск идеи
             if (!empty($idea_id)) {
                 $idea = $this->ideasRepository->find($idea_id);
                 if (empty($idea)) {
                     throw new Exception("Такой идеи не существует");
                 }
             } else {
-                throw new Exception("Передайте idea_id");
+                throw new Exception("Передайте ID идеи");
             }
-//            dd($idea);
-            $newStatus = $this->statusRepository->find($status_id);
-            if (empty($newStatus)) {
-                throw new Exception("Такого статуса не существует");
+            // проверка и поиск статуса
+            if (!empty($status_id)) {
+                $newStatus = $this->statusRepository->find($status_id);
+                if (empty($newStatus)) {
+                    throw new Exception("Такого статуса не существует");
+                }
+            } else {
+                throw new Exception("Передайте ID статуса");
             }
             if(in_array("ROLE_ADMIN", $user->getRoles())
                 or in_array("ROLE_DEVELOPER", $user->getRoles()))
@@ -645,16 +668,15 @@ class IdeasController extends AbstractController
                 } else {
                     $idea->setAllowComments(true);
                 }
+                if ($newStatus->getName() == $idea->get_Status()->getName()) {
+                    throw new Exception("Нельзя поменять статус на такой же как и прежде");
+                }
                 $idea->setStatus($newStatus);
                 $this->ideasRepository->save($idea);
-
                 if ($idea->get_Status()->getName() == "new") {
-                    if ($newStatus->getName() == $idea->get_Status()->getName()) {
-                        throw new Exception("Нельзя поменять статус на такой же как и прежде");
-                    }
                     if ($idea->get_Type()->getName() == "Сообщить о проблеме") {
                         $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
-                            "title" => $idea->getTitle(),
+                            "title" => "Feedback. " . $idea->getTitle(),
                             "description" => $idea->getContent()
                         ));
 //                        dd($response);

@@ -221,16 +221,37 @@ class UserController extends AbstractController
             if(empty($user)){
                 throw new Exception("Такого пользователя нет");
             }
-            $ideas = $user->get_IdeasArray();
-            $comments = $user->get_CommentsArray();
-            $likes = $user->get_VotesArray();
+            $data = json_decode($request->getContent(), true);
+            if ($data) {
+                $page = (int) $data['page'];
+            } else {
+                $page = (int) $request->get('page');
+            }
+            if(empty($page)){
+                throw new Exception("Передайте параметр page");
+            }
             $response = array(
                 'state' => 'success',
                 'profile' => $user->get_Profile(),
-                'ideas' => $ideas,
-                'comments' => $comments,
-                'likes' => $likes
             );
+            switch ($page){
+                case 1:
+                    $ideas = $user->get_IdeasArray();
+                    $response["ideas"] = $ideas;
+                    break;
+                case 2:
+                    $comments = $user->get_CommentsArray();
+                    $response["comments"] = $comments;
+                    break;
+                case 3:
+                    $likes = $user->get_VotesArray();
+                    $response["likes"] = $likes;
+                    break;
+                default:
+                    throw new Exception("Неизвестная вкладка");
+                    break;
+            }
+
             return $this->json($response);
         } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);

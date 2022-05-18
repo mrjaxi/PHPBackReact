@@ -54,34 +54,6 @@ class MainController extends AbstractController
         return $this->json(AppController::saveFile($request, $this->getParameter('kernel.project_dir') . '/public/' . $this->getParameter('app.name') . '/', $this->getDoctrine()->getManager()));
     }
 
-//    /**
-//     * @Route("/redirect")
-//     * @param Request $request
-//     * @return Response
-//     */
-    public function auto_redirect(Request $request): Response
-    {
-        // TODO: перевести редирект в реакт
-        $url = $request->query->get('url');
-        $userBase64 = $request->query->get('user');
-        if (empty($userBase64) or empty($url)) {
-            $this->redirect('/' . $request->getLocale() . '/');
-        }
-
-        $user = AppController::decodeBase64User($userBase64);
-        $email = $user[0];
-        $password  = $user[1];
-        $isLogin = $this->checkAuth($email, $password);
-        if($isLogin){
-//            $this->redirectToRoute("app_login", array(
-//                'username' => $email,
-//                'password' => $password,
-//                'remember' => 1
-//            ));
-        }
-        return $this->redirect($url);
-    }
-
     /**
      * @Route("/api/decode/user/")
      * @param Request $request

@@ -174,7 +174,7 @@ const MainPage = () => {
                 data[index].allowComments = true;
                 setItems(data)
             } else {
-                global.openNotification("Ошибка", "Невозможно изменить статус идеи", "error")
+                global.openNotification("Ошибка", response.data.message, "error")
             }
         })
     };

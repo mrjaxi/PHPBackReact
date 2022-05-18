@@ -88,6 +88,7 @@ global.curDate = today;
 global.user = {};
 global.layout = false;
 global.baseURL = "https://pbr.atmadev.ru"
+// global.baseURL = "http://127.0.0.1:8000"
 
 class App extends React.Component {
     constructor(props) {
