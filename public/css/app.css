@@ -1300,6 +1300,17 @@ body {
   align-items: center;
   flex-direction: column;
 }
+.f-search-wrap {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  width: 80%;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.f-search-wrap::-webkit-scrollbar {
+  display: none;
+}
 .f-new-idea {
   position: sticky;
   width: 280px;
