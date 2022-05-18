@@ -80,6 +80,19 @@ body {
         display: flex;
         align-items: center;
         flex-direction: column;
+
+        &-wrap {
+            display: flex;
+            flex-direction: column;
+            overflow-y: scroll;
+            width: 80%;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
     }
 
     &-new-idea {
