@@ -10,7 +10,7 @@ const Login = () => {
     const [checked, setChecked] = useState(false);
 
     const loginUser = (data) => {
-        axios.post("http://127.0.0.1:8000/ru/login", global.serialize({username: data?.email, password: data?.password, remember: checked}), {withCredentials: true,}).then(response => {
+        axios.post(global.baseURL + "/ru/login", global.serialize({username: data?.email, password: data?.password, remember: checked}), {withCredentials: true,}).then(response => {
             if (response.data.state === "success"){
                 global.user = response.data.profile
 

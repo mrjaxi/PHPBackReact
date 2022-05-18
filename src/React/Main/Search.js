@@ -5,7 +5,7 @@ import axios from "axios";
 const Search = () => {
 
     const searchIdeas = (text) => {
-        axios.post("http://127.0.0.1:8000/ideas/api/search/", {title: 'Неза', content: ''}).then(response => {
+        axios.post(global.baseURL + "/ideas/api/search/", {title: 'Неза', content: ''}).then(response => {
             console.log(response.data)
         })
     };

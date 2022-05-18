@@ -99,7 +99,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        global.getProfile = () => axios.post("http://127.0.0.1:8000/ru/login").then(response => {
+        global.getProfile = () => axios.post(global.baseURL + "/ru/login").then(response => {
             if (response.data.state === "success") {
                 global.user = response.data.profile;
 
