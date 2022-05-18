@@ -108,7 +108,7 @@ class IdeasRepository extends ServiceEntityRepository
         $getQuery = $query->getQuery();
         /** @var array $ideas */
         $ideas = $getQuery->execute();
-//        dd($ideas);
+//        dd($getQuery);
         if(!empty($ideas)){
             return $ideas;
         } else {

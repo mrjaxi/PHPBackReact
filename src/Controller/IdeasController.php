@@ -289,7 +289,7 @@ class IdeasController extends AbstractController
             }
         } else {
             $statusGET = json_decode($_GET["status"]);
-            if(empty($statusGET) or count($statusGET) <= 1 or gettype($statusGET[0]) != "integer"){
+            if(empty($statusGET) or gettype($statusGET[0]) != "integer"){
                 foreach ($data['status'] as $status) {
                     if($status->getName() != "new"){
                         $statuses[] = $status->getId();

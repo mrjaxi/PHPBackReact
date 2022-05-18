@@ -13,6 +13,7 @@ const AddIdeaPage = () => {
     const [loading, setLoading] = useState(false);
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
+    const [uploadURL, setUploadURL] = useState(global.baseURL + "/api/upload/")
 
     const [fileList, setFileList] = useState([
     ]);
@@ -144,7 +145,7 @@ const AddIdeaPage = () => {
                         name={"file"}
                     >
                         <Upload
-                            action={global.baseURL + "/api/upload/"}
+                            action={uploadURL}
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}
