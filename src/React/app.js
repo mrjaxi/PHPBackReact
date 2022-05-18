@@ -87,6 +87,7 @@ let today = new Date();
 global.curDate = today;
 global.user = {};
 global.layout = false;
+global.baseURL = "http://127.0.0.1:8000"
 
 class App extends React.Component {
     constructor(props) {
@@ -99,12 +100,12 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        global.getProfile = () => axios.post("http://127.0.0.1:8000/ru/login").then(response => {
+        global.getProfile = () => axios.post("/ru/login").then(response => {
             if (response.data.state === "success") {
                 global.user = response.data.profile;
 
                 if (response.data.profile.is_active === true) {
-                    if (response.data.profile.roles.indexOf('ROLE_ADMIN') > -1 || response.data.profile.roles.indexOf('ROLE_DEV') > -1) {
+                    if (response.data.profile.roles.indexOf('ROLE_ADMIN') > -1 || response.data.profile.roles.indexOf('ROLE_DEVELOPER') > -1) {
                         this.setState({layout: 'admin'});
                         global.layout = 'admin';
                     } else if (response.data.profile.roles.indexOf('ROLE_USER') > -1) {
@@ -119,7 +120,6 @@ class App extends React.Component {
                 this.setState({layout: 'guest'});
                 global.layout = 'guest';
             }
-
             console.log(global.layout)
         });
         global.getProfile();

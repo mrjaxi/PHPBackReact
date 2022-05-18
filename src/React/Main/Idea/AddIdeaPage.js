@@ -37,7 +37,7 @@ const AddIdeaPage = () => {
     };
 
     const onSend = (data) => {
-        axios.post("http://127.0.0.1:8000/ideas/api/new/", {
+        axios.post("/ideas/api/new/", {
             title: data.title,
             description: data.description,
             category: data.category,
@@ -52,7 +52,7 @@ const AddIdeaPage = () => {
 
     const getCategory = () => {
         setLoading(true);
-        axios.get("http://127.0.0.1:8000/ideas/api/getCategories/").then(response => {
+        axios.get("/ideas/api/getCategories/").then(response => {
             let categoryData = [];
             let typesData = [];
             if (response.data?.categories){
@@ -144,7 +144,7 @@ const AddIdeaPage = () => {
                         name={"file"}
                     >
                         <Upload
-                            action="http://127.0.0.1:8000/api/upload/"
+                            action={global.baseURL + "/api/upload/"}
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}

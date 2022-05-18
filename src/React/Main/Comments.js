@@ -8,7 +8,7 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
 
     const sendComment = (text) => {
         console.log(text)
-        axios.post("http://127.0.0.1:8000/ideas/api/newComment/", {idea_id: item.id, content: text}).then(
+        axios.post("/ideas/api/newComment/", {idea_id: item.id, content: text}).then(
             response => {
                 if (response.data.state === "success"){
                     addCommentToIdea(index, response.data.comment)

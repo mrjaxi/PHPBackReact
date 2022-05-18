@@ -66,7 +66,7 @@ const MainPage = () => {
             params["status"] = JSON.stringify(prevIncludedId) : null;
         }
 
-        axios.get("http://127.0.0.1:8000/ideas/api/getIdeas/" + category + "/?" + global.serialize(params)).then(response => {
+        axios.get("/ideas/api/getIdeas/" + category + "/?" + global.serialize(params)).then(response => {
             if (response.data?.ideas !== null) {
                 response.data.ideas.map(item => {
                     data.push({
@@ -100,7 +100,7 @@ const MainPage = () => {
 
     const getCategory = () => {
         setLoading(true);
-        axios.get("http://127.0.0.1:8000/ideas/api/getCategories/").then(response => {
+        axios.get("/ideas/api/getCategories/").then(response => {
             setTypes(response.data.types);
             setStatus(response.data.statuses);
             setCategories(response.data.categories);
@@ -114,7 +114,7 @@ const MainPage = () => {
 
     const newVote = (id, index, currentUserIsVote) => {
         currentUserIsVote ?
-            axios.post("http://127.0.0.1:8000/api/delete/vote/", {idea_id: id}).then(response => {
+            axios.post("/api/delete/vote/", {idea_id: id}).then(response => {
                 if (response.data.state === "success"){
                     let data = [...items];
                     data[index].like -= 1;
@@ -125,7 +125,7 @@ const MainPage = () => {
                     global.openNotification("Ошибка", response.data.message, "error")
                 }
             }) :
-            axios.post("http://127.0.0.1:8000/ideas/api/newVote/", {idea_id: id, type: "like"}).then(response => {
+            axios.post("/ideas/api/newVote/", {idea_id: id, type: "like"}).then(response => {
                 if (response.data.state === "success"){
                     let data = [...items];
                     data[index].like += 1;
@@ -164,7 +164,7 @@ const MainPage = () => {
     };
 
     const changeStatus = (idea_id, id, name) => {
-        axios.post("http://127.0.0.1:8000/ideas/api/setStatus/", {idea_id: idea_id, status_id: id}).then(response => {
+        axios.post("/ideas/api/setStatus/", {idea_id: idea_id, status_id: id}).then(response => {
             if (response.data.state === "success"){
                 let data = [...items];
                 data[index].status = id;
@@ -180,7 +180,7 @@ const MainPage = () => {
     };
 
     const logout = () => {
-        axios.post("http://127.0.0.1:8000/ru/logout").then(response => {
+        axios.post("/ru/logout").then(response => {
             if (response.data.state === "success"){
                 global._history.replace("/")
             }
@@ -316,7 +316,7 @@ const MainPage = () => {
                                             <div className={"f-cards-card-wrap"}>
                                                 {
                                                     item.photo !== null &&
-                                                    <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("http://127.0.0.1:8000' + item.photo.split(";")[0] + '")' }} />
+                                                    <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("' + global.baseURL + item.photo.split(";")[0] + '")' }} />
                                                 }
                                                 <div className={"f-cards-inner"}>
                                                     <div className={"f-cards-avatar"}>
