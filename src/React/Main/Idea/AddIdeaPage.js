@@ -74,7 +74,7 @@ const AddIdeaPage = () => {
     };
 
     useEffect(() => {
-        getCategory()
+        // getCategory()
     }, []);
 
     return (

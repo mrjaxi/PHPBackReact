@@ -17,7 +17,7 @@ const Search = () => {
 
         let prevSearchItems = [];
 
-        axios.post("/ideas/api/search/", {title: text, content: ""}).then(response => {
+        axios.post("/ideas/api/search/", {title: text, content: " "}).then(response => {
             if (response.data?.ideas) {
                 response.data?.ideas.map(item => {
                     prevSearchItems.push({
@@ -39,22 +39,6 @@ const Search = () => {
 
             setSearchItems(prevSearchItems)
             setLoading(false)
-        })
-    };
-
-    const changeStatus = (idea_id, id, name) => {
-        axios.post("/ideas/api/setStatus/", {idea_id: idea_id, status_id: id}).then(response => {
-            if (response.data.state === "success"){
-                let data = [...items];
-                data[index].status = id;
-                if (name === "declined" || name === "completed"){
-                    data[index].allowComments = false;
-                }
-                data[index].allowComments = true;
-                setItems(data)
-            } else {
-                global.openNotification("Ошибка", "Невозможно изменить статус идеи", "error")
-            }
         })
     };
 
@@ -115,7 +99,7 @@ const Search = () => {
                                                     <Highlighter
                                                         searchWords={searchText.split(" ").filter(item => item.length > 1)}
                                                         autoEscape={true}
-                                                        highlightStyle={{ padding: 0 }}
+                                                        highlightStyle={{ padding: 0, backgroundColor: "#FFFF66", color: "black" }}
                                                         textToHighlight={ item.title }
                                                     />
                                                 </span>

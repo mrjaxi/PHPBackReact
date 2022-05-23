@@ -87,8 +87,8 @@ let today = new Date();
 global.curDate = today;
 global.user = {};
 global.layout = false;
-global.baseURL = "https://pbr.atmadev.ru"
-// global.baseURL = "http://127.0.0.1:8000"
+// global.baseURL = "https://pbr.atmadev.ru"
+global.baseURL = "http://127.0.0.1:8000"
 
 class App extends React.Component {
     constructor(props) {
@@ -121,7 +121,7 @@ class App extends React.Component {
                 this.setState({layout: 'guest'});
                 global.layout = 'guest';
             }
-            console.log(global.layout)
+
         });
         global.getProfile();
     }

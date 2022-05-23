@@ -2,9 +2,10 @@ import React, {useEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import Comments from "./Main/Comments";
 import './sass/main-component.scss'
-import {Avatar, Button, Col, Image, Menu, Select, Skeleton} from "antd";
+import {Col, Select, Skeleton} from "antd";
 import axios from "axios";
-import {UserOutlined, DownOutlined, UpOutlined} from '@ant-design/icons';
+import Header from "./Main/Components/Header";
+import Navigation from "./Main/Components/Navigation";
 const { Option } = Select;
 
 const MainPage = () => {
@@ -163,7 +164,7 @@ const MainPage = () => {
         setItems(data)
     };
 
-    const changeStatus = (idea_id, id, name) => {
+    const changeStatus = (idea_id, id, name, index) => {
         axios.post("/ideas/api/setStatus/", {idea_id: idea_id, status_id: id}).then(response => {
             if (response.data.state === "success"){
                 let data = [...items];
@@ -179,67 +180,11 @@ const MainPage = () => {
         })
     };
 
-    const logout = () => {
-        axios.post("/ru/logout").then(response => {
-            if (response.data.state === "success"){
-                global._history.replace("/")
-            }
-        })
-    };
-
     return (
         <>
             <Col className={"f-main"}>
                 <div>
-                    <header className={"f-header-content"}>
-                        <div className={'f-header-wrap-content'}>
-                            <div className={'f-header-wrap-logo'}>
-                                <a href="/" className={'f-header-wrap-logo'}>
-                                    <div className={"f-header-back-wrap"}>
-                                        <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'} />
-                                    </div>
-                                    <img className={"f-header-wrap-logo-logo"} src={"/i/atmaguru.svg"} />
-                                </a>
-                            </div>
-                            {
-                                global.layout !== "guest" ?
-                                    <div className="dropdown">
-                                        <button className="dropbtn">
-                                            <div style={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                flexDirection: 'row'
-                                            }}>
-                                                <Avatar size={36} style={{ backgroundColor: '#AAB2BD' }} src={global.user.image !== null ? <img src={global.user.image}/> : <UserOutlined /> } />
-                                                <div style={{ marginLeft: 10 }}>
-                                                    <DownOutlined />
-                                                </div>
-                                            </div>
-                                        </button>
-                                        <div className="dropdown-content">
-                                            <a style={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                flexDirection: 'row',
-                                            }}>
-                                                <span style={{ marginRight: 10, fontSize: 17 }}>{ global.user.first_name }</span>
-                                                <Avatar size={36} style={{ backgroundColor: '#AAB2BD' }} src={global.user.image !== null ? <img src={global.user.image}/> : <UserOutlined /> } />
-                                                <div style={{ marginLeft: 5 }}>
-                                                    <UpOutlined />
-                                                </div>
-                                            </a>
-                                            <a href={"/"} onClick={() => logout()}>Выход</a>
-                                        </div>
-                                    </div>
-                                     :
-                                    <div className={'f-header-logo-wrapper'}>
-                                        <NavLink className={'f-sign-in'} to={global.lang + "/auth/"}>Войти</NavLink>
-                                    </div>
-                            }
-                        </div>
-                    </header>
+                    <Header />
                     <section className={"max_width"}>
                         <div className={"f-section"}>
                             <div className={"f-section-wrap-text"}>
@@ -253,19 +198,14 @@ const MainPage = () => {
                             <img className={"f-section-wrap-image"} src={'/i/movie-text.png'} />
                         </div>
                     </section>
-                    <navigation className={"f-nav-wrap"}>
-                        <div className={"f-nav max_width"}>
-                            {
-                                categories.map((category) => (
-                                    <a onClick={() => { setSelectedCategory(category.id), loadData(selectedPanelMenu, selectedType, category.id) }} className={"f-nav-button " + (category.id === selectedCategory && "f-nav-button-active")}>{ category.name }</a>
-                                ))
-                            }
-                            <img className={"f-nav-button-img"} src={"/i/threedot.svg"}/>
-                            <NavLink to={"/search"}>
-                                <img className={"f-nav-button-img"} src={"/i/search.svg"}/>
-                            </NavLink>
-                        </div>
-                    </navigation>
+                    <Navigation
+                        categories={categories}
+                        loadData={loadData}
+                        selectedCategory={selectedCategory}
+                        selectedPanelMenu={selectedPanelMenu}
+                        selectedType={selectedType}
+                        setSelectedCategory={setSelectedCategory}
+                    />
                     <NavLink to={ global.layout !== "guest" ? (global.lang + "/idea/add/") : (global.lang + "/auth/")} className={"f-new-idea"}>Новая идея</NavLink>
                     <div className={"f-row-type max_width"}>
                         <div style={{
@@ -316,7 +256,7 @@ const MainPage = () => {
                                             <div className={"f-cards-card-wrap"}>
                                                 {
                                                     item.photo !== null &&
-                                                    <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("' + global.baseURL + item.photo.split(";")[0] + '")' }} />
+                                                    <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("' + item.photo.split(";")[0] + '")' }} />
                                                 }
                                                 <div className={"f-cards-inner"}>
                                                     <div className={"f-cards-avatar"}>
@@ -334,7 +274,7 @@ const MainPage = () => {
                                                         </div>
                                                         {
                                                             global.layout === "admin" ?
-                                                            <Select onSelect={(id) => changeStatus(item.id, id, item.status.name)} defaultValue={ item.status.id } style={{ width: 130 }}>
+                                                            <Select onSelect={(id) => changeStatus(item.id, id, item.status.name, index)} defaultValue={ item.status.id } style={{ width: 130 }}>
                                                                 {
                                                                     statuses.map(status => (
                                                                         <Option value={status.id}>{status.translate}</Option>
@@ -345,9 +285,9 @@ const MainPage = () => {
                                                         }
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
-                                                            <span className={"f-cards-content-text"}>
-                                                                { item.title }
-                                                            </span>
+                                                        <span className={"f-cards-content-text"}>
+                                                            { item.title }
+                                                        </span>
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
                                                             <span className={"f-cards-content-description"}>
