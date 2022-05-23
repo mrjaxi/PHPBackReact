@@ -3,9 +3,9 @@ import {Form, Input, Select, Skeleton} from "antd";
 import axios from "axios";
 import Highlighter from "react-highlight-words";
 const { Option } = Select;
+import ApiRoutes from "../Routes/ApiRoutes";
 
 const Search = () => {
-
     const [searchItems, setSearchItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [statuses, setStatus] = useState([]);
@@ -13,11 +13,11 @@ const Search = () => {
     const [searchText, setSearchText] = useState("");
 
     const searchIdeas = (text) => {
-        setLoading(true)
+        setLoading(true);
 
         let prevSearchItems = [];
 
-        axios.post("/ideas/api/search/", {title: text, content: " "}).then(response => {
+        axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}).then(response => {
             if (response.data?.ideas) {
                 response.data?.ideas.map(item => {
                     prevSearchItems.push({
@@ -37,14 +37,14 @@ const Search = () => {
                 prevSearchItems = []
             }
 
-            setSearchItems(prevSearchItems)
+            setSearchItems(prevSearchItems);
             setLoading(false)
         })
     };
 
     const getCategory = () => {
         setLoading(true);
-        axios.get("/ideas/api/getCategories/").then(response => {
+        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             setStatus(response.data.statuses);
         });
         setLoading(false);

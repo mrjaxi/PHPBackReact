@@ -119,12 +119,12 @@ class IdeasController extends AbstractController
             $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId() . "/";
             $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
             // Берем почты из бд
-            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
-            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
-            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
-            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
-                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
-            }
+//            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
+//            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
+//            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+//            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
+//                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
+//            }
 
             return $this->json([
                 "state" => "success",
@@ -349,7 +349,7 @@ class IdeasController extends AbstractController
             $searchContent = $request->get('content');
         }
         try {
-            if(empty($searchTitle) or empty($searchContent)){
+            if(empty($searchTitle) and empty($searchContent)){
                 throw new Exception("Передайте title или content");
             }
             if(!empty($searchTitle) and !empty($searchContent)){

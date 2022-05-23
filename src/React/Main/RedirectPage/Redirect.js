@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
 import axios from "axios";
+import ApiRoutes from "../../Routes/ApiRoutes";
 
 const Redirect = (props) => {
 
@@ -7,9 +8,9 @@ const Redirect = (props) => {
         const query = new URLSearchParams(props.location.search);
 
         if (query.get("url") && query.get("user")){
-            axios.post("/api/decode/user/", {user: query.get("user")}).then(response => {
+            axios.post(ApiRoutes.API_DECODE_USER_DATA, {user: query.get("user")}).then(response => {
                 if (response.data.state === "success") {
-                    axios.post("/ru/login", {username: response.data?.user.username, password: response.data?.user.password, remember: true}, {withCredentials: true}).then(login => {
+                    axios.post(ApiRoutes.API_LOGIN, {username: response.data?.user.username, password: response.data?.user.password, remember: true}, {withCredentials: true}).then(login => {
                         if (login.data.state === "success"){
                             global.user = login.data.profile;
                         }

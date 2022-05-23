@@ -19,12 +19,12 @@ const Header = () => {
             <header style={{ width: '100%' }} className={"f-header-content"}>
                 <div className={'f-header-wrap-content'}>
                     <div className={'f-header-wrap-logo'}>
-                        <a href="/" className={'f-header-wrap-logo'}>
+                        <NavLink to={"/"} className={'f-header-wrap-logo'}>
                             <div className={"f-header-back-wrap"}>
                                 <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'} />
                             </div>
                             <img className={"f-header-wrap-logo-logo"} src={"/i/atmaguru.svg"} />
-                        </a>
+                        </NavLink>
                     </div>
                     {
                         global.layout !== "guest" ?

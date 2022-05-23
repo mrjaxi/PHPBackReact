@@ -1,22 +1,75 @@
-import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Form, Input, Modal, Select, Upload} from "antd";
+import React, {useEffect, useMemo, useRef, useState} from "react";
+import {Button, Checkbox, Form, Input, Modal, Select, Spin, Upload} from "antd";
 import { Typography } from 'antd';
 import {NavLink} from "react-router-dom";
 import axios from "axios";
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
 const { Title } = Typography;
 const { Option } = Select;
+import debounce from 'lodash/debounce';
+import ApiRoutes from "../../Routes/ApiRoutes";
 const { TextArea } = Input;
 
-const AddIdeaPage = () => {
+const DebounceSelect = ({ fetchOptions, debounceTimeout = 800, ...props }) => {
+    const [fetching, setFetching] = useState(false);
+    const [options, setOptions] = useState([]);
+    const fetchRef = useRef(0);
+    const debounceFetcher = useMemo(() => {
+        const loadOptions = (value) => {
+            fetchRef.current += 1;
+            const fetchId = fetchRef.current;
+            setOptions([]);
+            setFetching(true);
+            fetchOptions(value).then((newOptions) => {
+                if (fetchId !== fetchRef.current) {
+                    return;
+                }
 
+                setOptions(newOptions);
+                setFetching(false);
+            });
+        };
+
+        return debounce(loadOptions, debounceTimeout);
+    }, [fetchOptions, debounceTimeout]);
+    return (
+        <Select
+            labelInValue
+            autoClearSearchValue={false}
+            filterOption={false}
+            onSearch={debounceFetcher}
+            notFoundContent={fetching && null}
+            {...props}
+            options={options}
+        />
+    );
+};
+
+const fetchUserList = async (text) => {
+    return await fetch(ApiRoutes.API_SEARCH,
+    {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            cache: 'no-cache',
+            body: JSON.stringify({title: text, content: ""})
+        }).then(response => response.json())
+        .then((body) =>
+            body.ideas.map((item) => ({
+                label: <div onClick={() => global._history.replace("/idea/" + item.id)}>{item.title}</div>,
+            }))
+        )
+};
+
+const AddIdeaPage = () => {
     const [loading, setLoading] = useState(false);
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
     const [uploadURL, setUploadURL] = useState(global.baseURL + "/api/upload/")
+    const [value, setValue] = useState([]);
 
-    const [fileList, setFileList] = useState([
-    ]);
+    const [fileList, setFileList] = useState([]);
 
     const onChange = ({ fileList: newFileList }) => {
         setFileList(newFileList);
@@ -38,8 +91,8 @@ const AddIdeaPage = () => {
     };
 
     const onSend = (data) => {
-        axios.post("/ideas/api/new/", {
-            title: data.title,
+        axios.post(ApiRoutes.API_NEW_IDEA, {
+            title: data.title.map(item => item.value).join(" "),
             description: data.description,
             category: data.category,
             type: data.type,
@@ -53,7 +106,7 @@ const AddIdeaPage = () => {
 
     const getCategory = () => {
         setLoading(true);
-        axios.get("/ideas/api/getCategories/").then(response => {
+        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             let categoryData = [];
             let typesData = [];
             if (response.data?.categories){
@@ -74,7 +127,7 @@ const AddIdeaPage = () => {
     };
 
     useEffect(() => {
-        // getCategory()
+        getCategory()
     }, []);
 
     return (
@@ -93,7 +146,21 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Input size={"large"} style={{ fontSize: 17, width: '440px' }} placeholder={"Заголовок"} minLength={5} maxLength={255}/>
+                        {/*<Input value={value} hidden={true} size={"large"} style={{ fontSize: 17, width: '440px' }} placeholder={"Заголовок"} minLength={5} maxLength={255}/>*/}
+                        <DebounceSelect
+                            mode="tags"
+                            value={value}
+                            autoClearSearchValue={false}
+                            size={"large"}
+                            minLength={5}
+                            maxLength={255}
+                            placeholder="Заголовок"
+                            style={{ fontSize: 17, width: '440px' }}
+                            fetchOptions={fetchUserList}
+                            onChange={(newValue) => {
+                                setValue(newValue);
+                            }}
+                        />
                     </Form.Item>
                     <Form.Item
                         name={"category"}

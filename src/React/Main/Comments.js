@@ -1,6 +1,7 @@
 import React from "react";
 import {Button, Form, Input, Skeleton, Typography} from "antd";
 import axios from "axios";
+import ApiRoutes from "../Routes/ApiRoutes";
 const { Title } = Typography;
 const { TextArea } = Input;
 
@@ -8,7 +9,7 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
 
     const sendComment = (text) => {
         console.log(text)
-        axios.post("/ideas/api/newComment/", {idea_id: item.id, content: text}).then(
+        axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: item.id, content: text}).then(
             response => {
                 if (response.data.state === "success"){
                     addCommentToIdea(index, response.data.comment)

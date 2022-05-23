@@ -3,6 +3,7 @@ import {Button, Checkbox, Form, Input} from "antd";
 import { Typography } from 'antd';
 import axios from "axios";
 import { CloseOutlined } from '@ant-design/icons';
+import ApiRoutes from "../../Routes/ApiRoutes";
 const { Title } = Typography;
 
 const Login = () => {
@@ -10,7 +11,7 @@ const Login = () => {
     const [checked, setChecked] = useState(false);
 
     const loginUser = (data) => {
-        axios.post("/ru/login", global.serialize({username: data?.email, password: data?.password, remember: checked}), {withCredentials: true,}).then(response => {
+        axios.post(ApiRoutes.API_LOGIN, global.serialize({username: data?.email, password: data?.password, remember: checked}), {withCredentials: true,}).then(response => {
             if (response.data.state === "success"){
                 global.user = response.data.profile
 

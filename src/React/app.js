@@ -32,6 +32,7 @@ import {
 
 import { UserHeader } from './User/Components';
 import ProfileEdit from "./User/ProfileEdit";
+import ApiRoutes from "./Routes/ApiRoutes";
 
 const {Header, Content, Sider} = Layout;
 const {Title} = Typography;
@@ -90,6 +91,13 @@ global.layout = false;
 // global.baseURL = "https://pbr.atmadev.ru"
 global.baseURL = "http://127.0.0.1:8000"
 
+String.prototype.format = String.prototype.f = function(){
+    let args = arguments;
+    return this.replace(/\{(\d+)\}/g, function(m,n){
+        return args[n] ? args[n] : m;
+    });
+};
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -101,7 +109,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        global.getProfile = () => axios.post("/ru/login").then(response => {
+        global.getProfile = () => axios.post(ApiRoutes.API_LOGIN).then(response => {
             if (response.data.state === "success") {
                 global.user = response.data.profile;
 
