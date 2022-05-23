@@ -14,9 +14,9 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class MainController extends AbstractController
 {
-    private $userRepository;
-    private $encoder;
-    private $guardHandler;
+    private UserRepository $userRepository;
+    private UserPasswordEncoderInterface $encoder;
+    private GuardAuthenticatorHandler $guardHandler;
 
     public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $encoder, GuardAuthenticatorHandler $guardHandler)
     {
@@ -45,7 +45,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/api/upload/")
+     * @Route("/api/web/upload/")
      * @param Request $request
      * @return Response
      */
@@ -55,7 +55,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/api/decode/user/")
+     * @Route("/api/web/decode/user/")
      * @param Request $request
      * @return Response
      */
@@ -83,25 +83,6 @@ class MainController extends AbstractController
                 ]);
         } catch (Exception $e){
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
-        }
-    }
-
-    /**
-     * @param string $email
-     * @param string $pass
-     * @return User|false
-     */
-    private function checkAuth($email, $pass)
-    {
-        /* @var User */
-        $user = $this->userRepository->findOneBy(['email' => $email]);
-        if(!empty($user)){
-            if($user->getOpenPassword() === $pass)
-                return $user;
-            else
-                return false;
-        } else {
-            return false;
         }
     }
 }

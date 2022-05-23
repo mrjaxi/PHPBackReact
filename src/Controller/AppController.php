@@ -155,8 +155,7 @@ class AppController extends AbstractController
         return $res;
     }
 
-    static public function sendEmail(MailerInterface $mailer, $message, $subject="Новый отзыв", $tomail="bumblebeelion@atma.company",
-                                     $from_mail = "atmaguru@atmadev.ru", $bcc = "bumblebeelion@atma.company")
+    static public function sendEmail(MailerInterface $mailer, $message, $subject="Новый отзыв", $tomail="bumblebeelion@atma.company", $from_mail = "atmaguru@atmadev.ru", $bcc = "bumblebeelion@atma.company")
     { // damedvedev@atmapro.ru  bumblebeelion@atma.company  atmaguru@atmadev.ru
         if (!empty($message)) {
             $email = (new Email())
@@ -219,40 +218,6 @@ class AppController extends AbstractController
         curl_close($curl);
 
         return $response;
-    }
-
-    static public function add_file($files, $project_dir){
-        $photo = null;
-        if($files == null)
-            return $photo;
-
-        if (!is_dir($project_dir)) {
-            mkdir($project_dir);
-        }
-
-        for($i=0; $i < count($files['name']); $i++) {
-            if ($files['error'][$i] == 0) {
-                if ($files['size'][$i] == 0) {
-                    continue;
-                }
-
-                $getMime = explode('.', $files['name'][$i]);
-                $mime = strtolower(end($getMime));
-                $types = array('jpg', 'png', 'gif', 'bmp', 'jpeg');
-
-                if (!in_array($mime, $types)) {
-                    continue;
-                }
-
-                $name = 'photo\\' . md5(microtime() . rand(0, 9999)) . "." . $mime;
-
-                $photo = $photo . $name . ";";
-
-                copy($files['tmp_name'][$i], __DIR__ . "/../../public/" . $name);
-            }
-        }
-
-        return $photo;
     }
 
     static public function decodeBase64User($userBase64){

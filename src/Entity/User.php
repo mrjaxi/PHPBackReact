@@ -192,7 +192,7 @@ class User implements UserInterface
             $name = "Разработчик";
         } else if(in_array("ROLE_USER", $roles)){
             $name = "Генератор идей";
-        } else  {
+        } else {
             $name = "Самозванец";
         }
 

@@ -67,8 +67,8 @@ class IdeasRepository extends ServiceEntityRepository
         /**
          * SELECT * FROM ideas
          * WHERE ( category_id='4' )
-         * AND (type_id='1' OR type_id='2' OR type_id='3' OR type_id='4' OR type_id='5' )
-         * AND (i.status = '1' OR i.status = '2' OR i.status = '3' OR i.status = '4' OR i.status = '5')
+         * AND ( type_id='1' OR type_id='2' OR type_id='3' OR type_id='4' OR type_id='5' )
+         * AND ( i.status = '1' OR i.status = '2' OR i.status = '3' OR i.status = '4' OR i.status = '5' )
          * ORDER BY date DESC
          * LIMIT 10 OFFSET 10
          */
@@ -109,11 +109,7 @@ class IdeasRepository extends ServiceEntityRepository
         /** @var array $ideas */
         $ideas = $getQuery->execute();
 //        dd($getQuery);
-        if(!empty($ideas)){
-            return $ideas;
-        } else {
-            return null;
-        }
+        return $ideas ?: null;
     }
 
     /**
@@ -123,6 +119,12 @@ class IdeasRepository extends ServiceEntityRepository
      */
     public function searchIdeas($searchTitle = '', $searchContent = ''): ?array
     {
+        /**
+         * SELECT i Ideas i
+         * WHERE (i.title LIKE '%систевф обр%' OR i.content LIKE '%звонкуу ваще%') <-- поиск по всей строке title и всей строке content
+         * OR (i.title LIKE '%систевф%' OR i.title LIKE '%обр%')        <-- поиск отдельно по словам из строки title
+         * OR (i.content LIKE '%звонкуу%' OR i.content LIKE '%ваще%')   <-- поиск отдельно по словам из строки content
+         */
         if(empty($searchTitle) and empty($searchContent)){
             return null;
         }
@@ -189,10 +191,6 @@ class IdeasRepository extends ServiceEntityRepository
         /** @var array $ideas */
         $ideas = $getQuery->execute();
 //        dd($getQuery);
-        if(!empty($ideas)){
-            return $ideas;
-        } else {
-            return null;
-        }
+        return $ideas ?: null;
     }
 }

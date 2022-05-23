@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Core\DataProvider\Pagination;
 use App\Entity\Categories;
 use App\Entity\Comments;
 use App\Entity\Ideas;
@@ -30,15 +31,15 @@ use Symfony\Component\Validator\Constraints\Date;
 
 class IdeasController extends AbstractController
 {
-    private $categoriesRepository;
-    private $typesRepository;
-    private $ideasRepository;
-    private $userRepository;
-    private $statusRepository;
-    private $votesRepository;
-    private $commentsRepository;
-    private $settingsRepository;
-    private $encoder;
+    private CategoriesRepository $categoriesRepository;
+    private TypesRepository $typesRepository;
+    private IdeasRepository $ideasRepository;
+    private UserRepository $userRepository;
+    private StatusRepository $statusRepository;
+    private VotesRepository $votesRepository;
+    private CommentsRepository $commentsRepository;
+    private SettingsRepository $settingsRepository;
+    private UserPasswordEncoderInterface $encoder;
 
     /**
      * @param CategoriesRepository $categoriesRepository
@@ -68,7 +69,7 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @Route("/ideas/api/new/")
+     * @Route("/api/user/ideas/new/")
      * @param Request $request
      * @param MailerInterface $mailer
      * @return Response
@@ -77,67 +78,51 @@ class IdeasController extends AbstractController
     public function new_idea(Request $request, MailerInterface $mailer): Response
     {
         $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
-        try {
-            /** @var User $user */
-            $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("Не авторизован");
-            }
-            $data = json_decode($request->getContent(), true);
-            if ($data) {
-                $title = $data['title'];
-                $desc = $data['description'];
-                $catid = $data['category'];
-                $typeid = $data['type'];
-                $photo = $data['photo'];
-            } else {
-                $title = $request->get('title');
-                $desc = $request->get('description');
-                $catid = $request->get('category');
-                $typeid = $request->get('type');
-                $photo = $request->get('photo');
-            }
-            if (empty($photo)) {
-                $photo = null;
-            }
-            $this->checkParamsError($title, $desc, $catid, $typeid);
-            $category = $this->getCategoryOrCreate($catid);
-            $type = $this->getTypeOrCreate($typeid);
-            $status = $this->statusRepository->findOneBy(['name' => 'new']);
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (empty($data)) {
+            return $this->json(['state' => 'error', 'message' => "Передайте данные"]);
+        }
+        if (empty($data['photo'])) {
+            $data['photo'] = null;
+        }
+        try{
+            $this->checkParamsError($data['title'], $data['description'], $data['category'], $data['type']);
+        } catch (Exception $e){
+            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        }
+        $category = $this->getCategoryOrCreate($data['category']);
+        $type = $this->getTypeOrCreate($data['type']);
+        $status = $this->statusRepository->findOneBy(['name' => 'new']);
 
-            $idea = new Ideas();
-            $idea->setTitle($title)
-                ->setContent($desc)
-                ->setUser($user)
-                ->setDate(new DateTime())
-                ->setCategory($category)
-                ->setType($type)
-                ->setStatus($status)
-                ->setPhoto($photo);
-            $this->ideasRepository->save($idea);
+        $idea = new Ideas();
+        $idea->setTitle($data['title'])
+            ->setContent($data['description'])
+            ->setUser($user)
+            ->setDate(new DateTime())
+            ->setCategory($category)
+            ->setType($type)
+            ->setStatus($status)
+            ->setPhoto($data['photo']);
+        $this->ideasRepository->save($idea);
 
-            $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId() . "/";
-            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
-            // Берем почты из бд
-//            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
-//            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
-//            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
-//            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
-//                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
-//            }
-
+        $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId() . "/";
+        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
+        if($this->sendMail($mailer, $message, "Новый отзыв")){
             return $this->json([
                 "state" => "success",
             ]);
-        } catch (TransportExceptionInterface $e) {
-            return $this->json(['state' => 'trouble', 'message' => $e->getMessage()]);
-        } catch (Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        } else {
+            return $this->json([
+                'state' => 'trouble',
+                'message' => "Не удалось отправить почту"
+            ]);
         }
     }
 
     /**
-     * @Route("/ideas/api/add_idea/")
+     * @Route("/api/ag/ideas/add_idea/")
      * @param Request $request
      * @param MailerInterface $mailer
      * @return Response
@@ -146,73 +131,55 @@ class IdeasController extends AbstractController
     public function add_idea(Request $request, MailerInterface $mailer): Response
     {
         $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
+        $data = json_decode($request->getContent(), true);
+        if (empty($data)) {
+            return $this->json(['state' => 'error', 'message' => "Передайте данные"]);
+        }
+        if (empty($data['href'])) {
+            $data['href'] = null;
+        }
         try {
-            $data = json_decode($request->getContent(), true);
-            if ($data) {
-                $title = $data['title'];
-                $desc = $data['description'];
-                $catid = $data['category'];
-                $typeid = $data['type'];
-                $href = $data['href'];
-                $email = $data['email'];
-                $pass = $data['pass'];
-                $name = $data['name'];
-            } else {
-                $title = $request->get('title');
-                $desc = $request->get('description');
-                $catid = $request->get('category');
-                $typeid = $request->get('type');
-                $href = $request->get('href');
-                $email = $request->get('email');
-                $pass = $request->get('pass');
-                $name = $request->get('name');
-            }
-            if (empty($href)) {
-                $href = null;
-            }
-            $this->checkParamsError($title, $desc, $catid, $typeid);
-            $category = $this->getCategoryOrCreate($catid);
-            $type = $this->getTypeOrCreate($typeid);
-            $user = $this->getUserOrCreate($email, $pass, $name);
-            $photo = $this->saveFile($request);
-            $status = $this->statusRepository->findOneBy(['name' => 'new']);
+            $this->checkParamsError($data['title'], $data['description'], $data['category'], $data['type']);
+            $user = $this->getUserOrCreate($data['email'], $data['pass'], $name = $data['name']);
+        } catch (Exception $e){
+            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        }
+        $category = $this->getCategoryOrCreate($data['category']);
+        $type = $this->getTypeOrCreate($data['type']);
+        $photo = $this->saveFile($request);
+        $status = $this->statusRepository->findOneBy(['name' => 'new']);
 
-            $idea = new Ideas();
-            $idea->setTitle($title)
-                ->setContent($desc)
-                ->setUser($user)
-                ->setDate(new DateTime())
-                ->setCategory($category)
-                ->setType($type)
-                ->setStatus($status)
-                ->setPhoto($photo)
-                ->setHref($href);
-            $this->ideasRepository->save($idea);
+        $idea = new Ideas();
+        $idea->setTitle($data['title'])
+            ->setContent($data['description'])
+            ->setUser($user)
+            ->setDate(new DateTime())
+            ->setCategory($category)
+            ->setType($type)
+            ->setStatus($status)
+            ->setPhoto($photo)
+            ->setHref($data['href']);
+        $this->ideasRepository->save($idea);
 
-            $userBase64 = AppController::encodeBase64User($user->getEmail(), $user->getOpenPassword());
-            $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId();
-            $redirectURL = $baseURL . $this->generateUrl("auto_redirect", array(
+        $userBase64 = AppController::encodeBase64User($user->getEmail(), $user->getOpenPassword());
+        $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId();
+        $redirectURL = $baseURL . $this->generateUrl("auto_redirect", array(
                 'url' => $urlIdea,
                 'user' => $userBase64
             ));
 
-            $message = "Добавлена новая идея: $title\n\nСсылка: $urlIdea";
-            // Берем почты из бд
-            $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
-            $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
-            $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
-            if(!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)){
-                AppController::sendEmail($mailer, $message,"Новый отзыв", $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
-            }
-
+        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: $urlIdea";
+        if($this->sendMail($mailer, $message, "Новый отзыв")){
             return $this->json([
                 "state" => "success",
                 "url" => $redirectURL
             ]);
-        } catch (TransportExceptionInterface $e) {
-            return $this->json(['state' => 'trouble', 'message' => $e->getMessage()]);
-        } catch (Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        } else {
+            return $this->json([
+                'state' => 'trouble',
+                "url" => $redirectURL,
+                'message' => "Не удалось отправить почту"
+            ]);
         }
     }
     /**
@@ -241,17 +208,17 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @Route("/ideas/api/getIdeas/{category_id}/")
+     * @Route("/api/web/ideas/getIdeas/{category_id}/")
      * @param Request $request
+     * @param $category_id
      * @return Response
      */
-    public function getIdeas(Request $request): Response
+    public function getIdeas(Request $request, $category_id): Response
     {
-//        return dd($_GET);
-        $categories = array($request->get("category_id"));
-        $order = !empty($_GET["order"]) ? $_GET["order"] : 'date';
-        $type = !empty($_GET["type"]) ? $_GET["type"] : 'desc';
-        $page = (int)!empty($_GET["page"]) ? $_GET["page"] : 1;
+        $categories = array($category_id);
+        $order = !empty($request->get("order")) ? $request->get("order") : 'date';
+        $type = !empty($request->get("type")) ? $request->get("type") : 'desc';
+        $page = (int)!empty($request->get("page")) ? $request->get("page") : 1;
 
         $limit = 10;
         $from = ($page - 1) * 10;
@@ -260,19 +227,19 @@ class IdeasController extends AbstractController
         $data['status'] = $this->statusRepository->findAll();
         // Фильтры по типам
         $types = array();
-        if(empty($_GET["types"])){
+        if (empty($request->get("types"))) {
             foreach ($data['types'] as $typeOne) {
                 $types[] = $typeOne->getId();
             }
         } else {
-            $typesGET = json_decode($_GET["types"]);
-            if(empty($typesGET) or count($typesGET) < 1 or gettype($typesGET[0]) != "integer"){
+            $typesGET = json_decode($request->get("types"));
+            if (empty($typesGET) or count($typesGET) < 1 or gettype($typesGET[0]) != "integer") {
                 foreach ($data['types'] as $typeOne) {
                     $types[] = $typeOne->getId();
                 }
-            } else{
+            } else {
                 foreach ($data['types'] as $t) {
-                    if(in_array($t->getId(), $typesGET)){
+                    if (in_array($t->getId(), $typesGET)) {
                         $types[] = $t->getId();
                     }
                 }
@@ -280,61 +247,74 @@ class IdeasController extends AbstractController
         }
         // Фильтры по статусам
         $statuses = array();
-        if(empty($_GET["status"])){
+        if (empty($request->get("status"))) {
             foreach ($data['status'] as $status) {
-                if($status->getName() != "new"){
+                if ($status->getName() != "new") {
                     $statuses[] = $status->getId();
                 }
             }
         } else {
-            $statusGET = json_decode($_GET["status"]);
-            if(empty($statusGET) or gettype($statusGET[0]) != "integer"){
+            $statusGET = json_decode($request->get("status"));
+            if (empty($statusGET) or gettype($statusGET[0]) != "integer") {
                 foreach ($data['status'] as $status) {
-                    if($status->getName() != "new"){
+                    if ($status->getName() != "new") {
                         $statuses[] = $status->getId();
                     }
                 }
             } else {
                 foreach ($data['status'] as $status) {
-                    if(in_array($status->getId(), $statusGET)){
+                    if (in_array($status->getId(), $statusGET)) {
                         $statuses[] = $status->getId();
                     }
                 }
             }
         }
-        try {
-            $category = $this->categoriesRepository->find($categories[0]);
-            if(empty($category)){
-                throw new Exception("Такой категории не существует");
-            }
-            if(empty($types)){
-                throw new Exception("Укажите существующие типы для поиска");
-            }
-            if(empty($statuses)){
-                throw new Exception("Укажите существующие статусы для поиска");
-            }
-//            dd($statuses);
-
-            if($order == "votes"){
-//                dd($type);
-                $ideas = $this->ideasRepository->getIdeas("id", $type == 'desc'? 1 : 0, $from, $limit, $statuses, $categories, $types);
-                $ideas = $this->decorateIdeas($ideas);
-//                dd(count($ideas));
-                $ideas = $this->array_sort($ideas,"likes",$type == 'desc'? SORT_DESC : SORT_ASC);
-            } else {
-                $ideas = $this->ideasRepository->getIdeas($order, $type == 'desc'? 1 : 0, $from, $limit, $statuses, $categories, $types);
-                $ideas = $this->decorateIdeas($ideas);
-//                dd($ideas);
-            }
-
-            return $this->json(['state' => 'success', 'ideas' => $ideas]); // $this->decorateIdeas($ideas)
-        } catch (Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        $category = $this->categoriesRepository->find($categories[0]);
+        if (empty($category)) {
+            return $this->json(['state' => 'error', 'message' => "Такой категории не существует"]);
         }
+        if (empty($types)) {
+            return $this->json(['state' => 'error', 'message' => "Укажите существующие типы для поиска"]);
+        }
+        if (empty($statuses)) {
+            return $this->json(['state' => 'error', 'message' => "Укажите существующие статусы для поиска"]);
+        }
+//        dd($statuses);
+
+        if ($order == "votes") {
+//            dd($type);
+            $ideas = $this->ideasRepository->getIdeas("id", $type == 'desc' ? 1 : 0, $from, $limit, $statuses, $categories, $types);
+            $ideas = $this->decorateIdeas($ideas);
+//            dd(count($ideas));
+            $ideas = $this->array_sort($ideas, "likes", $type == 'desc' ? SORT_DESC : SORT_ASC);
+        } else {
+            $ideas = $this->ideasRepository->getIdeas($order, $type == 'desc' ? 1 : 0, $from, $limit, $statuses, $categories, $types);
+            $ideas = $this->decorateIdeas($ideas);
+//            dd($ideas);
+        }
+
+        return $this->json(['state' => 'success', 'ideas' => $ideas]); // $this->decorateIdeas($ideas)
     }
 
     /**
-     * @Route("/ideas/api/search/")
+     * @Route("/api/web/idea/{idea_id}/")
+     * @param Request $request
+     * @param $idea_id
+     * @return Response
+     */
+    public function getIdea(Request $request, $idea_id): Response
+    {
+        $idea = $this->ideasRepository->find($idea_id);
+
+        if(empty($idea)){
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+        }
+        $ideaInfo = $this->decorateIdeas(array($idea));
+
+        return $this->json(['state' => 'success', 'idea' => $ideaInfo]);
+    }
+    /**
+     * @Route("/api/web/ideas/search/")
      * @param Request $request
      * @return Response
      */
@@ -357,8 +337,7 @@ class IdeasController extends AbstractController
             } else {
                 if(!empty($searchTitle)){
                     $ideas = $this->ideasRepository->searchIdeas($searchTitle,"");
-                }
-                if(!empty($searchContent)){
+                } else if(!empty($searchContent)){
                     $ideas = $this->ideasRepository->searchIdeas("", $searchContent);
                 }
             }
@@ -376,7 +355,7 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @Route("/ideas/api/getCategories/")
+     * @Route("/api/web/ideas/getCategories/")
      * @param Request $request
      * @return Response
      */
@@ -418,7 +397,7 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @Route("/ideas/api/newComment/")
+     * @Route("/api/user/ideas/newComment/")
      * @param Request $request
      * @return Response
      */
@@ -467,7 +446,7 @@ class IdeasController extends AbstractController
         }
     }
     /**
-     * @Route("/api/delete/comment/")
+     * @Route("/api/admin/delete/comment/")
      * @param Request $request
      * @return Response
      */
@@ -506,7 +485,7 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @Route("/ideas/api/newVote/")
+     * @Route("/api/user/ideas/newVote/")
      * @param Request $request
      * @return Response
      */
@@ -572,7 +551,7 @@ class IdeasController extends AbstractController
         }
     }
     /**
-     * @Route("/api/delete/vote/")
+     * @Route("/api/user/delete/vote/")
      * @param Request $request
      * @return Response
      */
@@ -619,7 +598,7 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @Route("/ideas/api/setStatus/")
+     * @Route("/api/admin/ideas/setStatus/")
      * @param Request $request
      * @return Response
      * @throws Exception
@@ -691,7 +670,7 @@ class IdeasController extends AbstractController
         }
     }
     /**
-     * @Route("/api/closeIssue")
+     * @Route("/api/ag/closeIssue")
      * @param Request $request
      * @return Response
      * @throws Exception
@@ -752,14 +731,15 @@ class IdeasController extends AbstractController
         }
         return $type;
     }
+
     /**
-     * @param $email
-     * @param $pass
-     * @param $name
+     * @param string $email
+     * @param string $pass
+     * @param string $name
      * @return User
      * @throws Exception
      */
-    private function getUserOrCreate($email, $pass, $name){
+    private function getUserOrCreate(string $email, string $pass, string $name){
         if(empty($email)){
             throw new Exception("Нет email чтобы найти/зарегистрировать пользователя");
         }
@@ -791,6 +771,21 @@ class IdeasController extends AbstractController
             return $upload["filename"];
         } else {
             return null;
+        }
+    }
+    private function sendMail(MailerInterface $mailer, string $message, string $subject): bool
+    {
+        // Берем почты из бд
+        $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
+        $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
+        $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+        try {
+            if (!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)) {
+                AppController::sendEmail($mailer, $message, $subject, $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
+            }
+            return true;
+        } catch (TransportExceptionInterface $e) {
+            return false;
         }
     }
     // array_sort($array, 'key', SORT_DESC);
@@ -828,7 +823,12 @@ class IdeasController extends AbstractController
 
         return array_values((array)$new_array);
     }
-    private function decorateIdeas($ideas): ?array
+
+    /**
+     * @param array $ideas
+     * @return array|null
+     */
+    private function decorateIdeas(array $ideas): ?array
     {
         if(empty($ideas)){
             return null;

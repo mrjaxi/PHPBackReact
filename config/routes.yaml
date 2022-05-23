@@ -2,67 +2,74 @@ authentication_token:
   path: /api/app_login
   methods: ['POST']
 
-api_decode_user:
-  path: /api/decode/user/
-  controller: App\Controller\MainController::decodeUserInfo
-api_upload:
-  path: /api/upload/
-  controller: App\Controller\MainController::upload
+# Роуты для atmaguru
 api_close_issue:
-  path: /api/closeIssue
+  path: /api/ag/closeIssue
   controller: App\Controller\IdeasController::closeIssue
-
-api_user_new:
-  path: /api/user/new/
-  controller: App\Controller\UserController::newUser
 api_user_register:
-  path: /api/user/register/
+  path: /api/ag/register/
   controller: App\Controller\UserController::register
-api_profile:
-  path: /api/profile/
-  controller: App\Controller\UserController::getProfile
 api_user_setProfile:
-  path: /api/user/setProfile/
+  path: /api/ag/user/setProfile/
   controller: App\Controller\UserController::setProfile
 api_user_set_username:
-  path: /api/user/setUsername/
+  path: /api/ag/user/setUsername/
   controller: App\Controller\UserController::setUsername
-api_user_profile:
-  path: /api/users/{id}/
-  controller: App\Controller\UserController::getUserProfile
+api_add_idea:
+  path: /api/ag/ideas/add_idea/
+  controller: App\Controller\IdeasController::add_idea
 
+# Роуты общедоступные
+api_decode_user:
+  path: /api/web/decode/user/
+  controller: App\Controller\MainController::decodeUserInfo
+api_upload:
+  path: /api/web/upload/
+  controller: App\Controller\MainController::upload
+api_signIn:
+  path: /api/web/signIn/
+  controller: App\Controller\UserController::signIn
+api_profile:
+  path: /api/web/profile/
+  controller: App\Controller\UserController::getProfile
+api_user_profile:
+  path: /api/web/user/{id}/
+  controller: App\Controller\UserController::getUserProfile
 api_ideas_search:
-  path: /ideas/api/search/
+  path: /api/web/ideas/search/
   controller: App\Controller\IdeasController::search
 api_get_categories:
-  path: /ideas/api/getCategories/
+  path: /api/web/ideas/getCategories/
   controller: App\Controller\IdeasController::getCategories
 api_get_ideas:
-  path: /ideas/api/getIdeas/{category_id}/
+  path: /api/web/ideas/getIdeas/{category_id}/
   controller: App\Controller\IdeasController::getIdeas
-  requirements:
-    id: \d+
-api_add_idea:
-  path: /ideas/api/add_idea/
-  controller: App\Controller\IdeasController::add_idea
+api_get_idea:
+  path: /api/web/idea/{idea_id}/
+  controller: App\Controller\IdeasController::getIdea
+
+# Роуты пользователей
 api_new_idea:
-  path: /ideas/api/new/
+  path: /api/user/ideas/new/
   controller: App\Controller\IdeasController::new_idea
-api_set_status:
-  path: /ideas/api/setStatus/
-  controller: App\Controller\IdeasController::setStatus
 api_new_vote:
-  path: /ideas/api/newVote/
+  path: /api/user/ideas/newVote/
   controller: App\Controller\IdeasController::newVote
 api_unvote:
-  path: /api/delete/vote/
+  path: /api/user/delete/vote/
   controller: App\Controller\IdeasController::unVote
-api_delete_comment:
-  path: /api/delete/comment/
-  controller: App\Controller\IdeasController::deleteComment
 api_new_comment:
-  path: /ideas/api/newComment/
+  path: /api/user/ideas/newComment/
   controller: App\Controller\IdeasController::newComment
+
+# Роуты админа
+api_set_status:
+  path: /api/admin/ideas/setStatus/
+  controller: App\Controller\IdeasController::setStatus
+api_delete_comment:
+  path: /api/admin/delete/comment/
+  controller: App\Controller\IdeasController::deleteComment
+
 
 # роуты реакта
 auto_redirect:
@@ -95,9 +102,3 @@ homepage:
   requirements:
     _locale: en|ru
     wildcard: .*
-
-#api_user_get:
-#  path: /api/users/{id}/
-#  controller: App\Controller\UserController::getUserProfile
-#  requirements:
-#    id: \d+
