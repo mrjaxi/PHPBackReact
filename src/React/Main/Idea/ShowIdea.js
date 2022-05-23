@@ -4,6 +4,7 @@ import Header from "../Components/Header";
 import Comments from "../Comments";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
+import {useParams} from "react-router";
 
 const ShowIdea = () => {
 
@@ -13,6 +14,8 @@ const ShowIdea = () => {
     const [loading, setLoading] = useState(true);
     const [statuses, setStatus] = useState([]);
     const [loadingComments, setLoadingComments] = useState(false);
+
+    const params = useParams();
 
     const getCategory = () => {
         setLoading(true);
@@ -24,15 +27,10 @@ const ShowIdea = () => {
 
     const getIdea = () => {
         setLoading(true)
-        let params = {
-            order: "id",
-            type: "asc",
-            page: 1,
-        };
 
-        axios.get(ApiRoutes.API_GET_IDEA.format(1) + "?" + global.serialize(params)).then(response => {
-            if (response.data?.ideas !== null) {
-                response.data.ideas.map(item => {
+        axios.get(ApiRoutes.API_GET_ONE_IDEA.format(params.id)).then(response => {
+            if (response.data?.idea) {
+                response.data.idea.map(item => {
                     data.push({
                         id: item.id,
                         title: item.title,
@@ -53,10 +51,10 @@ const ShowIdea = () => {
                     })
                 });
 
-                setItems(data.filter((item, index) => index < 1));
+                setItems(data);
                 setLoading(false)
             } else {
-                setItems(data.filter((item, index) => index < 1));
+                setItems(data);
                 setLoading(false)
             }
         })
@@ -132,7 +130,7 @@ const ShowIdea = () => {
     return (
         loading ? <></> :
         <>
-            <Col className={"f-main"}>
+            <Col className={"f-main"} style={{ minHeight: '100vh' }}>
                 <div>
                     <Header />
                     <div className={"f-row-type max_width"}>

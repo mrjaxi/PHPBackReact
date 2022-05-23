@@ -21,7 +21,7 @@ const Profile = () => {
                 <section>
                     <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>
                         <div style={{ display: 'flex', flexDirection: 'row', width: '40%', justifyContent: 'space-between' }}>
-                            <span>
+                            <span style={{}}>
                                 Публикации
                             </span>
                             <span>

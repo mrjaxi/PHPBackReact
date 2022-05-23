@@ -1552,10 +1552,12 @@ body {
 }
 .f-cards-div-wrap-text {
   margin-bottom: 20px;
+  color: #1D1D1D;
 }
 .f-cards-content-description {
   font-size: 17px;
   text-overflow: ellipsis;
+  color: #1D1D1D;
 }
 .f-cards-image {
   width: 48px;

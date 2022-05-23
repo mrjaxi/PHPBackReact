@@ -251,7 +251,7 @@ const MainPage = () => {
                                         </div>
                                         :
                                     items.map((item, index) => (
-                                    <div className={"f-cards"}>
+                                    <NavLink to={"/idea/" + item.id} className={"f-cards"}>
                                         <div>
                                             <p style={{ marginLeft: 10 }} className={"f-cards-hashtag"}>#{item.type}</p>
                                             <div className={"f-cards-card-wrap"}>
@@ -326,7 +326,7 @@ const MainPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </NavLink>
                                 ))}
                         </div>
                         <section style={{ width: '20%' }}>
