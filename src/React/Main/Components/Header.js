@@ -43,18 +43,18 @@ const Header = () => {
                                     </div>
                                 </button>
                                 <div className="dropdown-content">
-                                    <a style={{
+                                    <NavLink style={{
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         flexDirection: 'row',
-                                    }}>
+                                    }} to={"/profile"}>
                                         <span style={{ marginRight: 10, fontSize: 17 }}>{ global.user.first_name }</span>
                                         <Avatar size={36} style={{ backgroundColor: '#AAB2BD' }} src={global.user.image !== null ? <img src={global.user.image}/> : <UserOutlined /> } />
                                         <div style={{ marginLeft: 5 }}>
                                             <UpOutlined />
                                         </div>
-                                    </a>
+                                    </NavLink>
                                     <a href={"/"} onClick={() => logout()}>Выход</a>
                                 </div>
                             </div>)

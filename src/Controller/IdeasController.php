@@ -828,7 +828,7 @@ class IdeasController extends AbstractController
      * @param array $ideas
      * @return array|null
      */
-    private function decorateIdeas(array $ideas): ?array
+    private function decorateIdeas(array $ideas = null): ?array
     {
         if(empty($ideas)){
             return null;

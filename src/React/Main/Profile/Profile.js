@@ -17,30 +17,22 @@ const Profile = () => {
     return (
         <>
             <Col className={"f-main"}>
-                <div>
-                    <Header />
-                    <Navigation
-                        categories={categories}
-                        loadData={loadData}
-                        selectedCategory={selectedCategory}
-                        selectedPanelMenu={selectedPanelMenu}
-                        selectedType={selectedType}
-                        setSelectedCategory={setSelectedCategory}
-                    />
-                    <section>
-                        <div>
-                            <div>
-                                Тест
-                            </div>
-                            <div>
-                                Тест
-                            </div>
-                            <div>
-                                Тест
-                            </div>
+                <Header />
+                <section>
+                    <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>
+                        <div style={{ display: 'flex', flexDirection: 'row', width: '40%', justifyContent: 'space-between' }}>
+                            <span>
+                                Публикации
+                            </span>
+                            <span>
+                                Комментарии
+                            </span>
+                            <span>
+                                Понравилось
+                            </span>
                         </div>
-                    </section>
-                </div>
+                    </div>
+                </section>
             </Col>
         </>
     )

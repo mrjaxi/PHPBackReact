@@ -68,7 +68,7 @@ const MainPage = () => {
             params["status"] = JSON.stringify(prevIncludedId) : null;
         }
 
-        axios.get(ApiRoutes.API_GET_IDEA.format(category) + "?" + global.serialize(params)).then(response => {
+        axios.get(ApiRoutes.API_GET_IDEAS.format(category) + "?" + global.serialize(params)).then(response => {
             if (response.data?.ideas !== null) {
                 response.data.ideas.map(item => {
                     data.push({

@@ -1341,6 +1341,7 @@ body {
   background-repeat: no-repeat;
   display: flex;
   justify-content: center;
+  flex-direction: column;
   font-family: Inter, sans-serif, Arial;
 }
 .f-header-back-wrap {
