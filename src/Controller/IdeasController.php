@@ -107,18 +107,18 @@ class IdeasController extends AbstractController
             ->setPhoto($data['photo']);
         $this->ideasRepository->save($idea);
 
-//        $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId() . "/";
-//        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
-//        if($this->sendMail($mailer, $message, "Новый отзыв")){
+        $urlIdea = $baseURL . "/idea/" . $idea->getId();
+        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
+        if($this->sendMail($mailer, $message, "Новый отзыв")){
             return $this->json([
                 "state" => "success",
             ]);
-    //        } else {
-    //            return $this->json([
-    //                'state' => 'trouble',
-    //                'message' => "Не удалось отправить почту"
-    //            ]);
-    //        }
+        } else {
+            return $this->json([
+                'state' => 'trouble',
+                'message' => "Не удалось отправить почту"
+            ]);
+        }
     }
 
     /**
@@ -162,7 +162,7 @@ class IdeasController extends AbstractController
         $this->ideasRepository->save($idea);
 
         $userBase64 = AppController::encodeBase64User($user->getEmail(), $user->getOpenPassword());
-        $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId();
+        $urlIdea = "/idea/" . $idea->getId();
         $redirectURL = $baseURL . $this->generateUrl("auto_redirect", array(
                 'url' => $urlIdea,
                 'user' => $userBase64
@@ -825,10 +825,10 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @param array $ideas
+     * @param array|null $ideas
      * @return array|null
      */
-    private function decorateIdeas(array $ideas = null): ?array
+    private function decorateIdeas(?array $ideas): ?array
     {
         if(empty($ideas)){
             return null;

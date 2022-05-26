@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Ideas;
+use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
+use App\Repository\VotesRepository;
+use Doctrine\Common\Collections\Collection;
 use Exception;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +20,16 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     private UserRepository $userRepository;
+    private SettingsRepository $settingsRepository;
+    private VotesRepository $votesRepository;
     private UserPasswordEncoderInterface $encoder;
 
-    public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $encoder)
+    public function __construct(UserRepository $userRepository, SettingsRepository $settingsRepository,
+                                VotesRepository $votesRepository,UserPasswordEncoderInterface $encoder)
     {
         $this->userRepository = $userRepository;
+        $this->settingsRepository = $settingsRepository;
+        $this->votesRepository = $votesRepository;
         $this->encoder = $encoder;
     }
 
@@ -31,7 +41,64 @@ class UserController extends AbstractController
      */
     public function signIn(Request $request, MailerInterface $mailer): Response
     {
+        $data = json_decode($request->getContent(), true);
+        if (empty($data['username']) or empty($data['password'])) {
+            return $this->json(['state' => 'error', 'message' => "Передайте username и password."]);
+        }
+        $user = $this->userRepository->findOneBy([ "email" => $data['username'] ]);
+        if(empty($user)){
+            $user = $this->userRepository->findOneBy([ "username" => $data['username'] ]);
+            if(empty($user)){
+                return $this->json(['state' => 'error', 'message' => "Такого пользователя не существует"]);
+            }
+        }
+        if($user->getOpenPassword() !== $data['password']){
+            return $this->json(['state' => 'error', 'message' => "Неверный пароль"]);
+        }
+        $expires = AppController::getExpires();
+        $userInfo = AppController::encodeBase64User($user->getEmail(), $user->getOpenPassword());
+        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
+        $url = $baseURL . $this->generateUrl("api_redirect", array(
+                "user" => $userInfo,
+                "expires" => $expires,
+            ));
+//        dd($url);
+        $message = "Попытка входа в ваш аккаунт Atmaguru Feedback. Чтобы войти в аккаунт, перейдите по ссылке:\n\n{$url}";
+        if($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())){
+            return $this->json(['state' => 'success', "url" => $url]);
+        } else {
+            return $this->json(['state' => 'trouble',
+                "message" => "Не удалось отправить сообщение на почту",
+                "url" => $url
+            ]);
+        }
+    }
 
+    /**
+     * @Route("/api/web/redirect/")
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @return Response
+     */
+    public function redirectToReact(Request $request, MailerInterface $mailer): Response
+    {
+        $userInfo = $request->get("user");
+        $expires = (int) $request->get("expires");
+        if (!$request->getLocale()) {
+            $request->setLocale('ru');
+        }
+        if(empty($userInfo) or empty($expires)){
+            return $this->redirect('/' . $request->getLocale() . '/');
+        }
+        if(!AppController::checkExpires($expires)){
+            return $this->redirect('/' . $request->getLocale() . '/');
+        }
+        $baseURL = "{$request->getScheme()}://{$request->getHttpHost()}/{$request->getLocale()}/";
+        $redirectURL =$baseURL . "redirect?" .
+            "url=/{$request->getLocale()}/" .
+            "&user={$userInfo}";
+//        dd($redirectURL);
+        return $this->redirect($redirectURL);
 
     }
 
@@ -202,7 +269,8 @@ class UserController extends AbstractController
         );
         switch ($data) {
             case 1:
-                $ideas = $user->get_IdeasArray();
+                $ideas = $user->get_Ideas();
+                $ideas = $this->decorateIdeas($ideas);
                 $response["ideas"] = $ideas;
                 break;
             case 2:
@@ -219,5 +287,60 @@ class UserController extends AbstractController
         }
 
         return $this->json($response);
+    }
+
+    /**
+     * @param Collection $ideas
+     * @return array|null
+     */
+    private function decorateIdeas(Collection $ideas): ?array
+    {
+        if($ideas->isEmpty()){
+            return null;
+        }
+        /** @var User $user */
+        $user = $this->getUser();
+        $ideasArr = array();
+        for($i = 0; $i < $ideas->count(); $i++){
+            /** @var $idea Ideas */
+            $idea = $ideas[$i];
+            $ideasArr[$i] = $idea->get_Info();
+            $ideasArr[$i]["comments"] = $idea->get_CommentsArray();
+
+            if(empty($user)){
+                $ideasArr[$i]["currentUserIsVote"] = "unauthorized";
+                continue;
+            }
+            $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
+//            dd($votes);
+            if(empty($votes)){
+                $ideasArr[$i]["currentUserIsVote"] = false;
+                continue;
+            }
+            foreach ($votes as $vote){
+                if($vote->get_User()->getId() == $user->getId()){
+                    $ideasArr[$i]["currentUserIsVote"]= true;
+                    break;
+                } else {
+                    $ideasArr[$i]["currentUserIsVote"]= false;
+                }
+            }
+        }
+        return $ideasArr;
+    }
+
+    private function sendToMail(MailerInterface $mailer, string $message, string $subject, string $toMail): bool
+    {
+        // Берем почты из бд
+        $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
+        $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+        try {
+            if (!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)) {
+                AppController::sendEmail($mailer, $message, $subject, $toMail, $from_mail->getValue(), $bcc_mail->getValue());
+            }
+            return true;
+        } catch (TransportExceptionInterface $e) {
+            return false;
+        }
     }
 }

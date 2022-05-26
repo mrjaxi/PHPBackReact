@@ -26,7 +26,7 @@ class UserFixtures extends Fixture
             0 => [
                 'username' => 'root',
                 'role' => ['ROLE_ADMIN'],
-                'first_name' => 'Роман',
+                'first_name' => 'Дмитрий',
                 'is_active' => '1',
                 'password' => 'freelord',
                 'email' => 'bumblebeelion@atma.company',
