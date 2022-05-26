@@ -36,7 +36,7 @@ class SettingsFixtures extends Fixture
             ],
             3 => [
                 'name' => 'MAIL-main',
-                'value' => 'atmaguru@atmadev.ru',
+                'value' => 'feedback@atmadev.ru',
             ],
             4 => [
                 'name' => 'MAIL-bcc',

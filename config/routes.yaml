@@ -26,6 +26,9 @@ api_decode_user:
 api_upload:
   path: /api/web/upload/
   controller: App\Controller\MainController::upload
+api_redirect:
+  path: /api/web/redirect/
+  controller: App\Controller\UserController::redirectToReact
 api_signIn:
   path: /api/web/signIn/
   controller: App\Controller\UserController::signIn
@@ -62,13 +65,15 @@ api_new_comment:
   path: /api/user/ideas/newComment/
   controller: App\Controller\IdeasController::newComment
 
+# Как для админа так и для пользователя
+api_delete_comment:
+  path: /api/user/delete/comment/
+  controller: App\Controller\IdeasController::deleteComment
+
 # Роуты админа
 api_set_status:
   path: /api/admin/ideas/setStatus/
   controller: App\Controller\IdeasController::setStatus
-api_delete_comment:
-  path: /api/admin/delete/comment/
-  controller: App\Controller\IdeasController::deleteComment
 
 
 # роуты реакта

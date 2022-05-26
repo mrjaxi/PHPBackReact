@@ -66,7 +66,7 @@ const AddIdeaPage = () => {
     const [loading, setLoading] = useState(false);
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
-    const [uploadURL, setUploadURL] = useState(global.baseURL + "/api/upload/")
+    const [uploadURL, setUploadURL] = useState(ApiRoutes.BASE_URL + "/api/upload/")
     const [value, setValue] = useState([]);
 
     const [fileList, setFileList] = useState([]);

@@ -227,4 +227,12 @@ class AppController extends AbstractController
     static public function encodeBase64User($email, $pass){
         return strtr(base64_encode($email . ':' . $pass), '+/=', '._-');
     }
+
+    static public function getExpires(){
+        return time() + 3600 * 6;
+    }
+
+    static public function checkExpires($expires){
+        return time() < $expires;
+    }
 }
