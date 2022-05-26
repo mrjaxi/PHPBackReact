@@ -251,7 +251,7 @@ const MainPage = () => {
                                         </div>
                                         :
                                     items.map((item, index) => (
-                                    <NavLink to={"/idea/" + item.id} className={"f-cards"}>
+                                    <div className={"f-cards"}>
                                         <div>
                                             <p style={{ marginLeft: 10 }} className={"f-cards-hashtag"}>#{item.type}</p>
                                             <div className={"f-cards-card-wrap"}>
@@ -285,6 +285,7 @@ const MainPage = () => {
                                                                 <p className={"f-cards-type f-type-viewed"}>{ item.status.translate }</p>
                                                         }
                                                     </div>
+
                                                     <div className={"f-cards-div-wrap-text"}>
                                                         <span className={"f-cards-content-text"}>
                                                             { item.title }
@@ -296,7 +297,7 @@ const MainPage = () => {
                                                                     item.text.length < 400 ? <span>{item.text}</span> :
                                                                         item.text.length > 400 && !item.showFullText ?
                                                                             <span>{item.text.slice(0, 400)}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
-                                                                            <span>{item.text} <a onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
+                                                                            <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
                                                                 }
                                                             </span>
                                                     </div>
@@ -326,7 +327,7 @@ const MainPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </NavLink>
+                                    </div>
                                 ))}
                         </div>
                         <section style={{ width: '20%' }}>

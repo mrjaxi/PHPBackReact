@@ -13,7 +13,7 @@ const Login = () => {
     const loginUser = (data) => {
         axios.post(ApiRoutes.API_LOGIN, global.serialize({username: data?.email, password: data?.password, remember: checked}), {withCredentials: true,}).then(response => {
             if (response.data.state === "success"){
-                global.user = response.data.profile
+                global.user = response.data.profile;
 
                 global._history.push("/")
             }

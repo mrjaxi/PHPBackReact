@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Form, Input, Select, Skeleton} from "antd";
 import axios from "axios";
+import { CloseOutlined } from "@ant-design/icons"
 import Highlighter from "react-highlight-words";
 const { Option } = Select;
 import ApiRoutes from "../Routes/ApiRoutes";
@@ -67,7 +68,7 @@ const Search = () => {
                             searchIdeas(event.target.value.trim()),
                             setSearchText(event.target.value.trim())
                         }} style={{
-                            width: '100%', paddingLeft: 30,
+                            paddingLeft: 30,
                             height: 65, borderRadius: 0, borderTopLeftRadius: 32, borderTopRightRadius: 32, borderColor: '#FFFFFF',
                             fontSize: 24, borderBottomWidth: 1, borderBottomColor: '#E6E9ED'
                         }} placeholder={"Поиск..."}/>

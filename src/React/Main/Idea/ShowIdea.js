@@ -5,6 +5,7 @@ import Comments from "../Comments";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import {useParams} from "react-router";
+import {NavLink} from "react-router-dom";
 
 const ShowIdea = () => {
 
@@ -151,6 +152,21 @@ const ShowIdea = () => {
                                     alignItems: "center",
                                 }}>
                                     {
+                                        items.length === 0 ?
+                                            <div className={"f-cards"}>
+                                                <div>
+                                                    <div className={"f-cards-card-wrap"}>
+                                                        <div className={"f-cards-inner"}>
+                                                            <div className={"f-cards-div-wrap-text"}>
+                                                            <span className={"f-cards-content-text"}>
+                                                                <div>Пока нет идей...</div>
+                                                            </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            :
                                         items.map((item, index) => (
                                             <div className={"f-cards"}>
                                                 <div>

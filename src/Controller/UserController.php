@@ -191,15 +191,16 @@ class UserController extends AbstractController
         if (empty($user)) {
             return $this->json(['state' => 'error', 'message' => "Такого пользователя нет"]);
         }
-        $data = json_decode($request->getContent(), true);
-        if (empty($data['page'])) {
+//        $data = json_decode($request->getContent(), true);
+        $data = $request->get("page");
+        if (empty($data)) {
             return $this->json(['state' => 'error', 'message' => "Передайте параметр page"]);
         }
         $response = array(
             'state' => 'success',
             'profile' => $user->get_Profile(),
         );
-        switch ($data['page']) {
+        switch ($data) {
             case 1:
                 $ideas = $user->get_IdeasArray();
                 $response["ideas"] = $ideas;

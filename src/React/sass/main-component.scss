@@ -95,6 +95,24 @@ body {
         }
     }
 
+    &-bottom-selected {
+        width: 100%;
+        height: 4px;
+        background-color: #3D72ED;
+        border-radius: 8px;
+        margin-top: 6px;
+    }
+
+    &-profile-header {
+        font-size: 17px;
+        font-weight: 500;
+        color: #AAB2BD;
+    }
+
+    &-profile-header:hover {
+        color: #AAB2BD;
+    }
+
     &-new-idea {
         position: sticky;
         width: 280px;

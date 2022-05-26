@@ -39,6 +39,14 @@ class UserFixtures extends Fixture
                 'password' => 'freelord',
                 'email' => 'yakov@atmapro.ru',
             ],
+            3 => [
+                'username' => 'mail',
+                'role' => ['ROLE_ADMIN',"ROLE_DEVELOPER"],
+                'first_name' => 'mail1',
+                'is_active' => '1',
+                'password' => 'mail',
+                'email' => 'mail@gmail.com',
+            ],
         ];
 
         foreach ($usersData as $user) {

@@ -107,18 +107,18 @@ class IdeasController extends AbstractController
             ->setPhoto($data['photo']);
         $this->ideasRepository->save($idea);
 
-        $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId() . "/";
-        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
-        if($this->sendMail($mailer, $message, "Новый отзыв")){
+//        $urlIdea = $baseURL . $this->generateUrl("idea_show") . $idea->getId() . "/";
+//        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
+//        if($this->sendMail($mailer, $message, "Новый отзыв")){
             return $this->json([
                 "state" => "success",
             ]);
-        } else {
-            return $this->json([
-                'state' => 'trouble',
-                'message' => "Не удалось отправить почту"
-            ]);
-        }
+    //        } else {
+    //            return $this->json([
+    //                'state' => 'trouble',
+    //                'message' => "Не удалось отправить почту"
+    //            ]);
+    //        }
     }
 
     /**

@@ -11,7 +11,8 @@ const ApiRoutes = {
     API_NEW_COMMENT: "/api/user/ideas/newComment/",
     API_DELETE_COMMENT: "/api/admin/delete/comment/",
     API_LOGIN: "/ru/login",
-    API_GET_ONE_IDEA: "/api/web/idea/{0}/"
+    API_GET_ONE_IDEA: "/api/web/idea/{0}/",
+    API_GET_USER_DATA: "/api/web/user/{0}/"
 };
 
 export default ApiRoutes;

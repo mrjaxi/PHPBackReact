@@ -1311,6 +1311,21 @@ body {
 .f-search-wrap::-webkit-scrollbar {
   display: none;
 }
+.f-bottom-selected {
+  width: 100%;
+  height: 4px;
+  background-color: #3D72ED;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+.f-profile-header {
+  font-size: 17px;
+  font-weight: 500;
+  color: #AAB2BD;
+}
+.f-profile-header:hover {
+  color: #AAB2BD;
+}
 .f-new-idea {
   position: sticky;
   width: 280px;
