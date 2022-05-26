@@ -65,11 +65,10 @@ class UserController extends AbstractController
 //        dd($url);
         $message = "Попытка входа в ваш аккаунт Atmaguru Feedback. Чтобы войти в аккаунт, перейдите по ссылке:\n\n{$url}";
         if($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())){
-            return $this->json(['state' => 'success', "url" => $url]);
+            return $this->json(['state' => 'success']);
         } else {
             return $this->json(['state' => 'trouble',
                 "message" => "Не удалось отправить сообщение на почту",
-                "url" => $url
             ]);
         }
     }
@@ -99,7 +98,6 @@ class UserController extends AbstractController
             "&user={$userInfo}";
 //        dd($redirectURL);
         return $this->redirect($redirectURL);
-
     }
 
     /**
@@ -335,10 +333,12 @@ class UserController extends AbstractController
         $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
         $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
         try {
-            if (!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)) {
+            if (!empty($toMail) and !empty($from_mail) and !empty($bcc_mail)) {
                 AppController::sendEmail($mailer, $message, $subject, $toMail, $from_mail->getValue(), $bcc_mail->getValue());
+                return true;
+            } else {
+                return false;
             }
-            return true;
         } catch (TransportExceptionInterface $e) {
             return false;
         }

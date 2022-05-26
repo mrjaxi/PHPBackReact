@@ -130,7 +130,11 @@ class IdeasController extends AbstractController
      */
     public function add_idea(Request $request, MailerInterface $mailer): Response
     {
-        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
+        if (!$request->getLocale()) {
+            $request->setLocale('ru');
+        }
+        $baseURL = "{$request->getScheme()}://{$request->getHttpHost()}/{$request->getLocale()}";
+
         $data = json_decode($request->getContent(), true);
         if (empty($data)) {
             return $this->json(['state' => 'error', 'message' => "Передайте данные"]);
@@ -168,7 +172,7 @@ class IdeasController extends AbstractController
                 'user' => $userBase64
             ));
 
-        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: $urlIdea";
+        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$baseURL}{$urlIdea}";
         if($this->sendMail($mailer, $message, "Новый отзыв")){
             return $this->json([
                 "state" => "success",
@@ -325,33 +329,28 @@ class IdeasController extends AbstractController
             $searchTitle = $data['title'];
             $searchContent = $data['content'];
         } else {
-            $searchTitle = $request->get('title');
-            $searchContent = $request->get('content');
+            return $this->json(['state' => 'error', 'message' => "Передайте title и/или content"]);
         }
-        try {
-            if(empty($searchTitle) and empty($searchContent)){
-                throw new Exception("Передайте title или content");
+        if (empty($searchTitle) and empty($searchContent)) {
+            return $this->json(['state' => 'error', 'message' => "Передайте title или content"]);
+        }
+        if (!empty($searchTitle) and !empty($searchContent)) {
+            $ideas = $this->ideasRepository->searchIdeas($searchTitle, $searchContent);
+        } else {
+            if (!empty($searchTitle)) {
+                $ideas = $this->ideasRepository->searchIdeas($searchTitle, "");
+            } else if (!empty($searchContent)) {
+                $ideas = $this->ideasRepository->searchIdeas("", $searchContent);
             }
-            if(!empty($searchTitle) and !empty($searchContent)){
-                $ideas = $this->ideasRepository->searchIdeas($searchTitle, $searchContent);
-            } else {
-                if(!empty($searchTitle)){
-                    $ideas = $this->ideasRepository->searchIdeas($searchTitle,"");
-                } else if(!empty($searchContent)){
-                    $ideas = $this->ideasRepository->searchIdeas("", $searchContent);
-                }
+        }
+        $ideas = $this->decorateIdeas($ideas);
+        if (!empty($ideas)) {
+            foreach ($ideas as &$idea) {
+                unset($idea['comments']);
             }
-            $ideas = $this->decorateIdeas($ideas);
-            if(!empty($ideas)){
-                foreach ($ideas as &$idea) {
-                    unset($idea['comments']);
-                }
-            }
+        }
 
-            return $this->json(['state' => 'success', 'ideas' => $ideas]);
-        } catch (Exception $e) {
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
-        }
+        return $this->json(['state' => 'success', 'ideas' => $ideas]);
     }
 
     /**
@@ -361,39 +360,35 @@ class IdeasController extends AbstractController
      */
     public function getCategories(Request $request): Response
     {
-        try {
-            $Categories = $this->categoriesRepository->findAll();
-            $Types = $this->typesRepository->findAll();
-            $Statuses = $this->statusRepository->findAll();
+        $Categories = $this->categoriesRepository->findAll();
+        $Types = $this->typesRepository->findAll();
+        $Statuses = $this->statusRepository->findAll();
 
-            /** @var User $user */
-            $user = $this->getUser();
-            if(!empty($user)) {
-                if (!in_array("ROLE_ADMIN", $user->getRoles())
-                    and !in_array("ROLE_DEVELOPER", $user->getRoles())) {
-                    foreach ($Statuses as $key => $status) {
-                        if ($status->getName() == "new") {
-                            unset($Statuses[$key]);
-                        }
-                    }
-                }
-            } else {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!empty($user)) {
+            if (!in_array("ROLE_ADMIN", $user->getRoles())
+                and !in_array("ROLE_DEVELOPER", $user->getRoles())) {
                 foreach ($Statuses as $key => $status) {
                     if ($status->getName() == "new") {
                         unset($Statuses[$key]);
                     }
                 }
             }
-
-            return $this->json([
-                'state' => 'success',
-                'categories' => $Categories,
-                "types" => $Types,
-                'statuses' => $Statuses,
-            ]);
-        } catch (Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        } else {
+            foreach ($Statuses as $key => $status) {
+                if ($status->getName() == "new") {
+                    unset($Statuses[$key]);
+                }
+            }
         }
+
+        return $this->json([
+            'state' => 'success',
+            'categories' => $Categories,
+            "types" => $Types,
+            'statuses' => $Statuses,
+        ]);
     }
 
     /**
@@ -403,84 +398,65 @@ class IdeasController extends AbstractController
      */
     public function newComment(Request $request): Response
     {
-        try {
-            /** @var User $user */
-            $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("Не авторизован");
-            }
-            $data = json_decode($request->getContent(), true);
-            if (!empty($data)) {
-                $idea_id = $data['idea_id'];
-                $content = $data['content'];
-
-            } else {
-                $idea_id = $request->get('idea_id');
-                $content = $request->get('content');
-            }
-            if(empty($content)){
-                throw new Exception("Сообщение не должно быть пустым");
-            }
-            if (!empty($idea_id)) {
-                $idea = $this->ideasRepository->find($idea_id);
-                if (empty($idea)) {
-                    throw new Exception("Такой идеи не существует");
-                }
-            } else {
-                throw new Exception("Передайте idea_id");
-            }
-            if(!$idea->getAllowComments()){
-                throw new Exception("Под этой идеей нельзя оставлять комментарии");
-            }
-
-            $newComment = new Comments();
-            $newComment->setDate(new DateTime())
-                ->setIdea($idea)
-                ->setUser($user)
-                ->setContent($content);
-            $this->commentsRepository->save($newComment);
-
-            return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
-        } catch (\Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data)) {
+            $idea_id = $data['idea_id'];
+            $content = $data['content'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id и content"]);
         }
+        if (empty($content)) {
+            return $this->json(['state' => 'error', 'message' => "Сообщение не должно быть пустым"]);
+        }
+        if (!empty($idea_id)) {
+            $idea = $this->ideasRepository->find($idea_id);
+            if (empty($idea)) {
+                return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+            }
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
+        }
+        if (!$idea->getAllowComments()) {
+            return $this->json(['state' => 'error', 'message' => "Под этой идеей нельзя оставлять комментарии"]);
+        }
+
+        $newComment = new Comments();
+        $newComment->setDate(new DateTime())
+            ->setIdea($idea)
+            ->setUser($user)
+            ->setContent($content);
+        $this->commentsRepository->save($newComment);
+
+        return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
     }
     /**
-     * @Route("/api/admin/delete/comment/")
+     * @Route("/api/user/delete/comment/")
      * @param Request $request
      * @return Response
      */
     public function deleteComment(Request $request): Response
     {
-        try {
-            /** @var User $user */
-            $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("Не авторизован");
-            }
-            $data = json_decode($request->getContent(), true);
-            if (!empty($data)) {
-                $comment_id = $data['comment_id'];
-            } else {
-                $comment_id = $request->get('comment_id');
-            }
-            if(empty($comment_id)){
-                throw new Exception("Передайте comment_id");
-            }
-            $comment = $this->commentsRepository->find($comment_id);
-            if(empty($comment)){
-                throw new Exception("Такого комментария не существует");
-            }
-            // Удалять если админ или автор комментария
-            if(in_array("ROLE_ADMIN", $user->getRoles())
-              or $user->getId() == $comment->get_User()->getId()){
-                $this->commentsRepository->remove($comment);
-                return $this->json(['state' => 'success']);
-            } else {
-                throw new Exception("Вы не можете удалить этот комментарий");
-            }
-        } catch (\Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data)) {
+            $comment_id = $data['comment_id'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте comment_id"]);
+        }
+        $comment = $this->commentsRepository->find($comment_id);
+        if (empty($comment)) {
+            return $this->json(['state' => 'error', 'message' => "Такого комментария не существует"]);
+        }
+        // Удалять если админ или автор комментария
+        if (in_array("ROLE_ADMIN", $user->getRoles())
+            or $user->getId() == $comment->get_User()->getId()) {
+            $this->commentsRepository->remove($comment);
+            return $this->json(['state' => 'success']);
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Вы не можете удалить этот комментарий"]);
         }
     }
 
@@ -491,64 +467,56 @@ class IdeasController extends AbstractController
      */
     public function newVote(Request $request): Response
     {
-        try {
-            /** @var User $user */
-            $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("Не авторизован");
-            }
-            $data = json_decode($request->getContent(), true);
-            if (!empty($data)) {
-                $idea_id = $data['idea_id'];
-                $type = $data["type"];
-            } else {
-                $idea_id = $request->get('idea_id');
-                $type = $request->get('type');
-            }
-            if(!empty($type)){
-                if($type != "like" and $type != "dislike"){
-                    throw new Exception("Голос может быть только like или dislike");
-                }
-            } else {
-                throw new Exception("Передайте тип голоса");
-            }
-            if (!empty($idea_id)) {
-                $idea = $this->ideasRepository->find($idea_id);
-                if (empty($idea)) {
-                    throw new Exception("Такой идеи не существует");
-                }
-            } else {
-                throw new Exception("Передайте idea_id");
-            }
-            if(!$idea->getAllowComments()){
-                throw new Exception("За эту идею нельзя проголосовать");
-            }
-            // Проверка проголосовал ли он уже за эту идею
-            $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
-//            dd($votes);
-            foreach ($votes as $vote){
-                if($vote->get_User()->getId() == $user->getId()){
-                    if($vote->getType() == $type){
-                        throw new Exception("Вы уже поставили $type этой идее");
-                    } else {
-                        $vote->setType($type);
-                        $this->votesRepository->save($vote);
-                        return $this->json(['state' => 'success']);
-                    }
-                }
-            }
-
-            $newVote = new Votes();
-            $newVote->setDate(new DateTime())
-                ->setIdea($idea)
-                ->setUser($user)
-                ->setType($type);
-            $this->votesRepository->save($newVote);
-
-            return $this->json(['state' => 'success']);
-        } catch (\Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data)) {
+            $idea_id = $data['idea_id'];
+            $type = $data["type"];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id и type"]);
         }
+        if (!empty($type)) {
+            if ($type != "like" and $type != "dislike") {
+                return $this->json(['state' => 'error', 'message' => "Голос может быть только like или dislike"]);
+            }
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте тип голоса"]);
+        }
+        if (!empty($idea_id)) {
+            $idea = $this->ideasRepository->find($idea_id);
+            if (empty($idea)) {
+                return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+            }
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
+        }
+        if (!$idea->getAllowComments()) {
+            return $this->json(['state' => 'error', 'message' => "За эту идею нельзя проголосовать"]);
+        }
+        // Проверка проголосовал ли он уже за эту идею
+        $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
+//            dd($votes);
+        foreach ($votes as $vote) {
+            if ($vote->get_User()->getId() == $user->getId()) {
+                if ($vote->getType() == $type) {
+                    return $this->json(['state' => 'error', 'message' => "Вы уже поставили $type этой идее"]);
+                } else {
+                    $vote->setType($type);
+                    $this->votesRepository->save($vote);
+                    return $this->json(['state' => 'success']);
+                }
+            }
+        }
+
+        $newVote = new Votes();
+        $newVote->setDate(new DateTime())
+            ->setIdea($idea)
+            ->setUser($user)
+            ->setType($type);
+        $this->votesRepository->save($newVote);
+
+        return $this->json(['state' => 'success']);
     }
     /**
      * @Route("/api/user/delete/vote/")
@@ -557,44 +525,37 @@ class IdeasController extends AbstractController
      */
     public function unVote(Request $request): Response
     {
-        try {
-            /** @var User $user */
-            $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("Не авторизован");
-            }
-            $data = json_decode($request->getContent(), true);
-            if (!empty($data)) {
-                $idea_id = $data['idea_id'];
-            } else {
-                $idea_id = $request->get('idea_id');
-            }
-            if (!empty($idea_id)) {
-                $idea = $this->ideasRepository->find($idea_id);
-                if (empty($idea)) {
-                    throw new Exception("Такой идеи не существует");
-                }
-            } else {
-                throw new Exception("Передайте idea_id");
-            }
-            $ideaStatusName = $idea->get_Status()->getName();
-            if($ideaStatusName == 'completed' or $ideaStatusName == 'declined'){
-                throw new Exception("Нельзя убрать голос с этой идеи");
-            }
-            // Проверка проголосовал ли он уже за эту идею
-            $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
-//            dd($votes);
-            foreach ($votes as $vote){
-                if($vote->get_User()->getId() == $user->getId()){
-                    $this->votesRepository->remove($vote);
-                    return $this->json(['state' => 'success']);
-                }
-            }
-
-            throw new Exception("Вы не голосовали за эту идею");
-        } catch (\Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data)) {
+            $idea_id = $data['idea_id'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
         }
+        if (!empty($idea_id)) {
+            $idea = $this->ideasRepository->find($idea_id);
+            if (empty($idea)) {
+                return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+            }
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
+        }
+        $ideaStatusName = $idea->get_Status()->getName();
+        if ($ideaStatusName == 'completed' or $ideaStatusName == 'declined') {
+            return $this->json(['state' => 'error', 'message' => "Нельзя убрать голос с этой идеи"]);
+        }
+        // Проверка проголосовал ли он уже за эту идею
+        $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
+//            dd($votes);
+        foreach ($votes as $vote) {
+            if ($vote->get_User()->getId() == $user->getId()) {
+                $this->votesRepository->remove($vote);
+                return $this->json(['state' => 'success']);
+            }
+        }
+
+        return $this->json(['state' => 'error', 'message' => "Вы не голосовали за эту идею"]);
     }
 
     /**
@@ -605,68 +566,59 @@ class IdeasController extends AbstractController
      */
     public function setStatus(Request $request): Response
     {
-        try {
-            /** @var User $user */
-            $user = $this->getUser();
-            if (empty($user)) {
-                throw new Exception("Не авторизован");
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data)) {
+            $idea_id = $data['idea_id'];
+            $status_id = $data['status_id'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id и status_id"]);
+        }
+        // проверка и поиск идеи
+        if (!empty($idea_id)) {
+            $idea = $this->ideasRepository->find($idea_id);
+            if (empty($idea)) {
+                return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
             }
-            $data = json_decode($request->getContent(), true);
-            if (!empty($data)) {
-                $idea_id = $data['idea_id'];
-                $status_id = $data['status_id'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте ID идеи"]);
+        }
+        // проверка и поиск статуса
+        if (!empty($status_id)) {
+            $newStatus = $this->statusRepository->find($status_id);
+            if (empty($newStatus)) {
+                return $this->json(['state' => 'error', 'message' => "Такого статуса не существует"]);
+            }
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте ID статуса"]);
+        }
+        if (in_array("ROLE_ADMIN", $user->getRoles())
+            or in_array("ROLE_DEVELOPER", $user->getRoles()))
+        {
+            if ($newStatus->getName() == 'completed'
+                or $newStatus->getName() == 'declined') {
+                $idea->setAllowComments(false);
             } else {
-                $idea_id = $request->get('idea_id');
-                $status_id = $request->get('status_id');
+                $idea->setAllowComments(true);
             }
-            // проверка и поиск идеи
-            if (!empty($idea_id)) {
-                $idea = $this->ideasRepository->find($idea_id);
-                if (empty($idea)) {
-                    throw new Exception("Такой идеи не существует");
-                }
-            } else {
-                throw new Exception("Передайте ID идеи");
+            if ($newStatus->getName() == $idea->get_Status()->getName()) {
+                return $this->json(['state' => 'error', 'message' => "Нельзя поменять статус на такой же как и прежде"]);
             }
-            // проверка и поиск статуса
-            if (!empty($status_id)) {
-                $newStatus = $this->statusRepository->find($status_id);
-                if (empty($newStatus)) {
-                    throw new Exception("Такого статуса не существует");
-                }
-            } else {
-                throw new Exception("Передайте ID статуса");
-            }
-            if(in_array("ROLE_ADMIN", $user->getRoles())
-                or in_array("ROLE_DEVELOPER", $user->getRoles()))
-            {
-                if($newStatus->getName() == 'completed'
-                    or $newStatus->getName() == 'declined')
-                {
-                    $idea->setAllowComments(false);
-                } else {
-                    $idea->setAllowComments(true);
-                }
-                if ($newStatus->getName() == $idea->get_Status()->getName()) {
-                    throw new Exception("Нельзя поменять статус на такой же как и прежде");
-                }
-                $idea->setStatus($newStatus);
-                $this->ideasRepository->save($idea);
-                if ($idea->get_Status()->getName() == "new") {
-                    if ($idea->get_Type()->getName() == "Сообщить о проблеме") {
-                        $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
-                            "title" => "Feedback. " . $idea->getTitle(),
-                            "description" => $idea->getContent()
-                        ));
+            $idea->setStatus($newStatus);
+            $this->ideasRepository->save($idea);
+            if ($idea->get_Status()->getName() == "new") {
+                if ($idea->get_Type()->getName() == "Сообщить о проблеме") {
+                    $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
+                        "title" => "Feedback. " . $idea->getTitle(),
+                        "description" => $idea->getContent()
+                    ));
 //                        dd($response);
-                    }
                 }
-                return $this->json(['state' => 'success']);
-            } else {
-                throw new Exception("Вы не можете изменить статус этой идеи");
             }
-        } catch (\Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+            return $this->json(['state' => 'success']);
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Вы не можете изменить статус этой идеи"]);
         }
     }
     /**
@@ -677,26 +629,22 @@ class IdeasController extends AbstractController
      */
     public function closeIssue(Request $request): Response
     {
-        try {
-            $data = json_decode($request->getContent(), true);
-            if(empty($data)) {
-                throw new Exception("Данные не получены");
-            }
-//            dd($data);
-            if ($data["object_attributes"]["closed_at"] != null) {
-                $idea = $this->ideasRepository->findOneBy(["title" => $data["object_attributes"]["title"]]);
-                if (!empty($idea)) {
-                    $newStatus = $this->statusRepository->findOneBy(["name" => "completed"]);
-                    $idea->setStatus($newStatus);
-                    $this->ideasRepository->save($idea);
-                } else {
-                    throw new Exception("Такой идеи не существует");
-                }
-            }
-            return $this->json(['state' => 'success']);
-        } catch (\Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        $data = json_decode($request->getContent(), true);
+        if (empty($data)) {
+            return $this->json(['state' => 'error', 'message' => "Данные не получены"]);
         }
+//        dd($data);
+        if ($data["object_attributes"]["closed_at"] != null) {
+            $idea = $this->ideasRepository->findOneBy(["title" => $data["object_attributes"]["title"]]);
+            if (!empty($idea)) {
+                $newStatus = $this->statusRepository->findOneBy(["name" => "completed"]);
+                $idea->setStatus($newStatus);
+                $this->ideasRepository->save($idea);
+            } else {
+                return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+            }
+        }
+        return $this->json(['state' => 'success']);
     }
 
     /**
