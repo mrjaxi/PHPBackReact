@@ -202,6 +202,26 @@ class UserController extends AbstractController
         }
     }
     /**
+     * @Route("/api/ag/getUserByEmail/")
+     * @param Request $request
+     * @return Response
+     */
+    public function getUserByEmail(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if($data['email']){
+            /** @var User $user */
+            $user = $this->userRepository->findOneBy(["email" => $data['email']]);
+            if(empty($user)){
+                return $this->json(['state' => 'error', 'message' => "Такого пользователя не существует"]);
+            }
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передвайте email"]);
+        }
+//        dd($user);
+        return $this->json(['state' => 'success', 'user' => $user->get_Profile()]);
+    }
+    /**
      * @Route("/api/ag/user/setProfile/")
      * @param Request $request
      * @return Response
@@ -209,8 +229,8 @@ class UserController extends AbstractController
     public function setProfile(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
-        if (empty($data['email']) or empty($data['first_name']) or empty($data['username'])) {
-            return $this->json(['state' => 'error', 'message' => "Передайте email, username, first_name"]);
+        if (empty($data['email']) or empty($data['first_name'])) {
+            return $this->json(['state' => 'error', 'message' => "Передайте email, first_name"]);
         }
 
         /** @var User $user */
@@ -220,7 +240,7 @@ class UserController extends AbstractController
         }
 
         $user->setEmail($data['email'])
-            ->setUsername($data['username'])
+            ->setUsername($data['email'])
             ->setFirstName($data['first_name']);
         if (!empty($data['middle_name'])) {
             $user->setMiddleName($data['middle_name']);
@@ -233,6 +253,9 @@ class UserController extends AbstractController
         }
         if (!empty($data['phone'])) {
             $user->setPhone($data['phone']);
+        }
+        if (!empty($data['system_id'])) {
+            $user->setSystemId($data['system_id']);
         }
         if (!empty($data['pass'])) {
             $user->setPassword($this->encoder->encodePassword($user, $data['pass']))
@@ -278,9 +301,6 @@ class UserController extends AbstractController
             case 3:
                 $likes = $user->get_VotesArray();
                 $response["likes"] = $likes;
-                break;
-            default:
-                return $this->json(['state' => 'error', 'message' => "Неизвестная вкладка"]);
                 break;
         }
 

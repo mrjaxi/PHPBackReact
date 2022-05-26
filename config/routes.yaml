@@ -6,18 +6,21 @@ authentication_token:
 api_close_issue:
   path: /api/ag/closeIssue
   controller: App\Controller\IdeasController::closeIssue
+api_add_idea:
+  path: /api/ag/ideas/add_idea/
+  controller: App\Controller\IdeasController::add_idea
 api_user_register:
   path: /api/ag/register/
   controller: App\Controller\UserController::register
 api_user_setProfile:
   path: /api/ag/user/setProfile/
   controller: App\Controller\UserController::setProfile
+api_user_get_by_email:
+  path: /api/ag/getUserByEmail/
+  controller: App\Controller\UserController::getUserByEmail
 api_user_set_username:
   path: /api/ag/user/setUsername/
   controller: App\Controller\UserController::setUsername
-api_add_idea:
-  path: /api/ag/ideas/add_idea/
-  controller: App\Controller\IdeasController::add_idea
 
 # Роуты общедоступные
 api_decode_user:

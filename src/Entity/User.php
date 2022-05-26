@@ -122,6 +122,7 @@ class User implements UserInterface
             "last_name" => $this->last_name,
             "image" => $this->image,
             "is_active" => $this->is_active,
+            "system_id" => $this->system_id,
         ];
     }
 

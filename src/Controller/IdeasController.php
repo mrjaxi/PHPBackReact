@@ -150,7 +150,7 @@ class IdeasController extends AbstractController
         }
         $category = $this->getCategoryOrCreate($data['category']);
         $type = $this->getTypeOrCreate($data['type']);
-        $photo = $this->saveFile($request);
+        $photo = $data['photo'] ?: null;
         $status = $this->statusRepository->findOneBy(['name' => 'new']);
 
         $idea = new Ideas();
@@ -605,8 +605,6 @@ class IdeasController extends AbstractController
             if ($newStatus->getName() == $idea->get_Status()->getName()) {
                 return $this->json(['state' => 'error', 'message' => "Нельзя поменять статус на такой же как и прежде"]);
             }
-            $idea->setStatus($newStatus);
-            $this->ideasRepository->save($idea);
             if ($idea->get_Status()->getName() == "new") {
                 if ($idea->get_Type()->getName() == "Сообщить о проблеме") {
                     $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
@@ -616,6 +614,8 @@ class IdeasController extends AbstractController
 //                        dd($response);
                 }
             }
+            $idea->setStatus($newStatus);
+            $this->ideasRepository->save($idea);
             return $this->json(['state' => 'success']);
         } else {
             return $this->json(['state' => 'error', 'message' => "Вы не можете изменить статус этой идеи"]);
