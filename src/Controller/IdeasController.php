@@ -635,7 +635,7 @@ class IdeasController extends AbstractController
         }
 //        dd($data);
         if ($data["object_attributes"]["closed_at"] != null) {
-            $idea = $this->ideasRepository->findOneBy(["title" => $data["object_attributes"]["title"]]);
+            $idea = $this->ideasRepository->findOneBy(["title" => "Feedback. " . $data["object_attributes"]["title"]]);
             if (!empty($idea)) {
                 $newStatus = $this->statusRepository->findOneBy(["name" => "completed"]);
                 $idea->setStatus($newStatus);
