@@ -90,7 +90,6 @@ const MainPage = () => {
                         allowComments: item.allowComments
                     })
                 });
-                console.log(data)
                 setItems(data);
                 setLoading(false)
             } else {
