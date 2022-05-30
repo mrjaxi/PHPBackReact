@@ -1456,11 +1456,9 @@ body {
   align-items: center;
   justify-content: center;
   margin-bottom: 100px;
-}
-.f-nav-wrap {
-  z-index: 1000;
   position: sticky;
-  top: 15px;
+  top: 0;
+  z-index: 1000;
 }
 .f-nav-button {
   padding: 28px 38px 28px 38px;

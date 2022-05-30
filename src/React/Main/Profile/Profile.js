@@ -1,6 +1,9 @@
 import React, {useState} from "react";
 import {Col, Select} from "antd";
 import Header from "../Components/Header";
+import UserIdeas from "./UserIdeas";
+import UserComments from "./UserComments";
+import UserFavourite from "./UserFavourite";
 // import UserComments from "../Profile/UserComments"
 // import UserIdeas from "./UserIdeas";
 
@@ -31,14 +34,14 @@ const Profile = () => {
                         </div>
                     </section>
                 </div>
-                {/*{*/}
-                {/*    selectedHeaderItem === 0 ?*/}
-                {/*        <UserIdeas/> :*/}
-                {/*        selectedHeaderItem === 1 ?*/}
-                {/*            <UserComments/> :*/}
-                {/*            selectedHeaderItem === 2 &&*/}
-                {/*                <UserIdeas/>*/}
-                {/*}*/}
+                {
+                    selectedHeaderItem === 0 ?
+                        <UserIdeas/> :
+                        selectedHeaderItem === 1 ?
+                            <UserComments/> :
+                            selectedHeaderItem === 2 &&
+                                <UserFavourite/>
+                }
             </Col>
         </>
     )

@@ -91,6 +91,7 @@ const AddIdeaPage = () => {
     };
 
     const onSend = (data) => {
+        console.log(data)
         axios.post(ApiRoutes.API_NEW_IDEA, {
             title: data.title.map(item => item.value).join(" "),
             description: data.description,
@@ -98,6 +99,7 @@ const AddIdeaPage = () => {
             type: data.type,
             photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
         }).then(response => {
+            console.log(response)
             if (response.data.state === "success"){
                 global._history.replace('/')
             }

@@ -170,10 +170,12 @@ const MainPage = () => {
             if (response.data.state === "success"){
                 let data = [...items];
                 data[index].status = id;
-                if (name === "declined" || name === "completed"){
+
+                if (name.data === "declined" || name.data === "completed"){
                     data[index].allowComments = false;
+                } else {
+                    data[index].allowComments = true;
                 }
-                data[index].allowComments = true;
                 setItems(data)
             } else {
                 global.openNotification("Ошибка", response.data.message, "error")
@@ -275,14 +277,13 @@ const MainPage = () => {
                                                         </div>
                                                         {
                                                             global.layout === "admin" ?
-                                                            <Select onSelect={(id) => changeStatus(item.id, id, item.status.name, index)} defaultValue={ item.status.id } style={{ width: 130 }}>
+                                                            <Select onSelect={(id, data) => changeStatus(item.id, id, data, index)} defaultValue={ item.status.id } style={{ width: 130 }}>
                                                                 {
                                                                     statuses.map(status => (
-                                                                        <Option value={status.id}>{status.translate}</Option>
+                                                                        <Option data={status.name} value={status.id}>{status.translate}</Option>
                                                                     ))
                                                                 }
-                                                            </Select> :
-                                                                <p className={"f-cards-type f-type-viewed"}>{ item.status.translate }</p>
+                                                            </Select> : <p className={"f-cards-type f-type-viewed"}>{ item.status.translate }</p>
                                                         }
                                                     </div>
 

@@ -261,12 +261,9 @@ body {
         align-items: center;
         justify-content: center;
         margin-bottom: 100px;
-
-        &-wrap {
-            z-index: 1000;
-            position: sticky;
-            top: 15px;
-        }
+        position: sticky;
+        top: 0;
+        z-index: 1000;
 
         &-button {
             padding: 28px 38px 28px 38px;

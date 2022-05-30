@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button, Form, Input, Skeleton, Typography} from "antd";
 import axios from "axios";
 import ApiRoutes from "../Routes/ApiRoutes";
@@ -6,6 +6,8 @@ const { Title } = Typography;
 const { TextArea } = Input;
 
 const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComments }) => {
+
+    const [text, setText] = useState("");
 
     const sendComment = (text) => {
         console.log(text)
@@ -70,10 +72,9 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
                                     message: 'Напишите комментарий',
                                 },
                             ]}
-                            onChange={(e) => console.log(e.target.value)}
                         >
-                            <TextArea style={{ backgroundColor: '#FFFFFF' }} className={"f-write-comments-input"} placeholder={global.layout !== "guest" ?
-                                "Напишите что-нибудь..." : "Войти, чтобы оставлять комментарии, публиковать и оценивать идеи"}/>
+                            <TextArea clearableInput={true} style={{ backgroundColor: '#FFFFFF' }} className={"f-write-comments-input"} placeholder={global.layout !== "guest" ?
+                                "Напишите что-нибудь..." : "Войдите, чтобы оставлять комментарии, публиковать и оценивать идеи"}/>
                         </Form.Item>
                         <Form.Item>
                             {

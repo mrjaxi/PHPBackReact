@@ -102,11 +102,13 @@ const UserComments = () => {
                                                                             { item.content }
                                                                         </span>
                                                                     </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                                )
+                                                )
+                                        }
                                 </div>
                             </div>
                         </div>
