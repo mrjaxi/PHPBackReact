@@ -44,19 +44,13 @@ const UserComments = () => {
                 loading ? <></> :
                     <>
                         <div className={"f-row-type max_width"} style={{ marginTop: 100 }}>
-                            <div style={{
-                                width: '100%',
-                                display: "flex",
-                                justifyContent: 'center',
-                                flexDirection: "column",
-                                alignItems: "center",
-                            }}>
-                                <div className={"f-row-type max_width"}>
+                                <div className={"f-row-type max_width"} style={{ justifyContent: 'center' }}>
                                     <div style={{
                                         display: "flex",
                                         justifyContent: 'center',
                                         flexDirection: "column",
                                         alignItems: "center",
+                                        width: '70%'
                                     }}>
                                         {
                                             items.length === 0 ?
@@ -112,7 +106,6 @@ const UserComments = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </>
             }
         </>

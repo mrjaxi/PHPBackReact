@@ -91,19 +91,19 @@ const AddIdeaPage = () => {
     };
 
     const onSend = (data) => {
-        console.log(data)
-        axios.post(ApiRoutes.API_NEW_IDEA, {
-            title: data.title.map(item => item.value).join(" "),
-            description: data.description,
-            category: data.category,
-            type: data.type,
-            photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
-        }).then(response => {
-            console.log(response)
-            if (response.data.state === "success"){
-                global._history.replace('/')
-            }
-        })
+        console.log(data.file);
+        // axios.post(ApiRoutes.API_NEW_IDEA, {
+        //     title: data.title.map(item => item.value).join(" "),
+        //     description: data.description,
+        //     category: data.category,
+        //     type: data.type,
+        //     photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
+        // }).then(response => {
+        //     console.log(response)
+        //     if (response.data.state === "success"){
+        //         global._history.replace('/')
+        //     }
+        // })
     };
 
     const getCategory = () => {

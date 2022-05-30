@@ -90,7 +90,7 @@ const MainPage = () => {
                         allowComments: item.allowComments
                     })
                 });
-
+                console.log(data)
                 setItems(data);
                 setLoading(false)
             } else {
@@ -277,7 +277,7 @@ const MainPage = () => {
                                                         </div>
                                                         {
                                                             global.layout === "admin" ?
-                                                            <Select onSelect={(id, data) => changeStatus(item.id, id, data, index)} defaultValue={ item.status.id } style={{ width: 130 }}>
+                                                            <Select onSelect={(id, data) => { changeStatus(item.id, id, data, index), getCategory() }} defaultValue={ item.status.id } style={{ width: 130 }}>
                                                                 {
                                                                     statuses.map(status => (
                                                                         <Option data={status.name} value={status.id}>{status.translate}</Option>
