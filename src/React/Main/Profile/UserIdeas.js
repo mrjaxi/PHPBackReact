@@ -147,6 +147,7 @@ const UserIdeas = () => {
                                         justifyContent: 'center',
                                         flexDirection: "column",
                                         alignItems: "center",
+                                        width: '70vw'
                                     }}>
                                         {
                                             items.length === 0 ?

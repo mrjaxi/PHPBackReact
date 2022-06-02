@@ -44,7 +44,7 @@ const UserComments = () => {
                 loading ? <></> :
                     <>
                         <div className={"f-row-type max_width"} style={{ marginTop: 100 }}>
-                                <div className={"f-row-type max_width"} style={{ justifyContent: 'center' }}>
+                                <div className={"f-row-type max_width"} style={{ justifyContent: 'center', minWidth: '60vw' }}>
                                     <div style={{
                                         display: "flex",
                                         justifyContent: 'center',

@@ -14,7 +14,10 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
         axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: item.id, content: text}).then(
             response => {
                 if (response.data.state === "success"){
-                    addCommentToIdea(index, response.data.comment)
+                        addCommentToIdea(index, response.data.comment)
+                        // let data = [...commentsData];
+                        // data[index].comments.push(comment);
+                        // setItems(data)
                 } else {
                     global.openNotification("Ошибка", response.data.error, "error")
                 }
