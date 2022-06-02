@@ -143,7 +143,8 @@ const AddIdeaPage = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Придумайте заголовок',
+                                min: 5,
+                                message: 'Заголовок не может быть меньше 5 символов',
                             },
                         ]}
                     >

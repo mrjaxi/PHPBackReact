@@ -302,6 +302,7 @@ class UserController extends AbstractController
                 $likes = $user->get_VotesArray();
                 foreach($likes as &$like){
                     $decorIdea = $this->decorateArrayIdeas(array($like['idea']));
+
                     $like['idea'] = $decorIdea[0] ?: null;
                 }
                 $response["likes"] = $likes;

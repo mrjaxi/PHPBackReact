@@ -11,11 +11,13 @@ const Login = () => {
     const [checked, setChecked] = useState(false);
 
     const loginUser = (data) => {
-        axios.post(ApiRoutes.API_LOGIN, global.serialize({username: data?.email, password: data?.password, remember: checked}), {withCredentials: true,}).then(response => {
+        axios.post(ApiRoutes.API_SIGN_IN, global.serialize({username: data?.email, password: data?.password}), {withCredentials: true,}).then(response => {
             if (response.data.state === "success"){
                 global.user = response.data.profile;
 
                 global._history.push("/")
+            } else {
+                global.openNotification("Ошибка", "Неверные данные для входа", "error")
             }
         })
     };
@@ -51,11 +53,6 @@ const Login = () => {
                         ]}
                     >
                         <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>
-                    </Form.Item>
-                    <Form.Item
-                        name={"remember"}
-                    >
-                        <Checkbox onChange={() => setChecked(!checked)} style={{ fontSize: 19 }}>Запомнить меня</Checkbox>
                     </Form.Item>
                     <Form.Item>
                         <Button className={"f-login-btn"} type="primary" htmlType="submit" shape="round">Войти</Button>

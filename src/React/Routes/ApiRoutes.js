@@ -1,6 +1,6 @@
 const ApiRoutes = {
-    // BASE_URL: "https://pbr.atmadev.ru",
-    BASE_URL: "http://127.0.0.1:8000",
+    BASE_URL: "https://pbr.atmadev.ru",
+    // BASE_URL: "http://127.0.0.1:8000",
 
     API_DECODE_USER_DATA: "/api/web/decode/user/",
     API_UPLOAD_IMAGE: "/api/web/upload/",
@@ -15,7 +15,8 @@ const ApiRoutes = {
     API_DELETE_COMMENT: "/api/user/delete/comment/",
     API_LOGIN: "/ru/login",
     API_GET_ONE_IDEA: "/api/web/idea/{0}/",
-    API_GET_USER_DATA: "/api/web/user/{0}/"
+    API_GET_USER_DATA: "/api/web/user/{0}/",
+    API_SIGN_IN: "/api/web/signIn/",
 };
 
 export default ApiRoutes;

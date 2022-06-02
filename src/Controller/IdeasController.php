@@ -108,17 +108,21 @@ class IdeasController extends AbstractController
         $this->ideasRepository->save($idea);
 
         $urlIdea = $baseURL . "/idea/" . $idea->getId();
-        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
-        if($this->sendMail($mailer, $message, "Новый отзыв")){
-            return $this->json([
-                "state" => "success",
+//        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
+//        if($this->sendMail($mailer, $message, "Новый отзыв")){
+//            return $this->json([
+//                "state" => "success",
+//            ]);
+//        } else {
+//            return $this->json([
+//                'state' => 'trouble',
+//                'message' => "Не удалось отправить почту"
+//            ]);
+//        }
+
+        return $this->json([
+               "state" => "success",
             ]);
-        } else {
-            return $this->json([
-                'state' => 'trouble',
-                'message' => "Не удалось отправить почту"
-            ]);
-        }
     }
 
     /**
