@@ -290,7 +290,7 @@ class IdeasController extends AbstractController
             $ideas = $this->ideasRepository->getIdeas("id", $type == 'desc' ? 1 : 0, $from, $limit, $statuses, $categories, $types);
             $ideas = $this->decorateIdeas($ideas);
 //            dd(count($ideas));
-            $ideas = $this->array_sort($ideas, "likes", $type == 'desc' ? SORT_DESC : SORT_ASC);
+            $ideas = AppController::array_sort($ideas, "likes", $type == 'desc' ? SORT_DESC : SORT_ASC);
         } else {
             $ideas = $this->ideasRepository->getIdeas($order, $type == 'desc' ? 1 : 0, $from, $limit, $statuses, $categories, $types);
             $ideas = $this->decorateIdeas($ideas);

@@ -291,7 +291,7 @@ class UserController extends AbstractController
         switch ($data) {
             case 1:
                 $ideas = $user->get_Ideas();
-                $ideas = $this->decorateIdeas($ideas);
+                $ideas = $this->decorateCollectionIdeas($ideas);
                 $response["ideas"] = $ideas;
                 break;
             case 2:
@@ -300,18 +300,21 @@ class UserController extends AbstractController
                 break;
             case 3:
                 $likes = $user->get_VotesArray();
+                foreach($likes as &$like){
+                    $decorIdea = $this->decorateArrayIdeas(array($like['idea']));
+                    $like['idea'] = $decorIdea[0] ?: null;
+                }
                 $response["likes"] = $likes;
+                break;
+            default:
+                return $this->json(['state' => 'trouble', 'profile' => $user->get_Profile(), 'message' => "Такой страницы профиля нет"]);
                 break;
         }
 
         return $this->json($response);
     }
 
-    /**
-     * @param Collection $ideas
-     * @return array|null
-     */
-    private function decorateIdeas(Collection $ideas): ?array
+    private function decorateCollectionIdeas(Collection $ideas): ?array
     {
         if($ideas->isEmpty()){
             return null;
@@ -345,6 +348,41 @@ class UserController extends AbstractController
             }
         }
         return $ideasArr;
+    }
+
+    private function decorateArrayIdeas(?array $ideas): ?array
+    {
+        if(empty($ideas)){
+            return null;
+        }
+        /** @var User $user */
+        $user = $this->getUser();
+        for($i = 0; $i < count($ideas); $i++){
+            /** @var $idea Ideas */
+            $idea = $ideas[$i];
+            $ideas[$i] = $idea->get_Info();
+            $ideas[$i]["comments"] = $idea->get_CommentsArray();
+
+            if(empty($user)){
+                $ideas[$i]["currentUserIsVote"] = "unauthorized";
+                continue;
+            }
+            $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
+//            dd($votes);
+            if(empty($votes)){
+                $ideas[$i]["currentUserIsVote"] = false;
+                continue;
+            }
+            foreach ($votes as $vote){
+                if($vote->get_User()->getId() == $user->getId()){
+                    $ideas[$i]["currentUserIsVote"]= true;
+                    break;
+                } else {
+                    $ideas[$i]["currentUserIsVote"]= false;
+                }
+            }
+        }
+        return $ideas;
     }
 
     private function sendToMail(MailerInterface $mailer, string $message, string $subject, string $toMail): bool

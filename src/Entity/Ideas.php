@@ -110,7 +110,6 @@ class Ideas
             "likes" => $this->get_LikesCount(),
             "photo" => $this->photo,
             "href" => $this->href,
-            "comments" => $this->get_CommentsArray(),
             "allowComments" => $this->allowComments,
             "status" => $this->status,
             "date" => $this->date->format('Y-m-d H:i:s'),

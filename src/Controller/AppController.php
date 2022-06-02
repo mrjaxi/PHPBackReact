@@ -2,31 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Video;
-use App\Repository\SettingsRepository;
+use App\Entity\Ideas;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
-use App\Entity\Answer;
-use App\Entity\Exercise;
-use App\Entity\Lesson;
-use App\Entity\Map;
-use App\Entity\MapItem;
-use App\Entity\Result;
-use App\Entity\ResultAnswer;
-use App\Entity\ResultExerciseItem;
-use App\Entity\ResultItem;
-use App\Entity\ResultTesting;
-use App\Entity\Testing;
-use App\Kernel;
-use FFMpeg\Format\Video\X264;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 
@@ -171,6 +153,41 @@ class AppController extends AbstractController
             return true;
         }
         return false;
+    }
+
+    static public function array_sort($array, $on, $order=SORT_ASC)
+    {
+        $new_array = array();
+        $sortable_array = array();
+
+        if (!empty($array)) {
+            foreach ($array as $k => $v) {
+                if (is_array($v)) {
+                    foreach ($v as $k2 => $v2) {
+                        if ($k2 == $on) {
+                            $sortable_array[$k] = $v2;
+                        }
+                    }
+                } else {
+                    $sortable_array[$k] = $v;
+                }
+            }
+
+            switch ($order) {
+                case SORT_ASC:
+                    asort($sortable_array);
+                    break;
+                case SORT_DESC:
+                    arsort($sortable_array);
+                    break;
+            }
+
+            foreach ($sortable_array as $k => $v) {
+                $new_array[$k] = $array[$k];
+            }
+        }
+
+        return array_values((array)$new_array);
     }
 
     static public function randomPassword()

@@ -53,7 +53,7 @@ class Votes
             'date' => $this->date,
             'type' => $this->type,
             'user' => $this->user->get_Profile(),
-            'idea' => $this->idea->get_Info(),
+            'idea' => $this->idea,
         );
     }
 
