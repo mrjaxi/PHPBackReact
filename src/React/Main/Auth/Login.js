@@ -1,17 +1,14 @@
 import React, {useState} from "react";
-import {Button, Checkbox, Form, Input} from "antd";
+import {Button, Form, Input} from "antd";
 import { Typography } from 'antd';
 import axios from "axios";
-import { CloseOutlined } from '@ant-design/icons';
 import ApiRoutes from "../../Routes/ApiRoutes";
 const { Title } = Typography;
 
 const Login = () => {
 
-    const [checked, setChecked] = useState(false);
-
     const loginUser = (data) => {
-        axios.post(ApiRoutes.API_SIGN_IN, {username: data?.email, password: data?.password}, {withCredentials: true,}).then(response => {
+        axios.post(ApiRoutes.API_SIGN_IN, global.serialize({username: data?.email, password: data?.password}), {withCredentials: true,}).then(response => {
             if (response.data.state === "success"){
                 global.user = response.data.profile;
                 global.openNotification("Успешно", "Ссылка для входа отправлена на вашу почту", "success")

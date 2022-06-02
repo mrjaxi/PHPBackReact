@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useLayoutEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import Comments from "./Main/Comments";
 import './sass/main-component.scss'
@@ -138,7 +138,7 @@ const MainPage = () => {
             })
     };
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         getCategory();
         global.getProfile();
     }, []);
@@ -276,7 +276,7 @@ const MainPage = () => {
                                                         </div>
                                                         {
                                                             global.layout === "admin" ?
-                                                            <Select onSelect={(id, data) => { changeStatus(item.id, id, data, index), getCategory() }} defaultValue={ item.status.id } style={{ width: 130 }}>
+                                                            <Select onSelect={(id, data) => { changeStatus(item.id, id, data, index), getCategory() }} defaultValue={ item.status.id } style={{ width: 150 }}>
                                                                 {
                                                                     statuses.map(status => (
                                                                         <Option data={status.name} value={status.id}>{status.translate}</Option>

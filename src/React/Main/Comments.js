@@ -5,7 +5,7 @@ import ApiRoutes from "../Routes/ApiRoutes";
 const { Title } = Typography;
 const { TextArea } = Input;
 
-const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComments }) => {
+const Comments = ({ comments, loading, item, allowComments }) => {
 
     const [showComments, setShowComments] = useState(true);
     const [commentsData, setCommentsData] = useState(comments.filter((item, index) => index < 3));
@@ -14,9 +14,10 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
         axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: item.id, content: text}).then(
             response => {
                 if (response.data.state === "success"){
-                        let data = [...commentsData];
+                        let data = [...comments];
                         data.push(response.data.comment);
-                        setCommentsData(data)
+                        setCommentsData(data);
+                        setShowComments(false)
                 } else {
                     global.openNotification("Ошибка", response.data.error, "error")
                 }
