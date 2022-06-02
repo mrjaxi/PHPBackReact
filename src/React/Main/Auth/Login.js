@@ -14,10 +14,11 @@ const Login = () => {
         axios.post(ApiRoutes.API_SIGN_IN, {username: data?.email, password: data?.password}, {withCredentials: true,}).then(response => {
             if (response.data.state === "success"){
                 global.user = response.data.profile;
+                global.openNotification("Успешно", "Ссылка для входа отправлена на вашу почту", "success")
 
                 global._history.push("/")
             } else {
-                global.openNotification("Ошибка", response.data.state, "error")
+                global.openNotification("Ошибка", "Неверные данные для входа", "error")
             }
         })
     };
