@@ -11,13 +11,13 @@ const Login = () => {
     const [checked, setChecked] = useState(false);
 
     const loginUser = (data) => {
-        axios.post(ApiRoutes.API_SIGN_IN, global.serialize({username: data?.email, password: data?.password}), {withCredentials: true,}).then(response => {
+        axios.post(ApiRoutes.API_SIGN_IN, {username: data?.email, password: data?.password}, {withCredentials: true,}).then(response => {
             if (response.data.state === "success"){
                 global.user = response.data.profile;
 
                 global._history.push("/")
             } else {
-                global.openNotification("Ошибка", "Неверные данные для входа", "error")
+                global.openNotification("Ошибка", response.data.state, "error")
             }
         })
     };
