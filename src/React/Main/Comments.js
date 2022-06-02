@@ -7,10 +7,10 @@ const { TextArea } = Input;
 
 const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComments }) => {
 
-    const [text, setText] = useState("");
+    const [showComments, setShowComments] = useState(true);
+    const [commentsData, setCommentsData] = useState(comments.filter((item, index) => index < 3));
 
     const sendComment = (text) => {
-        console.log(text)
         axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: item.id, content: text}).then(
             response => {
                 if (response.data.state === "success"){
@@ -27,7 +27,7 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
             <span className={"f-comments-tip-text"}>Комментарии</span>
             <div className={"f-comments-scroll"}>
                 {
-                    comments.length === 0 ? (
+                    commentsData.length === 0 ? (
                         <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{ marginTop: 20 }}>
                             <span className={"f-cards-content-description"}>
                                 Пока нет комментариев
@@ -35,26 +35,34 @@ const Comments = ({ comments, loading, addCommentToIdea, index, item, allowComme
                         </div>
                     ) :
                     loading ? <Skeleton active style={{ width: '100%', height: '200px' }} />:
-                    comments.map(comment => (
-                        <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{ marginTop: 20 }}>
-                            <div className={"f-cards-row-wrap"}>
-                                <img className={"f-cards-image"} src={"/i/avatar.png"}/>
-                                <div className={"f-cards-wrap-text"}>
-                                    <span className={"f-cards-text"}>{comment.user.first_name + " " + (comment.user.last_name ? comment.user.last_name : "") }
+                        commentsData.map((comment, index) => (
+                            <>
+                            <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{ marginTop: 20 }}>
+                                <div className={"f-cards-row-wrap"}>
+                                    <img className={"f-cards-image"} src={"/i/avatar.png"}/>
+                                    <div className={"f-cards-wrap-text"}>
+                                        <span className={"f-cards-text"}>{comment.user.first_name + " " + (comment.user.last_name ? comment.user.last_name : "") }
+                                            {
+                                                comment.user.roles.includes("ROLE_ADMIN") &&
+                                                <img style={{ marginBottom: 3, marginLeft: 5 }} src={"/i/official.svg"} width={15} height={15}/>
+                                            }
+                                        </span>
+                                        <span className={"f-cards-content-description"}>
                                         {
-                                            comment.user.roles.includes("ROLE_ADMIN") &&
-                                            <img style={{ marginBottom: 3, marginLeft: 5 }} src={"/i/official.svg"} width={15} height={15}/>
+                                            comment.content
                                         }
-                                    </span>
-                                    <span className={"f-cards-content-description"}>
-                                    {
-                                        comment.content
-                                    }
-                                    </span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))
+                            {/*<div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', fontSize: 17 }}>*/}
+                            {/*    {*/}
+                            {/*        (index === 2 && showComments) &&*/}
+                            {/*        <a onClick={() => { setCommentsData(comments), setShowComments(false) }}>Загрузить еще</a>*/}
+                            {/*    }*/}
+                            {/*</div>*/}
+                            </>
+                        ))
                 }
             </div>
             {

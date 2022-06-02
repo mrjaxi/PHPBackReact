@@ -66,7 +66,6 @@ const AddIdeaPage = () => {
     const [loading, setLoading] = useState(false);
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
-    const [uploadURL, setUploadURL] = useState(ApiRoutes.BASE_URL + "/api/upload/")
     const [value, setValue] = useState([]);
 
     const [fileList, setFileList] = useState([]);
@@ -91,19 +90,19 @@ const AddIdeaPage = () => {
     };
 
     const onSend = (data) => {
-        console.log(data.file);
-        // axios.post(ApiRoutes.API_NEW_IDEA, {
-        //     title: data.title.map(item => item.value).join(" "),
-        //     description: data.description,
-        //     category: data.category,
-        //     type: data.type,
-        //     photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
-        // }).then(response => {
-        //     console.log(response)
-        //     if (response.data.state === "success"){
-        //         global._history.replace('/')
-        //     }
-        // })
+        // console.log(data.file);
+        axios.post(ApiRoutes.API_NEW_IDEA, {
+            title: data.title.map(item => item.value).join(" "),
+            description: data.description,
+            category: data.category,
+            type: data.type,
+            photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
+        }).then(response => {
+            console.log(response)
+            if (response.data.state === "success"){
+                global._history.replace('/')
+            }
+        })
     };
 
     const getCategory = () => {
@@ -214,7 +213,7 @@ const AddIdeaPage = () => {
                         name={"file"}
                     >
                         <Upload
-                            action={uploadURL}
+                            action={ApiRoutes.API_UPLOAD_IMAGE}
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}
