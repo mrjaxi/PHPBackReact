@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220512105658 extends AbstractMigration
+final class Version20220602102838 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -32,13 +32,13 @@ final class Version20220512105658 extends AbstractMigration
         $this->addSql('CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, username VARCHAR(180) NOT NULL, first_name VARCHAR(255) DEFAULT NULL, middle_name VARCHAR(255) DEFAULT NULL, last_name VARCHAR(255) DEFAULT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, open_password VARCHAR(255) NOT NULL, roles JSON NOT NULL, phone VARCHAR(255) DEFAULT NULL, is_active TINYINT(1) NOT NULL, image VARCHAR(1000) DEFAULT NULL, system_id INT DEFAULT NULL, UNIQUE INDEX UNIQ_8D93D649F85E0677 (username), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE votes (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, idea_id INT DEFAULT NULL, date DATETIME NOT NULL, type VARCHAR(50) NOT NULL, INDEX IDX_518B7ACFA76ED395 (user_id), INDEX IDX_518B7ACF5B6FEF7D (idea_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE comments ADD CONSTRAINT FK_5F9E962AA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL');
-        $this->addSql('ALTER TABLE comments ADD CONSTRAINT FK_5F9E962A5B6FEF7D FOREIGN KEY (idea_id) REFERENCES ideas (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE comments ADD CONSTRAINT FK_5F9E962A5B6FEF7D FOREIGN KEY (idea_id) REFERENCES ideas (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE ideas ADD CONSTRAINT FK_1DB2F1DEA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE ideas ADD CONSTRAINT FK_1DB2F1DE6BF700BD FOREIGN KEY (status_id) REFERENCES status (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE ideas ADD CONSTRAINT FK_1DB2F1DE12469DE2 FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE ideas ADD CONSTRAINT FK_1DB2F1DEC54C8C93 FOREIGN KEY (type_id) REFERENCES types (id) ON DELETE SET NULL');
-        $this->addSql('ALTER TABLE votes ADD CONSTRAINT FK_518B7ACFA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL');
-        $this->addSql('ALTER TABLE votes ADD CONSTRAINT FK_518B7ACF5B6FEF7D FOREIGN KEY (idea_id) REFERENCES ideas (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE votes ADD CONSTRAINT FK_518B7ACFA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE votes ADD CONSTRAINT FK_518B7ACF5B6FEF7D FOREIGN KEY (idea_id) REFERENCES ideas (id) ON DELETE CASCADE');
     }
 
     public function down(Schema $schema): void

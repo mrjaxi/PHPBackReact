@@ -41,7 +41,7 @@ class Comments
     /**
      * @var Ideas|null
      * @ORM\ManyToOne(targetEntity=Ideas::class, inversedBy="comments")
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $idea;
 
@@ -86,7 +86,11 @@ class Comments
 
     public function get_UserInfo(): array
     {
-        return $this->user->get_Profile();
+        if($this->user){
+            return $this->user->get_Profile();
+        } else {
+            return [];
+        }
     }
 
     public function get_User(): User

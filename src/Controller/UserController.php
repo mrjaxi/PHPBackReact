@@ -67,9 +67,7 @@ class UserController extends AbstractController
         if($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())){
             return $this->json(['state' => 'success']);
         } else {
-            return $this->json(['state' => 'trouble',
-                "message" => "Не удалось отправить сообщение на почту",
-            ]);
+            return $this->json(['state' => 'trouble', "message" => "Не удалось отправить сообщение на почту",]);
         }
     }
 

@@ -35,14 +35,14 @@ class Votes
     /**
      * @var User|null
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="votes")
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $user;
 
     /**
      * @var Ideas|null
      * @ORM\ManyToOne(targetEntity=Ideas::class, inversedBy="votes")
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $idea;
 
