@@ -41,7 +41,7 @@ class Comments
     /**
      * @var Ideas|null
      * @ORM\ManyToOne(targetEntity=Ideas::class, inversedBy="comments")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $idea;
 
