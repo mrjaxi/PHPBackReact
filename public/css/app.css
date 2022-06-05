@@ -1496,7 +1496,7 @@ body {
   outline: none;
   -moz-appearance: none;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0);
+  border: 1px solid #ffffff00;
   padding: 15px;
   font-size: 21px;
 }
@@ -1658,7 +1658,7 @@ body {
   justify-content: center;
   align-items: center;
   border-radius: 88px;
-  background-color: rgba(255, 255, 255, 0.6392156863);
+  background-color: #FFFFFFA3;
   padding: 15px 20px 15px 20px;
   margin-left: 30px;
 }
@@ -2196,7 +2196,7 @@ body {
   border-color: white;
 }
 .u_module_essay textarea:focus, .u_module_essay textarea.ant-input-focused {
-  box-shadow: 0 0 0 2px rgb(24, 144, 255) !important;
+  box-shadow: 0 0 0 2px #1890ff !important;
 }
 .u_module_essay .u_module__q {
   padding: 0 22px;

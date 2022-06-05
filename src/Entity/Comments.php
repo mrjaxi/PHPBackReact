@@ -86,7 +86,11 @@ class Comments
 
     public function get_UserInfo(): array
     {
-        return $this->user->get_Profile();
+        if($this->user){
+            return $this->user->get_Profile();
+        } else {
+            return [];
+        }
     }
 
     public function get_User(): User

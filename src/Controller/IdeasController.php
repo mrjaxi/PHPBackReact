@@ -87,9 +87,9 @@ class IdeasController extends AbstractController
         if (empty($data['photo'])) {
             $data['photo'] = null;
         }
-        try{
+        try {
             $this->checkParamsError($data['title'], $data['description'], $data['category'], $data['type']);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
         $category = $this->getCategoryOrCreate($data['category']);
@@ -108,21 +108,17 @@ class IdeasController extends AbstractController
         $this->ideasRepository->save($idea);
 
         $urlIdea = $baseURL . "/idea/" . $idea->getId();
-//        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
-//        if($this->sendMail($mailer, $message, "Новый отзыв")){
-//            return $this->json([
-//                "state" => "success",
-//            ]);
-//        } else {
-//            return $this->json([
-//                'state' => 'trouble',
-//                'message' => "Не удалось отправить почту"
-//            ]);
-//        }
-
-        return $this->json([
-               "state" => "success",
+        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
+        if ($this->sendMail($mailer, $message, "Новый отзыв")) {
+            return $this->json([
+                "state" => "success",
             ]);
+        } else {
+            return $this->json([
+                'state' => 'trouble',
+                'message' => "Не удалось отправить почту"
+            ]);
+        }
     }
 
     /**
@@ -149,7 +145,7 @@ class IdeasController extends AbstractController
         try {
             $this->checkParamsError($data['title'], $data['description'], $data['category'], $data['type']);
             $user = $this->getUserOrCreate($data['email'], $data['pass'], $name = $data['name']);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
         }
         $category = $this->getCategoryOrCreate($data['category']);
@@ -177,7 +173,7 @@ class IdeasController extends AbstractController
             ));
 
         $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$baseURL}{$urlIdea}";
-        if($this->sendMail($mailer, $message, "Новый отзыв")){
+        if ($this->sendMail($mailer, $message, "Новый отзыв")) {
             return $this->json([
                 "state" => "success",
                 "url" => $redirectURL
@@ -190,6 +186,7 @@ class IdeasController extends AbstractController
             ]);
         }
     }
+
     /**
      * @param $title
      * @param $desc
@@ -197,20 +194,21 @@ class IdeasController extends AbstractController
      * @param $typeid
      * @throws Exception
      */
-    private function checkParamsError($title, $desc, $catid, $typeid){
-        if(empty($title) or empty($desc) or empty($catid) or empty($typeid)){
+    private function checkParamsError($title, $desc, $catid, $typeid)
+    {
+        if (empty($title) or empty($desc) or empty($catid) or empty($typeid)) {
             throw new Exception("Введите значения title, description, category, type.");
         }
-        if($catid < 1){
+        if ($catid < 1) {
             throw new Exception("Неверно выбрана категория");
         }
-        if($typeid < 1){
+        if ($typeid < 1) {
             throw new Exception("Неверно выбран тип");
         }
-        if(strlen($title) < 5){
+        if (strlen($title) < 5) {
             throw new Exception("Заголовок не может быть меньше 5 символов");
         }
-        if(strlen($desc) < 10){
+        if (strlen($desc) < 10) {
             throw new Exception("Описание не может быть меньше 10 символов");
         }
     }
@@ -314,13 +312,14 @@ class IdeasController extends AbstractController
     {
         $idea = $this->ideasRepository->find($idea_id);
 
-        if(empty($idea)){
+        if (empty($idea)) {
             return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
         }
         $ideaInfo = $this->decorateIdeas(array($idea));
 
         return $this->json(['state' => 'success', 'idea' => $ideaInfo]);
     }
+
     /**
      * @Route("/api/web/ideas/search/")
      * @param Request $request
@@ -435,6 +434,7 @@ class IdeasController extends AbstractController
 
         return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
     }
+
     /**
      * @Route("/api/user/delete/comment/")
      * @param Request $request
@@ -522,6 +522,7 @@ class IdeasController extends AbstractController
 
         return $this->json(['state' => 'success']);
     }
+
     /**
      * @Route("/api/user/delete/vote/")
      * @param Request $request
@@ -598,8 +599,7 @@ class IdeasController extends AbstractController
             return $this->json(['state' => 'error', 'message' => "Передайте ID статуса"]);
         }
         if (in_array("ROLE_ADMIN", $user->getRoles())
-            or in_array("ROLE_DEVELOPER", $user->getRoles()))
-        {
+            or in_array("ROLE_DEVELOPER", $user->getRoles())) {
             if ($newStatus->getName() == 'completed'
                 or $newStatus->getName() == 'declined') {
                 $idea->setAllowComments(false);
@@ -625,6 +625,7 @@ class IdeasController extends AbstractController
             return $this->json(['state' => 'error', 'message' => "Вы не можете изменить статус этой идеи"]);
         }
     }
+
     /**
      * @Route("/api/ag/closeIssue")
      * @param Request $request
@@ -667,6 +668,7 @@ class IdeasController extends AbstractController
         }
         return $category;
     }
+
     /**
      * @param $type_id
      * @return Types
@@ -691,8 +693,9 @@ class IdeasController extends AbstractController
      * @return User
      * @throws Exception
      */
-    private function getUserOrCreate(string $email, string $pass, string $name){
-        if(empty($email)){
+    private function getUserOrCreate(string $email, string $pass, string $name)
+    {
+        if (empty($email)) {
             throw new Exception("Нет email чтобы найти/зарегистрировать пользователя");
         }
         /** @var $user User */
@@ -701,7 +704,7 @@ class IdeasController extends AbstractController
             if (empty($pass)) {
                 throw new Exception("Нет пароля чтобы зарегистрировать нового пользователя");
             }
-            if(empty($name)){
+            if (empty($name)) {
                 $name = "Незнакомец";
             }
             $user = new User();
@@ -716,7 +719,9 @@ class IdeasController extends AbstractController
         }
         return $user;
     }
-    private function saveFile($request){
+
+    private function saveFile($request)
+    {
         $project_dir = $this->getParameter('kernel.project_dir') . '/public/' . $this->getParameter('app.name') . '/';
         $upload = AppController::saveFile($request, $project_dir, $this->getDoctrine()->getManager());
         if (!empty($upload["filename"])) {
@@ -725,6 +730,7 @@ class IdeasController extends AbstractController
             return null;
         }
     }
+
     private function sendMail(MailerInterface $mailer, string $message, string $subject): bool
     {
         // Берем почты из бд
@@ -740,8 +746,9 @@ class IdeasController extends AbstractController
             return false;
         }
     }
+
     // array_sort($array, 'key', SORT_DESC);
-    private function array_sort($array, $on, $order=SORT_ASC)
+    private function array_sort($array, $on, $order = SORT_ASC)
     {
         $new_array = array();
         $sortable_array = array();
@@ -782,33 +789,33 @@ class IdeasController extends AbstractController
      */
     private function decorateIdeas(?array $ideas): ?array
     {
-        if(empty($ideas)){
+        if (empty($ideas)) {
             return null;
         }
         /** @var User $user */
         $user = $this->getUser();
-        for($i = 0; $i < count($ideas); $i++){
+        for ($i = 0; $i < count($ideas); $i++) {
             /** @var $idea Ideas */
             $idea = $ideas[$i];
             $ideas[$i] = $idea->get_Info();
             $ideas[$i]["comments"] = $idea->get_CommentsArray();
 
-            if(empty($user)){
+            if (empty($user)) {
                 $ideas[$i]["currentUserIsVote"] = "unauthorized";
                 continue;
             }
             $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
 //            dd($votes);
-            if(empty($votes)){
+            if (empty($votes)) {
                 $ideas[$i]["currentUserIsVote"] = false;
                 continue;
             }
-            foreach ($votes as $vote){
-                if($vote->get_User()->getId() == $user->getId()){
-                    $ideas[$i]["currentUserIsVote"]= true;
+            foreach ($votes as $vote) {
+                if ($vote->get_User()->getId() == $user->getId()) {
+                    $ideas[$i]["currentUserIsVote"] = true;
                     break;
                 } else {
-                    $ideas[$i]["currentUserIsVote"]= false;
+                    $ideas[$i]["currentUserIsVote"] = false;
                 }
             }
         }
