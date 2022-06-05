@@ -63,7 +63,6 @@ const fetchUserList = async (text) => {
 };
 
 const AddIdeaPage = () => {
-    const [loading, setLoading] = useState(false);
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
     const [value, setValue] = useState([]);
@@ -90,7 +89,6 @@ const AddIdeaPage = () => {
     };
 
     const onSend = (data) => {
-        // console.log(data.file);
         axios.post(ApiRoutes.API_NEW_IDEA, {
             title: data.title.map(item => item.value).join(" "),
             description: data.description,
@@ -106,7 +104,6 @@ const AddIdeaPage = () => {
     };
 
     const getCategory = () => {
-        setLoading(true);
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             let categoryData = [];
             let typesData = [];
@@ -123,7 +120,6 @@ const AddIdeaPage = () => {
             }
             setCategory(categoryData);
             setTypes(typesData);
-            setLoading(false)
         })
     };
 
@@ -143,7 +139,6 @@ const AddIdeaPage = () => {
                         rules={[
                             {
                                 required: true,
-                                min: 5,
                                 message: 'Заголовок не может быть меньше 5 символов',
                             },
                         ]}

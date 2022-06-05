@@ -8,7 +8,7 @@ const Navigation = ({ categories, setSelectedCategory, loadData, selectedPanelMe
             <div className={"f-nav max_width"}>
                 {
                     categories.map((category) => (
-                        <a onClick={() => { setSelectedCategory(category.id), loadData(selectedPanelMenu, selectedType, category.id) }} className={"f-nav-button " + (category.id === selectedCategory && "f-nav-button-active")}>{ category.name }</a>
+                        <a onClick={() => { setSelectedCategory(category.id), loadData(null, null, category.id) }} className={"f-nav-button " + (category.id === selectedCategory && "f-nav-button-active")}>{ category.name }</a>
                     ))
                 }
                 <img className={"f-nav-button-img"} src={"/i/threedot.svg"}/>

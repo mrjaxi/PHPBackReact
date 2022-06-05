@@ -60,7 +60,7 @@ const Comments = ({ comments, loading, item, allowComments }) => {
                             </div>
                             <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', fontSize: 17 }}>
                                 {
-                                    (index === 2 && showComments) &&
+                                    (index === 2 && showComments && commentsData.length > 3) &&
                                     <a onClick={() => { setCommentsData(comments), setShowComments(false) }}>Загрузить еще</a>
                                 }
                             </div>

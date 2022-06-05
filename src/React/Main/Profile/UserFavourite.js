@@ -12,7 +12,7 @@ const UserFavourite = () => {
     const [statuses, setStatus] = useState([]);
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState([]);
-    const [loadingComments, setLoadingComments] = useState(false);
+
 
     const getUserFavourites = () => {
         setLoading(true);
@@ -31,7 +31,7 @@ const UserFavourite = () => {
                         photo: item.idea.photo,
                         comments: item.idea.comments,
                         like: Number(item.idea.likes),
-                        dislike: getRandomInt(0, 200),
+                        dislike: 2,
                         username: item.idea.user?.first_name,
                         type: item.idea.type.name,
                         currentUserIsVote: true,
@@ -146,7 +146,7 @@ const UserFavourite = () => {
                                         justifyContent: 'center',
                                         flexDirection: "column",
                                         alignItems: "center",
-                                        width: '70vw'
+                                        width: '60vw'
                                     }}>
                                         {
                                             items.length === 0 ?
@@ -235,7 +235,7 @@ const UserFavourite = () => {
                                                                     </div>
                                                                     {
                                                                         item.showComments &&
-                                                                        <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} loading={loadingComments}/>
+                                                                        <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} />
                                                                     }
                                                                 </div>
                                                             </div>

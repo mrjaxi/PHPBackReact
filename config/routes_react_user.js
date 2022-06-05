@@ -14,6 +14,7 @@ params:
     left_menu - key left menu, если не указан - не отобразится в меню
     viewBreadcrumbs - хлебные крошки
  */
+
 export default [
     { path: "/", name: "Главная страница", Component: MainPage },
     { path: "/profile", name: "Профиль", Component: Profile},

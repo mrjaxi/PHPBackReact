@@ -14,7 +14,7 @@ const ShowIdea = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [statuses, setStatus] = useState([]);
-    const [loadingComments, setLoadingComments] = useState(false);
+
 
     const params = useParams();
 
@@ -44,7 +44,7 @@ const ShowIdea = () => {
                         photo: item.photo,
                         comments: item.comments,
                         like: Number(item.likes),
-                        dislike: getRandomInt(0, 200),
+                        dislike: 2,
                         username: item.user?.first_name,
                         type: item.type.name,
                         currentUserIsVote: item.currentUserIsVote,
@@ -150,6 +150,7 @@ const ShowIdea = () => {
                                     justifyContent: 'center',
                                     flexDirection: "column",
                                     alignItems: "center",
+                                    width: '60vw'
                                 }}>
                                     {
                                         items.length === 0 ?
@@ -238,7 +239,7 @@ const ShowIdea = () => {
                                                             </div>
                                                             {
                                                                 item.showComments &&
-                                                                <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} loading={loadingComments}/>
+                                                                <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} />
                                                             }
                                                         </div>
                                                     </div>

@@ -12,7 +12,7 @@ const UserIdeas = () => {
     const [statuses, setStatus] = useState([]);
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState([]);
-    const [loadingComments, setLoadingComments] = useState(false);
+
 
     const getUserIdeas = () => {
         setLoading(true);
@@ -32,7 +32,7 @@ const UserIdeas = () => {
                         photo: item.photo,
                         comments: item.comments,
                         like: Number(item.likes),
-                        dislike: getRandomInt(0, 200),
+                        dislike: 2,
                         username: item.user?.first_name,
                         type: item.type.name,
                         currentUserIsVote: item.currentUserIsVote,
@@ -147,7 +147,7 @@ const UserIdeas = () => {
                                         justifyContent: 'center',
                                         flexDirection: "column",
                                         alignItems: "center",
-                                        width: '70vw'
+                                        width: '60vw'
                                     }}>
                                         {
                                             items.length === 0 ?
@@ -156,9 +156,9 @@ const UserIdeas = () => {
                                                         <div className={"f-cards-card-wrap"}>
                                                             <div className={"f-cards-inner"}>
                                                                 <div className={"f-cards-div-wrap-text"}>
-                                                    <span className={"f-cards-content-text"}>
-                                                        <div>Вы пока не опубликовали ни одной идеи...</div>
-                                                    </span>
+                                                                    <span className={"f-cards-content-text"}>
+                                                                        <div>Вы пока не опубликовали ни одной идеи...</div>
+                                                                    </span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -236,7 +236,7 @@ const UserIdeas = () => {
                                                                     </div>
                                                                     {
                                                                         item.showComments &&
-                                                                        <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} loading={loadingComments}/>
+                                                                        <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} />
                                                                     }
                                                                 </div>
                                                             </div>

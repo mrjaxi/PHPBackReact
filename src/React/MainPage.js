@@ -27,12 +27,12 @@ const MainPage = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
 
     const [loading, setLoading] = useState(false);
-    const [loadingComments, setLoadingComments] = useState(false);
+
 
     const loadData = (id, type, category) => {
         setLoading(true);
         data = [];
-
+        console.log("includedTypes:: ", includedTypes, " includedId:: ", includedId)
         let params = {
             order: "id",
             type: "asc",
@@ -83,7 +83,7 @@ const MainPage = () => {
                         photo: item.photo,
                         comments: item.comments,
                         like: Number(item.likes),
-                        dislike: getRandomInt(0, 200),
+                        dislike: 2,
                         username: item.user?.first_name,
                         type: item.type.name,
                         currentUserIsVote: item.currentUserIsVote,
@@ -138,11 +138,6 @@ const MainPage = () => {
             })
     };
 
-    useLayoutEffect(() => {
-        getCategory();
-        global.getProfile();
-    }, []);
-
     const showText = (show, index) => {
         let data = [...items];
         data[index].showFullText = !show;
@@ -181,6 +176,11 @@ const MainPage = () => {
             }
         })
     };
+
+    useLayoutEffect(() => {
+        getCategory();
+        global.getProfile();
+    }, []);
 
     return (
         <>
@@ -286,21 +286,23 @@ const MainPage = () => {
                                                         }
                                                     </div>
 
-                                                    <div className={"f-cards-div-wrap-text"}>
-                                                        <span className={"f-cards-content-text"}>
-                                                            { item.title }
-                                                        </span>
-                                                    </div>
-                                                    <div className={"f-cards-div-wrap-text"}>
-                                                            <span className={"f-cards-content-description"}>
-                                                                {
-                                                                    item.text.length < 400 ? <span>{item.text}</span> :
-                                                                        item.text.length > 400 && !item.showFullText ?
-                                                                            <span>{item.text.slice(0, 400)}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
-                                                                            <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
-                                                                }
+                                                    <NavLink to={"/idea/" + item.id}>
+                                                        <div className={"f-cards-div-wrap-text"}>
+                                                            <span className={"f-cards-content-text"}>
+                                                                { item.title }
                                                             </span>
-                                                    </div>
+                                                        </div>
+                                                        <div className={"f-cards-div-wrap-text"}>
+                                                                <span className={"f-cards-content-description"}>
+                                                                    {
+                                                                        item.text.length < 400 ? <span>{item.text}</span> :
+                                                                            item.text.length > 400 && !item.showFullText ?
+                                                                                <span>{item.text.slice(0, 400)}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
+                                                                                <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
+                                                                    }
+                                                                </span>
+                                                        </div>
+                                                    </NavLink>
                                                     <div className={"f-cards-under-block"}>
                                                         <div>
                                                             <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</a>
@@ -322,7 +324,7 @@ const MainPage = () => {
                                                     </div>
                                                     {
                                                         item.showComments &&
-                                                        <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} loading={loadingComments}/>
+                                                        <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} />
                                                     }
                                                 </div>
                                             </div>

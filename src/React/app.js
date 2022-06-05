@@ -5,25 +5,18 @@ import './sass/main-component.scss'
 import './sass/user.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Layout, Row, Col, Avatar, Typography, Button, Tooltip, notification} from 'antd';
+import {Layout, Button, Tooltip, notification} from 'antd';
 import {
     Router,
     Switch,
     Route,
-    Link,
 } from "react-router-dom";
 import routesAdmin from "../../config/routes_react_admin";
 import routesUser from "../../config/routes_react_user";
 import routesGuest from "../../config/routes_react_guest";
 
-import Cookies from 'universal-cookie';
-const cookies = new Cookies();
-
-
-import {default as LeftMenu} from "./Admin/LeftMenu";
 import {createBrowserHistory} from "history";
 import {
-    UserOutlined,
     LogoutOutlined,
     CheckOutlined,
     WarningOutlined,
@@ -34,28 +27,23 @@ import { UserHeader } from './User/Components';
 import ProfileEdit from "./User/ProfileEdit";
 import ApiRoutes from "./Routes/ApiRoutes";
 
-const {Header, Content, Sider} = Layout;
-const {Title} = Typography;
+const axios = require('axios');
+const {Header, Content} = Layout;
 
 global.host = '';
 global.lang = '/ru';
 global.profile = null;
-global.app = null
+global.app = null;
 global._history = createBrowserHistory();
 global.getProfile = null;
 
-global.getRandomInt = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-global.convertArrayToObject = function (arr) {
-    let result = {};
-    for (let i = 0; i < arr.length; i++) {
-        result[arr[i].key] = arr[i];
-    }
-    return result;
-}
+String.prototype.format = String.prototype.f = function(){
+    let args = arguments;
+    return this.replace(/\{(\d+)\}/g, function(m,n){
+        return args[n] ? args[n] : m;
+    });
+};
+
 global.serialize = function(obj, prefix) {
     let str = [],
         p;
@@ -69,7 +57,7 @@ global.serialize = function(obj, prefix) {
         }
     }
     return str.join("&");
-}
+};
 
 global.openNotification = function(message, description = '', type = 'success') {
     notification.open({
@@ -77,24 +65,15 @@ global.openNotification = function(message, description = '', type = 'success') 
         description: description,
         icon: type === 'success' ? <CheckOutlined style={{ color: '#108ee9' }} /> : (type === 'warn' ? <WarningOutlined  style={{color: 'darkorange'}} /> : <CloseOutlined style={{color:"red"}} />) ,
     });
-}
-const axios = require('axios');
+};
+
 axios.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest',
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
 };
 
-let today = new Date();
-global.curDate = today;
 global.user = {};
 global.layout = false;
-
-String.prototype.format = String.prototype.f = function(){
-    let args = arguments;
-    return this.replace(/\{(\d+)\}/g, function(m,n){
-        return args[n] ? args[n] : m;
-    });
-};
 
 class App extends React.Component {
     constructor(props) {
