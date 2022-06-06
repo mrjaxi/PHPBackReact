@@ -47,7 +47,7 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         if (empty($data['username'])) {
-            return $this->json(['state' => 'error', 'message' => "Передайте почту."]);
+            return $this->json(['state' => 'error', 'message' => "Передайте почту"]);
         }
         $user = $this->userRepository->findOneBy(["email" => $data['username']]);
         if (empty($user)) {
@@ -73,9 +73,13 @@ class UserController extends AbstractController
             $user->setLastAuth($currentDateTime );
             $this->userRepository->save($user);
             if ($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())) {
-                return $this->json(['state' => 'success']);
+                return $this->json(['state' => 'success', "seconds" => 120,]);
             } else {
-                return $this->json(['state' => 'trouble', "message" => "Не удалось отправить сообщение на почту",]);
+                return $this->json([
+                    'state' => 'trouble',
+                    "seconds" => 120,
+                    "message" => "Не удалось отправить сообщение на почту",
+                ]);
             }
         }
         $last_auth->modify("+2 minute");
@@ -83,9 +87,13 @@ class UserController extends AbstractController
             $user->setLastAuth($currentDateTime);
             $this->userRepository->save($user);
             if ($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())) {
-                return $this->json(['state' => 'success']);
+                return $this->json(['state' => 'success', "seconds" => 120,]);
             } else {
-                return $this->json(['state' => 'trouble', "message" => "Не удалось отправить сообщение на почту",]);
+                return $this->json([
+                    'state' => 'trouble',
+                    "seconds" => 120,
+                    "message" => "Не удалось отправить сообщение на почту",
+                ]);
             }
         } else {
             $diff = $last_auth->diff($currentDateTime);

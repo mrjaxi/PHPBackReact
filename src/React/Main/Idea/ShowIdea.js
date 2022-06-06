@@ -5,7 +5,6 @@ import Comments from "../Comments";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import {useParams} from "react-router";
-import {NavLink} from "react-router-dom";
 
 const ShowIdea = () => {
 
@@ -14,7 +13,6 @@ const ShowIdea = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [statuses, setStatus] = useState([]);
-
 
     const params = useParams();
 
@@ -51,7 +49,6 @@ const ShowIdea = () => {
                         allowComments: item.allowComments
                     })
                 });
-
                 setItems(data);
                 setLoading(false)
             } else {
@@ -134,23 +131,20 @@ const ShowIdea = () => {
             <Col className={"f-main"} style={{ minHeight: '100vh' }}>
                 <div>
                     <Header />
-                    <div className={"f-row-type max_width"}>
+                    <div className={"max_width"}>
                         <div style={{
-                            height: '80vh',
                             display: "flex",
-                            justifyContent: 'center',
                             flexDirection: "column",
+                            justifyContent: 'center',
                             alignItems: "center",
-                            paddingLeft: 200,
-                            paddingRight: 200,
                         }}>
-                            <div className={"f-row-type max_width"}>
+                            <div className={"max_width"}>
                                 <div style={{
                                     display: "flex",
                                     justifyContent: 'center',
                                     flexDirection: "column",
                                     alignItems: "center",
-                                    width: '60vw'
+                                    width: '50vw'
                                 }}>
                                     {
                                         items.length === 0 ?
@@ -213,14 +207,18 @@ const ShowIdea = () => {
                                                                          {
                                                                              item.text.split(" ").length < 25 ? <span>{item.text}</span> :
                                                                                  item.text.split(" ").length > 25 && !item.showFullText ?
-                                                                                     <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
+                                                                                     <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}...
+                                                                                         <a onClick={() => showText(item.showFullText, index)}>Еще</a>
+                                                                                     </span> :
                                                                                      <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
                                                                          }
                                                                     </span>
                                                             </div>
                                                             <div className={"f-cards-under-block"}>
                                                                 <div>
-                                                                    <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</a>
+                                                                    <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>
+                                                                        { global.numWord(item.comments.length,["комментарий", "комментария", "комментариев"]) }
+                                                                    </a>
                                                                 </div>
                                                                 <div>
                                                                     <a style={{ backgroundColor: item.currentUserIsVote === true ? "#90EE90" : "" }} className={"f-cards-under-block-like"} onClick={() => newVote(item.id, index, item.currentUserIsVote)}>
@@ -238,8 +236,8 @@ const ShowIdea = () => {
                                                                 {/*</div>*/}
                                                             </div>
                                                             {
-                                                                item.showComments &&
-                                                                <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} />
+                                                                    item.showComments &&
+                                                                    <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments}/>
                                                             }
                                                         </div>
                                                     </div>

@@ -219,11 +219,10 @@ const MainPage = () => {
                         <div style={{
                             width: '80%',
                             display: "flex",
-                            justifyContent: 'center',
                             flexDirection: "column",
+                            justifyContent: 'center',
                             alignItems: "center",
                             paddingLeft: 200,
-                            paddingRight: 200,
                         }}>
                             {
                                 loading ?
@@ -260,7 +259,7 @@ const MainPage = () => {
                                     items.map((item, index) => (
                                     <div className={"f-cards"}>
                                         <div>
-                                            <p style={{ marginLeft: 10 }} className={"f-cards-hashtag"}>#{item.type}</p>
+                                            <p style={{ marginLeft: 43 }} className={"f-cards-hashtag"}>#{item.type}</p>
                                             <div className={"f-cards-card-wrap"}>
                                                 {
                                                     item.photo !== null &&
@@ -282,33 +281,36 @@ const MainPage = () => {
                                                         </div>
                                                         {
                                                             global.layout === "admin" ?
-                                                            <Select onSelect={(id, data) => { changeStatus(item.id, id, data, index), updateStatuses() }} defaultValue={ item.status.id } style={{ width: 150 }}>
+                                                            <Select onSelect={(id, data) => { changeStatus(item.id, id, data, index), updateStatuses() }}
+                                                                    defaultValue={ item.status.id } style={{ justifyContent: 'center', alignItems: "center", }}>
                                                                 {
                                                                     statuses.map(status => (
                                                                         <Option data={status.name} value={status.id}>{status.translate}</Option>
                                                                     ))
                                                                 }
-                                                            </Select> : <p className={"f-cards-type f-cards-type-viewed"}>{ item.status.translate }</p>
+                                                            </Select> :
+                                                                <p className={"f-cards-type f-cards-type-viewed"}>{item.status.translate}</p>
                                                         }
                                                     </div>
 
-                                                    {/*<NavLink to={"/idea/" + item.id}>*/}
-                                                        <div className={"f-cards-div-wrap-text"}>
+                                                    <div className={"f-cards-div-wrap-text"}>
+                                                        <NavLink to={"/idea/" + item.id}>
                                                             <span className={"f-cards-content-text"}>
-                                                                { item.title }
+                                                                {item.title}
                                                             </span>
-                                                        </div>
-                                                        <div className={"f-cards-div-wrap-text"}>
-                                                                <span className={"f-cards-content-description"}>
-                                                                    {
-                                                                        item.text.split(" ").length < 25 ? <span>{item.text}</span> :
-                                                                            item.text.split(" ").length > 25 && !item.showFullText ?
-                                                                                <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
-                                                                                <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
-                                                                    }
-                                                                </span>
-                                                        </div>
-                                                    {/*</NavLink>*/}
+                                                        </NavLink>
+                                                    </div>
+
+                                                    <div className={"f-cards-div-wrap-text"}>
+                                                        <span className={"f-cards-content-description"}>
+                                                            {
+                                                                item.text.split(" ").length < 25 ? <span>{item.text}</span> :
+                                                                    item.text.split(" ").length > 25 && !item.showFullText ?
+                                                                        <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
+                                                                        <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
+                                                            }
+                                                        </span>
+                                                    </div>
                                                     <div className={"f-cards-under-block"}>
                                                         <div>
                                                             <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</a>
@@ -338,7 +340,7 @@ const MainPage = () => {
                                     </div>
                                 ))}
                         </div>
-                        <section style={{ width: '20%' }}>
+                        <section style={{ width: '15%', justifyContent: 'center', alignItems: "center", }}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"} style={{ marginTop: 70 }}>
                                     {

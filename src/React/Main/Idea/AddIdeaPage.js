@@ -1,16 +1,18 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Button, Checkbox, Form, Input, Modal, Select, Spin, Upload} from "antd";
-import { Typography } from 'antd';
+import {Typography} from 'antd';
 import {NavLink} from "react-router-dom";
 import axios from "axios";
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
-const { Title } = Typography;
-const { Option } = Select;
+
+const {Title} = Typography;
+const {Option} = Select;
 import debounce from 'lodash/debounce';
 import ApiRoutes from "../../Routes/ApiRoutes";
-const { TextArea } = Input;
 
-const DebounceSelect = ({ fetchOptions, debounceTimeout = 800, ...props }) => {
+const {TextArea} = Input;
+
+const DebounceSelect = ({fetchOptions, debounceTimeout = 800, ...props}) => {
     const [fetching, setFetching] = useState(false);
     const [options, setOptions] = useState([]);
     const fetchRef = useRef(0);
@@ -47,7 +49,7 @@ const DebounceSelect = ({ fetchOptions, debounceTimeout = 800, ...props }) => {
 
 const fetchUserList = async (text) => {
     return await fetch(ApiRoutes.API_SEARCH,
-    {
+        {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +71,7 @@ const AddIdeaPage = () => {
 
     const [fileList, setFileList] = useState([]);
 
-    const onChange = ({ fileList: newFileList }) => {
+    const onChange = ({fileList: newFileList}) => {
         setFileList(newFileList);
     };
 
@@ -97,8 +99,17 @@ const AddIdeaPage = () => {
             photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
         }).then(response => {
             console.log(response)
-            if (response.data.state === "success"){
-                global._history.replace('/')
+            switch (response.data.state) {
+                case "trouble":
+                case "success":
+                    global._history.replace('/idea/'+response.data.idea_id)
+                    break;
+                case "error":
+                    global.openNotification("Ошибка", response.data?.message, "error")
+                    break;
+                default:
+                    global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
+                    break;
             }
         })
     };
@@ -107,13 +118,13 @@ const AddIdeaPage = () => {
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             let categoryData = [];
             let typesData = [];
-            if (response.data?.categories){
+            if (response.data?.categories) {
                 response.data.categories.map(cat => {
                     categoryData.push({id: cat.id, value: cat.name})
                 })
             }
 
-            if (response.data?.types){
+            if (response.data?.types) {
                 response.data.types.map(type => {
                     typesData.push({id: type.id, value: type.name})
                 })
@@ -133,7 +144,7 @@ const AddIdeaPage = () => {
                 <Form
                     onFinish={(values) => onSend(values)}
                 >
-                    <Title style={{ marginBottom: 48 }}>Есть идея?</Title>
+                    <Title style={{marginBottom: 48}}>Есть идея?</Title>
                     <Form.Item
                         name={"title"}
                         rules={[
@@ -152,7 +163,7 @@ const AddIdeaPage = () => {
                             minLength={5}
                             maxLength={255}
                             placeholder="Заголовок"
-                            style={{ fontSize: 17, width: '440px' }}
+                            style={{fontSize: 17, width: '440px'}}
                             fetchOptions={fetchUserList}
                             onChange={(newValue) => {
                                 setValue(newValue);
@@ -168,7 +179,8 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Select size={"large"} style={{ fontSize: 17, width: '440px', }} placeholder={"Выберите категорию"}>
+                        <Select size={"large"} style={{fontSize: 17, width: '440px',}}
+                                placeholder={"Выберите категорию"}>
                             {
                                 category.map(categories => {
                                     return <Option value={categories.id}>{categories.value}</Option>
@@ -185,7 +197,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Select size={"large"} style={{ fontSize: 17, width: '440px' }} placeholder={"Выберите тип"}>
+                        <Select size={"large"} style={{fontSize: 17, width: '440px'}} placeholder={"Выберите тип"}>
                             {
                                 types.map(types => {
                                     return <Option value={types.id}>{types.value}</Option>
@@ -203,7 +215,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <TextArea style={{ fontSize: 17 }} rows={4} placeholder={"Описание"} />
+                        <TextArea style={{fontSize: 17}} rows={4} placeholder={"Описание"}/>
                     </Form.Item>
                     <Form.Item
                         name={"file"}
@@ -216,12 +228,14 @@ const AddIdeaPage = () => {
                             listType="picture"
                             defaultFileList={[...fileList]}
                         >
-                            <Button icon={<UploadOutlined />}>Upload</Button>
+                            <Button icon={<UploadOutlined/>}>Upload</Button>
                         </Upload>
                     </Form.Item>
                     <Form.Item>
-                        <Button className={"f-login-btn"} type="primary" htmlType="submit" shape="round">Отправить</Button>
-                        <Button style={{ marginLeft: 10, boxShadow: 'none' }} className={"f-login-btn"} shape="round"><NavLink to={""}>Закрыть</NavLink></Button>
+                        <Button className={"f-login-btn"} type="primary" htmlType="submit"
+                                shape="round">Отправить</Button>
+                        <Button style={{marginLeft: 10, boxShadow: 'none'}} className={"f-login-btn"}
+                                shape="round"><NavLink to={""}>Закрыть</NavLink></Button>
                     </Form.Item>
                 </Form>
             </div>

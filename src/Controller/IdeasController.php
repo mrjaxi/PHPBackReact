@@ -112,10 +112,12 @@ class IdeasController extends AbstractController
         if ($this->sendMail($mailer, $message, "Новый отзыв")) {
             return $this->json([
                 "state" => "success",
+                "idea_id" => $idea->getId()
             ]);
         } else {
             return $this->json([
                 'state' => 'trouble',
+                "idea_id" => $idea->getId(),
                 'message' => "Не удалось отправить почту"
             ]);
         }

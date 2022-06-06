@@ -6,7 +6,7 @@ import ApiRoutes from "../Routes/ApiRoutes";
 const {Title} = Typography;
 const {TextArea} = Input;
 
-const Comments = ({comments, loading, item, allowComments}) => {
+const Comments = ({comments, loading, item, index, allowComments}) => {
 
     const [showComments, setShowComments] = useState(true);
     const [commentsData, setCommentsData] = useState(comments.filter((item, index) => index < 3));

@@ -1,4 +1,5 @@
 const ApiRoutes = {
+    // TODO: Изменить роут
     BASE_URL: "https://pbr.atmadev.ru",
     // BASE_URL: "http://127.0.0.1:8000",
 
