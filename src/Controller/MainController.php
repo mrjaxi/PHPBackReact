@@ -61,28 +61,24 @@ class MainController extends AbstractController
      */
     public function decodeUserInfo(Request $request): Response
     {
-        try {
-            $data = json_decode($request->getContent(), true);
-            if ($data) {
-                $userBase64 = $data['user'];
-            } else {
-                $userBase64 = $request->get('user');
-            }
-            if (empty($userBase64)) {
-                throw new Exception("Передайте закодированные данные пользователя");
-            }
-            $user = AppController::decodeBase64User($userBase64);
-            $email = $user[0];
-            $password  = $user[1];
-            return $this->json([
-                    "state" => "success",
-                    "user" => array(
-                        "username" => $email,
-                        "password" => $password
-                    )
-                ]);
-        } catch (Exception $e){
-            return $this->json(['state' => 'error', 'message' => $e->getMessage()]);
+        $data = json_decode($request->getContent(), true);
+        if ($data) {
+            $userBase64 = $data['user'];
+        } else {
+            $userBase64 = $request->get('user');
         }
+        if (empty($userBase64)) {
+            return $this->json(['state' => 'error', 'message' => "Передайте закодированные данные пользователя"]);
+        }
+        $user = AppController::decodeBase64User($userBase64);
+        $email = $user[0];
+        $password = $user[1];
+        return $this->json([
+            "state" => "success",
+            "user" => array(
+                "username" => $email,
+                "password" => $password
+            )
+        ]);
     }
 }

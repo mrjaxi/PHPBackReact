@@ -6,6 +6,8 @@ use App\Entity\Ideas;
 use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
 use App\Repository\VotesRepository;
+use DateInterval;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Exception;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -16,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Constraints\Date;
+use function Symfony\Component\DomCrawler\last;
 
 class UserController extends AbstractController
 {
@@ -25,7 +29,7 @@ class UserController extends AbstractController
     private UserPasswordEncoderInterface $encoder;
 
     public function __construct(UserRepository $userRepository, SettingsRepository $settingsRepository,
-                                VotesRepository $votesRepository,UserPasswordEncoderInterface $encoder)
+                                VotesRepository $votesRepository, UserPasswordEncoderInterface $encoder)
     {
         $this->userRepository = $userRepository;
         $this->settingsRepository = $settingsRepository;
@@ -42,18 +46,15 @@ class UserController extends AbstractController
     public function signIn(Request $request, MailerInterface $mailer): Response
     {
         $data = json_decode($request->getContent(), true);
-        if (empty($data['username']) or empty($data['password'])) {
-            return $this->json(['state' => 'error', 'message' => "Передайте username и password."]);
+        if (empty($data['username'])) {
+            return $this->json(['state' => 'error', 'message' => "Передайте почту."]);
         }
-        $user = $this->userRepository->findOneBy([ "email" => $data['username'] ]);
-        if(empty($user)){
-            $user = $this->userRepository->findOneBy([ "username" => $data['username'] ]);
-            if(empty($user)){
+        $user = $this->userRepository->findOneBy(["email" => $data['username']]);
+        if (empty($user)) {
+            $user = $this->userRepository->findOneBy(["username" => $data['username']]);
+            if (empty($user)) {
                 return $this->json(['state' => 'error', 'message' => "Такого пользователя не существует"]);
             }
-        }
-        if($user->getOpenPassword() !== $data['password']){
-            return $this->json(['state' => 'error', 'message' => "Неверный пароль"]);
         }
         $expires = AppController::getExpires();
         $userInfo = AppController::encodeBase64User($user->getEmail(), $user->getOpenPassword());
@@ -62,12 +63,40 @@ class UserController extends AbstractController
                 "user" => $userInfo,
                 "expires" => $expires,
             ));
-//        dd($url);
         $message = "Попытка входа в ваш аккаунт Atmaguru Feedback. Чтобы войти в аккаунт, перейдите по ссылке:\n\n{$url}";
-        if($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())){
-            return $this->json(['state' => 'success']);
+//        dd($url);
+
+        /** @var DateTime $last_auth */
+        $last_auth = $user->getLastAuth();
+        $currentDateTime = new DateTime();
+        if (empty($last_auth)) {
+            $user->setLastAuth($currentDateTime );
+            $this->userRepository->save($user);
+            if ($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())) {
+                return $this->json(['state' => 'success']);
+            } else {
+                return $this->json(['state' => 'trouble', "message" => "Не удалось отправить сообщение на почту",]);
+            }
+        }
+        $last_auth->modify("+2 minute");
+        if ($last_auth < $currentDateTime) {
+            $user->setLastAuth($currentDateTime);
+            $this->userRepository->save($user);
+            if ($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())) {
+                return $this->json(['state' => 'success']);
+            } else {
+                return $this->json(['state' => 'trouble', "message" => "Не удалось отправить сообщение на почту",]);
+            }
         } else {
-            return $this->json(['state' => 'trouble', "message" => "Не удалось отправить сообщение на почту",]);
+            $diff = $last_auth->diff($currentDateTime);
+            $diffMin = (int)$diff->format('%i');
+            $diffSec = (int)$diff->format('%s');
+            $allSec = $diffMin * 60 + $diffSec;
+            return $this->json([
+                "state" => "timer",
+                "seconds" => $allSec,
+                "message" => "Подождите " . AppController::num_word($allSec,["секунду", "секунды", 'секунд']) . " перед следующей попыткой входа",
+            ]);
         }
     }
 
@@ -80,18 +109,18 @@ class UserController extends AbstractController
     public function redirectToReact(Request $request, MailerInterface $mailer): Response
     {
         $userInfo = $request->get("user");
-        $expires = (int) $request->get("expires");
+        $expires = (int)$request->get("expires");
         if (!$request->getLocale()) {
             $request->setLocale('ru');
         }
-        if(empty($userInfo) or empty($expires)){
+        if (empty($userInfo) or empty($expires)) {
             return $this->redirect('/' . $request->getLocale() . '/');
         }
-        if(!AppController::checkExpires($expires)){
+        if (!AppController::checkExpires($expires)) {
             return $this->redirect('/' . $request->getLocale() . '/');
         }
         $baseURL = "{$request->getScheme()}://{$request->getHttpHost()}/{$request->getLocale()}/";
-        $redirectURL =$baseURL . "redirect?" .
+        $redirectURL = $baseURL . "redirect?" .
             "url=/{$request->getLocale()}/" .
             "&user={$userInfo}";
 //        dd($redirectURL);
@@ -199,6 +228,7 @@ class UserController extends AbstractController
             return Response::create('UNAUTHORIZED', Response::HTTP_UNAUTHORIZED);
         }
     }
+
     /**
      * @Route("/api/ag/getUserByEmail/")
      * @param Request $request
@@ -207,10 +237,10 @@ class UserController extends AbstractController
     public function getUserByEmail(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
-        if($data['email']){
+        if ($data['email']) {
             /** @var User $user */
             $user = $this->userRepository->findOneBy(["email" => $data['email']]);
-            if(empty($user)){
+            if (empty($user)) {
                 return $this->json(['state' => 'error', 'message' => "Такого пользователя не существует"]);
             }
         } else {
@@ -219,6 +249,7 @@ class UserController extends AbstractController
 //        dd($user);
         return $this->json(['state' => 'success', 'user' => $user->get_Profile()]);
     }
+
     /**
      * @Route("/api/ag/user/setProfile/")
      * @param Request $request
@@ -298,7 +329,7 @@ class UserController extends AbstractController
                 break;
             case 3:
                 $likes = $user->get_VotesArray();
-                foreach($likes as &$like){
+                foreach ($likes as &$like) {
                     $decorIdea = $this->decorateArrayIdeas(array($like['idea']));
 
                     $like['idea'] = $decorIdea[0] ?: null;
@@ -315,34 +346,34 @@ class UserController extends AbstractController
 
     private function decorateCollectionIdeas(Collection $ideas): ?array
     {
-        if($ideas->isEmpty()){
+        if ($ideas->isEmpty()) {
             return null;
         }
         /** @var User $user */
         $user = $this->getUser();
         $ideasArr = array();
-        for($i = 0; $i < $ideas->count(); $i++){
+        for ($i = 0; $i < $ideas->count(); $i++) {
             /** @var $idea Ideas */
             $idea = $ideas[$i];
             $ideasArr[$i] = $idea->get_Info();
             $ideasArr[$i]["comments"] = $idea->get_CommentsArray();
 
-            if(empty($user)){
+            if (empty($user)) {
                 $ideasArr[$i]["currentUserIsVote"] = "unauthorized";
                 continue;
             }
             $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
 //            dd($votes);
-            if(empty($votes)){
+            if (empty($votes)) {
                 $ideasArr[$i]["currentUserIsVote"] = false;
                 continue;
             }
-            foreach ($votes as $vote){
-                if($vote->get_User()->getId() == $user->getId()){
-                    $ideasArr[$i]["currentUserIsVote"]= true;
+            foreach ($votes as $vote) {
+                if ($vote->get_User()->getId() == $user->getId()) {
+                    $ideasArr[$i]["currentUserIsVote"] = true;
                     break;
                 } else {
-                    $ideasArr[$i]["currentUserIsVote"]= false;
+                    $ideasArr[$i]["currentUserIsVote"] = false;
                 }
             }
         }
@@ -351,33 +382,33 @@ class UserController extends AbstractController
 
     private function decorateArrayIdeas(?array $ideas): ?array
     {
-        if(empty($ideas)){
+        if (empty($ideas)) {
             return null;
         }
         /** @var User $user */
         $user = $this->getUser();
-        for($i = 0; $i < count($ideas); $i++){
+        for ($i = 0; $i < count($ideas); $i++) {
             /** @var $idea Ideas */
             $idea = $ideas[$i];
             $ideas[$i] = $idea->get_Info();
             $ideas[$i]["comments"] = $idea->get_CommentsArray();
 
-            if(empty($user)){
+            if (empty($user)) {
                 $ideas[$i]["currentUserIsVote"] = "unauthorized";
                 continue;
             }
             $votes = $this->votesRepository->findBy(['idea' => $idea->getId()]);
 //            dd($votes);
-            if(empty($votes)){
+            if (empty($votes)) {
                 $ideas[$i]["currentUserIsVote"] = false;
                 continue;
             }
-            foreach ($votes as $vote){
-                if($vote->get_User()->getId() == $user->getId()){
-                    $ideas[$i]["currentUserIsVote"]= true;
+            foreach ($votes as $vote) {
+                if ($vote->get_User()->getId() == $user->getId()) {
+                    $ideas[$i]["currentUserIsVote"] = true;
                     break;
                 } else {
-                    $ideas[$i]["currentUserIsVote"]= false;
+                    $ideas[$i]["currentUserIsVote"] = false;
                 }
             }
         }

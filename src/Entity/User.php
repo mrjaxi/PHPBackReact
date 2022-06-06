@@ -84,6 +84,11 @@ class User implements UserInterface
     private $system_id;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $last_auth;
+
+    /**
      * @var ArrayCollection<int, Ideas>
      * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="user")
      */
@@ -300,6 +305,18 @@ class User implements UserInterface
     public function setSystemId(?int $system_id): self
     {
         $this->system_id = $system_id;
+
+        return $this;
+    }
+
+    public function getLastAuth(): ?\DateTimeInterface
+    {
+        return $this->last_auth;
+    }
+
+    public function setLastAuth(?\DateTimeInterface $last_auth): self
+    {
+        $this->last_auth = $last_auth;
 
         return $this;
     }
