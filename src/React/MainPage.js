@@ -113,6 +113,12 @@ const MainPage = () => {
         setLoading(false);
     };
 
+    const updateStatuses = () => {
+        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
+            setStatus(response.data.statuses);
+        })
+    };
+
     const newVote = (id, index, currentUserIsVote) => {
         currentUserIsVote ?
             axios.post(ApiRoutes.API_DELETE_VOTE, {idea_id: id}).then(response => {
@@ -197,7 +203,7 @@ const MainPage = () => {
                                     им с нами
                                 </p>
                             </div>
-                            <img className={"f-section-wrap-image"} src={'/i/movie-text.png'} />
+                            {/*<img className={"f-section-wrap-image"} src={'/i/movie-text.png'} />*/}
                         </div>
                     </section>
                     <Navigation
@@ -276,17 +282,17 @@ const MainPage = () => {
                                                         </div>
                                                         {
                                                             global.layout === "admin" ?
-                                                            <Select onSelect={(id, data) => { changeStatus(item.id, id, data, index), getCategory() }} defaultValue={ item.status.id } style={{ width: 150 }}>
+                                                            <Select onSelect={(id, data) => { changeStatus(item.id, id, data, index), updateStatuses() }} defaultValue={ item.status.id } style={{ width: 150 }}>
                                                                 {
                                                                     statuses.map(status => (
                                                                         <Option data={status.name} value={status.id}>{status.translate}</Option>
                                                                     ))
                                                                 }
-                                                            </Select> : <p className={"f-cards-type f-type-viewed"}>{ item.status.translate }</p>
+                                                            </Select> : <p className={"f-cards-type f-cards-type-viewed"}>{ item.status.translate }</p>
                                                         }
                                                     </div>
 
-                                                    <NavLink to={"/idea/" + item.id}>
+                                                    {/*<NavLink to={"/idea/" + item.id}>*/}
                                                         <div className={"f-cards-div-wrap-text"}>
                                                             <span className={"f-cards-content-text"}>
                                                                 { item.title }
@@ -295,14 +301,14 @@ const MainPage = () => {
                                                         <div className={"f-cards-div-wrap-text"}>
                                                                 <span className={"f-cards-content-description"}>
                                                                     {
-                                                                        item.text.length < 400 ? <span>{item.text}</span> :
-                                                                            item.text.length > 400 && !item.showFullText ?
-                                                                                <span>{item.text.slice(0, 400)}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
+                                                                        item.text.split(" ").length < 25 ? <span>{item.text}</span> :
+                                                                            item.text.split(" ").length > 25 && !item.showFullText ?
+                                                                                <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
                                                                                 <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
                                                                     }
                                                                 </span>
                                                         </div>
-                                                    </NavLink>
+                                                    {/*</NavLink>*/}
                                                     <div className={"f-cards-under-block"}>
                                                         <div>
                                                             <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>{ item.comments.length } комментариев</a>

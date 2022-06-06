@@ -5,6 +5,7 @@ import { CloseOutlined } from "@ant-design/icons"
 import Highlighter from "react-highlight-words";
 const { Option } = Select;
 import ApiRoutes from "../Routes/ApiRoutes";
+import {NavLink} from "react-router-dom";
 
 const Search = () => {
     const [searchItems, setSearchItems] = useState([]);
@@ -96,14 +97,16 @@ const Search = () => {
                                                     <p className={"f-cards-type"}>{ item.status.translate }</p>
                                                 </div>
                                                 <div className={"f-cards-div-wrap-text"}>
-                                                <span className={"f-cards-content-text"}>
-                                                    <Highlighter
-                                                        searchWords={searchText.split(" ").filter(item => item.length > 1)}
-                                                        autoEscape={true}
-                                                        highlightStyle={{ padding: 0, backgroundColor: "#FFFF66", color: "black" }}
-                                                        textToHighlight={ item.title }
-                                                    />
-                                                </span>
+                                                    <NavLink to={"/idea/" + item.id}>
+                                                        <span className={"f-cards-content-text"}>
+                                                            <Highlighter
+                                                                searchWords={searchText.split(" ").filter(item => item.length > 1)}
+                                                                autoEscape={true}
+                                                                highlightStyle={{ padding: 0, backgroundColor: "#FFFF66", color: "black" }}
+                                                                textToHighlight={ item.title }
+                                                            />
+                                                        </span>
+                                                    </NavLink>
                                                 </div>
                                             </div>
                                         </div>

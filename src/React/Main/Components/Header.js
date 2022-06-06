@@ -16,7 +16,7 @@ const Header = () => {
 
     return (
         <>
-            <header style={{ width: '100%' }} className={"f-header-content"}>
+            <header className={"f-header-content"}>
                 <div className={'f-header-wrap-content'}>
                     <div className={'f-header-wrap-logo'}>
                         <NavLink to={"/"} className={'f-header-wrap-logo'}>

@@ -208,10 +208,10 @@ const UserIdeas = () => {
                                                                     <div className={"f-cards-div-wrap-text"}>
                                                                         <span className={"f-cards-content-description"}>
                                                                             {
-                                                                                item.text.length < 400 ? <span>{item.text}</span> :
-                                                                                    item.text.length > 400 && !item.showFullText ?
-                                                                                        <span>{item.text.slice(0, 400)}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
-                                                                                        <span>{item.text} <a onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
+                                                                                item.text.split(" ").length < 25 ? <span>{item.text}</span> :
+                                                                                    item.text.split(" ").length > 25 && !item.showFullText ?
+                                                                                        <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
+                                                                                        <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
                                                                             }
                                                                         </span>
                                                                     </div>

@@ -5,19 +5,43 @@ import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 const { Title } = Typography;
 
+import { useTimer } from 'react-timer-hook';
+
+function AccessTimer({ expiryTimestamp, setTimeExpiry }) {
+    const {
+        seconds,
+        minutes,
+    } = useTimer({ expiryTimestamp, onExpire: () => setTimeExpiry(false)});
+
+
+    return (
+        <>
+            <span> {minutes}</span>:<span>{seconds}</span>
+        </>
+    );
+}
+
+
 const Login = () => {
 
-    const loginUser = (data) => {
-        axios.post(ApiRoutes.API_SIGN_IN, {username: data?.email, password: data?.password}, {withCredentials: true,}).then(response => {
-            if (response.data.state === "success"){
-                global.user = response.data.profile;
-                global.openNotification("Успешно", "Ссылка для входа отправлена на вашу почту", "success")
+    const time = new Date();
+    const [timeExpiry, setTimeExpiry] = useState(false);
 
-                global._history.push("/")
-            } else {
-                global.openNotification("Ошибка", "Неверные данные для входа", "error")
-            }
-        })
+    const loginUser = (data) => {
+        if (!timeExpiry){
+            axios.post(ApiRoutes.API_SIGN_IN, {username: data?.email}, {withCredentials: true,}).then(response => {
+                if (response.data.state === "success"){
+                    global.user = response.data.profile;
+                    global.openNotification("Успешно", "Ссылка для входа отправлена на вашу почту", "success")
+
+                    global._history.push("/")
+                } else if (response.data.state === "timer"){
+                    setTimeExpiry(time.setSeconds(time.getSeconds() + response.data.seconds));
+                } else {
+                    global.openNotification("Ошибка", "Неверные данные для входа", "error")
+                }
+            })
+        }
     };
 
     return (
@@ -41,19 +65,20 @@ const Login = () => {
                     >
                         <Input size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Электронная почта"}/>
                     </Form.Item>
-                    <Form.Item
-                        name={"password"}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Пожалуйста, введите пароль',
-                            },
-                        ]}
-                    >
-                        <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>
-                    </Form.Item>
+                    {/*<Form.Item*/}
+                    {/*    name={"password"}*/}
+                    {/*    rules={[*/}
+                    {/*        {*/}
+                    {/*            required: true,*/}
+                    {/*            message: 'Пожалуйста, введите пароль',*/}
+                    {/*        },*/}
+                    {/*    ]}*/}
+                    {/*>*/}
+                    {/*    <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>*/}
+                    {/*</Form.Item>*/}
                     <Form.Item>
-                        <Button className={"f-login-btn"} type="primary" htmlType="submit" shape="round">Войти</Button>
+                        <Button disabled={timeExpiry} className={"f-login-btn"} type="primary" htmlType="submit" shape="round">Отправить на почту{ timeExpiry && <>
+                        <span>&nbsp;повторно&nbsp;</span><AccessTimer setTimeExpiry={setTimeExpiry} expiryTimestamp={timeExpiry}/></> }</Button>
                     </Form.Item>
                 </Form>
             </div>
