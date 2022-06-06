@@ -8,7 +8,7 @@ const { Title } = Typography;
 const Login = () => {
 
     const loginUser = (data) => {
-        axios.post(ApiRoutes.API_SIGN_IN, global.serialize({username: data?.email, password: data?.password}), {withCredentials: true,}).then(response => {
+        axios.post(ApiRoutes.API_SIGN_IN, {username: data?.email, password: data?.password}, {withCredentials: true,}).then(response => {
             if (response.data.state === "success"){
                 global.user = response.data.profile;
                 global.openNotification("Успешно", "Ссылка для входа отправлена на вашу почту", "success")
