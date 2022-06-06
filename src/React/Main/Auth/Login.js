@@ -41,17 +41,17 @@ const Login = () => {
                     >
                         <Input size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Электронная почта"}/>
                     </Form.Item>
-                    {/*<Form.Item*/}
-                    {/*    name={"password"}*/}
-                    {/*    rules={[*/}
-                    {/*        {*/}
-                    {/*            required: true,*/}
-                    {/*            message: 'Пожалуйста, введите пароль',*/}
-                    {/*        },*/}
-                    {/*    ]}*/}
-                    {/*>*/}
-                    {/*    <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>*/}
-                    {/*</Form.Item>*/}
+                    <Form.Item
+                        name={"password"}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, введите пароль',
+                            },
+                        ]}
+                    >
+                        <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>
+                    </Form.Item>
                     <Form.Item>
                         <Button className={"f-login-btn"} type="primary" htmlType="submit" shape="round">Войти</Button>
                     </Form.Item>
