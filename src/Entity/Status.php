@@ -32,6 +32,11 @@ class Status
     private $translate;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $color;
+
+    /**
      * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="status")
      */
     private $ideas;
@@ -66,6 +71,18 @@ class Status
     public function setTranslate(string $translate): self
     {
         $this->translate = $translate;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
 
         return $this;
     }

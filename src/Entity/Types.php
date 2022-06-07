@@ -32,6 +32,11 @@ class Types
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $color;
+
+    /**
      * @ORM\OneToMany(targetEntity=Ideas::class, mappedBy="type")
      */
     private $ideas;
@@ -47,6 +52,7 @@ class Types
             "id" => $this->id,
             "name" => $this->name,
             "description" => $this->description,
+            "color" => $this->color,
         ];
     }
 
@@ -79,6 +85,18 @@ class Types
         return $this;
     }
 
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
     /**
      * @return array
      */
@@ -91,6 +109,7 @@ class Types
         }
         return $ideasArray;
     }
+
     /**
      * @return ArrayCollection
      */

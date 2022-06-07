@@ -25,34 +25,41 @@ class StatusFixtures extends Fixture
         $statusData = [
             0 => [
                 'name' => 'completed',
-                'translate' => "Завершено"
+                'translate' => "Завершено",
+                "color" => "#42C82C",
             ],
             1 => [
                 'name' => 'started',
-                'translate' => "Начато"
+                'translate' => "Начато",
+                "color" => "#3D72ED",
             ],
             2 => [
                 'name' => 'planned',
-                'translate' => "Запланировано"
+                'translate' => "Запланировано",
+                "color" => "#F6BA59",
             ],
             3 => [
                 'name' => 'considered',
-                'translate' => "Рассмотрено"
+                'translate' => "Рассмотрено",
+                "color" => "#CCD1D9",
             ],
             4 => [
                 'name' => 'declined',
-                'translate' => "Отклонено"
+                'translate' => "Отклонено",
+                "color" => "#EE505A",
             ],
             5 => [
                 'name' => 'new',
-                'translate' => "Не рассмотрено"
+                'translate' => "Не рассмотрено",
+                "color" => "#CCD1D9",
             ],
         ];
 
         foreach ($statusData as $status) {
             $newStatus = new Status();
             $newStatus->setName($status["name"])
-                ->setTranslate($status["translate"]);
+                ->setTranslate($status["translate"])
+                ->setColor($status["color"]);
 
             $this->em->persist($newStatus);
         }

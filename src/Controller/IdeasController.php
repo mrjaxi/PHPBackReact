@@ -664,7 +664,9 @@ class IdeasController extends AbstractController
         if (empty($category)) {
             $category = $this->categoriesRepository->findOneBy(['name' => "Прочее"]);
             if (empty($category)) {
-                $category = new Categories("Прочее", "Все записи, которые не определили к конкретной категории");
+                $category = new Categories();
+                $category->setName("Прочее")
+                    ->setDescription("Все записи, которые не определили к конкретной категории");
                 $this->categoriesRepository->save($category);
             }
         }
@@ -681,7 +683,10 @@ class IdeasController extends AbstractController
         if (empty($type)) {
             $type = $this->typesRepository->findOneBy(['name' => "Без классификации"]);
             if (empty($type)) {
-                $type = new Types("Без классификации", "Все записи, которые не определили к конкретному типу");
+                $type = new Types();
+                $type->setName("Без классификации")
+                    ->setDescription("Все записи, которые не определили к конкретному типу")
+                    ->setColor("#2B2D33");
                 $this->typesRepository->save($type);
             }
         }

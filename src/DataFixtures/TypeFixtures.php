@@ -24,26 +24,32 @@ class TypeFixtures extends Fixture
         $typesData = [
             0 => [
                 'name' => 'Предложить идею',
+                "color" => "#3D72ED",
             ],
             1 => [
                 'name' => 'Сообщить о проблеме',
+                "color" => "#EE505A",
             ],
             2 => [
                 'name' => 'Поблагодарить',
+                "color" => "#42C82C",
             ],
             3 => [
                 'name' => 'Задать вопрос',
+                "color" => "#F88545",
             ],
             4 => [
                 'name' => 'Без классификации',
+                "color" => "#2B2D33",
             ],
         ];
 
         foreach ($typesData as $type) {
-            $newTypes = new Types();
-            $newTypes->setName($type["name"]);
+            $newType = new Types();
+            $newType->setName($type["name"])
+                ->setColor($type["color"]);
 
-            $this->em->persist($newTypes);
+            $this->em->persist($newType);
         }
 
         $this->em->flush();
