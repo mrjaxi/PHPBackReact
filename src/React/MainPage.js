@@ -35,7 +35,6 @@ const MainPage = () => {
     const loadData = (id, type, category) => {
         setLoading(true);
         data = [];
-        console.log("includedTypes:: ", includedTypes, " includedId:: ", includedId)
         let params = {
             order: "id",
             type: "asc",

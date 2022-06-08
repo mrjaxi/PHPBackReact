@@ -9,19 +9,17 @@ const  { Option } = Select;
 
 const IdeaItem = ({item, index, setItem, statuses}) => {
 
-    const [idea, setIdea] = useState(item)
+    const [idea, setIdea] = useState(item);
 
     useEffect(() => {
-        console.log(idea)
         setItem(idea, index)
-    }, [idea])
+    }, [idea]);
 
     const setIdeaComments = (comments) => {
-        let newIdea = {...idea}
-        newIdea.comments = comments
-        console.log("setNewIdea:", idea)
+        let newIdea = {...idea};
+        newIdea.comments = comments;
         setIdea(newIdea)
-    }
+    };
 
     const newVote = (id, currentUserIsVote) => {
         switch (currentUserIsVote) {
