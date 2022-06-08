@@ -68,17 +68,19 @@ global.openNotification = function(message, description = '', type = 'success') 
 };
 
 global.numWord = (number, words, returnNum=true) => {
-    let baseNumber = number
-    number = Math.abs(number) % 100;
-    let n1 = number % 10;
-    let word = words[2];
-    if (number > 10 && number < 20) { word = words[2]; }
-    if (n1 > 1 && n1 < 5) { word =  words[1]; }
-    if (n1 === 1) { word =  words[0]; }
-    if(returnNum === true)
-        return `${baseNumber} ${word}`;
-    else
-        return `${word}`;
+    let num = Math.abs(number) % 100;
+    if(num > 19) {
+        num = num % 10
+    }
+    let out = (returnNum) ? `${num} ` : ""
+    switch (num) {
+        case 1:  out += words[0]; break;
+        case 2:
+        case 3:
+        case 4:  out += words[1]; break;
+        default: out += words[2]; break;
+    }
+    return out;
 }
 
 axios.defaults.headers.common = {

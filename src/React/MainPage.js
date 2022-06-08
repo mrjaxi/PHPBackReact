@@ -92,8 +92,8 @@ const MainPage = () => {
                                 like: Number(item.likes),
                                 dislike: 2,
                                 username: item.user?.first_name,
-                                type: item.type.name,
                                 userImage: item.user.image,
+                                type: item.type.name,
                                 currentUserIsVote: item.currentUserIsVote,
                                 allowComments: item.allowComments
                             })
@@ -282,10 +282,10 @@ const MainPage = () => {
                                             <div className={"f-cards-card-wrap"}>
                                                 <div className={"f-cards-inner"}>
                                                     <div className={"f-cards-div-wrap-text"}>
-                                                            <span className={"f-cards-content-text"}>
-                                                                <Skeleton active avatar paragraph={{ rows: 1 }}/>
-                                                                <Skeleton active/>
-                                                            </span>
+                                                        <span className={"f-cards-content-text"}>
+                                                            <Skeleton active avatar paragraph={{ rows: 1 }}/>
+                                                            <Skeleton active/>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -295,17 +295,9 @@ const MainPage = () => {
                                     <FlatList
                                         list={ideas}
                                         renderItem={(idea, index) => {
-                                            console.log(`idea:`, idea)
+                                            // console.log(`idea:`, idea)
                                             return(
-                                                <IdeaItem
-                                                    updateStatuses={updateStatuses}
-                                                    item={idea}
-                                                    index={index}
-                                                    setItem={setIdea}
-                                                    statuses={statuses}
-                                                    showText={showText}
-                                                    showComments={showComments}
-                                                />
+                                                <IdeaItem item={idea} index={index} setItem={setIdea} statuses={statuses} updateStatuses={updateStatuses}/>
                                             )
                                         }}
                                         renderWhenEmpty={() =>
@@ -326,106 +318,6 @@ const MainPage = () => {
                                         // sortBy={["firstName", {key: "lastName", descending: true}]}
                                         // groupBy={person => person.info.age > 18 ? 'Over 18' : 'Under 18'}
                                     />
-                                //     ideas.map((item, index) => (
-                                //     <div className={"f-cards"}>
-                                //         <div>
-                                //             <p style={{ marginLeft: 40 }} className={"f-cards-hashtag"}>#{item.type}</p>
-                                //             <div className={"f-cards-card-wrap"}>
-                                //                 {
-                                //                     item.photo !== null &&
-                                //                     <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("' + item.photo.split(";")[0] + '")' }} />
-                                //                 }
-                                //                 <div className={"f-cards-inner"}>
-                                //                     <div className={"f-cards-avatar"}>
-                                //                         <div className={"f-cards-row-wrap"}>
-                                //                             <img className={"f-cards-image"} src={"/i/avatar.png"}/>
-                                //                             <div className={"f-cards-wrap-text"}>
-                                //                                 <span className={"f-cards-text"}>{ item.username }
-                                //                                     {
-                                //                                         item.roles.includes("ROLE_ADMIN") &&
-                                //                                         <img style={{ marginBottom: 3, marginLeft: 5 }} src={"/i/official.svg"} width={15} height={15}/>
-                                //                                     }
-                                //                                 </span>
-                                //                                 <span className={"f-cards-text-bottom"}>{ item.role }</span>
-                                //                             </div>
-                                //                         </div>
-                                //                         {
-                                //                             global.layout === "admin" ?
-                                //                                 <Select onSelect={(id, data) => {
-                                //                                     changeStatus(item.id, id, data, index), updateStatuses()
-                                //                                 }}
-                                //                                         defaultValue={item.status.id} style={{
-                                //                                     justifyContent: 'center',
-                                //                                     alignItems: "center",
-                                //                                 }}>
-                                //                                     {
-                                //                                         statuses.map(status => (
-                                //                                             <Option data={status.name}
-                                //                                                     value={status.id}>{status.translate}</Option>
-                                //                                         ))
-                                //                                     }
-                                //                                 </Select> :
-                                //                                 <div style={{ textAlign: "center",
-                                //                                     justifyContent: 'center', }}>
-                                //                                     <p className={"f-cards-type f-cards-type-viewed"} style={{
-                                //                                            flex: 1,
-                                //                                            padding: "5px",
-                                //                                            color: item.status?.color ? item.status?.color : "#000000",
-                                //                                            backgroundColor: item.status?.color ? item.status?.color + "30" : "#AAB2BD",
-                                //                                        }}
-                                //                                     >{item.status.translate}</p>
-                                //                                 </div>
-                                //                         }
-                                //                     </div>
-                                //
-                                //                     <div className={"f-cards-div-wrap-text"}>
-                                //                         <NavLink to={"/idea/" + item.id}>
-                                //                             <span className={"f-cards-content-text"}>
-                                //                                 {item.title}
-                                //                             </span>
-                                //                         </NavLink>
-                                //                     </div>
-                                //
-                                //                     <div className={"f-cards-div-wrap-text"}>
-                                //                         <span className={"f-cards-content-description"}>
-                                //                             {
-                                //                                 item.text.split(" ").length < 25 ? <span>{item.text}</span> :
-                                //                                     item.text.split(" ").length > 25 && !item.showFullText ?
-                                //                                         <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}... <a onClick={() => showText(item.showFullText, index)}>Еще</a></span> :
-                                //                                         <span>{item.text} <a style={{ zIndex: 3  }} onClick={() => showText(item.showFullText, index)}>Скрыть</a></span>
-                                //                             }
-                                //                         </span>
-                                //                     </div>
-                                //                     <div className={"f-cards-under-block"}>
-                                //                         <div>
-                                //                             <a onClick={() => { showComments(index) }} className={"f-cards-under-block-comment"}>
-                                //                                 { global.numWord(item.comments.length,["комментарий", "комментария", "комментариев"]) }
-                                //                             </a>
-                                //                         </div>
-                                //                         <div>
-                                //                             <a style={{ backgroundColor: item.currentUserIsVote === true ? "#90EE90" : "" }} className={"f-cards-under-block-like"} onClick={() => newVote(item.id, index, item.currentUserIsVote)}>
-                                //                                 <i className="em em---1"
-                                //                                    aria-label="THUMBS UP SIGN"></i>
-                                //                                 <span className={"f-cards-under-block-like-text"}>{ item.like }</span>
-                                //                             </a>
-                                //                         </div>
-                                //                         {/*<div>*/}
-                                //                         {/*    <a className={"f-cards-under-block-like"} href={"#"}>*/}
-                                //                         {/*        <i className="em em--1"*/}
-                                //                         {/*           aria-label="THUMBS DOWN SIGN"></i>*/}
-                                //                         {/*        <span className={"f-cards-under-block-like-text"}>Не нравится</span>*/}
-                                //                         {/*    </a>*/}
-                                //                         {/*</div>*/}
-                                //                     </div>
-                                //                     {
-                                //                         item.showComments &&
-                                //                         <Comments allowComments={item.allowComments} item={item} index={index} addCommentToIdea={addCommentToIdea} comments={item.comments} setComments={setIdeaComments} />
-                                //                     }
-                                //                 </div>
-                                //             </div>
-                                //         </div>
-                                //     </div>
-                                // ))
                                 }
                         </div>
                         <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>

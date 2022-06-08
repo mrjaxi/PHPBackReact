@@ -17,8 +17,9 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
     }, [idea])
 
     const setIdeaComments = (comments) => {
-        let newIdea = [...idea]
+        let newIdea = {...idea}
         newIdea.comments = comments
+        console.log("setNewIdea:", idea)
         setIdea(newIdea)
     }
 
@@ -32,7 +33,7 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
                     .then(response => {
                         switch (response.data?.state) {
                             case "success":
-                                let newIdea = [...idea];
+                                let newIdea = {...idea};
                                 newIdea.like -= 1;
                                 newIdea.currentUserIsVote = !currentUserIsVote;
                                 setIdea(newIdea)
@@ -51,7 +52,7 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
                     .then(response => {
                         switch (response.data?.state) {
                             case "success":
-                                let newIdea = [...idea];
+                                let newIdea = {...idea};
                                 newIdea.like += 1;
                                 newIdea.currentUserIsVote = !currentUserIsVote;
                                 setIdea(newIdea)
@@ -72,13 +73,13 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
     };
 
     const showText = (show) => {
-        let newIdea = [...idea];
+        let newIdea = {...idea};
         newIdea.showFullText = !show;
         setIdea(newIdea)
     };
 
     const showComments = () => {
-        let newIdea = [...idea];
+        let newIdea = {...idea};
         const flag = newIdea.showComments;
         newIdea.showComments = !flag;
         setIdea(newIdea)
@@ -90,7 +91,7 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
                 switch (response.data?.state) {
                     case "success":
                         global.openNotification("Успешно", "Статус идеи изменен", "success")
-                        let newIdea = [...idea];
+                        let newIdea = {...idea};
                         newIdea.status = id;
                         if (name.data === "declined" || name.data === "completed") {
                             newIdea.allowComments = false;
@@ -98,6 +99,7 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
                             newIdea.allowComments = true;
                         }
                         setIdea(newIdea)
+                        updateStatuses()
                         break;
                     case "error":
                         global.openNotification("Ошибка", response.data?.message, "error")

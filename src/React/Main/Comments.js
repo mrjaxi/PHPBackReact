@@ -6,7 +6,7 @@ import ApiRoutes from "../Routes/ApiRoutes";
 const {Title} = Typography;
 const {TextArea} = Input;
 
-const Comments = ({comments, setComments, loading, item, index, allowComments}) => {
+const Comments = ({comments, setComments, loading, idea, index, allowComments}) => {
 
     const [form] = Form.useForm();
     const [showComments, setShowComments] = useState(true);
@@ -14,7 +14,7 @@ const Comments = ({comments, setComments, loading, item, index, allowComments}) 
     const [rawCommentsData, setRawCommentsData] = useState(comments);
 
     const sendComment = (text) => {
-        axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: item.id, content: text}).then(
+        axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea.idea_id, content: text}).then(
             response => {
                 if (response.data.state === "success") {
                     form.resetFields()
