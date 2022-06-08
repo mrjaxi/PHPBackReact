@@ -3,14 +3,15 @@ import Search from "./Search";
 
 const Navigation = ({categories, setSelectedCategory, loadData, selectedPanelMenu, selectedType, selectedCategory}) => {
 
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false)
 
     return (
         <>
             <Search visible={visible} setVisible={setVisible}/>
             <navigation className={"f-nav-wrap"}>
                 <div className={"f-nav max_width"} style={{
-
+                    maxWidth: '80%',
+                    padding: 0
                 }}>
                     {
                         categories.map((category) => (

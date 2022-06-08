@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 import {UserOutlined} from "@ant-design/icons";
 const  { Option } = Select;
 
-const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
+const IdeaItem = ({item, index, setItem, statuses}) => {
 
     const [idea, setIdea] = useState(item)
 
@@ -99,7 +99,6 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
                             newIdea.allowComments = true;
                         }
                         setIdea(newIdea)
-                        updateStatuses()
                         break;
                     case "error":
                         global.openNotification("Ошибка", response.data?.message, "error")
@@ -144,7 +143,7 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
                             {
                                 global.layout === "admin" ?
                                     <Select onSelect={(id, data) => {
-                                        changeStatus(idea.idea_id, id, data), updateStatuses()
+                                        changeStatus(idea.idea_id, id, data)
                                     }} defaultValue={idea.status.id} style={{
                                         justifyContent: 'center',
                                         alignItems: "center",

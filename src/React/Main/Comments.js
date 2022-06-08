@@ -37,9 +37,9 @@ const Comments = ({comments, setComments, loading, idea, index, allowComments}) 
                 {
                     commentsData.length === 0 ? (
                             <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{marginTop: 20}}>
-                            <span className={"f-cards-content-description"}>
-                                Вы можете оставить первый комментарий
-                            </span>
+                            <span className={"f-cards-content-description"}>{
+                                allowComments ? "Вы можете оставить первый комментарий" : "Комментариев нет"
+                            }</span>
                             </div>
                         ) :
                         loading ? <Skeleton active style={{width: '100%', height: '200px'}}/> :

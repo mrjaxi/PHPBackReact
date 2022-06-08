@@ -1,15 +1,13 @@
 import React, {useLayoutEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
-import Comments from "./Main/Comments";
 import './sass/main-component.scss'
-import {Col, Select, Skeleton} from "antd";
+import {Col, Skeleton} from "antd";
 import axios from "axios";
 import Header from "./Main/Components/Header";
 import Navigation from "./Main/Components/Navigation";
 import ApiRoutes from "./Routes/ApiRoutes";
 import FlatList from 'flatlist-react';
 import IdeaItem from "./Main/Idea/IdeaItem";
-const { Option } = Select;
 
 const MainPage = () => {
 
@@ -100,7 +98,6 @@ const MainPage = () => {
                             })
                         });
                     }
-                    console.log("GETIDEAS COMPLETED")
                     setIdeas(data);
                     setLoading(false)
                     break;
@@ -134,105 +131,11 @@ const MainPage = () => {
         })
     };
 
-    const newVote = (id, index, currentUserIsVote) => {
-        switch (currentUserIsVote) {
-            case "unauthorized":
-                global.openNotification("Войдите", "Чтобы проголосовать нужно авторизоваться", "error")
-                break;
-            case true:
-                axios.post(ApiRoutes.API_DELETE_VOTE, {idea_id: id})
-                    .then(response => {
-                        switch(response.data?.state){
-                            case "success":
-                                let data = [...ideas];
-                                data[index].like -= 1;
-                                data[index].currentUserIsVote = !currentUserIsVote;
-                                setIdeas(data)
-                                break;
-                            case "error":
-                                global.openNotification("Ошибка", response.data?.message, "error")
-                                break;
-                            default:
-                                global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                                break;
-                        }
-                    })
-                break;
-            case false:
-                axios.post(ApiRoutes.API_NEW_VOTE, {idea_id: id, type: "like"})
-                    .then(response => {
-                        switch (response.data?.state) {
-                            case "success":
-                                let data = [...ideas];
-                                data[index].like += 1;
-                                data[index].currentUserIsVote = !currentUserIsVote;
-                                setIdeas(data)
-                                break;
-                            case "error":
-                                global.openNotification("Ошибка", response.data?.message, "error")
-                                break;
-                            default:
-                                global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                                break;
-                        }
-                    })
-                break;
-            default:
-                global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                break;
-        }
-    };
-
-    const showText = (show, index) => {
-        let data = [...ideas];
-        data[index].showFullText = !show;
-
-        setIdeas(data)
-    };
-
-    const showComments = (index) => {
-        let data = [...ideas];
-
-        const flag = data[index].showComments;
-        data[index].showComments = !flag;
-        setIdeas(data)
-    };
-
-    const addCommentToIdea = (index, comment) => {
-        let data = [...ideas];
-        data[index].comments.push(comment);
-        setIdeas(data)
-    };
-
-    const changeStatus = (idea_id, id, name, index) => {
-        axios.post(ApiRoutes.API_SET_STATUS, {idea_id: idea_id, status_id: id})
-            .then(response => {
-                switch (response.data?.state) {
-                    case "success":
-                        global.openNotification("Успешно", "Статус идеи изменен", "success")
-                        let data = [...ideas];
-                        data[index].status = id;
-                        if (name.data === "declined" || name.data === "completed") {
-                            data[index].allowComments = false;
-                        } else {
-                            data[index].allowComments = true;
-                        }
-                        setIdeas(data)
-                        break;
-                    case "error":
-                        global.openNotification("Ошибка", response.data?.message, "error")
-                        break;
-                    default:
-                        global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                        break;
-                }
-            })
-    };
-
     const setIdea = (idea, index) => {
         let newIdeas = [...ideas]
         newIdeas[index] = idea
         setIdeas(newIdeas)
+        updateStatuses()
     }
 
     return (
@@ -240,7 +143,7 @@ const MainPage = () => {
             <Col className={"f-main"}>
                 <div>
                     <Header />
-                    <section className={"max_width"}>
+                    <section className={"max_width"} style={{marginTop: "100px"}}>
                         <div className={"f-section"}>
                             <div className={"f-section-wrap-text"}>
                                 <p className={"f-section-wrap-p-text"} style={{
@@ -263,8 +166,8 @@ const MainPage = () => {
                         selectedType={selectedType}
                         setSelectedCategory={setSelectedCategory}
                     />
-                    <NavLink to={ global.layout !== "guest" ? (global.lang + "/idea/add/") : (global.lang + "/auth/")}>
-                        <p className={"f-new-idea"}>Новая идея</p>
+                    <NavLink to={ global.layout !== "guest" ? (global.lang + "/idea/add/") : (global.lang + "/auth/")} className={"f-new-idea"}>
+                        <p className={"f-new-idea-text"}>Новая идея</p>
                     </NavLink>
                     <div className={"f-row-type max_width"}>
                         <div style={{
@@ -273,7 +176,7 @@ const MainPage = () => {
                             flexDirection: "column",
                             justifyContent: 'center',
                             alignItems: "center",
-                            paddingRight: "200px",
+                            paddingRight: "100px",
                             paddingLeft: "200px"
                         }}>
                             {
@@ -297,7 +200,7 @@ const MainPage = () => {
                                         list={ideas}
                                         renderItem={(idea, index) => {
                                             return(
-                                                <IdeaItem item={idea} index={index} setItem={setIdea} statuses={statuses} updateStatuses={updateStatuses}/>
+                                                <IdeaItem item={idea} index={index} setItem={setIdea} statuses={statuses}/>
                                             )
                                         }}
                                         renderWhenEmpty={() =>
@@ -307,7 +210,7 @@ const MainPage = () => {
                                                         <div className={"f-cards-inner"}>
                                                             <div className={"f-cards-div-wrap-text"}>
                                                         <span className={"f-cards-content-text"}>
-                                                            <div>Пока нет идей...</div>
+                                                            <div>Пока нет записей...</div>
                                                         </span>
                                                             </div>
                                                         </div>
