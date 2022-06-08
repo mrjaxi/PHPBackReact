@@ -72,10 +72,6 @@ const UserComments = () => {
                                                     <div className={"f-cards"}>
                                                         <div>
                                                             <div className={"f-cards-card-wrap"}>
-                                                                {
-                                                                    item.photo !== null &&
-                                                                    <div className={"f-cards-image-type"} style={{ backgroundImage: 'url("' + item.photo.split(";")[0] + '")' }} />
-                                                                }
                                                                 <div className={"f-cards-inner"}>
                                                                     <div className={"f-cards-avatar"}>
                                                                         <div className={"f-cards-row-wrap"}>

@@ -228,7 +228,7 @@ const AddIdeaPage = () => {
                             listType="picture"
                             defaultFileList={[...fileList]}
                         >
-                            <Button icon={<UploadOutlined/>}>Upload</Button>
+                            <Button icon={<UploadOutlined/>}>Загрузить изображение</Button>
                         </Upload>
                     </Form.Item>
                     <Form.Item>

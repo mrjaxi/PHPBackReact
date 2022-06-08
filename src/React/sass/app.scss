@@ -1129,6 +1129,11 @@ form#login {
     margin-left: 8px;
 }
 
+.ant-modal-content {
+    height: 100%;
+    border-radius: 8px !important;
+}
+
 .ant-upload-select-picture-card {
     border-radius: 0;
     height: inherit;

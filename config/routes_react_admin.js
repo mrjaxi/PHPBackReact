@@ -1,6 +1,5 @@
 import {default as MainPage} from "../src/React/MainPage";
 import {default as AddIdeaPage} from "../src/React/Main/Idea/AddIdeaPage";
-import {default as Search} from "../src/React/Main/Search";
 import {default as ShowIdea} from "../src/React/Main/Idea/ShowIdea";
 import {default as Profile} from "../src/React/Main/Profile/Profile";
 import {default as Redirect} from "../src/React/Main/RedirectPage/Redirect";
@@ -17,7 +16,6 @@ params:
 export default [
     { path: "/", name: "Главная страница", Component: MainPage },
     { path: "/idea/add/", name: "Добавить идею", Component: AddIdeaPage },
-    { path: '/search', name: "Поиск по идеям", Component: Search },
     { path: "/idea/:id", name: "Идея", Component: ShowIdea},
     { path: "/redirect", name: "Редирект", Component: Redirect },
     { path: "/profile", name: "Профиль", Component: Profile},

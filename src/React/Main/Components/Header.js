@@ -3,6 +3,7 @@ import {Avatar} from "antd";
 import {DownOutlined, UpOutlined, UserOutlined} from "@ant-design/icons";
 import {NavLink} from "react-router-dom";
 import axios from "axios";
+import ProfileAvatar from "../Profile/ProfileAvatar";
 
 const Header = () => {
 
@@ -36,11 +37,7 @@ const Header = () => {
                                         alignItems: 'center',
                                         flexDirection: 'row'
                                     }}>
-                                        <Avatar size={36} style={{backgroundColor: '#AAB2BD'}}
-                                                src={global.user.image !== null && global.layout !== 'guest'
-                                                    ? <img src={global.user.image}/>
-                                                    : <UserOutlined/>
-                                                }/>
+                                        <ProfileAvatar size={36} image={global.user.image}/>
                                         <div style={{marginLeft: 10}}>
                                             <DownOutlined/>
                                         </div>
@@ -54,9 +51,7 @@ const Header = () => {
                                         flexDirection: 'row',
                                     }} to={"/profile"}>
                                         <span style={{marginRight: 10, fontSize: 17}}>{global.user.first_name}</span>
-                                        <Avatar size={36} style={{backgroundColor: '#AAB2BD'}}
-                                                src={global.user.image !== null ? <img src={global.user.image}/> :
-                                                    <UserOutlined/>}/>
+                                        <ProfileAvatar size={36} image={global.user.image}/>
                                         <div style={{marginLeft: 5}}>
                                             <UpOutlined/>
                                         </div>

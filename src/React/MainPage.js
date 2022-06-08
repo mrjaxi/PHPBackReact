@@ -44,6 +44,9 @@ const MainPage = () => {
             page: 1,
         };
 
+        params["status"] = JSON.stringify([...includedId]);
+        params["types"] = JSON.stringify([...includedTypes]);
+
         if (type){
             let prevIncludesType = [...includedTypes];
 
@@ -54,8 +57,7 @@ const MainPage = () => {
             }
             setIncludedTypes(prevIncludesType);
 
-            prevIncludesType.length > 0 ?
-            params["types"] = JSON.stringify(prevIncludesType) : null;
+            params["types"] = prevIncludesType.length !== 0 ? JSON.stringify(prevIncludesType) : JSON.stringify([]);
         }
 
         if (id) {
@@ -69,8 +71,7 @@ const MainPage = () => {
 
             setIncludedId(prevIncludedId);
 
-            prevIncludedId.length > 0 ?
-            params["status"] = JSON.stringify(prevIncludedId) : null;
+            params["status"] = prevIncludedId.length !== 0 ? JSON.stringify(prevIncludedId) : JSON.stringify([]);
         }
 
         axios.get(ApiRoutes.API_GET_IDEAS.format(category) + "?" + global.serialize(params)).then(response => {
@@ -295,7 +296,6 @@ const MainPage = () => {
                                     <FlatList
                                         list={ideas}
                                         renderItem={(idea, index) => {
-                                            // console.log(`idea:`, idea)
                                             return(
                                                 <IdeaItem item={idea} index={index} setItem={setIdea} statuses={statuses} updateStatuses={updateStatuses}/>
                                             )

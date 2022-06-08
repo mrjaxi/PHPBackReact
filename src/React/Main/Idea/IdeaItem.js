@@ -4,7 +4,7 @@ import ApiRoutes from "../../Routes/ApiRoutes";
 import Comments from "../Comments";
 import {Avatar, Select} from "antd";
 import { NavLink } from "react-router-dom";
-import {DownOutlined, UserOutlined} from "@ant-design/icons";
+import {UserOutlined} from "@ant-design/icons";
 const  { Option } = Select;
 
 const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
@@ -125,7 +125,7 @@ const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
                         <div className={"f-cards-avatar"}>
                             <div className={"f-cards-row-wrap"}>
                                 <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
-                                        src={idea.userImage !== null
+                                        src={idea.userImage
                                             ? <img src={idea.userImage}/>
                                             : <UserOutlined/>
                                         }/>

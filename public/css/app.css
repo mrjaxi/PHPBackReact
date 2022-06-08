@@ -1053,6 +1053,11 @@ form#login .ant-col.ant-form-item-control input {
   margin-left: 8px;
 }
 
+.ant-modal-content {
+  height: 100%;
+  border-radius: 8px !important;
+}
+
 .ant-upload-select-picture-card {
   border-radius: 0;
   height: inherit;
@@ -1287,6 +1292,24 @@ body {
 }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
+.ant-modal-content {
+  height: 100%;
+  border-radius: 8px !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+.f-input-search {
+  width: 99%;
+  border: none;
+  font-size: 21px;
+  color: #191919;
+}
 .f-search {
   position: absolute;
   left: 50px;
@@ -1307,6 +1330,7 @@ body {
   width: 80%;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  height: 100%;
 }
 .f-search-wrap::-webkit-scrollbar {
   display: none;
