@@ -1341,7 +1341,7 @@ body {
   margin-right: auto;
   margin-bottom: 20px;
   border-radius: 64px;
-  z-index: 2;
+  z-index: 100;
   display: flex;
   color: white;
   font-size: 24px;
@@ -1514,9 +1514,9 @@ body {
 }
 .f-cards {
   display: flex;
-  width: 100%;
+  /*width: 100%;*/
   flex-direction: column;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
   justify-content: center;
 }
 .f-cards:last-child {
@@ -1535,7 +1535,7 @@ body {
 .f-cards-card-wrap {
   display: flex;
   flex-direction: column;
-  z-index: 50;
+  z-index: 1;
 }
 .f-cards-border-image {
   background-repeat: no-repeat;
@@ -1674,7 +1674,7 @@ body {
 .f-row-type {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 .f-row-center-wrap {
   display: flex;

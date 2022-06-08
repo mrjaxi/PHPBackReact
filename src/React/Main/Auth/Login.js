@@ -29,8 +29,9 @@ const Login = () => {
 
     const loginUser = (data) => {
         if (!timeExpiry) {
-            axios.post(ApiRoutes.API_SIGN_IN,  // ApiRoutes.API_SIGN_IN     || ApiRoutes.API_LOGIN
-                {username: data?.email,}, // {username: data?.email,}, || global.serialize({username: data?.email, password: data?.password}),
+            // TODO: Поменять вход
+            axios.post(ApiRoutes.API_LOGIN,  // ApiRoutes.API_SIGN_IN     || ApiRoutes.API_LOGIN
+                global.serialize({username: data?.email, password: data?.password}), // {username: data?.email,}, || global.serialize({username: data?.email, password: data?.password}),
                 {withCredentials: true,})
                 .then(response => {
                     const time = new Date();
@@ -65,7 +66,7 @@ const Login = () => {
             <div className={"f-login"}>
                 <a onClick={() => global._history.replace("/")}
                    style={{position: 'absolute', top: 30, right: 30, height: 25, width: 25}}>
-                    <img src={"/i/close-login.svg"}/>
+                    <img src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>
                 </a>
                 <Form
                     onFinish={(values) => loginUser(values)}
@@ -83,17 +84,17 @@ const Login = () => {
                         <Input size={"large"} style={{padding: '10px 15px 10px 15px', width: '440px'}}
                                placeholder={"Электронная почта"}/>
                     </Form.Item>
-                    {/*<Form.Item*/}
-                    {/*    name={"password"}*/}
-                    {/*    rules={[*/}
-                    {/*        {*/}
-                    {/*            required: true,*/}
-                    {/*            message: 'Пожалуйста, введите пароль',*/}
-                    {/*        },*/}
-                    {/*    ]}*/}
-                    {/*>*/}
-                    {/*    <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>*/}
-                    {/*</Form.Item>*/}
+                    <Form.Item
+                        name={"password"}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, введите пароль',
+                            },
+                        ]}
+                    >
+                        <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>
+                    </Form.Item>
                     <Form.Item>
                         <Button disabled={timeExpiry} className={"f-login-btn"} type="primary" htmlType="submit"
                                 shape="round">

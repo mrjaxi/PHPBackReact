@@ -100,28 +100,30 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        global.getProfile = () => axios.post(ApiRoutes.API_LOGIN).then(response => {
-            if (response.data.state === "success") {
-                global.user = response.data.profile;
-
-                if (response.data.profile.is_active === true) {
-                    if (response.data.profile.roles.indexOf('ROLE_ADMIN') > -1 || response.data.profile.roles.indexOf('ROLE_DEVELOPER') > -1) {
-                        this.setState({layout: 'admin'});
-                        global.layout = 'admin';
-                    } else if (response.data.profile.roles.indexOf('ROLE_USER') > -1) {
-                        this.setState({layout: 'user'});
-                        global.layout = 'user';
-                    } else {
+        global.getProfile = () => axios.post(ApiRoutes.API_LOGIN)
+            .then(response => {
+                switch (response.data?.state) {
+                    case "success":
+                        global.user = response.data?.profile;
+                        if (global.user?.is_active === true) {
+                            if (global.user.roles.indexOf('ROLE_ADMIN') > -1 || global.user.roles.indexOf('ROLE_DEVELOPER') > -1) {
+                                this.setState({layout: 'admin'});
+                                global.layout = 'admin';
+                            } else if (global.user.roles.indexOf('ROLE_USER') > -1) {
+                                this.setState({layout: 'user'});
+                                global.layout = 'user';
+                            } else {
+                                this.setState({layout: 'guest'});
+                                global.layout = 'guest';
+                            }
+                        }
+                        break;
+                    default:
                         this.setState({layout: 'guest'});
                         global.layout = 'guest';
-                    }
+                        break;
                 }
-            } else {
-                this.setState({layout: 'guest'});
-                global.layout = 'guest';
-            }
-
-        });
+            });
         global.getProfile();
     }
 

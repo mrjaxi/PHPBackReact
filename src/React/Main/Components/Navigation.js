@@ -4,7 +4,9 @@ import {NavLink} from "react-router-dom";
 const Navigation = ({categories, setSelectedCategory, loadData, selectedPanelMenu, selectedType, selectedCategory}) => {
     return (
         <navigation className={"f-nav-wrap"}>
-            <div className={"f-nav max_width"}>
+            <div className={"f-nav max_width"} style={{
+
+            }}>
                 {
                     categories.map((category) => (
                         <a onClick={() => {

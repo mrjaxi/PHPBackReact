@@ -487,7 +487,7 @@ class IdeasController extends AbstractController
                 return $this->json(['state' => 'error', 'message' => "Голос может быть только like или dislike"]);
             }
         } else {
-            return $this->json(['state' => 'error', 'message' => "Передайте тип голоса"]);
+            return $this->json(['state' => 'error', 'message' => "Укажите тип голоса"]);
         }
         if (!empty($idea_id)) {
             $idea = $this->ideasRepository->find($idea_id);
@@ -495,7 +495,7 @@ class IdeasController extends AbstractController
                 return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
             }
         } else {
-            return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
+            return $this->json(['state' => 'error', 'message' => "Передайте номер идеи"]);
         }
         if (!$idea->getAllowComments()) {
             return $this->json(['state' => 'error', 'message' => "За эту идею нельзя проголосовать"]);

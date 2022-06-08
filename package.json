@@ -38,6 +38,7 @@
     "antd": "^4.13.0",
     "axios": "^0.21",
     "babel-loader": "^8.2.2",
+    "flatlist-react": "^1.5.0",
     "less-loader": "6.0.0",
     "mini-css-extract-plugin": "^1.4.1",
     "moment": "^2.29.2",
