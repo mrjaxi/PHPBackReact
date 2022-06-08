@@ -93,6 +93,7 @@ const MainPage = () => {
                                 dislike: 2,
                                 username: item.user?.first_name,
                                 type: item.type.name,
+                                userImage: item.user.image,
                                 currentUserIsVote: item.currentUserIsVote,
                                 allowComments: item.allowComments
                             })
@@ -295,7 +296,15 @@ const MainPage = () => {
                                         renderItem={(idea, index) => {
                                             console.log(`idea:`, idea)
                                             return(
-                                                <IdeaItem item={idea} index={index} setItem={setIdea} statuses={statuses}/>
+                                                <IdeaItem
+                                                    updateStatuses={updateStatuses}
+                                                    item={idea}
+                                                    index={index}
+                                                    setItem={setIdea}
+                                                    statuses={statuses}
+                                                    showText={showText}
+                                                    showComments={showComments}
+                                                />
                                             )
                                         }}
                                         renderWhenEmpty={() =>

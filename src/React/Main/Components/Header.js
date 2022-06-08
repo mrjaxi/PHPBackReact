@@ -37,7 +37,7 @@ const Header = () => {
                                         flexDirection: 'row'
                                     }}>
                                         <Avatar size={36} style={{backgroundColor: '#AAB2BD'}}
-                                                src={global.user.image !== null
+                                                src={global.user.image !== null && global.layout !== 'guest'
                                                     ? <img src={global.user.image}/>
                                                     : <UserOutlined/>
                                                 }/>

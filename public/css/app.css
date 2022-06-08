@@ -1261,7 +1261,7 @@ body {
   z-index: 1;
   border-radius: 20px;
   top: -1px;
-  left: -10px;
+  left: -70px;
 }
 
 /* Links inside the dropdown */
@@ -1514,9 +1514,9 @@ body {
 }
 .f-cards {
   display: flex;
-  /*width: 100%;*/
+  width: 100%;
   flex-direction: column;
-  margin-bottom: 50px;
+  margin-bottom: 100px;
   justify-content: center;
 }
 .f-cards:last-child {
@@ -1535,7 +1535,7 @@ body {
 .f-cards-card-wrap {
   display: flex;
   flex-direction: column;
-  z-index: 1;
+  z-index: 50;
 }
 .f-cards-border-image {
   background-repeat: no-repeat;
@@ -1674,7 +1674,7 @@ body {
 .f-row-type {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 .f-row-center-wrap {
   display: flex;

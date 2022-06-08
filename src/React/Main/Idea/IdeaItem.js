@@ -2,16 +2,17 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import Comments from "../Comments";
-import { Select } from "antd";
+import {Avatar, Select} from "antd";
 import { NavLink } from "react-router-dom";
+import {DownOutlined, UserOutlined} from "@ant-design/icons";
 const  { Option } = Select;
 
-const IdeaItem = ({item, index, setItem, statuses}) => {
+const IdeaItem = ({item, index, setItem, statuses, updateStatuses}) => {
 
     const [idea, setIdea] = useState(item)
 
     useEffect(() => {
-        console.log("setRefIdea:", idea)
+        console.log(idea)
         setItem(idea, index)
     }, [idea])
 
@@ -121,7 +122,11 @@ const IdeaItem = ({item, index, setItem, statuses}) => {
                     <div className={"f-cards-inner"}>
                         <div className={"f-cards-avatar"}>
                             <div className={"f-cards-row-wrap"}>
-                                <img className={"f-cards-image"} src={"/i/avatar.png"}/>
+                                <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                        src={idea.userImage !== null
+                                            ? <img src={idea.userImage}/>
+                                            : <UserOutlined/>
+                                        }/>
                                 <div className={"f-cards-wrap-text"}>
                                         <span className={"f-cards-text"}>{idea.username}
                                             {
@@ -137,7 +142,7 @@ const IdeaItem = ({item, index, setItem, statuses}) => {
                             {
                                 global.layout === "admin" ?
                                     <Select onSelect={(id, data) => {
-                                        changeStatus(idea.idea_id, id, data)
+                                        changeStatus(idea.idea_id, id, data), updateStatuses()
                                     }} defaultValue={idea.status.id} style={{
                                         justifyContent: 'center',
                                         alignItems: "center",
