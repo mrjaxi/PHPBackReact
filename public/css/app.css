@@ -1595,6 +1595,11 @@ button:focus {
 .f-cards-hashtag {
   font-size: 17px;
   color: #AAB2BD;
+  transition: 0.2s;
+}
+.f-cards-hashtag:hover {
+  color: #3D72ED;
+  cursor: pointer;
 }
 .f-cards-inner {
   background-color: #F5F7FA;

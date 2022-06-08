@@ -92,6 +92,7 @@ const MainPage = () => {
                                 username: item.user?.first_name,
                                 userImage: item.user.image,
                                 type: item.type.name,
+                                typeId: item.type.id,
                                 currentUserIsVote: item.currentUserIsVote,
                                 allowComments: item.allowComments
                             })
@@ -199,7 +200,14 @@ const MainPage = () => {
                                         list={ideas}
                                         renderItem={(idea, index) => {
                                             return(
-                                                <IdeaItem item={idea} index={index} setItem={setIdea} statuses={statuses}/>
+                                                <IdeaItem
+                                                    loadData={loadData}
+                                                    item={idea}
+                                                    index={index}
+                                                    setItem={setIdea}
+                                                    statuses={statuses}
+                                                    selectedCategory={selectedCategory}
+                                                />
                                             )
                                         }}
                                         renderWhenEmpty={() =>

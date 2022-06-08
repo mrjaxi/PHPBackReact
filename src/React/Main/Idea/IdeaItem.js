@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 import {UserOutlined} from "@ant-design/icons";
 const  { Option } = Select;
 
-const IdeaItem = ({item, index, setItem, statuses}) => {
+const IdeaItem = ({item, index, setItem, statuses, loadData, selectedCategory}) => {
 
     const [idea, setIdea] = useState(item);
 
@@ -111,7 +111,7 @@ const IdeaItem = ({item, index, setItem, statuses}) => {
     return (
         <>
             <div className={"f-cards"} key={index} id={index}>
-                <p style={{marginLeft: 40}} className={"f-cards-hashtag"}>#{idea?.type}</p>
+                <p onClick={() => loadData(null, idea.typeId, selectedCategory)} style={{marginLeft: 40}} className={"f-cards-hashtag"}>#{idea?.type}</p>
                 <div className={"f-cards-card-wrap"}>
                     {
                         idea.photo !== null &&

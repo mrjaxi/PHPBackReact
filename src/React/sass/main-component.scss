@@ -322,6 +322,7 @@ button:focus {
             white-space: nowrap;
             background: rgba(255, 255, 255, 0.48);
             margin: 15px;
+            //backdrop-filter: blur(68px);
 
             &-img {
                 margin: 25px;
@@ -418,6 +419,12 @@ button:focus {
         &-hashtag {
             font-size: 17px;
             color: #AAB2BD;
+            transition: 0.2s;
+
+            &:hover {
+                color: #3D72ED;
+                cursor: pointer;
+            }
         }
 
         &-inner {
