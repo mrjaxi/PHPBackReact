@@ -267,12 +267,13 @@ const MainPage = () => {
                     </NavLink>
                     <div className={"f-row-type max_width"}>
                         <div style={{
-                            width: '60%',
+                            width: '100%',
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: 'center',
                             alignItems: "center",
-                            paddingRight: "200px"
+                            paddingRight: "200px",
+                            paddingLeft: "200px"
                         }}>
                             {
                                 loading ?
@@ -427,7 +428,7 @@ const MainPage = () => {
                                 // ))
                                 }
                         </div>
-                        <section style={{ width: '15%', justifyContent: 'center', alignItems: "center", }}>
+                        <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"} style={{ marginTop: 70 }}>
                                     {
