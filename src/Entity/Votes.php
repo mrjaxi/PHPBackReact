@@ -46,15 +46,18 @@ class Votes
      */
     private $idea;
 
-    public function get_Info(): array
+    public function get_Info($idea=false): array
     {
-        return array(
+        $info = array(
             'id' => $this->id,
             'date' => $this->date,
             'type' => $this->type,
             'user' => $this->user->get_Profile(),
-            'idea' => $this->idea,
         );
+        if($idea){
+            $info['idea'] = $this->idea;
+        }
+        return $info;
     }
 
     public function getId(): ?int

@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import './sass/main-component.scss'
 import {Col, Skeleton} from "antd";
@@ -7,32 +7,71 @@ import Header from "./Main/Components/Header";
 import Navigation from "./Main/Components/Navigation";
 import ApiRoutes from "./Routes/ApiRoutes";
 import FlatList from 'flatlist-react';
-import IdeaItem from "./Main/Idea/IdeaItem";
+import IdeaItem from "./Main/Components/Idea/IdeaItem";
+import LoadingIdeas from "./Main/Components/Idea/LoadingIdeas";
+import EmptyIdeas from "./Main/Components/Idea/EmptyIdeas";
 
 const MainPage = () => {
 
     let data = [];
 
-    const [includedTypes, setIncludedTypes] = useState([]);
-    const [includedId, setIncludedId] = useState([]);
-
-    const [ideas, setIdeas] = useState([]);
-
     const [types, setTypes] = useState([]);
     const [statuses, setStatuses] = useState([]);
     const [categories, setCategories] = useState([]);
 
-    const [selectedPanelMenu, setSelectedPanelMenu] = useState('');
-    const [selectedType, setSelectedType] = useState('');
+    const [includedTypes, setIncludedTypes] = useState([]);
+    const [includedStatuses, setIncludedStatuses] = useState([]);
+
+    const [ideas, setIdeas] = useState([]);
+
+    // const [selectedStatus, setSelectedStatus] = useState('');
+    // const [selectedType, setSelectedType] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useLayoutEffect(() => {
         getCategory();
-    }, []);
+    },[]);
 
-    const loadData = (id, type, category) => {
+    useEffect(() => {
+        if(selectedCategory){
+            loadData()
+        }
+    },[selectedCategory, includedTypes, includedStatuses])
+
+    const selectStatus = (statusId) => {
+        if(statusId) {
+            let prevIncludedStatuses = [...includedStatuses];
+
+            if (prevIncludedStatuses.indexOf(statusId) >= 0) {
+                console.log("такой есть")
+                prevIncludedStatuses = prevIncludedStatuses.filter(item => item !== statusId)
+            } else {
+                console.log("такого нет запушил")
+                prevIncludedStatuses.push(statusId);
+            }
+            setIncludedStatuses(prevIncludedStatuses);
+        }
+    }
+
+    const selectType = (typeId) => {
+        if(typeId){
+            let prevIncludesTypes = [...includedTypes];
+
+            if (prevIncludesTypes.indexOf(typeId) >= 0){
+                console.log("такой есть")
+                prevIncludesTypes = prevIncludesTypes.filter(item => item !== typeId)
+            } else {
+                console.log("такого нет запушил")
+                prevIncludesTypes.push(typeId);
+            }
+            setIncludedTypes(prevIncludesTypes);
+        }
+        return true;
+    }
+
+    const loadData = (status=null, type=null) => {
         setLoading(true);
         data = [];
         let params = {
@@ -41,37 +80,19 @@ const MainPage = () => {
             page: 1,
         };
 
-        params["status"] = JSON.stringify([...includedId]);
-        params["types"] = JSON.stringify([...includedTypes]);
+        // let typesStr = JSON.stringify([...includedTypes]);
+        // let statusesStr = JSON.stringify([...includedStatuses]);
 
-        if (type){
-            let prevIncludesType = [...includedTypes];
-
-            if (prevIncludesType.indexOf(type) >= 0){
-                prevIncludesType = prevIncludesType.filter(item => item !== type)
-            } else {
-                prevIncludesType.push(type);
-            }
-            setIncludedTypes(prevIncludesType);
-
-            params["types"] = prevIncludesType.length !== 0 ? JSON.stringify(prevIncludesType) : JSON.stringify([]);
+        if(includedTypes.length !== 0){
+            console.log("[...includedTypes]", [...includedTypes])
+            params["types"] = JSON.stringify([...includedTypes])
+        }
+        if(includedStatuses.length !== 0){
+            console.log("[...includedStatuses]", [...includedStatuses])
+            params["status"] = JSON.stringify([...includedStatuses])
         }
 
-        if (id) {
-            let prevIncludedId = [...includedId];
-
-            if (prevIncludedId.indexOf(id) >= 0){
-                prevIncludedId = prevIncludedId.filter(item => item !== id)
-            } else {
-                prevIncludedId.push(id);
-            }
-
-            setIncludedId(prevIncludedId);
-
-            params["status"] = prevIncludedId.length !== 0 ? JSON.stringify(prevIncludedId) : JSON.stringify([]);
-        }
-
-        axios.get(ApiRoutes.API_GET_IDEAS.format(category) + "?" + global.serialize(params)).then(response => {
+        axios.get(ApiRoutes.API_GET_IDEAS.format(selectedCategory) + "?" + global.serialize(params)).then(response => {
             switch(response.data?.state){
                 case "success":
                     if (response.data?.ideas !== null) {
@@ -88,7 +109,7 @@ const MainPage = () => {
                                 photo: item.photo,
                                 comments: item.comments,
                                 like: Number(item.likes),
-                                dislike: 2,
+                                dislike: 0,
                                 username: item.user?.first_name,
                                 userImage: item.user.image,
                                 type: item.type.name,
@@ -112,17 +133,15 @@ const MainPage = () => {
     };
 
     const getCategory = () => {
-        setLoading(true);
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             setTypes(response.data.types);
             setStatuses(response.data.statuses);
             setCategories(response.data.categories);
 
-            setSelectedCategory(response.data.categories[0].id);
-
-            loadData(null, null, response.data.categories[0].id)
+            if(response.data?.categories){
+                setSelectedCategory(response.data.categories[0]?.id);
+            }
         });
-        setLoading(false);
     };
 
     const updateStatuses = () => {
@@ -148,6 +167,7 @@ const MainPage = () => {
                             <div className={"f-section-wrap-text"}>
                                 <p className={"f-section-wrap-p-text"} style={{
                                     marginBottom: 0,
+                                    marginTop: "20px",
                                 }}>
                                     Мы ценим мнение
                                     клиентов и рады,
@@ -155,15 +175,11 @@ const MainPage = () => {
                                     им с нами
                                 </p>
                             </div>
-                            {/*<img className={"f-section-wrap-image"} src={'/i/movie-text.png'} />*/}
                         </div>
                     </section>
                     <Navigation
                         categories={categories}
-                        loadData={loadData}
                         selectedCategory={selectedCategory}
-                        selectedPanelMenu={selectedPanelMenu}
-                        selectedType={selectedType}
                         setSelectedCategory={setSelectedCategory}
                     />
                     <NavLink to={ global.layout !== "guest" ? (global.lang + "/idea/add/") : (global.lang + "/auth/")} className={"f-new-idea"}>
@@ -177,74 +193,48 @@ const MainPage = () => {
                             justifyContent: 'center',
                             alignItems: "center",
                             paddingRight: "100px",
-                            paddingLeft: "200px"
+                            paddingLeft: "20%",
+                            marginBottom: "180px",
                         }}>
                             {
-                                loading ?
-                                    <div className={"f-cards"}>
-                                        <div>
-                                            <div className={"f-cards-card-wrap"}>
-                                                <div className={"f-cards-inner"}>
-                                                    <div className={"f-cards-div-wrap-text"}>
-                                                        <span className={"f-cards-content-text"}>
-                                                            <Skeleton active avatar paragraph={{ rows: 1 }}/>
-                                                            <Skeleton active/>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    :
+                                loading ? <LoadingIdeas/> :
                                     <FlatList
                                         list={ideas}
                                         renderItem={(idea, index) => {
                                             return(
                                                 <IdeaItem
-                                                    loadData={loadData}
                                                     item={idea}
                                                     index={index}
                                                     setItem={setIdea}
                                                     statuses={statuses}
-                                                    selectedCategory={selectedCategory}
+                                                    selectType={selectType}
                                                 />
                                             )
                                         }}
                                         renderWhenEmpty={() =>
-                                            <div className={"f-cards"}>
-                                                <div>
-                                                    <div className={"f-cards-card-wrap"}>
-                                                        <div className={"f-cards-inner"}>
-                                                            <div className={"f-cards-div-wrap-text"}>
-                                                        <span className={"f-cards-content-text"}>
-                                                            <div>Пока нет записей...</div>
-                                                        </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <EmptyIdeas text={"Пока нет записей..."}/>
                                         }
-                                        // sortBy={["firstName", {key: "lastName", descending: true}]}
-                                        // groupBy={person => person.info.age > 18 ? 'Over 18' : 'Under 18'}
                                     />
                                 }
                         </div>
                         <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>
                             <div className={"f-side-block"}>
-                                <div className={"f-side-panel-wrap"} style={{ marginTop: 70 }}>
+                                <div className={"f-side-panel-wrap"}>
                                     {
                                         statuses.map((status, index) => (
-                                            <a className={"f-side-panel-button-section "/* + (includedId.includes(status.id) && "f-viewed")*/}
-                                               onClick={() => {setSelectedPanelMenu(status.id), loadData(status.id, null, selectedCategory)}}
+                                            <a className={"f-side-panel-button-section "}
+                                               onClick={() => {
+                                                   // console.log(`selectType(${status.id})`)
+                                                   selectStatus(status.id)
+                                               }}
                                                style={{
-                                                   color: includedId.includes(status.id) && "#fff",
-                                                   backgroundColor: includedId.includes(status.id) && (status?.color ? status?.color : "#ffffff00"),
+                                                   color: includedStatuses.includes(status.id) && "#fff",
+                                                   backgroundColor: includedStatuses.includes(status.id) && (status?.color ? status?.color : "#ffffff00"),
                                                    borderRadius: "65px",
                                                }}
                                             >{status.translate}
                                                 <span
-                                                    className={"f-side-panel-count-subtext " + (includedId.includes(status.id) && "f-block")}
+                                                    className={"f-side-panel-count-subtext " + (includedStatuses.includes(status.id) && "f-block")}
                                                 >{status.ideasCount}</span>
                                             </a>
                                         ))
@@ -254,7 +244,10 @@ const MainPage = () => {
                                     {
                                         types.map((type) => (
                                             <a className={"f-side-panel-button"}
-                                               onClick={() => { setSelectedType(type.id), loadData(null, type.id, selectedCategory)}}
+                                               onClick={() => {
+                                                   // console.log(`selectType(${type.id})`)
+                                                   selectType(type.id)
+                                               }}
                                                style={{color: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED"),
                                                    borderColor: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED") }}
                                             >#{type.name}</a>

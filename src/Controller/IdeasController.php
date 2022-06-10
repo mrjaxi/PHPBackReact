@@ -406,7 +406,7 @@ class IdeasController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
-        if (!empty($data)) {
+        if (!empty($data['idea_id']) && !empty($data['content'])) {
             $idea_id = $data['idea_id'];
             $content = $data['content'];
         } else {

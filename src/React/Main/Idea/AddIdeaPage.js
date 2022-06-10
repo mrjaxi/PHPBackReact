@@ -1,16 +1,15 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
-import {Button, Checkbox, Form, Input, Modal, Select, Spin, Upload} from "antd";
-import {Typography} from 'antd';
-import {NavLink} from "react-router-dom";
+import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Button, Form, Input, Select, Upload } from "antd";
+import { Typography } from 'antd';
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
-
-const {Title} = Typography;
-const {Option} = Select;
 import debounce from 'lodash/debounce';
 import ApiRoutes from "../../Routes/ApiRoutes";
 
-const {TextArea} = Input;
+const { TextArea } = Input;
+const { Title } = Typography;
+const { Option } = Select;
 
 const DebounceSelect = ({fetchOptions, debounceTimeout = 800, ...props}) => {
     const [fetching, setFetching] = useState(false);
@@ -68,8 +67,11 @@ const AddIdeaPage = () => {
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
     const [value, setValue] = useState([]);
-
     const [fileList, setFileList] = useState([]);
+
+    useLayoutEffect(() => {
+        getCategory()
+    }, []);
 
     const onChange = ({fileList: newFileList}) => {
         setFileList(newFileList);
@@ -133,10 +135,6 @@ const AddIdeaPage = () => {
             setTypes(typesData);
         })
     };
-
-    useEffect(() => {
-        getCategory()
-    }, []);
 
     return (
         <>
@@ -215,7 +213,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <TextArea style={{fontSize: 17}} rows={4} placeholder={"Описание"}/>
+                        <TextArea style={{fontSize: 17}} rows={4} placeholder={"Описание"} autoSize={true}/>
                     </Form.Item>
                     <Form.Item
                         name={"file"}

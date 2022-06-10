@@ -45,14 +45,18 @@ class Comments
      */
     private $idea;
 
-    public function get_Info(): ?array
+    public function get_Info($idea=false): ?array
     {
-        return [
+        $info = [
             "id" => $this->id,
             "content" => $this->content,
             "date" => $this->date->format('Y-m-d H:i:s'),
             "user" => $this->get_UserInfo(),
         ];
+        if($idea){
+            $info['idea'] = $this->idea;
+        }
+        return $info;
     }
 
     public function getId(): ?int

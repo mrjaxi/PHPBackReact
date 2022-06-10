@@ -12,26 +12,42 @@ const Profile = () => {
 
     return (
         <>
-            <Col className={"f-main"} style={{ minHeight: '100vh', display: 'flex', justifyContent: 'flex-start' }}>
+            <Col className={"f-main"} style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
                 <div>
-                    <Header />
+                    <Header/>
                     <section>
-                        <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>
-                            <div style={{ display: 'flex', flexDirection: 'row', width: '40%', justifyContent: 'space-around' }}>
-                                <a onClick={() => setSelectedHeaderItem(0)} className={"f-profile-header"} style={{ color: selectedHeaderItem === 0 && "#1D1D1F" }}>
-                                    Публикации
-                                    { selectedHeaderItem === 0 && <div className={"f-bottom-selected"} /> }
-                                </a>
-                                <a onClick={() => setSelectedHeaderItem(1)} className={"f-profile-header"} style={{ color: selectedHeaderItem === 1 && "#1D1D1F" }}>
-                                    Комментарии
-                                    { selectedHeaderItem === 1 && <div className={"f-bottom-selected"} /> }
-                                </a>
-                                <a onClick={() => setSelectedHeaderItem(2)} className={"f-profile-header"} style={{ color: selectedHeaderItem === 2 && "#1D1D1F" }}>
-                                    Понравилось
-                                    { selectedHeaderItem === 2 && <div className={"f-bottom-selected"} /> }
-                                </a>
+                        <navigation className={"f-nav-wrap"}>
+                            <div className={"f-nav max_width"} style={{
+                                maxWidth: '80%',
+                                padding: 0,
+                                marginBottom: 0,
+                            }}>
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    width: '40%',
+                                    justifyContent: 'space-around',
+                                    paddingTop: "15vh"
+                                }}>
+                                    <a onClick={() => setSelectedHeaderItem(0)} className={"f-profile-header"}
+                                       style={{color: selectedHeaderItem === 0 && "#1D1D1F"}}>
+                                        Публикации
+                                        {selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/>}
+                                    </a>
+                                    <a onClick={() => setSelectedHeaderItem(1)} className={"f-profile-header"}
+                                       style={{color: selectedHeaderItem === 1 && "#1D1D1F"}}>
+                                        Комментарии
+                                        {selectedHeaderItem === 1 && <div className={"f-bottom-selected"}/>}
+                                    </a>
+                                    <a onClick={() => setSelectedHeaderItem(2)} className={"f-profile-header"}
+                                       style={{color: selectedHeaderItem === 2 && "#1D1D1F"}}>
+                                        Понравилось
+                                        {selectedHeaderItem === 2 && <div className={"f-bottom-selected"}/>}
+                                    </a>
+                                </div>
+
                             </div>
-                        </div>
+                        </navigation>
                     </section>
                 </div>
                 {
@@ -40,7 +56,7 @@ const Profile = () => {
                         selectedHeaderItem === 1 ?
                             <UserComments/> :
                             selectedHeaderItem === 2 &&
-                                <UserFavourite/>
+                            <UserFavourite/>
                 }
             </Col>
         </>

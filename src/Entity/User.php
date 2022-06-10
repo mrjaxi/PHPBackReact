@@ -366,12 +366,12 @@ class User implements UserInterface
     /**
      * @return array
      */
-    public function get_CommentsArray(): array
+    public function get_CommentsArray($getIdea=false): array
     {
         $commentsArray = array();
         /** @var Comments $comment */
         foreach ($this->comments as $comment) {
-            $commentsArray[] = $comment->get_Info();
+            $commentsArray[] = $comment->get_Info($getIdea);
         }
         return $commentsArray;
     }
@@ -408,12 +408,12 @@ class User implements UserInterface
     /**
      * @return array|null
      */
-    public function get_VotesArray(): ?array
+    public function get_VotesArray($getIdea=false): ?array
     {
         $votesArray = array();
         /** @var Votes $vote */
         foreach ($this->votes as $vote) {
-            $votesArray[] = $vote->get_Info();
+            $votesArray[] = $vote->get_Info($getIdea);
         }
         return $votesArray;
     }

@@ -20,13 +20,11 @@ const Header = () => {
             <header className={"f-header-content"}>
                 <div className={'f-header-wrap-logo'}>
                     <NavLink to={"/"}>
-                        <div className={"f-header-back-wrap"}>
-                            <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
-                        </div>
+                        <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
                     </NavLink>
                 </div>
                 {
-                    global.layout !== "guest" ?
+                    (global.layout !== "guest" || !global.layout) ?
                         (<div className="dropdown">
                             <button className="dropbtn">
                                 <div style={{
@@ -35,13 +33,14 @@ const Header = () => {
                                     alignItems: 'center',
                                     flexDirection: 'row'
                                 }}>
-                                    <ProfileAvatar size={36} image={global.user.image}/>
+                                    <ProfileAvatar size={45} image={global.user.image}/>
                                     <div style={{marginLeft: 10}}>
                                         <DownOutlined/>
                                     </div>
                                 </div>
                             </button>
-                            <div className="dropdown-content">
+                            <div className="dropdown-content"
+                                 style={{ marginTop: "-10px" }}>
                                 <NavLink style={{
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -50,7 +49,7 @@ const Header = () => {
                                     zIndex: 10,
                                 }} to={"/profile"}>
                                     <span style={{marginRight: 10, fontSize: 17}}>{global.user.first_name}</span>
-                                    <ProfileAvatar size={36} image={global.user.image}/>
+                                    <ProfileAvatar size={45} image={global.user.image}/>
                                     <div style={{marginLeft: 5}}>
                                         <UpOutlined/>
                                     </div>
@@ -64,7 +63,8 @@ const Header = () => {
                         </div>)
                 }
             </header>
-            <div className={global.layout === "guest" ? "logo" : "logo logo-auth"}/>
+            <div className={"logo logo-circle"}/>
+            <div className={"logo logo-ag"}/>
         </>
     )
 };

@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\Ideas;
 use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
 use App\Repository\VotesRepository;
 use DateInterval;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Exception;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -332,11 +334,22 @@ class UserController extends AbstractController
                 $response["ideas"] = $ideas;
                 break;
             case 2:
-                $comments = $user->get_CommentsArray();
+                $comments = $user->get_CommentsArray(true);
+                foreach ($comments as &$comment) {
+                    $comment["idea_id"] = $comment["idea"]->getId();
+                    unset($comment["idea"]);
+                }
+//                foreach ($comments as &$comment) {
+//                    $decorIdea = $this->decorateArrayIdeas(array($comment['idea']));
+//
+//                    $comment['idea'] = $decorIdea[0] ?: null;
+//                    $comment["idea"]["comments"] = [];
+//                }
+
                 $response["comments"] = $comments;
                 break;
             case 3:
-                $likes = $user->get_VotesArray();
+                $likes = $user->get_VotesArray(true);
                 foreach ($likes as &$like) {
                     $decorIdea = $this->decorateArrayIdeas(array($like['idea']));
 
@@ -351,6 +364,17 @@ class UserController extends AbstractController
 
         return $this->json($response);
     }
+
+//    private function getCommentsIdeas(?array $comments){
+//        if (empty($comments)) {
+//            return null;
+//        }
+//        $user = $this->getUser();
+//        for ($i = 0; $i < count($comments); $i++) {
+//            $comment = $comments[$i];
+//            $idea =
+//        }
+//    }
 
     private function decorateCollectionIdeas(Collection $ideas): ?array
     {

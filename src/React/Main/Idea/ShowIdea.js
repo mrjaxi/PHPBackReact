@@ -1,19 +1,19 @@
 import React, { useLayoutEffect, useState } from "react";
-import {Col, Select, Skeleton} from "antd";
-import Header from "../Components/Header";
-import Comments from "../Comments";
+import { useParams } from "react-router";
+import { Col } from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
-import {useParams} from "react-router";
-import IdeaItem from "./IdeaItem";
 import FlatList from "flatlist-react";
+import Header from "../Components/Header";
+import IdeaItem from "../Components/Idea/IdeaItem";
+import LoadingIdeas from "../Components/Idea/LoadingIdeas";
+import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
 const ShowIdea = () => {
 
     const [ideas, setIdeas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [statuses, setStatuses] = useState([]);
-
     const params = useParams();
 
     useLayoutEffect(() => {
@@ -96,22 +96,8 @@ const ShowIdea = () => {
                                     alignItems: "center",
                                     width: '50vw'
                                 }}>
-                                    { loading ?
-                                        <div className={"f-cards"}>
-                                            <div>
-                                                <div className={"f-cards-card-wrap"}>
-                                                    <div className={"f-cards-inner"}>
-                                                        <div className={"f-cards-div-wrap-text"}>
-                                                        <span className={"f-cards-content-text"}>
-                                                            <Skeleton active avatar paragraph={{ rows: 1 }}/>
-                                                            <Skeleton active/>
-                                                        </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        : <FlatList
+                                    { loading ? <LoadingIdeas/> :
+                                        <FlatList
                                             list={ideas}
                                             renderItem={(idea, index) => {
                                                 // console.log(`idea:`, idea)
@@ -121,19 +107,7 @@ const ShowIdea = () => {
                                                 )
                                             }}
                                             renderWhenEmpty={() =>
-                                                <div className={"f-cards"}>
-                                                    <div>
-                                                        <div className={"f-cards-card-wrap"}>
-                                                            <div className={"f-cards-inner"}>
-                                                                <div className={"f-cards-div-wrap-text"}>
-                                                        <span className={"f-cards-content-text"}>
-                                                            <div>Такой записи не существует...</div>
-                                                        </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <EmptyIdeas text={"Такой записи не существует..."}/>
                                             }
                                             // sortBy={["firstName", {key: "lastName", descending: true}]}
                                             // groupBy={person => person.info.age > 18 ? 'Over 18' : 'Under 18'}
