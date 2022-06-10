@@ -12,10 +12,7 @@ const Redirect = (props) => {
                 console.log(response.data)
                 if (response.data.state === "success") {
                     axios.post(ApiRoutes.API_LOGIN, global.serialize({username: response.data?.user.username, password: response.data?.user.password, remember: true}), {withCredentials: true}).then(login => {
-                        console.log(login.data);
-                        if (login.data.state === "success"){
-                            global.user = login.data.profile;
-                        }
+                        global.getProfile();
                         global._history.push(query.get("url"))
                     })
                 }
