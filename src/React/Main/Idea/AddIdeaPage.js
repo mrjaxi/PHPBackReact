@@ -1,12 +1,14 @@
-import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { Button, Form, Input, Select, Upload } from "antd";
 import { Typography } from 'antd';
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
-import debounce from 'lodash/debounce';
-import ApiRoutes from "../../Routes/ApiRoutes";
 
+const {Title} = Typography;
+const {Option} = Select;
+import ApiRoutes from "../../Routes/ApiRoutes";
+import AsyncSelect from 'react-select/async';
 const { TextArea } = Input;
 const { Title } = Typography;
 const { Option } = Select;
@@ -67,11 +69,31 @@ const AddIdeaPage = () => {
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
     const [value, setValue] = useState([]);
+
     const [fileList, setFileList] = useState([]);
 
-    useLayoutEffect(() => {
-        getCategory()
-    }, []);
+    const [selectedValue, setSelectedValue] = useState(null);
+
+    const handleInputChange = (value, { action }) => {
+        console.log(action, value)
+        if (action === "input-change"){
+            setSelectedValue(value)
+        }
+    };
+
+    const loadOptions = (inputValue) => {
+        return fetch(ApiRoutes.API_SEARCH,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                cache: 'no-cache',
+                body: JSON.stringify({title: inputValue, content: ""})
+            }
+        ).then((res) => res.json())
+            .then(data => data.ideas);
+    };
 
     const onChange = ({fileList: newFileList}) => {
         setFileList(newFileList);
@@ -136,11 +158,27 @@ const AddIdeaPage = () => {
         })
     };
 
+    useLayoutEffect(() => {
+        getCategory()
+    }, []);
+
+    const colourStyles = {
+        placeholder: styles => ({ ...styles, color: '#c7c7c7'}),
+        control: styles => ({ ...styles, backgroundColor: 'white', width: 440, height: 40, borderRadius: 8, fontSize: 17,}),
+        option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+            return {
+                ...styles,
+                color: 'black',
+                cursor: isDisabled ? 'not-allowed' : 'default',
+            };
+        },
+    };
+
     return (
         <>
             <div className={"f-login"}>
                 <Form
-                    onFinish={(values) => onSend(values)}
+                    onFinish={(values) => console.log(values)}
                 >
                     <Title style={{marginBottom: 48}}>Есть идея?</Title>
                     <Form.Item
@@ -149,23 +187,30 @@ const AddIdeaPage = () => {
                             {
                                 required: true,
                                 message: 'Заголовок не может быть меньше 5 символов',
+                                min: 5
                             },
                         ]}
                     >
-                        {/*<Input value={value} hidden={true} size={"large"} style={{ fontSize: 17, width: '440px' }} placeholder={"Заголовок"} minLength={5} maxLength={255}/>*/}
-                        <DebounceSelect
-                            mode="tags"
-                            value={value}
-                            autoClearSearchValue={false}
-                            size={"large"}
-                            minLength={5}
-                            maxLength={255}
-                            placeholder="Заголовок"
-                            style={{fontSize: 17, width: '440px'}}
-                            fetchOptions={fetchUserList}
-                            onChange={(newValue) => {
-                                setValue(newValue);
+                        <AsyncSelect
+                            setFieldsValue={selectedValue}
+                            value={selectedValue}
+                            defaultInputValue={selectedValue}
+                            inputValue={selectedValue}
+                            placeholder={"Заголовок"}
+                            styles={colourStyles}
+                            components={{
+                                IndicatorSeparator: () => null,
+                                DropdownIndicator: () => null,
                             }}
+                            loadingMessage={() => null}
+                            noOptionsMessage={() => null}
+                            getOptionLabel={e =>
+                                <div onClick={() => global._history.replace("/idea/" + e.id)}>{e.title}</div>
+                            }
+                            getOptionValue={e => e.id}
+                            loadOptions={loadOptions}
+                            onInputChange={handleInputChange}
+                            onChange={handleInputChange}
                         />
                     </Form.Item>
                     <Form.Item
