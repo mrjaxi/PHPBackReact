@@ -5,65 +5,11 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
 
-const {Title} = Typography;
 const {Option} = Select;
 import ApiRoutes from "../../Routes/ApiRoutes";
 import AsyncSelect from 'react-select/async';
 const { TextArea } = Input;
 const { Title } = Typography;
-const { Option } = Select;
-
-const DebounceSelect = ({fetchOptions, debounceTimeout = 800, ...props}) => {
-    const [fetching, setFetching] = useState(false);
-    const [options, setOptions] = useState([]);
-    const fetchRef = useRef(0);
-    const debounceFetcher = useMemo(() => {
-        const loadOptions = (value) => {
-            fetchRef.current += 1;
-            const fetchId = fetchRef.current;
-            setOptions([]);
-            setFetching(true);
-            fetchOptions(value).then((newOptions) => {
-                if (fetchId !== fetchRef.current) {
-                    return;
-                }
-
-                setOptions(newOptions);
-                setFetching(false);
-            });
-        };
-
-        return debounce(loadOptions, debounceTimeout);
-    }, [fetchOptions, debounceTimeout]);
-    return (
-        <Select
-            labelInValue
-            autoClearSearchValue={false}
-            filterOption={false}
-            onSearch={debounceFetcher}
-            notFoundContent={fetching && null}
-            {...props}
-            options={options}
-        />
-    );
-};
-
-const fetchUserList = async (text) => {
-    return await fetch(ApiRoutes.API_SEARCH,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            cache: 'no-cache',
-            body: JSON.stringify({title: text, content: ""})
-        }).then(response => response.json())
-        .then((body) =>
-            body.ideas.map((item) => ({
-                label: <div onClick={() => global._history.replace("/idea/" + item.id)}>{item.title}</div>,
-            }))
-        )
-};
 
 const AddIdeaPage = () => {
     const [category, setCategory] = useState([]);
