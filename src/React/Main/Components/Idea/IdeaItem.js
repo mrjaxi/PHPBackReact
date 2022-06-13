@@ -2,7 +2,7 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../../Comments";
-import {Avatar, Select} from "antd";
+import {Avatar, Select, Tooltip} from "antd";
 import {NavLink} from "react-router-dom";
 import {UserOutlined} from "@ant-design/icons";
 import { Image } from 'antd';
@@ -231,13 +231,29 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                                 </a>
                             </div>
                             <div>
-                                <a style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : ""}}
-                                   className={"f-cards-under-block-like"}
-                                   onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
-                                    <i className="em em---1"
-                                       aria-label="THUMBS UP SIGN"></i>
-                                    <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
-                                </a>
+                                {
+                                    global.layout === 'guest' ?
+                                    <Tooltip color={"black"} title="Вы не можете поставить лайк, пока не авторизованы">
+                                        <button disabled={true} type={"button"} style={{
+                                            backgroundColor: 'white',
+                                            cursor: 'not-allowed',
+                                            border: 'none',
+                                        }}
+                                           className={"f-cards-under-block-like"}
+                                           onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
+                                            <i className="em em---1"
+                                               aria-label="THUMBS UP SIGN"></i>
+                                            <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                        </button>
+                                    </Tooltip> :
+                                    <button type={"button"} style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "", border: 'none'}}
+                                       className={"f-cards-under-block-like"}
+                                       onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
+                                        <i className="em em---1"
+                                           aria-label="THUMBS UP SIGN"></i>
+                                        <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                    </button>
+                                }
                             </div>
                             {/*<div>*/}
                             {/*    <a className={"f-cards-under-block-like"} href={"#"}>*/}

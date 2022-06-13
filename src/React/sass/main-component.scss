@@ -112,12 +112,15 @@ button:focus {
 }
 
 .f {
+
     &-input-search {
         width: 99%;
         border: none;
         font-size: 21px;
         color: #191919;
     }
+
+    &-like
 
     &-search {
         position: absolute;
@@ -340,7 +343,7 @@ button:focus {
             background: rgba(255, 255, 255, 0.48);
             //margin: 15px;
             //filter: blur(68px);
-            backdrop-filter: blur(56px);
+            //backdrop-filter: blur(56px);
 
             &-img {
                 margin: 25px;
@@ -697,7 +700,7 @@ button:focus {
     &-login {
         box-sizing: border-box;
         margin: 0;
-        height: 100vh;
+        height: 90vh;
         width: 100%;
         background-color: white;
         display: flex;
