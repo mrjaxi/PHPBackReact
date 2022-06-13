@@ -76,7 +76,7 @@ const MainPage = () => {
         data = [];
         let params = {
             order: "id",
-            type: "asc",
+            type: "desc",
             page: 1,
         };
 
