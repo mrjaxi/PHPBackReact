@@ -5,12 +5,14 @@ import Comments from "../../Comments";
 import {Avatar, Select} from "antd";
 import {NavLink} from "react-router-dom";
 import {UserOutlined} from "@ant-design/icons";
-
+import { Image } from 'antd';
 const {Option} = Select;
 
 const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) => {
 
     const [idea, setIdea] = useState(item);
+    const [visible, setVisible] = useState(false);
+
     let editable = false
 
     useEffect(() => {
@@ -117,7 +119,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
     return (
         <>
             <div className={"f-cards"} key={index} id={index}>
-                <p className={"f-cards-hashtag"} style={{marginLeft: 40}}
+                <p className={"f-cards-hashtag"} style={{marginLeft: 40, marginRight: "auto"}}
                    onClick={() => {
                        console.log(`selectType(${idea.typeId})`)
                        selectType(idea.typeId)
@@ -126,7 +128,27 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                     {
                         idea?.photo !== null &&
                         <div className={"f-cards-image-type"}
-                             style={{backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")'}}/>
+                             onClick={() => setVisible(true)}
+                             style={{backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")'}}>
+                            <div
+                                style={{
+                                    display: 'none',
+                                }}
+                            >
+                                <Image.PreviewGroup
+                                    preview={{
+                                        visible,
+                                        onVisibleChange: (vis) => setVisible(vis),
+                                    }}
+                                >
+                                    {
+                                        idea?.photo.split(";").map(item => (
+                                            <Image src={item} />
+                                        ))
+                                    }
+                                </Image.PreviewGroup>
+                            </div>
+                        </div>
                     }
                     <div className={"f-cards-inner"}>
                         <div className={"f-cards-avatar"}>

@@ -1,10 +1,10 @@
-import {Modal} from "antd";
+import {Avatar, Modal} from "antd";
 import React, {useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import {NavLink} from "react-router-dom";
 import Highlighter from "react-highlight-words";
-import {CloseOutlined} from "@ant-design/icons";
+import {CloseOutlined, UserOutlined} from "@ant-design/icons";
 
 const Search = ({ visible, setVisible }) => {
 
@@ -27,6 +27,7 @@ const Search = ({ visible, setVisible }) => {
                         text: item.content,
                         roles: item.user.roles,
                         role: item.user.role_name,
+                        userImage: item.user.image,
                         status: item.status,
                         like: Number(item.likes),
                         username: item.user?.first_name,
@@ -126,7 +127,11 @@ const Search = ({ visible, setVisible }) => {
                                                 <div className={"f-cards-inner"}>
                                                     <div className={"f-cards-avatar"}>
                                                         <div className={"f-cards-row-wrap"}>
-                                                            <img className={"f-cards-image"} src={"/i/avatar.png"}/>
+                                                            <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                                                    src={item.userImage
+                                                                        ? <img src={item.userImage}/>
+                                                                        : <UserOutlined/>
+                                                                    }/>
                                                             <div className={"f-cards-wrap-text"}>
                                                                 <span className={"f-cards-text"}>{item.username}</span>
                                                                 <span

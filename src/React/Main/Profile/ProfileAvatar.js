@@ -6,7 +6,7 @@ const ProfileAvatar = ({size, image}) => {
    return (
        <Avatar size={size} style={{backgroundColor: '#AAB2BD'}}
                src={image && global.layout !== 'guest'
-                   ? <img style={{ height: `${size}px`, width: `${size/2}px` }} src={image}/>
+                   ? <img style={{ height: `${size}px`}} src={image}/>
                    : <UserOutlined/>
                }/>
    )

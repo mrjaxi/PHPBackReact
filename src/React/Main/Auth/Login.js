@@ -31,7 +31,7 @@ const Login = () => {
         if (!timeExpiry) {
             // TODO: Поменять вход
             axios.post(ApiRoutes.API_SIGN_IN,   // ApiRoutes.API_SIGN_IN     || ApiRoutes.API_LOGIN
-                {username: data?.email,},  // {username: data?.email,}, || global.serialize({username: data?.email, password: data?.password}),
+                {username: data?.email },  // {username: data?.email,}, || global.serialize({username: data?.email, password: data?.password}),
                 {withCredentials: true,})
                 .then(response => {
                     const time = new Date();

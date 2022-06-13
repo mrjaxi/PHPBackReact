@@ -4,7 +4,7 @@ import { Typography } from 'antd';
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
-
+import { Normalize } from 'styled-normalize'
 const {Option} = Select;
 import ApiRoutes from "../../Routes/ApiRoutes";
 import AsyncSelect from 'react-select/async';
@@ -62,7 +62,7 @@ const AddIdeaPage = () => {
 
     const onSend = (data) => {
         axios.post(ApiRoutes.API_NEW_IDEA, {
-            title: data.title.map(item => item.value).join(" "),
+            title: data.title,
             description: data.description,
             category: data.category,
             type: data.type,
@@ -109,8 +109,9 @@ const AddIdeaPage = () => {
     }, []);
 
     const colourStyles = {
-        placeholder: styles => ({ ...styles, color: '#c7c7c7'}),
-        control: styles => ({ ...styles, backgroundColor: 'white', width: 440, height: 40, borderRadius: 8, fontSize: 17,}),
+        placeholder: styles => ({ ...styles, color: '#c1c1c1'}),
+        control: styles => ({ ...styles, height: 40, width: 440, borderColor: '#d9d9d9', fontSize: 17, borderRadius: 8}),
+        // control: styles => ({ ...styles, backgroundColor: 'white', width: 440, height: 20, borderRadius: 8, fontSize: 17,}),
         option: (styles, { data, isDisabled, isFocused, isSelected }) => {
             return {
                 ...styles,
@@ -124,7 +125,7 @@ const AddIdeaPage = () => {
         <>
             <div className={"f-login"}>
                 <Form
-                    onFinish={(values) => console.log(values)}
+                    onFinish={(values) => onSend(values)}
                 >
                     <Title style={{marginBottom: 48}}>Есть идея?</Title>
                     <Form.Item
@@ -137,27 +138,33 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <AsyncSelect
-                            setFieldsValue={selectedValue}
-                            value={selectedValue}
-                            defaultInputValue={selectedValue}
-                            inputValue={selectedValue}
-                            placeholder={"Заголовок"}
-                            styles={colourStyles}
-                            components={{
-                                IndicatorSeparator: () => null,
-                                DropdownIndicator: () => null,
-                            }}
-                            loadingMessage={() => null}
-                            noOptionsMessage={() => null}
-                            getOptionLabel={e =>
-                                <div onClick={() => global._history.replace("/idea/" + e.id)}>{e.title}</div>
-                            }
-                            getOptionValue={e => e.id}
-                            loadOptions={loadOptions}
-                            onInputChange={handleInputChange}
-                            onChange={handleInputChange}
-                        />
+                        <div className="ant-form-item-control-input">
+                            <div className="ant-form-item-control-input-content">
+                                <AsyncSelect
+                                    id={"header"}
+                                    setFieldsValue={selectedValue}
+                                    value={selectedValue}
+                                    defaultInputValue={selectedValue}
+                                    inputValue={selectedValue}
+                                    placeholder={"Заголовок"}
+                                    styles={colourStyles}
+                                    className={"f-react-select"}
+                                    components={{
+                                        IndicatorSeparator: () => null,
+                                        DropdownIndicator: () => null,
+                                    }}
+                                    loadingMessage={() => null}
+                                    noOptionsMessage={() => null}
+                                    getOptionLabel={e =>
+                                        <div onClick={() => global._history.replace("/idea/" + e.id)}>{e.title}</div>
+                                    }
+                                    getOptionValue={e => e.id}
+                                    loadOptions={loadOptions}
+                                    onInputChange={handleInputChange}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                        </div>
                     </Form.Item>
                     <Form.Item
                         name={"category"}

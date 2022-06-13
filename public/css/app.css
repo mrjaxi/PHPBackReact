@@ -1336,6 +1336,12 @@ button:focus {
   border: none !important;
 }
 
+.f-react-select {
+  border-color: #FFF;
+}
+.f-react-select:hover {
+  border-color: #FFF;
+}
 .f-input-search {
   width: 99%;
   border: none;
