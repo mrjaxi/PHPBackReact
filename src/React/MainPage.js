@@ -36,6 +36,7 @@ const MainPage = () => {
 
     useEffect(() => {
         if(selectedCategory){
+            updateStatuses()
             loadData()
         }
     },[selectedCategory, includedTypes, includedStatuses])
@@ -79,9 +80,6 @@ const MainPage = () => {
             type: "asc",
             page: 1,
         };
-
-        // let typesStr = JSON.stringify([...includedTypes]);
-        // let statusesStr = JSON.stringify([...includedStatuses]);
 
         if(includedTypes.length !== 0){
             console.log("[...includedTypes]", [...includedTypes])
