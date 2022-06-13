@@ -112,15 +112,6 @@ button:focus {
 }
 
 .f {
-
-    &-react-select {
-        border-color: #FFF;
-
-        &:hover {
-            border-color: #FFF;
-        }
-    }
-
     &-input-search {
         width: 99%;
         border: none;
@@ -348,6 +339,8 @@ button:focus {
             white-space: nowrap;
             background: rgba(255, 255, 255, 0.48);
             //margin: 15px;
+            //filter: blur(68px);
+            backdrop-filter: blur(56px);
 
             &-img {
                 margin: 25px;
