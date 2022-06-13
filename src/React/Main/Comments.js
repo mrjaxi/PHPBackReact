@@ -1,8 +1,9 @@
 import React, {useState} from "react";
-import {Button, Form, Input, Skeleton, Typography} from "antd";
+import {Avatar, Button, Form, Input, Skeleton, Typography} from "antd";
 import axios from "axios";
 import ApiRoutes from "../Routes/ApiRoutes";
 import FlatList from "flatlist-react";
+import {UserOutlined} from "@ant-design/icons";
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -50,7 +51,11 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                     <div className={"f-cards-avatar f-cards-avatar-bottom-border"}
                                          style={{marginTop: 20}}>
                                         <div className={"f-cards-row-wrap"}>
-                                            <img className={"f-cards-image"} src={"/i/avatar.png"}/>
+                                            <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                                    src={comment.user.image
+                                                        ? <img src={comment.user.image}/>
+                                                        : <UserOutlined/>
+                                                    }/>
                                             <div className={"f-cards-wrap-text"}>
                                         <span
                                             className={"f-cards-text"}>{comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")}

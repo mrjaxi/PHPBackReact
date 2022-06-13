@@ -129,7 +129,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                         idea?.photo !== null &&
                         <div className={"f-cards-image-type"}
                              onClick={() => setVisible(true)}
-                             style={{backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")'}}>
+                             style={{backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")', cursor: 'pointer'}}>
                             <div
                                 style={{
                                     display: 'none',
