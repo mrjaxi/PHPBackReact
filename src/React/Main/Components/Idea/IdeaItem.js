@@ -129,7 +129,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                         idea?.photo !== null &&
                         <div className={"f-cards-image-type"}
                              onClick={() => setVisible(true)}
-                             style={{backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")'}}>
+                             style={{backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")', cursor: 'pointer'}}>
                             <div
                                 style={{
                                     display: 'none',
@@ -231,12 +231,12 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                                 </a>
                             </div>
                             <div>
-                                <a style={{backgroundColor: idea.currentUserIsVote === true ? "#90EE90" : ""}}
+                                <a style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : ""}}
                                    className={"f-cards-under-block-like"}
                                    onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
                                     <i className="em em---1"
                                        aria-label="THUMBS UP SIGN"></i>
-                                    <span className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                    <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
                                 </a>
                             </div>
                             {/*<div>*/}

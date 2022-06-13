@@ -1336,12 +1336,6 @@ button:focus {
   border: none !important;
 }
 
-.f-react-select {
-  border-color: #FFF;
-}
-.f-react-select:hover {
-  border-color: #FFF;
-}
 .f-input-search {
   width: 99%;
   border: none;
@@ -1539,6 +1533,7 @@ button:focus {
   color: #1D1D1D;
   white-space: nowrap;
   background: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(56px);
 }
 .f-nav-button-img {
   margin: 25px;
