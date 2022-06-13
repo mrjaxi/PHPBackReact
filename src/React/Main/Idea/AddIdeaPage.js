@@ -4,7 +4,6 @@ import { Typography } from 'antd';
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
-import { Normalize } from 'styled-normalize'
 const {Option} = Select;
 import ApiRoutes from "../../Routes/ApiRoutes";
 import AsyncSelect from 'react-select/async';
