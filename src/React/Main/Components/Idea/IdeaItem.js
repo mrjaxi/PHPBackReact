@@ -253,7 +253,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                             <div>
                                 {
                                     global.layout === 'guest' ?
-                                    <Tooltip color={"black"} title="Вы не можете поставить лайк, пока не авторизованы">
+                                    <Tooltip color={"black"} title="Авторизуйтесь, чтобы оценить">
                                         <button disabled={true} type={"button"} style={{
                                             backgroundColor: 'white',
                                             cursor: 'not-allowed',

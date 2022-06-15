@@ -52,8 +52,10 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                         ) :
                             commentsData.map((comment, index) => (
                                 <>
-                                    <div className={"f-cards-avatar f-cards-avatar-bottom-border"}
-                                         style={{paddingTop: 40}}>
+                                    <div
+                                        className={"f-cards-avatar f-cards-avatar-bottom-border"}
+                                        style={{paddingTop: 40}}
+                                    >
                                         <div className={"f-cards-row-wrap"}>
                                             <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
                                                     src={comment.user.image
@@ -61,39 +63,41 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                                         : <UserOutlined/>
                                                     }/>
                                             <div className={"f-cards-wrap-text"}>
-                                        <span
-                                            className={"f-cards-text"}>{comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")}
-                                            {
-                                                comment?.user.roles.includes("ROLE_ADMIN") &&
-                                                <img style={{marginBottom: 3, marginLeft: 5}} src={"/i/official.svg"}
-                                                     width={15} height={15}/>
-                                            }
-                                        </span>
+                                                <span
+                                                    className={"f-cards-text"}>
+                                                    <span>
+                                                        {comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")}
+                                                        {
+                                                            comment?.user.roles.includes("ROLE_ADMIN") &&
+                                                            <img style={{marginBottom: 3, marginLeft: 5}} src={"/i/official.svg"}
+                                                                 width={15} height={15}/>
+                                                        }
+                                                    </span>
+                                                    {
+                                                        <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 20, fontWeight: 400 }}>Отредактирован</span>
+                                                    }
+                                                </span>
                                                 <span className={"f-cards-content-description"}>
-                                        {
-                                            comment?.content
-                                        }
-                                        </span>
+                                                    {
+                                                        comment?.content
+                                                    }
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                     {
                                         (rawCommentsData.length > 3 && index === commentsData.length - 1) &&
-                                        <div style={{
-                                            display: 'flex',
-                                            width: '100%',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: 17
-                                        }}>
-                                            <a onClick={() => {
+                                        <div className={"f-comments-under-text"}>
+                                            <a
+                                                className={"f-comments-text-button"}
+                                                onClick={() => {
                                                 if (index === 2 && showComments) {
                                                     setCommentsData(rawCommentsData), setShowComments(false)
                                                 }
                                                 if (index === rawCommentsData.length - 1 && !showComments) {
                                                     setCommentsData(rawCommentsData.filter((item, index) => index < 3)), setShowComments(true)
                                                 }
-                                            }}>{(index === 2 && showComments) ? "Загрузить еще" : "Скрыть"}</a>
+                                            }}>{(index === 2 && showComments) ? "Показать следующие комментарии" : "Скрыть"}</a>
                                         </div>
                                     }
                                 </>

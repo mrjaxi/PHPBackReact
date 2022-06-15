@@ -316,6 +316,21 @@ button:focus {
         padding-top: 40px;
         margin-bottom: 20px;
 
+        &-text-button {
+            border-bottom: 0.5px solid #3D72ED25;
+        }
+
+        &-under-text {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: flex-start;
+            font-size: 19px;
+            color: #3D72ED;
+            margin-bottom: 45px;
+            margin-top: 25px;
+        }
+
         &-tip-text {
             color: #1D1D1F;
             font-size: 21px;
@@ -554,6 +569,9 @@ button:focus {
             font-size: 17px;
             font-weight: 500;
             color: #1D1D1F;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
             &-bottom {
                 font-size: 13px;

@@ -13,7 +13,7 @@ const Header = ({ search=false }) => {
     const [visibleLogin, setVisibleLogin] = useState();
 
     const logout = async () => {
-        axios.post("/ru/logout").then(response => {
+         axios.post("/ru/logout").then(response => {
             if (response.data.state === "success") {
                 global._history.replace(global.lang + "/")
             }

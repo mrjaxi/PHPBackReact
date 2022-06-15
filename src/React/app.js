@@ -1,7 +1,7 @@
 import 'antd/dist/antd.less';
 import './sass/app.scss';
 import './sass/main-component.scss'
-import './sass/loader.scss'
+
 import './sass/user.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
