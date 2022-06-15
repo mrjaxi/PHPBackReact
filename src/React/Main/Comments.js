@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {Avatar, Button, Form, Input, Skeleton, Typography} from "antd";
 import axios from "axios";
 import ApiRoutes from "../Routes/ApiRoutes";
-import FlatList from "flatlist-react";
 import {UserOutlined} from "@ant-design/icons";
+import Login from "./Auth/Login";
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -14,6 +14,8 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
     const [showComments, setShowComments] = useState(true);
     const [commentsData, setCommentsData] = useState(comments.filter((item, index) => index < 3));
     const [rawCommentsData, setRawCommentsData] = useState(comments);
+
+    const [visible, setVisible] = useState();
 
     const sendComment = (text) => {
         axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text})
@@ -37,6 +39,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
 
     return (
         <div className={"f-comments"}>
+            <Login visible={visible} setVisible={setVisible}/>
             <span className={"f-comments-tip-text"}>Комментарии</span>
             <div className={"f-comments-scroll"}>
                 {
@@ -122,13 +125,22 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                         <Form.Item>
                             {
                                 global.layout !== "guest" ?
-                                    <Button className={"f-write-comments-button"} type="primary" htmlType="submit"
-                                            shape="round"
-                                    >Отправить</Button>
-                                    : <Button onClick={() => {
-                                        global._history.replace(global.lang + "/auth/")
-                                    }} className={"f-write-comments-button"} type="primary" htmlType="submit"
-                                              shape="round">Войти</Button>
+                                    <Button
+                                        className={"f-write-comments-button"}
+                                        type="primary"
+                                        htmlType="submit"
+                                        shape="round"
+                                    >
+                                        Отправить
+                                    </Button>
+                                    : <Button
+                                        onClick={() => setVisible(!visible)}
+                                        className={"f-write-comments-button"}
+                                        type="primary"
+                                        shape="round"
+                                    >
+                                        Войти
+                                    </Button>
                             }
                         </Form.Item>
                     </Form>

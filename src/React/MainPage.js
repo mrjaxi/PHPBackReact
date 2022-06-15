@@ -10,27 +10,32 @@ import FlatList from 'flatlist-react';
 import IdeaItem from "./Main/Components/Idea/IdeaItem";
 import LoadingIdeas from "./Main/Components/Idea/LoadingIdeas";
 import EmptyIdeas from "./Main/Components/Idea/EmptyIdeas";
+import Login from "./Main/Auth/Login";
 
-const MainPage = () => {
+const MainPage = (props) => {
 
     let data = [];
 
+    const urlParams = new URLSearchParams(props.location.search);
+
     const [wait, setWait] = useState(true);
 
-    const [types, setTypes] = useState([]);
-    const [statuses, setStatuses] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const [types, setTypes] = useState(urlParams.get("types") ? JSON.parse(urlParams.get("types")) : []);
+    const [statuses, setStatuses] = useState(urlParams.get("statuses") ? JSON.parse(urlParams.get("categories")) : []);
+    const [categories, setCategories] = useState(urlParams.get("categories") ? JSON.parse(urlParams.get("categories")) : []);
 
-    const [includedTypes, setIncludedTypes] = useState([]);
-    const [includedStatuses, setIncludedStatuses] = useState([]);
+    const [includedTypes, setIncludedTypes] = useState(urlParams.get("types") ? JSON.parse(urlParams.get("types")) : []);
+    const [includedStatuses, setIncludedStatuses] = useState(urlParams.get("status") ? JSON.parse(urlParams.get("status")) : []);
+    const [includedCategory, setIncludedCategory] = useState([]);
 
     const [ideas, setIdeas] = useState([]);
-
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [visible, setVisible] = useState();
+    const [selectedCategory, setSelectedCategory] = useState(urlParams.get("categories") ? Number(urlParams.get("categories")) : '');
 
     const [loading, setLoading] = useState(true);
 
     useLayoutEffect(() => {
+        console.log(JSON.parse(urlParams.get("types")))
         getCategory();
     },[]);
 
@@ -76,9 +81,9 @@ const MainPage = () => {
         setLoading(true);
         data = [];
         let params = {
-            order: "id",
-            type: "desc",
-            page: 1,
+            order: urlParams.get("order") ? urlParams.get("order") : "id",
+            type: urlParams.get("type") ? urlParams.get("type") : "desc",
+            page: urlParams.get("page") ? urlParams.get("page") : 1,
         };
 
         if(includedTypes.length !== 0){
@@ -91,6 +96,7 @@ const MainPage = () => {
         }
 
         axios.get(ApiRoutes.API_GET_IDEAS.format(selectedCategory) + "?" + global.serialize(params)).then(response => {
+            global._history.replace("?" + `${global.serialize(params)}&categories=${selectedCategory}`);
             switch(response.data?.state){
                 case "success":
                     if (response.data?.ideas !== null) {
@@ -139,7 +145,7 @@ const MainPage = () => {
             setCategories(response.data.categories);
 
             if(response.data?.categories){
-                setSelectedCategory(response.data.categories[0]?.id);
+                setSelectedCategory(urlParams.get("categories") ? Number(urlParams.get("categories")) : response.data.categories[0]?.id);
             }
         });
     };
@@ -158,10 +164,15 @@ const MainPage = () => {
     }
 
     if (wait) {
-        return (<></>);
+        return (
+            <div className="loader-wrapper">
+                <div className="loader" />
+            </div>
+        );
     } else {
         return (
             <>
+                <Login visible={visible} setVisible={setVisible}/>
                 <Col className={"f-main"}>
                     <div>
                         <Header search={true} />
@@ -184,10 +195,18 @@ const MainPage = () => {
                             categories={categories}
                             selectedCategory={selectedCategory}
                             setSelectedCategory={setSelectedCategory}
+                            includedCategory={includedCategory}
+                            setIncludedCategory={setIncludedCategory}
                         />
-                        <NavLink to={ global.layout !== "guest" ? (global.lang + "/idea/add/") : (global.lang + "/auth/")} className={"f-new-idea"}>
+                        {
+                        global.layout !== "guest" ?
+                        <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
                             <p className={"f-new-idea-text"}>Новая идея</p>
-                        </NavLink>
+                        </NavLink> :
+                        <a onClick={() => setVisible(!visible)} className={"f-new-idea"}>
+                            <p className={"f-new-idea-text"}>Новая идея</p>
+                        </a>
+                    }
                         <div className={"f-row-type max_width"}>
                             <div style={{
                                 width: '100%',

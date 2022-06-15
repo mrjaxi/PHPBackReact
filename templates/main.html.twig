@@ -8,11 +8,48 @@
         <link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet">
         <script src="/js/app.js?deploy=2312333123" defer></script>
 
+        <style>
+            .loader-wrapper {
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background-color: white;
+                display: grid;
+                place-items: center;
+            }
+
+            .loader {
+                background-image: url("/i/logotype.svg");
+                background-size: contain;
+                border-radius: 50%;
+                width: 140px;
+                height: 140px;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
         <!-- Styles -->
 
     </head>
     <body>
-        <div id="app" style="height: 100%"></div>
+        <div id="app" style="height: 100%">
+            <div id="root">
+                <div class="loader-wrapper">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
     </body>
     <link href="/css/app.css?deploy=2312333123" rel="stylesheet">
 </html>

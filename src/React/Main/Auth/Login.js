@@ -12,12 +12,12 @@ function AccessTimer({expiryTimestamp, setTimeExpiry}) {
     const {
         seconds,
         minutes,
-    } = useTimer({expiryTimestamp, onExpire: () => setTimeExpiry(false)});
+    } = useTimer({expiryTimestamp, onExpire: () => { setTimeExpiry(false) }});
 
 
     return (
         <>
-            <span> {minutes}</span>:<span>{seconds < 10 ? `0${seconds}` : seconds}</span>
+            <span>Повторно отправить можно через {minutes}</span>:<span>{seconds < 10 ? `0${seconds}` : seconds}</span>
         </>
     );
 }
@@ -93,6 +93,11 @@ const Login = ({visible, setVisible}) => {
                                         if (!value) {
                                             callback('Пожалуйста, укажите адрес электронной почты')
                                         }
+
+                                        if (timeExpiry){
+                                            callback(<AccessTimer callback={callback} setTimeExpiry={setTimeExpiry} expiryTimestamp={timeExpiry}/>)
+                                        }
+
                                         callback()
                                     }
                                 },
@@ -113,13 +118,17 @@ const Login = ({visible, setVisible}) => {
                             <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>
                         </Form.Item>
                         <Form.Item>
-                            <Button disabled={timeExpiry} className={"f-login-btn"} type="primary" htmlType="submit"
+                            {/*<Button disabled={timeExpiry} className={"f-login-btn"} type="primary" htmlType="submit"*/}
+                            {/*        shape="round">*/}
+                            {/*    Отправить ссылку для входа*/}
+                            {/*    {timeExpiry && <>*/}
+                            {/*        <span>&nbsp;повторно&nbsp;</span>*/}
+                            {/*        <AccessTimer setTimeExpiry={setTimeExpiry} expiryTimestamp={timeExpiry}/>*/}
+                            {/*    </>}*/}
+                            {/*</Button>*/}
+                            <Button className={"f-login-btn"} type="primary" htmlType="submit"
                                     shape="round">
-                                Отправить ссылку для входа
-                                {timeExpiry && <>
-                                    <span>&nbsp;повторно&nbsp;</span>
-                                    <AccessTimer setTimeExpiry={setTimeExpiry} expiryTimestamp={timeExpiry}/>
-                                </>}
+                                Отправить
                             </Button>
                         </Form.Item>
                     </Form>

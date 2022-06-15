@@ -1,7 +1,7 @@
 import 'antd/dist/antd.less';
 import './sass/app.scss';
 import './sass/main-component.scss'
-
+import './sass/loader.scss'
 import './sass/user.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -96,12 +96,14 @@ class App extends React.Component {
         super(props);
         this.state = {
             layout: false,
+            wait: true,
         };
 
         global.app = this;
     }
 
     componentDidMount() {
+        this.setState({wait: true});
         global.getProfile = () => axios.post(ApiRoutes.API_LOGIN)
             .then(response => {
                 switch (response.data?.state) {
@@ -125,6 +127,7 @@ class App extends React.Component {
                         global.layout = 'guest';
                         break;
                 }
+                this.setState({wait: false})
             });
         global.getProfile();
     }
@@ -201,13 +204,7 @@ class App extends React.Component {
     }
 
     render() {
-
-        if (!this.state.layout) {
-            return (
-                <></>
-            )
-        }
-        else if (this.state.layout && this.state.onlyProfile) {
+        if (this.state.layout && this.state.onlyProfile) {
             return (
                 <Layout>
                     <Router history={global._history}>
