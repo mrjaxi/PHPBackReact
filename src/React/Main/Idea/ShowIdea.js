@@ -28,25 +28,26 @@ const ShowIdea = () => {
             switch(response.data?.state){
                 case "success":
                     if (response.data?.idea) {
-                        response.data.idea.map(item => {
+                        response.data.idea.map(idea => {
                             data.push({
-                                idea_id: item.id,
-                                title: item.title,
-                                text: item.content,
-                                showComments: item.comments.length > 0,
+                                idea_id: idea.id,
+                                title: idea.title,
+                                text: idea.content,
+                                showComments: idea.comments.length > 0,
                                 showFullText: false,
-                                roles: item.user.roles,
-                                role: item.user.role_name,
-                                status: item.status,
-                                photo: item.photo,
-                                comments: item.comments,
-                                like: Number(item.likes),
+                                roles: idea.user.roles,
+                                role: idea.user.role_name,
+                                status: idea.status,
+                                photo: idea.photo,
+                                comments: idea.comments,
+                                like: Number(idea.likes),
                                 dislike: 2,
-                                username: item.user?.first_name,
-                                userImage: item.user.image,
-                                type: item.type.name,
-                                currentUserIsVote: item.currentUserIsVote,
-                                allowComments: item.allowComments
+                                username: idea.user?.first_name,
+                                userImage: idea.user.image,
+                                type: idea.type.name,
+                                currentUserIsVote: idea.currentUserIsVote,
+                                allowComments: idea.allowComments,
+                                date: idea?.date
                             })
                         });
                     }

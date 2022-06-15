@@ -20,19 +20,20 @@ const Search = ({ visible, setVisible }) => {
 
         axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}).then(response => {
             if (response.data?.ideas && response.data.state === "success") {
-                response.data?.ideas.map(item => {
+                response.data?.ideas.map(idea => {
                     prevSearchItems.push({
-                        id: item.id,
-                        title: item.title,
-                        text: item.content,
-                        roles: item.user.roles,
-                        role: item.user.role_name,
-                        userImage: item.user.image,
-                        status: item.status,
-                        like: Number(item.likes),
-                        username: item.user?.first_name,
-                        type: item.type.name,
-                        currentUserIsVote: item.currentUserIsVote,
+                        id: idea.id,
+                        title: idea.title,
+                        text: idea.content,
+                        roles: idea.user.roles,
+                        role: idea.user.role_name,
+                        userImage: idea.user.image,
+                        status: idea.status,
+                        like: Number(idea.likes),
+                        username: idea.user?.first_name,
+                        type: idea.type.name,
+                        currentUserIsVote: idea.currentUserIsVote,
+                        date: idea?.date
                     })
                 });
             } else if (response.data.state === "error") {
@@ -60,7 +61,7 @@ const Search = ({ visible, setVisible }) => {
         <Modal
             title={
                 <form>
-                    <input value={searchText} onChange={event => {
+                    <input value={searchText} style={{width: "97%",}} onChange={event => {
                         searchIdeas(event.target.value.trim()), setSearchText(event.target.value.trim())
                     }} className={"f-input-search"} placeholder={"Поиск..."}/>
                     {searchText &&
@@ -79,18 +80,16 @@ const Search = ({ visible, setVisible }) => {
             onCancel={() => setVisible(false)}
             width={"100vw"}
             style={{
-                height: '100vh',
-                padding: "1% 5% 4% 5%",
+                padding: "20px 100px 70px",
             }}
             footer={null}
             bodyStyle={{
-                height: '90%',
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                scrollbarWidth: 'none',
-                overflowY: 'scroll'
+                padding: "24px 24px 0",
+                minHeight: "80vh",
             }}
         >
             {
@@ -152,7 +151,7 @@ const Search = ({ visible, setVisible }) => {
                                                         </div>
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
-                                                        <NavLink to={"/idea/" + item.id}>
+                                                        <NavLink to={global.lang + "/idea/" + item.id}>
                                                         <span className={"f-cards-content-text"}>
                                                             <Highlighter
                                                                 searchWords={searchText.split(" ").filter(item => item.length > 1)}

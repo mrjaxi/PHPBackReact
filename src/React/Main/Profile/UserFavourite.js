@@ -45,7 +45,8 @@ const UserFavourite = () => {
                         userImage: idea.user.image,
                         type: idea.type.name,
                         currentUserIsVote: idea.currentUserIsVote,
-                        allowComments: idea.allowComments
+                        allowComments: idea.allowComments,
+                        date: idea?.date
                     })
                 })
             }
@@ -68,7 +69,9 @@ const UserFavourite = () => {
 
     return (
         <>
-            <div className={"max_width"} style={{paddingTop: "10vh"}}>
+            <div className={"max_width"}
+                 style={{ paddingTop: 50 }}
+            >
                 <div style={{
                     display: "flex",
                     justifyContent: 'center',
@@ -76,7 +79,7 @@ const UserFavourite = () => {
                     alignItems: "center",
                     width: '50vw'
                 }}>
-                    {loading ? <LoadingIdeas/> :
+                    {loading ? <LoadingIdeas type={true}/> :
                         <FlatList
                             list={ideas}
                             renderItem={(idea, index) => {

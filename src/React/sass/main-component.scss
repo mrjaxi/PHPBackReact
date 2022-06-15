@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter');
 
 body {
+    overflow-y: scroll;
     font-family: Inter, sans-serif, Arial;
 }
 
@@ -14,7 +15,7 @@ body {
 .dropbtn {
     background-color: inherit;;
     color: inherit;
-    padding: 6px;
+    padding: 8px;
     font-size: 16px;
     border: none;
     cursor: pointer;
@@ -31,30 +32,28 @@ body {
 .dropdown-content {
     display: none;
     position: absolute;
+    height: 210px;
+    width: 240px;
+    top: -7px;
+    left: -144px;
     background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 20px;
-    top: 0;
-    left: -70px;
+    box-shadow: 0px 16px 32px 16px rgb(170 178 188 / 16%);
+    border-radius: 24px;
+
 }
 
 /* Links inside the dropdown */
 .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
     display: block;
-    border-radius: 20px;
-    top: -15px;
-}
+    padding: 7.5px 30px;
+    font-size: 17px;
+    font-weight: 400;
+    color: #AAB2BD;
+    text-decoration: none;
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-    border-radius: 20px;
-    top: -15px;
+    &:hover{
+        color: black
+    }
 }
 
 /* Show the dropdown menu on hover */
@@ -89,16 +88,16 @@ button:focus {
     &-ag {
         background-image: url("/i/atmaguru.svg");
         height: 30px;
-        left: 85px;
-        top: 40px;
+        left: 87px;
+        top: 53px;
         width: 135px;
     }
 
     &-circle {
         background-color: #D9F94B;
         height: 45px;
-        left: 30px;
-        top: 32px;
+        left: 32px;
+        top: 42px;
         width: 45px;
         align-items: center;
         justify-content: center;
@@ -112,15 +111,12 @@ button:focus {
 }
 
 .f {
-
     &-input-search {
         width: 99%;
         border: none;
         font-size: 21px;
         color: #191919;
     }
-
-    &-like
 
     &-search {
         position: absolute;
@@ -164,6 +160,7 @@ button:focus {
         font-size: 17px;
         font-weight: 500;
         color: #AAB2BD;
+        margin: 0 22px;
     }
 
     &-profile-header:hover {
@@ -171,11 +168,12 @@ button:focus {
     }
 
     &-header-content {
+        height: 84px;
         width: 100%;
-        align-items: flex-start;
+        align-items: center;
         display: flex;
         justify-content: space-between;
-        padding: 30px 45px 0 30px;
+        padding: 38px 45px 0 30px;
         position: fixed;
         z-index: 2;
     }
@@ -315,7 +313,7 @@ button:focus {
         border-top-width: 1px;
         border-top-color: #E6E9ED;
         border-top-style: solid;
-        padding-top: 20px;
+        padding-top: 40px;
         margin-bottom: 20px;
 
         &-tip-text {
@@ -327,30 +325,30 @@ button:focus {
 
     &-nav {
         display: flex;
-        align-items: center;
-        justify-content: space-evenly;
         margin-bottom: 100px;
         position: sticky;
-        top: 15px;
+        top: 25px;
         z-index: 3;
 
         &-button {
-            padding: 20px 30px 20px 30px;
+            padding: 23px 38px;
+            margin-right: 17px;
             border-radius: 64px;
-            font-size: 24px;
-            color: #1D1D1D;
             white-space: nowrap;
             background: rgba(255, 255, 255, 0.48);
-            //margin: 15px;
-            //filter: blur(68px);
-            //backdrop-filter: blur(56px);
-
-            &-img {
-                margin: 25px;
-            }
+            backdrop-filter: blur(56px);
+            color: #1D1D1F;
+            font-size: 24px;
+            font-weight: 400;
+            font-style: normal;
+            gap: 32px;
 
             &-active {
                 background-color: white;
+            }
+
+            &:last-child {
+                margin-right: 0;
             }
         }
         &-wrap {
@@ -393,7 +391,6 @@ button:focus {
             -moz-appearance: none;
             border-radius: 64px;
             font-size: 21px;
-            padding: 15px 20px;
             height: 60px;
         }
     }
@@ -441,11 +438,14 @@ button:focus {
         }
 
         &-hashtag {
+            height: 30px;
+            margin-left: 40px;
+            margin-right: auto;
             font-size: 17px;
             color: #AAB2BD;
             transition: 0.2s;
 
-            &:hover {
+            &-hover:hover {
                 color: #3D72ED;
                 cursor: pointer;
             }

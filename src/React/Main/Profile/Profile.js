@@ -15,40 +15,32 @@ const Profile = () => {
             <Col className={"f-main"} style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
                 <div>
                     <Header/>
-                    <section>
-                        <navigation className={"f-nav-wrap"}>
-                            <div className={"f-nav max_width"} style={{
-                                maxWidth: '80%',
-                                padding: 0,
-                                marginBottom: 0,
-                            }}>
-                                <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    width: '40%',
-                                    justifyContent: 'space-around',
-                                    paddingTop: "15vh"
-                                }}>
-                                    <a onClick={() => setSelectedHeaderItem(0)} className={"f-profile-header"}
-                                       style={{color: selectedHeaderItem === 0 && "#1D1D1F"}}>
-                                        Публикации
-                                        {selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/>}
-                                    </a>
-                                    <a onClick={() => setSelectedHeaderItem(1)} className={"f-profile-header"}
-                                       style={{color: selectedHeaderItem === 1 && "#1D1D1F"}}>
-                                        Комментарии
-                                        {selectedHeaderItem === 1 && <div className={"f-bottom-selected"}/>}
-                                    </a>
-                                    <a onClick={() => setSelectedHeaderItem(2)} className={"f-profile-header"}
-                                       style={{color: selectedHeaderItem === 2 && "#1D1D1F"}}>
-                                        Понравилось
-                                        {selectedHeaderItem === 2 && <div className={"f-bottom-selected"}/>}
-                                    </a>
-                                </div>
+                    <div className={"max_width"}>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            width: '35vw',
+                            marginLeft: "21vw",
+                            paddingTop: "15vh",
+                        }}>
+                            <a onClick={() => setSelectedHeaderItem(0)} className={"f-profile-header"}
+                               style={{color: selectedHeaderItem === 0 && "#1D1D1F"}}>
+                                Публикации
+                                {selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/>}
+                            </a>
+                            <a onClick={() => setSelectedHeaderItem(1)} className={"f-profile-header"}
+                               style={{color: selectedHeaderItem === 1 && "#1D1D1F"}}>
+                                Комментарии
+                                {selectedHeaderItem === 1 && <div className={"f-bottom-selected"}/>}
+                            </a>
+                            <a onClick={() => setSelectedHeaderItem(2)} className={"f-profile-header"}
+                               style={{color: selectedHeaderItem === 2 && "#1D1D1F"}}>
+                                Понравилось
+                                {selectedHeaderItem === 2 && <div className={"f-bottom-selected"}/>}
+                            </a>
+                        </div>
 
-                            </div>
-                        </navigation>
-                    </section>
+                    </div>
                 </div>
                 {
                     selectedHeaderItem === 0 ?

@@ -37,6 +37,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
 
     return (
         <div className={"f-comments"}>
+            <span className={"f-comments-tip-text"}>Комментарии</span>
             <div className={"f-comments-scroll"}>
                 {
                     commentsData.length === 0 ? (
@@ -49,7 +50,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                             commentsData.map((comment, index) => (
                                 <>
                                     <div className={"f-cards-avatar f-cards-avatar-bottom-border"}
-                                         style={{marginTop: 20}}>
+                                         style={{paddingTop: 40}}>
                                         <div className={"f-cards-row-wrap"}>
                                             <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
                                                     src={comment.user.image

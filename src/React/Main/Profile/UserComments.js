@@ -49,7 +49,9 @@ const UserComments = () => {
 
     return (
         <>
-            <div className={"max_width"} style={{paddingTop: "10vh"}}>
+            <div className={"max_width"}
+                 style={{ paddingTop: 50 }}
+            >
                 <div style={{
                     display: "flex",
                     justifyContent: 'center',

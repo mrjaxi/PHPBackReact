@@ -11,9 +11,18 @@ const {Option} = Select;
 const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) => {
 
     const [idea, setIdea] = useState(item);
+    const [date, setDate] = useState("")
     const [visible, setVisible] = useState(false);
 
     let editable = false
+    let months = ["января", "февраля", "марта", "апреля", "мая", "июня",
+        "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+
+    useLayoutEffect(() => {
+        let dateItem = new Date(item?.date)
+        let dateString = `${Number(dateItem.getUTCDate())} ${months[dateItem.getUTCMonth()]} ${dateItem.getUTCFullYear()}`
+        setDate(dateString)
+    }, [])
 
     useEffect(() => {
         if(editable){
@@ -127,9 +136,12 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
     return (
         <>
             <div className={"f-cards"} key={index} id={index}>
-                <p className={"f-cards-hashtag"} style={{marginLeft: 40, marginRight: "auto"}}
+                <text className={"f-cards-hashtag"} style={{
+                    marginBottom: "1em"
+                }}>{date}</text>
+                <p className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                    onClick={() => {
-                       console.log(`selectType(${idea.typeId})`)
+                       // console.log(`selectType(${idea.typeId})`)
                        selectType(idea.typeId)
                    }}>#{idea?.type}</p>
                 <div className={"f-cards-card-wrap"}>
@@ -210,7 +222,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                         </div>
 
                         <div className={"f-cards-div-wrap-text"}>
-                            <NavLink to={"/idea/" + idea.idea_id}>
+                            <NavLink to={global.lang + "/idea/" + idea.idea_id}>
                                 <span className={"f-cards-content-text"}>
                                     {idea.title}
                                 </span>
