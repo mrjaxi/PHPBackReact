@@ -39,38 +39,38 @@ const MainPage = () => {
             updateStatuses()
             loadData()
         }
-    },[selectedCategory, includedTypes, includedStatuses])
+    },[selectedCategory, includedTypes, includedStatuses]);
 
     const selectStatus = (statusId) => {
         if(statusId) {
             let prevIncludedStatuses = [...includedStatuses];
 
             if (prevIncludedStatuses.indexOf(statusId) >= 0) {
-                console.log("такой есть")
+                console.log("такой есть");
                 prevIncludedStatuses = prevIncludedStatuses.filter(item => item !== statusId)
             } else {
-                console.log("такого нет запушил")
+                console.log("такого нет запушил");
                 prevIncludedStatuses.push(statusId);
             }
             setIncludedStatuses(prevIncludedStatuses);
         }
-    }
+    };
 
     const selectType = (typeId) => {
         if(typeId){
             let prevIncludesTypes = [...includedTypes];
 
             if (prevIncludesTypes.indexOf(typeId) >= 0){
-                console.log("такой есть")
+                console.log("такой есть");
                 prevIncludesTypes = prevIncludesTypes.filter(item => item !== typeId)
             } else {
-                console.log("такого нет запушил")
+                console.log("такого нет запушил");
                 prevIncludesTypes.push(typeId);
             }
             setIncludedTypes(prevIncludesTypes);
         }
         return true;
-    }
+    };
 
     const loadData = (status=null, type=null) => {
         setLoading(true);

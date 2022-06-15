@@ -1342,7 +1342,7 @@ button:focus {
   font-size: 21px;
   color: #191919;
 }
-.f-search {
+.f-like .f-search {
   position: absolute;
   left: 50px;
   right: 50px;
@@ -1355,7 +1355,7 @@ button:focus {
   align-items: center;
   flex-direction: column;
 }
-.f-search-wrap {
+.f-like .f-search-wrap {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -1364,7 +1364,7 @@ button:focus {
   scrollbar-width: none;
   height: 100%;
 }
-.f-search-wrap::-webkit-scrollbar {
+.f-like .f-search-wrap::-webkit-scrollbar {
   width: 0;
 }
 .f-bottom-selected {
@@ -1533,7 +1533,6 @@ button:focus {
   color: #1D1D1D;
   white-space: nowrap;
   background: rgba(255, 255, 255, 0.48);
-  backdrop-filter: blur(56px);
 }
 .f-nav-button-img {
   margin: 25px;
@@ -1826,7 +1825,7 @@ button:focus {
 .f-login {
   box-sizing: border-box;
   margin: 0;
-  height: 100vh;
+  height: 90vh;
   width: 100%;
   background-color: white;
   display: flex;

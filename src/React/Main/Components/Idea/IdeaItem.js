@@ -2,7 +2,7 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../../Comments";
-import {Avatar, Select} from "antd";
+import {Avatar, Select, Tooltip} from "antd";
 import {NavLink} from "react-router-dom";
 import {UserOutlined} from "@ant-design/icons";
 import { Image } from 'antd';
@@ -35,17 +35,21 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                 global.openNotification("Войдите", "Чтобы проголосовать нужно авторизоваться", "error")
                 break;
             case true:
+                let newIdea = {...idea};
+                newIdea.like -= 1;
+                newIdea.currentUserIsVote = !currentUserIsVote;
+                setIdea(newIdea);
                 axios.post(ApiRoutes.API_DELETE_VOTE, {idea_id: id})
                     .then(response => {
                         switch (response.data?.state) {
                             case "success":
-                                let newIdea = {...idea};
-                                newIdea.like -= 1;
-                                newIdea.currentUserIsVote = !currentUserIsVote;
-                                setIdea(newIdea)
                                 break;
                             case "error":
                                 global.openNotification("Ошибка", response.data?.message, "error")
+                                let newIdea = {...idea};
+                                newIdea.like += 1;
+                                newIdea.currentUserIsVote = !currentUserIsVote;
+                                setIdea(newIdea)
                                 break;
                             default:
                                 global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
@@ -54,17 +58,21 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                     })
                 break;
             case false:
+                let newIdea1 = {...idea};
+                newIdea1.like += 1;
+                newIdea1.currentUserIsVote = !currentUserIsVote;
+                setIdea(newIdea1);
                 axios.post(ApiRoutes.API_NEW_VOTE, {idea_id: id, type: "like"})
                     .then(response => {
                         switch (response.data?.state) {
                             case "success":
-                                let newIdea = {...idea};
-                                newIdea.like += 1;
-                                newIdea.currentUserIsVote = !currentUserIsVote;
-                                setIdea(newIdea)
                                 break;
                             case "error":
                                 global.openNotification("Ошибка", response.data?.message, "error")
+                                let newIdea1 = {...idea};
+                                newIdea1.like -= 1;
+                                newIdea1.currentUserIsVote = !currentUserIsVote;
+                                setIdea(newIdea1);
                                 break;
                             default:
                                 global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
@@ -231,13 +239,29 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                                 </a>
                             </div>
                             <div>
-                                <a style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : ""}}
-                                   className={"f-cards-under-block-like"}
-                                   onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
-                                    <i className="em em---1"
-                                       aria-label="THUMBS UP SIGN"></i>
-                                    <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
-                                </a>
+                                {
+                                    global.layout === 'guest' ?
+                                    <Tooltip color={"black"} title="Вы не можете поставить лайк, пока не авторизованы">
+                                        <button disabled={true} type={"button"} style={{
+                                            backgroundColor: 'white',
+                                            cursor: 'not-allowed',
+                                            border: 'none',
+                                        }}
+                                           className={"f-cards-under-block-like"}
+                                           onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
+                                            <i className="em em---1"
+                                               aria-label="THUMBS UP SIGN"></i>
+                                            <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                        </button>
+                                    </Tooltip> :
+                                    <button type={"button"} style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "", border: 'none', cursor: 'pointer'}}
+                                       className={"f-cards-under-block-like"}
+                                       onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
+                                        <i className="em em---1"
+                                           aria-label="THUMBS UP SIGN"></i>
+                                        <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                    </button>
+                                }
                             </div>
                             {/*<div>*/}
                             {/*    <a className={"f-cards-under-block-like"} href={"#"}>*/}

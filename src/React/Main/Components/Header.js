@@ -1,11 +1,14 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Avatar} from "antd";
 import {DownOutlined, UpOutlined, UserOutlined} from "@ant-design/icons";
 import {NavLink} from "react-router-dom";
 import axios from "axios";
 import ProfileAvatar from "../Profile/ProfileAvatar";
+import Login from "../Auth/Login";
 
 const Header = () => {
+
+    const [visible, setVisible] = useState();
 
     const logout = () => {
         axios.post("/ru/logout").then(response => {
@@ -17,6 +20,7 @@ const Header = () => {
 
     return (
         <>
+            <Login visible={visible} setVisible={setVisible}/>
             <header className={"f-header-content"}>
                 <div className={'f-header-wrap-logo'}>
                     <NavLink to={"/"}>
@@ -59,7 +63,8 @@ const Header = () => {
                         </div>)
                         :
                         (<div className={'f-header-logo-wrapper'}>
-                            <NavLink className={'f-sign-in'} to={global.lang + "/auth/"}>Войти</NavLink>
+                            {/*<NavLink className={'f-sign-in'} to={global.lang + "/auth/"}>Войти</NavLink>*/}
+                            <a className={'f-sign-in'} onClick={() => setVisible(!visible)}>Войти</a>
                         </div>)
                 }
             </header>
