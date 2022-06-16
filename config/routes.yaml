@@ -48,7 +48,7 @@ api_get_categories:
   path: /api/web/ideas/getCategories/
   controller: App\Controller\IdeasController::getCategories
 api_get_ideas:
-  path: /api/web/ideas/getIdeas/{category_id}/
+  path: /api/web/ideas/getIdeas/
   controller: App\Controller\IdeasController::getIdeas
 api_get_idea:
   path: /api/web/idea/{idea_id}/

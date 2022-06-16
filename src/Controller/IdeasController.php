@@ -216,14 +216,12 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @Route("/api/web/ideas/getIdeas/{category_id}/")
+     * @Route("/api/web/ideas/getIdeas/")
      * @param Request $request
-     * @param $category_id
      * @return Response
      */
-    public function getIdeas(Request $request, $category_id): Response
+    public function getIdeas(Request $request): Response
     {
-        $categories = array($category_id);
         $order = !empty($request->get("order")) ? $request->get("order") : 'date';
         $type = !empty($request->get("type")) ? $request->get("type") : 'desc';
         $page = (int)!empty($request->get("page")) ? $request->get("page") : 1;
@@ -231,8 +229,29 @@ class IdeasController extends AbstractController
         $limit = 10;
         $from = ($page - 1) * 10;
 
+        $data['categories'] = $this->categoriesRepository->findAll();
         $data['types'] = $this->typesRepository->findAll();
         $data['status'] = $this->statusRepository->findAll();
+        // Фильтры по категориям
+        $categories = array();
+        if (empty($request->get("categories"))) {
+            foreach ($data['categories'] as $category) {
+                $categories[] = $category->getId();
+            }
+        } else {
+            $categoriesGET = json_decode($request->get("categories"));
+            if (empty($categoriesGET) or count($categoriesGET) < 1 or gettype($categoriesGET[0]) != "integer") {
+                foreach ($data['categories'] as $category) {
+                    $categories[] = $category->getId();
+                }
+            } else {
+                foreach ($data['categories'] as $category) {
+                    if (in_array($category->getId(), $categoriesGET)) {
+                        $categories[] = $category->getId();
+                    }
+                }
+            }
+        }
         // Фильтры по типам
         $types = array();
         if (empty($request->get("types"))) {
@@ -240,14 +259,14 @@ class IdeasController extends AbstractController
                 $types[] = $typeOne->getId();
             }
         } else {
-            $typesGET = json_decode($request->get("types"));
-            if (empty($typesGET) or count($typesGET) < 1 or gettype($typesGET[0]) != "integer") {
+            $categoriesGET = json_decode($request->get("types"));
+            if (empty($categoriesGET) or count($categoriesGET) < 1 or gettype($categoriesGET[0]) != "integer") {
                 foreach ($data['types'] as $typeOne) {
                     $types[] = $typeOne->getId();
                 }
             } else {
                 foreach ($data['types'] as $t) {
-                    if (in_array($t->getId(), $typesGET)) {
+                    if (in_array($t->getId(), $categoriesGET)) {
                         $types[] = $t->getId();
                     }
                 }
@@ -277,8 +296,7 @@ class IdeasController extends AbstractController
                 }
             }
         }
-        $category = $this->categoriesRepository->find($categories[0]);
-        if (empty($category)) {
+        if (empty($categories)) {
             return $this->json(['state' => 'error', 'message' => "Такой категории не существует"]);
         }
         if (empty($types)) {

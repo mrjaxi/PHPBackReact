@@ -7,7 +7,7 @@ const ApiRoutes = {
     API_UPLOAD_IMAGE: "/api/web/upload/",
     API_SEARCH: "/api/web/ideas/search/",
     API_GET_CATEGORIES: "/api/web/ideas/getCategories/",
-    API_GET_IDEAS: "/api/web/ideas/getIdeas/{0}/",
+    API_GET_IDEAS: "/api/web/ideas/getIdeas/",
     API_NEW_IDEA: "/api/user/ideas/new/",
     API_SET_STATUS: "/api/admin/ideas/setStatus/",
     API_NEW_VOTE: "/api/user/ideas/newVote/",

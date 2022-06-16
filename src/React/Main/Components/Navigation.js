@@ -1,22 +1,22 @@
 import React, {useEffect, useState} from "react";
 import Search from "./Search";
 
-const Navigation = ({categories, setSelectedCategory, selectedCategory, includedCategory, setIncludedCategory}) => {
+const Navigation = ({categories, selectCategory, includedCategory}) => {
 
-    const selectCategory = (categoryId) => {
-        if(categoryId) {
-            let prevIncludedCategory = [...includedCategory];
-
-            if (prevIncludedCategory.indexOf(categoryId) >= 0) {
-                console.log("такой есть");
-                prevIncludedCategory = prevIncludedCategory.filter(item => item !== categoryId)
-            } else {
-                console.log("такого нет запушил");
-                prevIncludedCategory.push(categoryId);
-            }
-            setIncludedCategory(prevIncludedCategory);
-        }
-    };
+    // const selectCategory = (categoryId) => {
+    //     if(categoryId) {
+    //         let prevIncludedCategory = [...includedCategory];
+    //
+    //         if (prevIncludedCategory.indexOf(categoryId) >= 0) {
+    //             console.log("такой есть");
+    //             prevIncludedCategory = prevIncludedCategory.filter(item => item !== categoryId)
+    //         } else {
+    //             console.log("такого нет запушил");
+    //             prevIncludedCategory.push(categoryId);
+    //         }
+    //         setIncludedCategory(prevIncludedCategory);
+    //     }
+    // };
 
     return (
         <>
@@ -30,10 +30,10 @@ const Navigation = ({categories, setSelectedCategory, selectedCategory, included
                     {
                         categories.map((category) => (
                             <a onClick={() => {
-                                selectCategory(category.id),
-                                setSelectedCategory(category.id)
+                                // selectCategory(category.id),
+                                selectCategory(category.id)
                             }}
-                               className={"f-nav-button " + ((includedCategory.includes(category.id) || selectedCategory === category.id) && "f-nav-button-active")}>{category.name}</a>
+                               className={"f-nav-button " + ((includedCategory.includes(category.id)) && "f-nav-button-active")}>{category.name}</a>
                         ))
                     }
                 </div>

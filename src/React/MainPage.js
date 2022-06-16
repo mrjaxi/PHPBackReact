@@ -20,41 +20,52 @@ const MainPage = (props) => {
 
     const [wait, setWait] = useState(true);
 
-    const [types, setTypes] = useState(urlParams.get("types") ? JSON.parse(urlParams.get("types")) : []);
-    const [statuses, setStatuses] = useState(urlParams.get("statuses") ? JSON.parse(urlParams.get("categories")) : []);
-    const [categories, setCategories] = useState(urlParams.get("categories") ? JSON.parse(urlParams.get("categories")) : []);
+    const [types, setTypes] = useState([]);
+    const [statuses, setStatuses] = useState([]);
+    const [categories, setCategories] = useState([]);
 
-    const [includedTypes, setIncludedTypes] = useState(urlParams.get("types") ? JSON.parse(urlParams.get("types")) : []);
-    const [includedStatuses, setIncludedStatuses] = useState(urlParams.get("status") ? JSON.parse(urlParams.get("status")) : []);
-    const [includedCategory, setIncludedCategory] = useState([]);
+    const [includedTypes, setIncludedTypes] = useState(urlParams.get("types") ? Object.values(JSON.parse(urlParams.get("types"))) : []);
+    const [includedStatuses, setIncludedStatuses] = useState(urlParams.get("status") ? Object.values(JSON.parse(urlParams.get("status"))) : []);
+    const [includedCategories, setIncludedCategories] = useState(urlParams.get("categories") ? Object.values(JSON.parse(urlParams.get("categories"))) : []);
 
     const [ideas, setIdeas] = useState([]);
-    const [visible, setVisible] = useState();
-    const [selectedCategory, setSelectedCategory] = useState(urlParams.get("categories") ? Number(urlParams.get("categories")) : '');
+    const [visibleLogin, setVisibleLogin] = useState(false);
 
     const [loading, setLoading] = useState(true);
 
     useLayoutEffect(() => {
-        console.log(JSON.parse(urlParams.get("types")))
         getCategory();
     },[]);
 
     useEffect(() => {
-        if(selectedCategory){
-            updateStatuses()
-            loadData()
+        updateStatuses()
+        loadData()
+    },[includedTypes, includedStatuses, includedCategories]);
+
+    const selectCategory = (categoryId) => {
+        if(categoryId) {
+            let prevIncludedCategories = [...includedCategories];
+
+            if (prevIncludedCategories.indexOf(categoryId) >= 0) {
+                // console.log("такой есть");
+                prevIncludedCategories = prevIncludedCategories.filter(item => item !== categoryId)
+            } else {
+                // console.log("такого нет запушил");
+                prevIncludedCategories.push(categoryId);
+            }
+            setIncludedCategories(prevIncludedCategories);
         }
-    },[selectedCategory, includedTypes, includedStatuses]);
+    };
 
     const selectStatus = (statusId) => {
         if(statusId) {
             let prevIncludedStatuses = [...includedStatuses];
 
             if (prevIncludedStatuses.indexOf(statusId) >= 0) {
-                console.log("такой есть");
+                // console.log("такой есть");
                 prevIncludedStatuses = prevIncludedStatuses.filter(item => item !== statusId)
             } else {
-                console.log("такого нет запушил");
+                // console.log("такого нет запушил");
                 prevIncludedStatuses.push(statusId);
             }
             setIncludedStatuses(prevIncludedStatuses);
@@ -66,10 +77,10 @@ const MainPage = (props) => {
             let prevIncludesTypes = [...includedTypes];
 
             if (prevIncludesTypes.indexOf(typeId) >= 0){
-                console.log("такой есть");
+                // console.log("такой есть");
                 prevIncludesTypes = prevIncludesTypes.filter(item => item !== typeId)
             } else {
-                console.log("такого нет запушил");
+                // console.log("такого нет запушил");
                 prevIncludesTypes.push(typeId);
             }
             setIncludedTypes(prevIncludesTypes);
@@ -86,56 +97,68 @@ const MainPage = (props) => {
             page: urlParams.get("page") ? urlParams.get("page") : 1,
         };
 
+        if(includedCategories.length !== 0){
+            // console.log("[...includedCategories]", [...includedCategories])
+            params["categories"] = JSON.stringify([...includedCategories])
+        }
         if(includedTypes.length !== 0){
-            console.log("[...includedTypes]", [...includedTypes])
+            // console.log("[...includedTypes]", [...includedTypes])
             params["types"] = JSON.stringify([...includedTypes])
         }
         if(includedStatuses.length !== 0){
-            console.log("[...includedStatuses]", [...includedStatuses])
+            // console.log("[...includedStatuses]", [...includedStatuses])
             params["status"] = JSON.stringify([...includedStatuses])
         }
-
-        axios.get(ApiRoutes.API_GET_IDEAS.format(selectedCategory) + "?" + global.serialize(params)).then(response => {
-            global._history.replace("?" + `${global.serialize(params)}&categories=${selectedCategory}`);
-            switch(response.data?.state){
-                case "success":
-                    if (response.data?.ideas !== null) {
-                        response.data.ideas.map(idea => {
-                            data.push({
-                                idea_id: idea.id,
-                                title: idea.title,
-                                text: idea.content,
-                                showComments: false,//idea.comments.length > 0,
-                                showFullText: false,
-                                roles: idea.user.roles,
-                                role: idea.user.role_name,
-                                status: idea.status,
-                                photo: idea.photo,
-                                comments: idea.comments,
-                                like: Number(idea.likes),
-                                dislike: 0,
-                                username: idea.user?.first_name,
-                                userImage: idea.user.image,
-                                type: idea.type.name,
-                                typeId: idea.type.id,
-                                currentUserIsVote: idea.currentUserIsVote,
-                                allowComments: idea.allowComments,
-                                date: idea?.date
-                            })
-                        });
-                    }
-                    setIdeas(data);
-                    setLoading(false)
-                    break;
-                case "error":
-                    global.openNotification("Ошибка", response.data?.message, "error")
-                    break;
-                default:
-                    global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                    break;
+        let serializedParams = "";
+        for (let key in params) {
+            if(serializedParams === ""){
+                serializedParams += `${key}=${params[key]}`
+            } else {
+                serializedParams += `&${key}=${params[key]}`
             }
-            setWait(false);
-        })
+        }
+        global._history.replace(`${global.lang}/?${serializedParams}`);
+        axios.get(ApiRoutes.API_GET_IDEAS + "?" + serializedParams)
+            .then(response => {
+                switch (response.data?.state) {
+                    case "success":
+                        if (response.data?.ideas !== null) {
+                            response.data.ideas.map(idea => {
+                                data.push({
+                                    idea_id: idea.id,
+                                    title: idea.title,
+                                    text: idea.content,
+                                    showComments: false,//idea.comments.length > 0,
+                                    showFullText: false,
+                                    roles: idea.user.roles,
+                                    role: idea.user.role_name,
+                                    status: idea.status,
+                                    photo: idea.photo,
+                                    comments: idea.comments,
+                                    like: Number(idea.likes),
+                                    dislike: 0,
+                                    username: idea.user?.first_name,
+                                    userImage: idea.user.image,
+                                    type: idea.type.name,
+                                    typeId: idea.type.id,
+                                    currentUserIsVote: idea.currentUserIsVote,
+                                    allowComments: idea.allowComments,
+                                    date: idea?.date
+                                })
+                            });
+                        }
+                        setIdeas(data);
+                        setLoading(false)
+                        break;
+                    case "error":
+                        global.openNotification("Ошибка", response.data?.message, "error")
+                        break;
+                    default:
+                        global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
+                        break;
+                }
+                setWait(false);
+            })
     };
 
     const getCategory = () => {
@@ -144,9 +167,9 @@ const MainPage = (props) => {
             setStatuses(response.data.statuses);
             setCategories(response.data.categories);
 
-            if(response.data?.categories){
-                setSelectedCategory(urlParams.get("categories") ? Number(urlParams.get("categories")) : response.data.categories[0]?.id);
-            }
+            // if(response.data?.categories){
+            //     setSelectedCategory(urlParams.get("categories") ? Number(urlParams.get("categories")) : response.data.categories[0]?.id);
+            // }
         });
     };
 
@@ -172,10 +195,10 @@ const MainPage = (props) => {
     } else {
         return (
             <>
-                <Login visible={visible} setVisible={setVisible}/>
+                <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
                 <Col className={"f-main"}>
                     <div>
-                        <Header search={true} />
+                        <Header search={true}/>
                         <section className={"max_width"} style={{marginTop: "100px"}}>
                             <div className={"f-section"}>
                                 <div className={"f-section-wrap-text"}>
@@ -193,20 +216,18 @@ const MainPage = (props) => {
                         </section>
                         <Navigation
                             categories={categories}
-                            selectedCategory={selectedCategory}
-                            setSelectedCategory={setSelectedCategory}
-                            includedCategory={includedCategory}
-                            setIncludedCategory={setIncludedCategory}
+                            selectCategory={selectCategory}
+                            includedCategory={includedCategories}
                         />
                         {
-                        global.layout !== "guest" ?
-                        <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
-                            <p className={"f-new-idea-text"}>Новая идея</p>
-                        </NavLink> :
-                        <a onClick={() => setVisible(!visible)} className={"f-new-idea"}>
-                            <p className={"f-new-idea-text"}>Новая идея</p>
-                        </a>
-                    }
+                            global.layout !== "guest" ?
+                                <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
+                                    <p className={"f-new-idea-text"}>Новая идея</p>
+                                </NavLink> :
+                                <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}>
+                                    <p className={"f-new-idea-text"}>Новая идея</p>
+                                </a>
+                        }
                         <div className={"f-row-type max_width"}>
                             <div style={{
                                 width: '100%',

@@ -55,10 +55,10 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                                 break;
                             case "error":
                                 global.openNotification("Ошибка", response.data?.message, "error")
-                                let newIdea = {...idea};
-                                newIdea.like += 1;
-                                newIdea.currentUserIsVote = !currentUserIsVote;
-                                setIdea(newIdea)
+                                let newIdea1 = {...newIdea};
+                                newIdea1.like += 1;
+                                newIdea1.currentUserIsVote = !newIdea1.currentUserIsVote;
+                                setIdea(newIdea1)
                                 break;
                             default:
                                 global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
@@ -78,10 +78,10 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                                 break;
                             case "error":
                                 global.openNotification("Ошибка", response.data?.message, "error")
-                                let newIdea1 = {...idea};
-                                newIdea1.like -= 1;
-                                newIdea1.currentUserIsVote = !currentUserIsVote;
-                                setIdea(newIdea1);
+                                let newIdea2 = {...newIdea1};
+                                newIdea2.like -= 1;
+                                newIdea2.currentUserIsVote = !newIdea2.currentUserIsVote;
+                                setIdea(newIdea2);
                                 break;
                             default:
                                 global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
