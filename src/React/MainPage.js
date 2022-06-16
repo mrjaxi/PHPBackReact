@@ -11,11 +11,9 @@ import IdeaItem from "./Main/Components/Idea/IdeaItem";
 import LoadingIdeas from "./Main/Components/Idea/LoadingIdeas";
 import EmptyIdeas from "./Main/Components/Idea/EmptyIdeas";
 import Login from "./Main/Auth/Login";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const MainPage = (props) => {
-
-    let data = [];
-
     const urlParams = new URLSearchParams(props.location.search);
 
     const [wait, setWait] = useState(true);
@@ -28,6 +26,7 @@ const MainPage = (props) => {
     const [includedStatuses, setIncludedStatuses] = useState(urlParams.get("status") ? Object.values(JSON.parse(urlParams.get("status"))) : []);
     const [includedCategories, setIncludedCategories] = useState(urlParams.get("categories") ? Object.values(JSON.parse(urlParams.get("categories"))) : []);
 
+    const [page, setPage] = useState(2);
     const [ideas, setIdeas] = useState([]);
     const [visibleLogin, setVisibleLogin] = useState(false);
 
@@ -88,13 +87,22 @@ const MainPage = (props) => {
         return true;
     };
 
-    const loadData = (status=null, type=null) => {
-        setLoading(true);
-        data = [];
+    const loadData = (status=null, type=null, pagination=false) => {
+        let data = null;
+
+        if (pagination){
+            data = [...ideas];
+            setPage(page + 1)
+        } else {
+            data = [];
+            setPage(2);
+            setLoading(true);
+        }
+
         let params = {
             order: urlParams.get("order") ? urlParams.get("order") : "id",
             type: urlParams.get("type") ? urlParams.get("type") : "desc",
-            page: urlParams.get("page") ? urlParams.get("page") : 1,
+            page: pagination ? page : 1,
         };
 
         if(includedCategories.length !== 0){
@@ -229,35 +237,42 @@ const MainPage = (props) => {
                                 </a>
                         }
                         <div className={"f-row-type max_width"}>
-                            <div style={{
-                                width: '100%',
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: 'center',
-                                alignItems: "center",
-                                paddingRight: "100px",
-                                paddingLeft: "20%",
-                                marginBottom: "180px",
-                            }}>
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: 'center',
+                                    alignItems: "center",
+                                    paddingRight: "100px",
+                                    paddingLeft: "20%",
+                                    marginBottom: "180px",
+                                }}
+                            >
                                 {
-                                    loading ? <LoadingIdeas type={true}/> :
-                                        <FlatList
-                                            list={ideas}
-                                            renderItem={(idea, index) => {
-                                                return(
+                                    loading ? <LoadingIdeas type={true}/> : ideas.length !== 0 ?
+                                        <InfiniteScroll
+                                            style={{ overflow: 'hidden' }}
+                                            next={() => {
+                                                loadData(statuses, types, true)
+                                            }}
+                                            hasMore={true}
+                                            dataLength={ideas.length}
+                                            loader={<LoadingIdeas type={true}/>}
+                                        >
+                                            {
+                                                ideas.map((idea, index) => (
                                                     <IdeaItem
                                                         item={idea}
-                                                        index={index}
+                                                        index={index + 1}
                                                         setItem={setIdea}
                                                         statuses={statuses}
                                                         selectType={selectType}
                                                     />
-                                                )
-                                            }}
-                                            renderWhenEmpty={() =>
-                                                <EmptyIdeas text={"Пока нет записей..."}/>
+                                                ))
                                             }
-                                        />
+                                        </InfiniteScroll>
+                                        : <EmptyIdeas text={"Пока нет записей..."}/>
                                 }
                             </div>
                             <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>

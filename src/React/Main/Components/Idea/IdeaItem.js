@@ -136,6 +136,9 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
     return (
         <>
             <div className={"f-cards"} key={index} id={index}>
+                {/*<div style={{ width: 100, height: 100, backgroundColor: 'black', color: 'white', fontSize: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
+                {/*    {index}*/}
+                {/*</div>*/}
                 <text className={"f-cards-hashtag"} style={{
                     marginBottom: "1em"
                 }}>{date}</text>
