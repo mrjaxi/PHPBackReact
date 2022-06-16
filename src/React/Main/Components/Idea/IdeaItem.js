@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
-import Comments from "../../Comments";
+import Comments from "../Comments";
 import {Avatar, Image, Select, Tooltip} from "antd";
 import {NavLink} from "react-router-dom";
 import {UserOutlined} from "@ant-design/icons";

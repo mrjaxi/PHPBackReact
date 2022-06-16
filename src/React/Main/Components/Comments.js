@@ -1,9 +1,9 @@
 import React, {useLayoutEffect, useState} from "react";
 import {Avatar, Button, Form, Input, Skeleton, Typography} from "antd";
 import axios from "axios";
-import ApiRoutes from "../Routes/ApiRoutes";
+import ApiRoutes from "../../Routes/ApiRoutes";
 import {UserOutlined} from "@ant-design/icons";
-import Login from "./Auth/Login";
+import Login from "../Auth/Login";
 
 const {Title} = Typography;
 const {TextArea} = Input;

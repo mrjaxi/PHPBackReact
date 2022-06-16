@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Col, Select} from "antd";
-import Comments from "../Comments";
+import Comments from "../Components/Comments";
 const { Option } = Select
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
