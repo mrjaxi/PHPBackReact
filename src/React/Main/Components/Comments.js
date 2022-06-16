@@ -22,7 +22,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                 if (response.data.state === "success") {
                     form.resetFields()
                     let data = [...rawCommentsData];
-                    data.push({...response.data?.comment, dateString: global.getDateString(new Date(), false,false)});
+                    data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
                     setCommentsData(data);
                     setRawCommentsData(data);
                     setComments(data)
