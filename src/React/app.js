@@ -78,6 +78,21 @@ global.numWord = (number, words, returnNum=true) => {
     }
     return out;
 }
+/**
+ * @var Date date
+ * */
+global.getDateString = (date, time = true,short = true) => {
+    let months = ["января", "февраля", "марта", "апреля", "мая", "июня",
+        "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+    let monthsShort = ["янв", "фев", "мар", "апр", "мая", "июня",
+        "июля", "авг", "сент", "окт", "нояб", "дек"];
+    if(time){
+        return `${Number(date.getUTCDate())} ${short ? monthsShort[date.getUTCMonth()] : months[date.getUTCMonth()]} ${date.getUTCFullYear()}` +
+            ` в ${date.getHours()}:${date.getUTCMinutes()}`
+    } else {
+        return `${Number(date.getUTCDate())} ${short ? monthsShort[date.getUTCMonth()] : months[date.getUTCMonth()]} ${date.getUTCFullYear()}`
+    }
+}
 
 axios.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest',

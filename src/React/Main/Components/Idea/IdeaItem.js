@@ -2,10 +2,10 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../../Comments";
-import {Avatar, Select, Tooltip} from "antd";
+import {Avatar, Image, Select, Tooltip} from "antd";
 import {NavLink} from "react-router-dom";
 import {UserOutlined} from "@ant-design/icons";
-import { Image } from 'antd';
+
 const {Option} = Select;
 
 const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) => {
@@ -15,13 +15,13 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
     const [visible, setVisible] = useState(false);
 
     let editable = false
-    let months = ["января", "февраля", "марта", "апреля", "мая", "июня",
-        "июля", "августа", "сентября", "октября", "ноября", "декабря"];
 
     useLayoutEffect(() => {
-        let dateItem = new Date(item?.date)
-        let dateString = `${Number(dateItem.getUTCDate())} ${months[dateItem.getUTCMonth()]} ${dateItem.getUTCFullYear()}`
-        setDate(dateString)
+        let newIdea = {...item}
+        setDate(global.getDateString(new Date(item?.date), false,false))
+        newIdea.comments.map(comment => {
+            comment.dateString = global.getDateString(new Date(comment?.date))
+        })
     }, [])
 
     useEffect(() => {

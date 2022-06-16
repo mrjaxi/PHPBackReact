@@ -11,8 +11,6 @@ const UserComments = () => {
     const [loading, setLoading] = useState(false);
 
     let commentsData = [];
-    let months = ["января", "февраля", "марта", "апреля", "мая", "июня",
-        "июля", "августа", "сентября", "октября", "ноября", "декабря"];
 
     useEffect(() => {
         getUserComments()
@@ -22,24 +20,18 @@ const UserComments = () => {
         setLoading(true)
         axios.get(ApiRoutes.API_GET_USER_DATA.format(global.user.id) + "?" + global.serialize({page: "2"})).then(response => {
             if (response.data.state === "success" && response.data?.comments) {
-                response.data.comments.map(item => {
-                    let date = new Date(item?.date)
-                    let timeArr = item?.date.split(" ")[1].split(":")
-                    // ${Number(dateArr[0])} ${months[dateStart.getMonth()]} ${dateArr[2]}
-                    let dateString = `${Number(date.getUTCDate())} ${months[date.getUTCMonth()]} ${date.getUTCFullYear()}` +
-                        ` в ${timeArr[0]}:${timeArr[1]}`
-                    console.log("DATE:",dateString)
-                    let comment = {
-                        id: item.id,
-                        date: dateString,
-                        photo: item.user.image,
-                        content: item.content,
-                        roles: item.user.roles,
-                        role: item.user.role_name,
-                        username: item.user?.first_name,
-                        ideaId: item?.idea_id,
+                response.data.comments.map(comment => {
+                    let newComment = {
+                        id: comment.id,
+                        date: global.getDateString(new Date(comment?.date)),
+                        photo: comment.user.image,
+                        content: comment.content,
+                        roles: comment.user.roles,
+                        role: comment.user.role_name,
+                        username: comment.user?.first_name,
+                        ideaId: comment?.idea_id,
                     }
-                    commentsData.push(comment)
+                    commentsData.push(newComment)
                 })
             }
             setComments(commentsData);
