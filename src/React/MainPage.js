@@ -26,11 +26,12 @@ const MainPage = (props) => {
     const [includedStatuses, setIncludedStatuses] = useState(urlParams.get("status") ? Object.values(JSON.parse(urlParams.get("status"))) : []);
     const [includedCategories, setIncludedCategories] = useState(urlParams.get("categories") ? Object.values(JSON.parse(urlParams.get("categories"))) : []);
 
-    const [page, setPage] = useState(2);
+    const [page, setPage] = useState(1);
     const [ideas, setIdeas] = useState([]);
     const [visibleLogin, setVisibleLogin] = useState(false);
 
     const [loading, setLoading] = useState(true);
+    const [loadingInfinite, setLoadingInfinite] = useState(true);
 
     useLayoutEffect(() => {
         getCategory();
@@ -39,84 +40,76 @@ const MainPage = (props) => {
     useEffect(() => {
         updateStatuses()
         loadData()
-    },[includedTypes, includedStatuses, includedCategories]);
+    },[includedTypes, includedStatuses, includedCategories, page]);
 
     const selectCategory = (categoryId) => {
         if(categoryId) {
             let prevIncludedCategories = [...includedCategories];
-
             if (prevIncludedCategories.indexOf(categoryId) >= 0) {
-                // console.log("такой есть");
                 prevIncludedCategories = prevIncludedCategories.filter(item => item !== categoryId)
             } else {
-                // console.log("такого нет запушил");
                 prevIncludedCategories.push(categoryId);
             }
+            setPage(1)
             setIncludedCategories(prevIncludedCategories);
         }
+        return true;
     };
 
     const selectStatus = (statusId) => {
         if(statusId) {
             let prevIncludedStatuses = [...includedStatuses];
-
             if (prevIncludedStatuses.indexOf(statusId) >= 0) {
-                // console.log("такой есть");
+
                 prevIncludedStatuses = prevIncludedStatuses.filter(item => item !== statusId)
             } else {
-                // console.log("такого нет запушил");
                 prevIncludedStatuses.push(statusId);
             }
+            setPage(1)
             setIncludedStatuses(prevIncludedStatuses);
         }
+        return true;
     };
 
     const selectType = (typeId) => {
         if(typeId){
             let prevIncludesTypes = [...includedTypes];
-
             if (prevIncludesTypes.indexOf(typeId) >= 0){
-                // console.log("такой есть");
+
                 prevIncludesTypes = prevIncludesTypes.filter(item => item !== typeId)
             } else {
-                // console.log("такого нет запушил");
                 prevIncludesTypes.push(typeId);
             }
+            setPage(1)
             setIncludedTypes(prevIncludesTypes);
         }
         return true;
     };
 
-    const loadData = (status=null, type=null, pagination=false) => {
-        let data = null;
-
-        if (pagination){
-            data = [...ideas];
-            setPage(page + 1)
-        } else {
-            data = [];
-            setPage(2);
-            setLoading(true);
-        }
-
+    const loadData = () => {
+        let data = [];
         let params = {
             order: urlParams.get("order") ? urlParams.get("order") : "id",
             type: urlParams.get("type") ? urlParams.get("type") : "desc",
-            page: pagination ? page : 1,
+            page: page,
         };
+        if (page > 1){
+            data = [...ideas];
+            setLoadingInfinite(true);
+        } else {
+            setLoading(true);
+        }
 
         if(includedCategories.length !== 0){
-            // console.log("[...includedCategories]", [...includedCategories])
             params["categories"] = JSON.stringify([...includedCategories])
         }
         if(includedTypes.length !== 0){
-            // console.log("[...includedTypes]", [...includedTypes])
             params["types"] = JSON.stringify([...includedTypes])
         }
         if(includedStatuses.length !== 0){
-            // console.log("[...includedStatuses]", [...includedStatuses])
             params["status"] = JSON.stringify([...includedStatuses])
         }
+
         let serializedParams = "";
         for (let key in params) {
             if(serializedParams === ""){
@@ -157,6 +150,7 @@ const MainPage = (props) => {
                         }
                         setIdeas(data);
                         setLoading(false)
+                        setLoadingInfinite(false);
                         break;
                     case "error":
                         global.openNotification("Ошибка", response.data?.message, "error")
@@ -174,10 +168,6 @@ const MainPage = (props) => {
             setTypes(response.data.types);
             setStatuses(response.data.statuses);
             setCategories(response.data.categories);
-
-            // if(response.data?.categories){
-            //     setSelectedCategory(urlParams.get("categories") ? Number(urlParams.get("categories")) : response.data.categories[0]?.id);
-            // }
         });
     };
 
@@ -209,16 +199,14 @@ const MainPage = (props) => {
                         <Header search={true}/>
                         <section className={"max_width"} style={{marginTop: "100px"}}>
                             <div className={"f-section"}>
-                                <div className={"f-section-wrap-text"}>
+                                <div>
                                     <p className={"f-section-wrap-p-text"} style={{
                                         marginBottom: 0,
                                         marginTop: "20px",
-                                    }}>
-                                        Мы ценим мнение
-                                        клиентов и рады,
-                                        когда вы делитесь
-                                        им с нами
-                                    </p>
+                                    }}>Мы ценим мнение</p>
+                                    <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>клиентов и рады,</p>
+                                    <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>когда вы делитесь</p>
+                                    <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>им с нами</p>
                                 </div>
                             </div>
                         </section>
@@ -240,25 +228,22 @@ const MainPage = (props) => {
                             <div
                                 style={{
                                     width: '100%',
-                                    display: "flex",
                                     flexDirection: "column",
-                                    justifyContent: 'center',
-                                    alignItems: "center",
                                     paddingRight: "100px",
                                     paddingLeft: "20%",
                                     marginBottom: "180px",
                                 }}
                             >
-                                {
-                                    loading ? <LoadingIdeas type={true}/> : ideas.length !== 0 ?
-                                        <InfiniteScroll
-                                            style={{ overflow: 'hidden' }}
+                                {loading ? <LoadingIdeas type={true}/> :
+                                    ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
+                                        : <InfiniteScroll
+                                            style={{overflow: 'hidden'}}
                                             next={() => {
-                                                loadData(statuses, types, true)
+                                                setPage(page + 1)
                                             }}
                                             hasMore={true}
                                             dataLength={ideas.length}
-                                            loader={<LoadingIdeas type={true}/>}
+                                            loader={loadingInfinite ? <LoadingIdeas type={true}/> : <></>}
                                         >
                                             {
                                                 ideas.map((idea, index) => (
@@ -272,7 +257,6 @@ const MainPage = (props) => {
                                                 ))
                                             }
                                         </InfiniteScroll>
-                                        : <EmptyIdeas text={"Пока нет записей..."}/>
                                 }
                             </div>
                             <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>

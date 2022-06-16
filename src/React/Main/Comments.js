@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useLayoutEffect, useState} from "react";
 import {Avatar, Button, Form, Input, Skeleton, Typography} from "antd";
 import axios from "axios";
 import ApiRoutes from "../Routes/ApiRoutes";
@@ -12,10 +12,25 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
 
     const [form] = Form.useForm();
     const [showComments, setShowComments] = useState(true);
-    const [commentsData, setCommentsData] = useState(comments.filter((item, index) => index < 3));
-    const [rawCommentsData, setRawCommentsData] = useState(comments);
+    const [commentsData, setCommentsData] = useState([]);
+    const [rawCommentsData, setRawCommentsData] = useState([]);
+    const [visible, setVisible] = useState(false);
 
-    const [visible, setVisible] = useState();
+    let months = ["янв", "фев", "мар", "апр", "мая", "июня",
+        "июля", "авг", "сент", "окт", "нояб", "дек"];
+
+    useLayoutEffect(() => {
+        comments.map(comment => {
+            let date = new Date(comment?.date)
+            let timeArr = comment?.date.split(" ")[1].split(":")
+            let dateString = `${Number(date.getUTCDate())} ${months[date.getUTCMonth()]} ${date.getUTCFullYear()}` +
+                ` в ${timeArr[0]}:${timeArr[1]}`
+            console.log("DATE:",dateString)
+            comment.date = dateString
+        })
+        setCommentsData(comments.filter((item, index) => index < 3))
+        setRawCommentsData(comments)
+    },[])
 
     const sendComment = (text) => {
         axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text})
@@ -33,8 +48,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                 } else {
                     global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
                 }
-            }
-        )
+            })
     };
 
     return (
@@ -64,22 +78,29 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                                     }/>
                                             <div className={"f-cards-wrap-text"}>
                                                 <span
-                                                    className={"f-cards-text"}>
+                                                    className={"f-cards-text"}
+                                                    style={{ justifyContent: "flex-start" }}
+                                                >
                                                     <span>
                                                         {comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")}
                                                         {
                                                             comment?.user.roles.includes("ROLE_ADMIN") &&
-                                                            <img style={{marginBottom: 3, marginLeft: 5}} src={"/i/official.svg"}
+                                                            <img style={{marginBottom: 3}} src={"/i/official.svg"}
                                                                  width={15} height={15}/>
                                                         }
                                                     </span>
                                                     {
-                                                        <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 20, fontWeight: 400 }}>Отредактирован</span>
+                                                        <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 10, fontWeight: 400 }}>ред.</span>
                                                     }
                                                 </span>
                                                 <span className={"f-cards-content-description"}>
                                                     {
                                                         comment?.content
+                                                    }
+                                                </span>
+                                                <span style={{ color: '#AAB2BD', fontSize: 15, fontWeight: 400 }}>
+                                                    {
+                                                        comment?.date
                                                     }
                                                 </span>
                                             </div>

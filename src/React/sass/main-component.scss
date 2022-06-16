@@ -281,16 +281,13 @@ button:focus {
     &-section {
         display: flex;
         align-items: center;
-        margin-bottom: 50px;
-
-        &-wrap-text {
-            width: 75%;
-        }
+        margin-bottom: 85px;
 
         &-wrap-p-text {
             display: flex;
             font-size: 96px;
             font-weight: 500;
+            line-height: 116px;
             color: #1D1D1F;
         }
 
