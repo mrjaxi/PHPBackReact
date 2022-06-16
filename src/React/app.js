@@ -5,7 +5,7 @@ import './sass/main-component.scss'
 import './sass/user.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Layout, Button, Tooltip, notification} from 'antd';
+import {Layout, notification} from 'antd';
 import {
     Router,
     Switch,
@@ -17,18 +17,14 @@ import routesGuest from "../../config/routes_react_guest";
 
 import {createBrowserHistory} from "history";
 import {
-    LogoutOutlined,
     CheckOutlined,
     WarningOutlined,
     CloseOutlined,
 } from "@ant-design/icons";
 
-import { UserHeader } from './User/Components';
-import ProfileEdit from "./User/ProfileEdit";
 import ApiRoutes from "./Routes/ApiRoutes";
 
 const axios = require('axios');
-const {Header, Content} = Layout;
 
 global.host = '';
 global.lang = '/ru';
@@ -156,11 +152,10 @@ class App extends React.Component {
         );
     }
 
-    _renderRoute(routes, breadcrumbs = false) {
+    _renderRoute(routes) {
         let _items = [];
 
         routes.map(({path, name, Component, viewBreadcrumbs}, key) => {
-
             if (Component.name === 'Auth' && false) {
                 // _items.push(
                 //     <Route exact={} path="/" key={key} >
@@ -204,43 +199,6 @@ class App extends React.Component {
     }
 
     render() {
-        if (this.state.layout && this.state.onlyProfile) {
-            return (
-                <Layout>
-                    <Router history={global._history}>
-                        <div className={'u'}>
-                            <Layout style={{height: '100vh'}}>
-                                <Header className={ 'u_header' }>
-                                    <UserHeader searchBarVisibility={false} />
-                                </Header>
-                                <Content className={'u_content' + (!this.state.hideUserPadding ? ' u_content_padding' : '')}>
-
-                                    <Tooltip placement={'top'} title={'Выйти'}>
-                                        <Button type="link" className={'u_logout'} danger
-                                                style={{display: (!this.state.hideUserPadding ? 'block' : 'none')}}
-                                                onClick={()=>{
-                                                    // axios.post(global.lang + '/logout', )
-                                                    //     .then(response =>{
-                                                    //         console.log(response);
-                                                    //         // if (response.state === "success") {
-                                                    //         global.profile = null;
-                                                    //         global.app.setState({layout: 'guest'});
-                                                    //         global._history.replace('/auth');
-                                                    //         // }
-                                                    //     })
-                                                }}
-                                        >
-                                            <LogoutOutlined rotate={180} style={{fontSize:'24px'}} />
-                                        </Button>
-                                    </Tooltip>
-                                    <ProfileEdit {...this.props} />
-                                </Content>
-                            </Layout>
-                        </div>
-                    </Router>
-                </Layout>
-            )
-        }
         return (
             <Router history={global._history}>
                 <Layout>

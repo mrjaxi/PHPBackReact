@@ -6,8 +6,6 @@ import {default as ShowIdea} from "../src/React/Main/Idea/ShowIdea";
 
 export default [
     { path: "/", name: "Главная страница", Component: MainPage },
-    { path: "/auth/", name: "Главная", Component: Login },
-    { path: "/profile", name: "Профиль", Component: Profile},
     { path: "/redirect", name: "Редирект", Component: Redirect },
     { path: "/idea/:id", name: "Идея", Component: ShowIdea}
 ];
