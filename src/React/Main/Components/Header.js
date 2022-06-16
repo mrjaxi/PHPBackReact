@@ -8,16 +8,12 @@ import Search from "./Search";
 import Login from "../Auth/Login";
 
 const Header = ({ search=false }) => {
-
     const [visibleSearch, setVisibleSearch] = useState(false)
     const [visibleLogin, setVisibleLogin] = useState();
 
     const logout = async () => {
-         axios.post("/ru/logout").then(response => {
-            if (response.data.state === "success") {
-                global._history.replace(global.lang + "/")
-            }
-        })
+         await axios.post("/ru/logout");
+         window.location.reload(true)
     };
 
     return (
@@ -83,13 +79,13 @@ const Header = ({ search=false }) => {
                                         </div>
                                     </NavLink>
                                     <a type={"button"} href={"/"}>Настройки профиля</a>
-                                    <a type={"button"} href={"/"} onClick={() => logout()}>Выход</a>
+                                    <a type={"button"} onClick={() => logout()}>Выход</a>
                                 </div>
                             </div>)
                             :
                             (<div className={'f-header-logo-wrapper'}>
                                 {/*<NavLink className={'f-sign-in'} to={global.lang + "/auth/"}>Войти</NavLink>*/}
-                                <a className={'f-sign-in'} onClick={() => setVisibleLogin(!visibleLogin)}>Войти</a>
+                                <a className={'f-sign-in'}  onClick={() => setVisibleLogin(!visibleLogin)}>Войти</a>
                             </div>)
                     }
                 </div>
