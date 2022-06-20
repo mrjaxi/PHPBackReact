@@ -2,6 +2,10 @@ authentication_token:
   path: /api/app_login
   methods: ['POST']
 
+api_addTipData:
+  path: /api/addTipData/
+  controller: App\Controller\IdeasController::importPhpBackData
+
 # Роуты для atmaguru
 api_close_issue:
   path: /api/ag/closeIssue
@@ -67,6 +71,9 @@ api_unvote:
 api_new_comment:
   path: /api/user/ideas/newComment/
   controller: App\Controller\IdeasController::newComment
+api_change_comment:
+  path: /api/user/ideas/changeComment/
+  controller: App\Controller\IdeasController::changeComment
 
 # Как для админа так и для пользователя
 api_delete_comment:

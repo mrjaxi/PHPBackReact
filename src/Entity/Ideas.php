@@ -2,17 +2,15 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\IdeasRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Cache\CacheException;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @ORM\Entity(repositoryClass=IdeasRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 #[ApiResource]
 class Ideas
@@ -39,6 +37,12 @@ class Ideas
      * @ORM\Column(type="datetime")
      */
     private $date;
+
+    /**
+     * @var DateTimeInterface $updated
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    protected $updatedAt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -119,6 +123,23 @@ class Ideas
         ];
     }
 
+    /**
+     * @ORM\PrePersist
+     */
+    public function createdTimestamps(): void
+    {
+        if ($this->getDate() === null) {
+            $this->setDate(new DateTime('now'));
+        }
+    }
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps(): void
+    {
+        $this->setUpdatedAt(new DateTime('now'));
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -148,14 +169,31 @@ class Ideas
         return $this;
     }
 
-    public function getDate(): ?string
+    public function getDateFormat(): ?string
     {
         return $this->date->format('Y-m-d H:i:s');
+    }
+
+    public function getDate(): DateTimeInterface
+    {
+        return $this->date;
     }
 
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getUpdatedAt() : ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

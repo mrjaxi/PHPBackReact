@@ -65,9 +65,14 @@ class Votes
         return $this->id;
     }
 
-    public function getDate(): ?string
+    public function getDateFormat(): ?string
     {
         return $this->date->format('Y-m-d H:i:s');
+    }
+
+    public function getDate(): DateTimeInterface
+    {
+        return $this->date;
     }
 
     public function setDate(DateTimeInterface $date): self

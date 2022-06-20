@@ -18,7 +18,8 @@ const ShowIdea = () => {
     const [loading, setLoading] = useState(true);
     const [statuses, setStatuses] = useState([]);
     const [page, setPage] = useState(0);
-    const [loadingInfinite, setLoadingInfinite] = useState(true);
+    const [loadingInfinity, setLoadingInfinity] = useState(true);
+    const [stopInfinity, setStopInfinity] = useState(false)
     const params = useParams();
 
     useLayoutEffect(() => {
@@ -40,6 +41,8 @@ const ShowIdea = () => {
                         response.data.idea.map(idea => {
                             data.push({
                                 idea_id: idea.id,
+                                category_id: idea?.category?.id,
+                                type_id: idea?.type?.id,
                                 title: idea.title,
                                 text: idea.content,
                                 showComments: idea.comments.length > 0,
@@ -56,11 +59,10 @@ const ShowIdea = () => {
                                 type: idea.type.name,
                                 currentUserIsVote: idea.currentUserIsVote,
                                 allowComments: idea.allowComments,
-                                date: idea?.date
+                                date: idea?.date,
                             })
                         });
                     }
-                    console.log("GET IDEA NICE")
                     break;
                 case "error":
                     global.openNotification("Ошибка", response.data?.message, "error")
@@ -70,44 +72,54 @@ const ShowIdea = () => {
                     break;
             }
             setIdeas(data);
+            if(data){
+                setPage(1)
+            }
             setLoading(false)
         })
     };
 
     const getIdeas = () => {
-        if(ideas[0] && page > 0) {
+        if(ideas[0] && page > 0 && !stopInfinity) {
             let data = [...ideasInfinite];
-            axios.get(ApiRoutes.API_GET_IDEAS + `?page=${page}&categories=[${ideas[0].idea_id}]`)
+            let idea_ids = [ideas[0].idea_id];
+            setLoadingInfinity(true);
+            axios.get(ApiRoutes.API_GET_IDEAS + `?page=${page}&categories=[${ideas[0].category_id}]&types=[${ideas[0].type_id}]`)
                 .then(response => {
                     switch (response.data?.state) {
                         case "success":
                             if (response.data?.ideas !== null) {
                                 response.data.ideas.map(idea => {
-                                    data.push({
-                                        idea_id: idea.id,
-                                        title: idea.title,
-                                        text: idea.content,
-                                        showComments: false,//idea.comments.length > 0,
-                                        showFullText: false,
-                                        roles: idea.user.roles,
-                                        role: idea.user.role_name,
-                                        status: idea.status,
-                                        photo: idea.photo,
-                                        comments: idea.comments,
-                                        like: Number(idea.likes),
-                                        dislike: 0,
-                                        username: idea.user?.first_name,
-                                        userImage: idea.user.image,
-                                        type: idea.type.name,
-                                        typeId: idea.type.id,
-                                        currentUserIsVote: idea.currentUserIsVote,
-                                        allowComments: idea.allowComments,
-                                        date: idea?.date
-                                    })
+                                    if (!idea_ids.includes(idea.id)) {
+                                        idea_ids.push(idea.id)
+                                        data.push({
+                                            idea_id: idea.id,
+                                            title: idea.title,
+                                            text: idea.content,
+                                            showComments: false,//idea.comments.length > 0,
+                                            showFullText: false,
+                                            roles: idea.user.roles,
+                                            role: idea.user.role_name,
+                                            status: idea.status,
+                                            photo: idea.photo,
+                                            comments: idea.comments,
+                                            like: Number(idea.likes),
+                                            dislike: 0,
+                                            username: idea.user?.first_name,
+                                            userImage: idea.user.image,
+                                            type: idea.type.name,
+                                            typeId: idea.type.id,
+                                            currentUserIsVote: idea.currentUserIsVote,
+                                            allowComments: idea.allowComments,
+                                            date: idea?.date
+                                        })
+                                    }
                                 });
+                            } else {
+                                setStopInfinity(true);
                             }
                             setIdeasInfinite(data);
-                            setLoadingInfinite(false);
+                            setLoadingInfinity(false);
                             break;
                         case "error":
                             global.openNotification("Ошибка", response.data?.message, "error")
@@ -157,31 +169,39 @@ const ShowIdea = () => {
                                             <FlatList
                                                 list={ideas}
                                                 renderItem={(idea, index) => (
-                                                        <IdeaItem item={idea} index={index} setItem={setIdea}
-                                                                  statuses={statuses}/>
-                                                    )}
-                                                renderWhenEmpty={() =>
+                                                    <IdeaItem item={idea} index={index} setItem={setIdea}
+                                                              statuses={statuses}/>
+                                                )}
+                                                renderWhenEmpty={() =>(
                                                     <EmptyIdeas text={"Такой записи не существует..."}/>
-                                                }
+                                                )}
                                                 // sortBy={["firstName", {key: "lastName", descending: true}]}
                                                 // groupBy={person => person.info.age > 18 ? 'Over 18' : 'Under 18'}
                                             />
-                                            <InfiniteScroll
-                                                style={{overflow: 'hidden'}}
-                                                next={() => {
-                                                    setPage(page + 1)
-                                                }}
-                                                hasMore={true}
-                                                dataLength={ideasInfinite.length}
-                                                loader={loadingInfinite ? <LoadingIdeas type={true}/> : <></>}
-                                            >
-                                                {
-                                                    ideasInfinite.map((idea, index) => (
-                                                        <IdeaItem item={idea} index={index} setItem={setIdea}
-                                                                  statuses={statuses}/>
-                                                    ))
-                                                }
-                                            </InfiniteScroll>
+                                            { ideasInfinite.length > 0 ?
+                                                <>
+                                                    <text className={"f-cards-hashtag"} style={{
+                                                        marginBottom: "2em",
+                                                        color: "black",
+                                                        fontSize: 20
+                                                    }}>Также может быть интересно</text>
+                                                    <InfiniteScroll
+                                                        style={{overflow: 'hidden',}}
+                                                        next={() => {
+                                                            setPage(page + 1)
+                                                        }}
+                                                        hasMore={true}
+                                                        dataLength={ideasInfinite.length}
+                                                        loader={(loadingInfinity) ? <LoadingIdeas type={true}/> : <></>}
+                                                    >{
+                                                        ideasInfinite.map((idea, index) => (
+                                                            <IdeaItem item={idea} index={index} setItem={setIdea}
+                                                                      statuses={statuses}/>
+                                                        ))
+                                                    }</InfiniteScroll>
+                                                </>
+                                                : <></>
+                                            }
                                         </>)
                                     }
                                 </div>

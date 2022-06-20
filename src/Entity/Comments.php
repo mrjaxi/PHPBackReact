@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommentsRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 #[ApiResource]
 class Comments
@@ -26,10 +27,16 @@ class Comments
     private $content;
 
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface $date
      * @ORM\Column(type="datetime")
      */
     private $date;
+
+    /**
+     * @var DateTimeInterface $updated
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    protected $updatedAt;
 
     /**
      * @var User|null
@@ -59,6 +66,23 @@ class Comments
         return $info;
     }
 
+    /**
+     * @ORM\PrePersist
+     */
+    public function createdTimestamps(): void
+    {
+        if ($this->getDate() === null) {
+            $this->setDate(new DateTime('now'));
+        }
+    }
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps(): void
+    {
+        $this->setUpdatedAt(new DateTime('now'));
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,14 +100,31 @@ class Comments
         return $this;
     }
 
-    public function getDate(): ?string
+    public function getDateFormat(): ?string
     {
         return $this->date->format('Y-m-d H:i:s');
+    }
+
+    public function getDate(): DateTimeInterface
+    {
+        return $this->date;
     }
 
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getUpdatedAt() : DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

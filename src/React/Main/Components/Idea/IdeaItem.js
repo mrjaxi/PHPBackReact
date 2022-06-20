@@ -173,7 +173,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                             </div>
                         </div>
                     }
-                    <div className={"f-cards-inner"}>
+                    <div className={"f-cards-inner"} style={{ marginTop: idea?.photo !== null ? -40 : 0 }}>
                         <div className={"f-cards-avatar"}>
                             <div className={"f-cards-row-wrap"}>
                                 <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
