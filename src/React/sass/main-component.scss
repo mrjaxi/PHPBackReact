@@ -501,6 +501,7 @@ button:focus {
         &-row-wrap {
             display: flex;
             flex-direction: row;
+            width: 90%;
         }
 
         &-avatar {
@@ -563,6 +564,7 @@ button:focus {
             display: flex;
             flex-direction: column;
             margin-left: 10px;
+            width: 90%;
         }
 
         &-text {

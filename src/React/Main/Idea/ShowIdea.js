@@ -180,11 +180,11 @@ const ShowIdea = () => {
                                             />
                                             { ideasInfinite.length > 0 ?
                                                 <>
-                                                    <text className={"f-cards-hashtag"} style={{
+                                                    <span className={"f-cards-hashtag"} style={{
                                                         marginBottom: "2em",
                                                         color: "black",
-                                                        fontSize: 20
-                                                    }}>Также может быть интересно</text>
+                                                        fontSize: 21
+                                                    }}>Также может быть интересно:</span>
                                                     <InfiniteScroll
                                                         style={{overflow: 'hidden',}}
                                                         next={() => {

@@ -1665,6 +1665,7 @@ button:focus {
 .f-cards-row-wrap {
   display: flex;
   flex-direction: row;
+  width: 90%;
 }
 .f-cards-avatar {
   display: flex;
@@ -1718,6 +1719,7 @@ button:focus {
   display: flex;
   flex-direction: column;
   margin-left: 10px;
+  width: 90%;
 }
 .f-cards-text {
   font-size: 17px;
