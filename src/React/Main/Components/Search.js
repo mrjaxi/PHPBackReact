@@ -63,7 +63,7 @@ const Search = ({ visible, setVisible }) => {
         <Modal
             title={
                 <form>
-                    <input value={searchText} style={{width: "97%",}} onChange={event => {
+                    <input autoFocus={true} value={searchText} style={{width: "97%",}} onChange={event => {
                         searchIdeas(event.target.value.trim()), setSearchText(event.target.value.trim())
                     }} className={"f-input-search"} placeholder={"Поиск..."}/>
                     {searchText &&
