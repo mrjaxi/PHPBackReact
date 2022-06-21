@@ -1535,6 +1535,21 @@ button:focus {
   font-size: 21px;
   margin-right: 50px;
 }
+.f-image-count {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: #F5F7FA;
+  z-index: 10;
+  margin-left: 20px;
+  margin-top: 20px;
+  -webkit-box-shadow: 4px 4px 31px 0 rgba(34, 60, 80, 0.1);
+  -moz-box-shadow: 4px 4px 31px 0 rgba(34, 60, 80, 0.1);
+  box-shadow: 4px 4px 31px 0 rgba(34, 60, 80, 0.1);
+}
 .f-nav {
   display: flex;
   margin-bottom: 100px;

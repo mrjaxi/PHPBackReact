@@ -118,14 +118,6 @@ const Login = ({visible, setVisible}) => {
                         {/*    <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>*/}
                         {/*</Form.Item>*/}
                         <Form.Item>
-                            {/*<Button disabled={timeExpiry} className={"f-login-btn"} type="primary" htmlType="submit"*/}
-                            {/*        shape="round">*/}
-                            {/*    Отправить ссылку для входа*/}
-                            {/*    {timeExpiry && <>*/}
-                            {/*        <span>&nbsp;повторно&nbsp;</span>*/}
-                            {/*        <AccessTimer setTimeExpiry={setTimeExpiry} expiryTimestamp={timeExpiry}/>*/}
-                            {/*    </>}*/}
-                            {/*</Button>*/}
                             <Button className={"f-login-btn"} type="primary" htmlType="submit"
                                     shape="round">
                                 Отправить
@@ -134,50 +126,6 @@ const Login = ({visible, setVisible}) => {
                     </Form>
                 </div>
             </Modal>
-            {/*<div className={"f-login"}>*/}
-            {/*    <a onClick={() => global._history.replace("/")}*/}
-            {/*       style={{position: 'absolute', top: 30, right: 30, height: 25, width: 25}}>*/}
-            {/*        <img src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>*/}
-            {/*    </a>*/}
-            {/*    <Form*/}
-            {/*        onFinish={(values) => loginUser(values)}*/}
-            {/*    >*/}
-            {/*        <Title style={{marginBottom: 48}}>Вход</Title>*/}
-            {/*        <Form.Item*/}
-            {/*            name={"email"}*/}
-            {/*            rules={[*/}
-            {/*                {*/}
-            {/*                    required: true,*/}
-            {/*                    message: 'Пожалуйста, укажите адрес электронной почты',*/}
-            {/*                },*/}
-            {/*            ]}*/}
-            {/*        >*/}
-            {/*            <Input size={"large"} style={{padding: '10px 15px 10px 15px', width: '440px'}}*/}
-            {/*                   placeholder={"Электронная почта"}/>*/}
-            {/*        </Form.Item>*/}
-            {/*        <Form.Item*/}
-            {/*            name={"password"}*/}
-            {/*            rules={[*/}
-            {/*                {*/}
-            {/*                    required: true,*/}
-            {/*                    message: 'Пожалуйста, введите пароль',*/}
-            {/*                },*/}
-            {/*            ]}*/}
-            {/*        >*/}
-            {/*            <Input.Password size={"large"} style={{ padding: '10px 15px 10px 15px', width: '440px' }} placeholder={"Пароль"}/>*/}
-            {/*        </Form.Item>*/}
-            {/*        <Form.Item>*/}
-            {/*            <Button disabled={timeExpiry} className={"f-login-btn"} type="primary" htmlType="submit"*/}
-            {/*                    shape="round">*/}
-            {/*                Отправить ссылку для входа*/}
-            {/*                {timeExpiry && <>*/}
-            {/*                    <span>&nbsp;повторно&nbsp;</span>*/}
-            {/*                    <AccessTimer setTimeExpiry={setTimeExpiry} expiryTimestamp={timeExpiry}/>*/}
-            {/*                </>}*/}
-            {/*            </Button>*/}
-            {/*        </Form.Item>*/}
-            {/*    </Form>*/}
-            {/*</div>*/}
         </>
     )
 };
