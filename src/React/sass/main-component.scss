@@ -121,6 +121,11 @@ button:focus {
         color: #191919;
     }
 
+    &-text-tags-wrap {
+        display: flex;
+        flex-direction: row;
+    }
+
     &-search {
         position: absolute;
         left: 50px;
@@ -501,7 +506,7 @@ button:focus {
         &-row-wrap {
             display: flex;
             flex-direction: row;
-            width: 90%;
+            width: 60%;
         }
 
         &-avatar {
@@ -565,6 +570,12 @@ button:focus {
             flex-direction: column;
             margin-left: 10px;
             width: 90%;
+
+            &-style {
+                display: flex;
+                flex-direction: column;
+                margin-left: 10px;
+            }
         }
 
         &-text {
@@ -720,7 +731,7 @@ button:focus {
     &-login {
         box-sizing: border-box;
         margin: 0;
-        height: 90vh;
+        min-height: 90vh;
         width: 100%;
         background-color: white;
         display: flex;

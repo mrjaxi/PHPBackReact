@@ -4,6 +4,8 @@ import ApiRoutes from "../../Routes/ApiRoutes";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import FlatList from "flatlist-react";
 import {NavLink} from "react-router-dom";
+import {Avatar} from "antd";
+import {UserOutlined} from "@ant-design/icons";
 
 const UserComments = () => {
 
@@ -64,15 +66,21 @@ const UserComments = () => {
                                                     <div className={"f-cards-inner"}>
                                                         <div className={"f-cards-avatar"}>
                                                             <div className={"f-cards-row-wrap"}>
-                                                                <img className={"f-cards-image"} src={"/i/avatar.png"}/>
-                                                                <div className={"f-cards-wrap-text"}>
-                                                                <span className={"f-cards-text"}>{ comment?.username }
-                                                                    {
-                                                                        comment?.roles.includes("ROLE_ADMIN") &&
-                                                                        <img style={{ marginBottom: 3, marginLeft: 5 }} src={"/i/official.svg"} width={15} height={15}/>
-                                                                    }
-                                                                </span>
-                                                                    <span className={"f-cards-text-bottom"}>{ comment?.role }</span>
+                                                                <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                                                        src={comment.photo
+                                                                            ? <img src={comment.photo}/>
+                                                                            : <UserOutlined/>
+                                                                        }/>
+                                                                <div className={"f-cards-wrap-text-style"}>
+                                                                    <span className={"f-cards-text"}>{comment.username}
+                                                                        {
+                                                                            comment.roles.includes("ROLE_ADMIN") &&
+                                                                            <img style={{marginBottom: 3, marginLeft: 5}}
+                                                                                 src={"/i/official.svg"} width={15}
+                                                                                 height={15}/>
+                                                                        }
+                                                                    </span>
+                                                                    <span className={"f-cards-text-bottom"}>{comment.role}</span>
                                                                 </div>
                                                             </div>
                                                             <div style={{

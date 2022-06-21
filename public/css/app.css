@@ -1343,6 +1343,10 @@ button:focus {
   font-size: 21px;
   color: #191919;
 }
+.f-text-tags-wrap {
+  display: flex;
+  flex-direction: row;
+}
 .f-search {
   position: absolute;
   left: 50px;
@@ -1665,7 +1669,7 @@ button:focus {
 .f-cards-row-wrap {
   display: flex;
   flex-direction: row;
-  width: 90%;
+  width: 60%;
 }
 .f-cards-avatar {
   display: flex;
@@ -1720,6 +1724,11 @@ button:focus {
   flex-direction: column;
   margin-left: 10px;
   width: 90%;
+}
+.f-cards-wrap-text-style {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
 }
 .f-cards-text {
   font-size: 17px;
@@ -1848,7 +1857,7 @@ button:focus {
 .f-login {
   box-sizing: border-box;
   margin: 0;
-  height: 90vh;
+  min-height: 90vh;
   width: 100%;
   background-color: white;
   display: flex;

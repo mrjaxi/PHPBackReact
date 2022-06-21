@@ -8,21 +8,21 @@ import {UserOutlined} from "@ant-design/icons";
 
 const {Option} = Select;
 
-const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) => {
+const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, selectCategory }) => {
 
     const [idea, setIdea] = useState(item);
-    const [date, setDate] = useState("")
+    const [date, setDate] = useState("");
     const [visible, setVisible] = useState(false);
 
-    let editable = false
+    let editable = false;
 
     useLayoutEffect(() => {
-        let newIdea = {...item}
-        setDate(global.getDateString(new Date(item?.date), false,false))
+        let newIdea = {...item};
+        setDate(global.getDateString(new Date(item?.date), false,false));
         newIdea.comments.map(comment => {
             comment.dateString = global.getDateString(new Date(comment?.date))
         })
-    }, [])
+    }, []);
 
     useEffect(() => {
         if(editable){
@@ -64,7 +64,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                                 global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
                                 break;
                         }
-                    })
+                    });
                 break;
             case false:
                 let newIdea1 = {...idea};
@@ -87,7 +87,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                                 global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
                                 break;
                         }
-                    })
+                    });
                 break;
             default:
                 global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
@@ -142,11 +142,17 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                 <text className={"f-cards-hashtag"} style={{
                     marginBottom: "1em"
                 }}>{date}</text>
-                <p className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
-                   onClick={() => {
-                       // console.log(`selectType(${idea.typeId})`)
-                       selectType(idea.typeId)
-                   }}>#{idea?.type}</p>
+                <div className={"f-text-tags-wrap"}>
+                    <p style={{ marginRight: 30 }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                       onClick={() => {
+                           selectCategory(idea.categoryId)
+                       }}>#{idea?.category}</p>
+                    <p style={{ marginLeft: 0 }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                       onClick={() => {
+                           // console.log(`selectType(${idea.typeId})`)
+                           selectType(idea.typeId)
+                       }}>#{idea?.type}</p>
+                </div>
                 <div className={"f-cards-card-wrap"}>
                     {
                         idea?.photo !== null &&
@@ -181,7 +187,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false }) 
                                             ? <img src={idea.userImage}/>
                                             : <UserOutlined/>
                                         }/>
-                                <div className={"f-cards-wrap-text"}>
+                                <div className={"f-cards-wrap-text-style"}>
                                         <span className={"f-cards-text"}>{idea.username}
                                             {
                                                 idea.roles.includes("ROLE_ADMIN") &&

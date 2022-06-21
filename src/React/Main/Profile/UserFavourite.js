@@ -41,6 +41,8 @@ const UserFavourite = () => {
                         comments: idea.comments,
                         like: Number(idea.likes),
                         dislike: 2,
+                        categoryId: idea.category.id,
+                        category: idea.category.name,
                         username: idea.user?.first_name,
                         userImage: idea.user.image,
                         type: idea.type.name,

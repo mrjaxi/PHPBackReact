@@ -174,7 +174,7 @@ class Ideas
         return $this->date->format('Y-m-d H:i:s');
     }
 
-    public function getDate(): DateTimeInterface
+    public function getDate(): ?DateTimeInterface
     {
         return $this->date;
     }

@@ -52,6 +52,8 @@ const ShowIdea = () => {
                                 status: idea.status,
                                 photo: idea.photo,
                                 comments: idea.comments,
+                                categoryId: idea.category.id,
+                                category: idea.category.name,
                                 like: Number(idea.likes),
                                 dislike: 2,
                                 username: idea.user?.first_name,
@@ -105,6 +107,8 @@ const ShowIdea = () => {
                                             comments: idea.comments,
                                             like: Number(idea.likes),
                                             dislike: 0,
+                                            categoryId: idea.category.id,
+                                            category: idea.category.name,
                                             username: idea.user?.first_name,
                                             userImage: idea.user.image,
                                             type: idea.type.name,
@@ -130,13 +134,13 @@ const ShowIdea = () => {
                     }
                 })
         }
-    }
+    };
 
     const setIdea = (idea, index) => {
-        let newIdeas = [...ideas]
-        newIdeas[index] = idea
+        let newIdeas = [...ideas];
+        newIdeas[index] = idea;
         setIdeas(newIdeas)
-    }
+    };
 
     const updateStatuses = () => {
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {

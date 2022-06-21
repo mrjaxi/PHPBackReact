@@ -140,6 +140,8 @@ const MainPage = (props) => {
                                     dislike: 0,
                                     username: idea.user?.first_name,
                                     userImage: idea.user.image,
+                                    categoryId: idea.category.id,
+                                    category: idea.category.name,
                                     type: idea.type.name,
                                     typeId: idea.type.id,
                                     currentUserIsVote: idea.currentUserIsVote,
@@ -253,6 +255,7 @@ const MainPage = (props) => {
                                                         setItem={setIdea}
                                                         statuses={statuses}
                                                         selectType={selectType}
+                                                        selectCategory={selectCategory}
                                                     />
                                                 ))
                                             }
