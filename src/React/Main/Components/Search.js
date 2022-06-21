@@ -29,6 +29,8 @@ const Search = ({ visible, setVisible }) => {
                         role: idea.user.role_name,
                         userImage: idea.user.image,
                         status: idea.status,
+                        categoryId: idea.category.id,
+                        category: idea.category.name,
                         like: Number(idea.likes),
                         username: idea.user?.first_name,
                         type: idea.type.name,
@@ -121,7 +123,10 @@ const Search = ({ visible, setVisible }) => {
                                 searchItems.map(item => (
                                     <div className={"f-cards"}>
                                         <div>
-                                            <p style={{marginLeft: 10}} className={"f-cards-hashtag"}>#{item.type}</p>
+                                            <div className={"f-text-tags-wrap"}>
+                                                <p style={{ marginRight: 30, marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.category}</p>
+                                                <p style={{ marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.type}</p>
+                                            </div>
                                             <div className={"f-cards-card-wrap"}>
                                                 <div className={"f-cards-inner"}>
                                                     <div className={"f-cards-avatar"}>
