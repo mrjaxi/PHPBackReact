@@ -44,7 +44,7 @@ const Login = ({visible, setVisible}) => {
                             setTimeExpiry(time.setSeconds(seconds));
                             break;
                         // global.user = response.data.profile;
-                        // global._history.replace("/")
+                        // global._history.push("/")
                         case "timer":
                             global.openNotification("Предупреждение", response.data?.message, "warn")
                             seconds = time.getSeconds() + response.data?.seconds

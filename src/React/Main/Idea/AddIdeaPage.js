@@ -71,7 +71,7 @@ const AddIdeaPage = () => {
             switch (response.data.state) {
                 case "trouble":
                 case "success":
-                    global._history.replace(global.lang + '/idea/'+response.data.idea_id)
+                    global._history.push(global.lang + '/idea/'+response.data.idea_id)
                     break;
                 case "error":
                     global.openNotification("Ошибка", response.data?.message, "error")
@@ -155,7 +155,7 @@ const AddIdeaPage = () => {
                                     loadingMessage={() => null}
                                     noOptionsMessage={() => null}
                                     getOptionLabel={e =>
-                                        <div onClick={() => global._history.replace(global.lang + "/idea/" + e.id)}>{e.title}</div>
+                                        <div onClick={() => global._history.push(global.lang + "/idea/" + e.id)}>{e.title}</div>
                                     }
                                     getOptionValue={e => e.id}
                                     loadOptions={loadOptions}
