@@ -211,11 +211,8 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                                         onSelect={(id, data) => {
                                             changeStatus(idea.idea_id, id, data)
                                         }}
+                                        style={{ height: '100%' }}
                                         defaultValue={idea.status.id}
-                                        style={{
-                                            justifyContent: 'center',
-                                            alignItems: "center",
-                                        }}
                                     >
                                         {
                                             statuses.map(status => (
@@ -234,7 +231,6 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                                     </div>
                             }
                         </div>
-
                         <div className={"f-cards-div-wrap-text"}>
                             <NavLink to={global.lang + "/idea/" + idea.idea_id}>
                                 <span className={"f-cards-content-text"}>
@@ -275,17 +271,21 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                                         }}
                                            className={"f-cards-under-block-like"}
                                            onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
-                                            <i className="em em---1"
-                                               aria-label="THUMBS UP SIGN"></i>
-                                            <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                <i className="em em---1"
+                                                   aria-label="THUMBS UP SIGN"></i>
+                                                <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                            </div>
                                         </button>
                                     </Tooltip> :
                                     <button type={"button"} style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "", border: 'none', cursor: 'pointer'}}
                                        className={"f-cards-under-block-like"}
                                        onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
-                                        <i className="em em---1"
-                                           aria-label="THUMBS UP SIGN"></i>
-                                        <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            <i className="em em---1"
+                                               aria-label="THUMBS UP SIGN"></i>
+                                            <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                        </div>
                                     </button>
                                 }
                             </div>

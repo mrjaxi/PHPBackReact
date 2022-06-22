@@ -74,9 +74,9 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                                                  width={15} height={15}/>
                                                         }
                                                     </span>
-                                                    {
-                                                        <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 10, fontWeight: 400 }}>ред.</span>
-                                                    }
+                                                    {/*{*/}
+                                                    {/*    <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 10, fontWeight: 400 }}>ред.</span>*/}
+                                                    {/*}*/}
                                                 </span>
                                                 <span className={"f-cards-content-description"}>
                                                     {

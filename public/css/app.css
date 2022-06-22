@@ -1552,7 +1552,7 @@ button:focus {
 }
 .f-nav {
   display: flex;
-  margin-bottom: 100px;
+  margin-bottom: 10px;
   position: sticky;
   top: 25px;
   z-index: 3;
