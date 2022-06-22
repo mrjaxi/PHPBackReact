@@ -6,6 +6,7 @@ import FlatList from "flatlist-react";
 import {NavLink} from "react-router-dom";
 import {Avatar} from "antd";
 import {UserOutlined} from "@ant-design/icons";
+import Linkify from "react-linkify";
 
 const UserComments = () => {
 
@@ -97,7 +98,9 @@ const UserComments = () => {
                                                         </div>
                                                         <div className={"f-cards-div-wrap-text"}>
                                                         <span className={"f-cards-content-text"}>
-                                                            { comment?.content }
+                                                            <Linkify>
+                                                                { comment?.content }
+                                                            </Linkify>
                                                         </span>
                                                         </div>
                                                     </div>
