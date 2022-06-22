@@ -19,7 +19,9 @@ const ShowIdea = () => {
     const [statuses, setStatuses] = useState([]);
     const [page, setPage] = useState(0);
     const [loadingInfinity, setLoadingInfinity] = useState(true);
-    const [stopInfinity, setStopInfinity] = useState(false)
+    const [stopInfinity, setStopInfinity] = useState(false);
+    const [wait, setWait] = useState(true);
+
     const params = useParams();
 
     useLayoutEffect(() => {
@@ -33,6 +35,7 @@ const ShowIdea = () => {
 
     const getIdea = () => {
         setLoading(true)
+        setWait(true)
         axios.get(ApiRoutes.API_GET_ONE_IDEA.format(params.id)).then(response => {
             let data = [];
             switch(response.data?.state){
@@ -78,6 +81,7 @@ const ShowIdea = () => {
                 setPage(1)
             }
             setLoading(false)
+            setWait(false)
         })
     };
 
@@ -148,42 +152,49 @@ const ShowIdea = () => {
         })
     };
 
-    return (
-        <>
-            <Col className={"f-main"} style={{ minHeight: '100vh' }}>
-                <div>
-                    <Header />
-                    <div className={"max_width"} style={{paddingTop: "15vh"}}>
-                        <div style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: 'center',
-                            alignItems: "center",
-                        }}>
-                            <div className={"max_width"}>
-                                <div style={{
-                                    display: "flex",
-                                    justifyContent: 'center',
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    width: '50vw'
-                                }}>
-                                    { loading ? <LoadingIdeas/> : (
-                                        <>
-                                            <FlatList
-                                                list={ideas}
-                                                renderItem={(idea, index) => (
-                                                    <IdeaItem item={idea} index={index} setItem={setIdea}
-                                                              statuses={statuses}/>
-                                                )}
-                                                renderWhenEmpty={() =>(
-                                                    <EmptyIdeas text={"Такой записи не существует..."}/>
-                                                )}
-                                                // sortBy={["firstName", {key: "lastName", descending: true}]}
-                                                // groupBy={person => person.info.age > 18 ? 'Over 18' : 'Under 18'}
-                                            />
-                                            { ideasInfinite.length > 0 ?
-                                                <>
+    if (wait) {
+        return (
+            <div className="loader-wrapper">
+                <div className="loader" />
+            </div>
+        );
+    } else {
+        return (
+            <>
+                <Col className={"f-main"} style={{ minHeight: '100vh' }}>
+                    <div>
+                        <Header />
+                        <div className={"max_width"} style={{paddingTop: "15vh"}}>
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: 'center',
+                                alignItems: "center",
+                            }}>
+                                <div className={"max_width"}>
+                                    <div style={{
+                                        display: "flex",
+                                        justifyContent: 'center',
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        width: '50vw'
+                                    }}>
+                                        { loading ? <LoadingIdeas/> : (
+                                            <>
+                                                <FlatList
+                                                    list={ideas}
+                                                    renderItem={(idea, index) => (
+                                                        <IdeaItem item={idea} index={index} setItem={setIdea}
+                                                                  statuses={statuses}/>
+                                                    )}
+                                                    renderWhenEmpty={() =>(
+                                                        <EmptyIdeas text={"Такой записи не существует..."}/>
+                                                    )}
+                                                    // sortBy={["firstName", {key: "lastName", descending: true}]}
+                                                    // groupBy={person => person.info.age > 18 ? 'Over 18' : 'Under 18'}
+                                                />
+                                                { ideasInfinite.length > 0 ?
+                                                    <>
                                                     <span className={"f-cards-hashtag"} style={{
                                                         marginTop: 50,
                                                         marginBottom: 33,
@@ -191,33 +202,34 @@ const ShowIdea = () => {
                                                         color: "#1D1D1D",
                                                         fontSize: 24
                                                     }}>Посмотрите похожие публикации</span>
-                                                    <InfiniteScroll
-                                                        style={{overflow: 'hidden',}}
-                                                        next={() => {
-                                                            setPage(page + 1)
-                                                        }}
-                                                        hasMore={true}
-                                                        dataLength={ideasInfinite.length}
-                                                        loader={(loadingInfinity) ? <LoadingIdeas type={true}/> : <></>}
-                                                    >{
-                                                        ideasInfinite.map((idea, index) => (
-                                                            <IdeaItem item={idea} index={index} setItem={setIdea}
-                                                                      statuses={statuses}/>
-                                                        ))
-                                                    }</InfiniteScroll>
-                                                </>
-                                                : <></>
-                                            }
-                                        </>)
-                                    }
+                                                        <InfiniteScroll
+                                                            style={{overflow: 'hidden',}}
+                                                            next={() => {
+                                                                setPage(page + 1)
+                                                            }}
+                                                            hasMore={true}
+                                                            dataLength={ideasInfinite.length}
+                                                            loader={(loadingInfinity) ? <LoadingIdeas type={true}/> : <></>}
+                                                        >{
+                                                            ideasInfinite.map((idea, index) => (
+                                                                <IdeaItem item={idea} index={index} setItem={setIdea}
+                                                                          statuses={statuses}/>
+                                                            ))
+                                                        }</InfiniteScroll>
+                                                    </>
+                                                    : <></>
+                                                }
+                                            </>)
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </Col>
-        </>
-    )
+                </Col>
+            </>
+        )
+    }
 };
 
 export default ShowIdea;
