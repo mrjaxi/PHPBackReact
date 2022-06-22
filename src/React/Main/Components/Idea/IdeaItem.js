@@ -4,9 +4,11 @@ import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../Comments";
 import {Avatar, Image, Select, Tooltip} from "antd";
 import {NavLink} from "react-router-dom";
-import {UserOutlined} from "@ant-design/icons";
+import Icon, {UserOutlined} from "@ant-design/icons";
 
 const {Option} = Select;
+
+import Like from '/public/i/like.svg'
 
 const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, selectCategory }) => {
 
@@ -272,8 +274,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                                            className={"f-cards-under-block-like"}
                                            onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
                                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                <i className="em em---1"
-                                                   aria-label="THUMBS UP SIGN"></i>
+                                                <Icon component={Like} style={{ fontSize: 23 }} />
                                                 <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
                                             </div>
                                         </button>
@@ -282,8 +283,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                                        className={"f-cards-under-block-like"}
                                        onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <i className="em em---1"
-                                               aria-label="THUMBS UP SIGN"></i>
+                                            <Icon component={Like} style={{ fontSize: 23 }} />
                                             <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
                                         </div>
                                     </button>

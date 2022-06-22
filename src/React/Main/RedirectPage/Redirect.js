@@ -25,7 +25,9 @@ const Redirect = (props) => {
     }, []);
 
     return (
-        <></>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: '100vh', width: '100%' }}>
+            <span style={{ fontSize: 24 }}>Авторизуем...</span>
+        </div>
     )
 };
 

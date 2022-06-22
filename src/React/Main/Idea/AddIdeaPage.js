@@ -16,11 +16,11 @@ const AddIdeaPage = () => {
     const [value, setValue] = useState([]);
 
     const [fileList, setFileList] = useState([]);
-
     const [selectedValue, setSelectedValue] = useState(null);
 
+    const [loading, setLoading] = useState(false);
+
     const handleInputChange = (value, { action }) => {
-        console.log(action, value)
         if (action === "input-change"){
             setSelectedValue(value)
         }
@@ -60,6 +60,7 @@ const AddIdeaPage = () => {
     };
 
     const onSend = (data) => {
+        setLoading(true)
         axios.post(ApiRoutes.API_NEW_IDEA, {
             title: data.title,
             description: data.description,
@@ -67,7 +68,6 @@ const AddIdeaPage = () => {
             type: data.type,
             photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
         }).then(response => {
-            console.log(response)
             switch (response.data.state) {
                 case "trouble":
                 case "success":
@@ -80,6 +80,7 @@ const AddIdeaPage = () => {
                     global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
                     break;
             }
+            setLoading(false)
         })
     };
 
@@ -227,10 +228,15 @@ const AddIdeaPage = () => {
                         </Upload>
                     </Form.Item>
                     <Form.Item>
-                        <Button className={"f-login-btn"} type="primary" htmlType="submit"
+                        <Button
+                            className={"f-write-comments-button"}
+                            style={{ paddingRight: 20, paddingLeft: 20, boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)' }}
+                            loading={loading} type="primary" htmlType="submit"
                                 shape="round">Отправить</Button>
-                        <Button style={{marginLeft: 10, boxShadow: 'none'}} className={"f-login-btn"}
-                                shape="round"><NavLink to={""}>Закрыть</NavLink></Button>
+                        <Button
+                            className={"f-write-comments-button"}
+                            style={{marginLeft: 10, paddingRight: 20, paddingLeft: 20, boxShadow: 'none', color: '#CCD1D9'}}
+                            shape="round"><NavLink to={""}>Закрыть</NavLink></Button>
                     </Form.Item>
                 </Form>
             </div>

@@ -1606,7 +1606,7 @@ button:focus {
   outline: none;
   -moz-appearance: none;
   border-radius: 64px;
-  font-size: 21px;
+  font-size: 20px;
   height: 60px;
 }
 .f-cards {
@@ -1719,7 +1719,7 @@ button:focus {
 }
 .f-cards-type-viewed {
   background-color: #E6E9ED;
-  padding: 7px;
+  padding: 7px 10px;
   color: #AAB2BD;
   font-weight: 500;
   text-transform: uppercase;

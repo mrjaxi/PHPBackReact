@@ -16,7 +16,10 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
     const [rawCommentsData, setRawCommentsData] = useState(comments);
     const [visible, setVisible] = useState(false);
 
+    const [loading, setLoading] = useState(false);
+
     const sendComment = (text) => {
+        setLoading(true)
         axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text})
             .then( response => {
                 if (response.data.state === "success") {
@@ -32,6 +35,8 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                 } else {
                     global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
                 }
+
+                setLoading(false);
             }
         )
     };
@@ -140,6 +145,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                         type="primary"
                                         htmlType="submit"
                                         shape="round"
+                                        loading={loading}
                                     >
                                         Отправить
                                     </Button>
@@ -148,6 +154,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                         className={"f-write-comments-button"}
                                         type="primary"
                                         shape="round"
+                                        style={{ paddingRight: 40, paddingLeft: 40 }}
                                     >
                                         Войти
                                     </Button>
