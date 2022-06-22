@@ -770,7 +770,7 @@ class IdeasController extends AbstractController
         }
         $commentsArr = array();
         foreach ($comments as $comment) {
-            $dateTimeArr = explode(" ", $idea['date']);
+            $dateTimeArr = explode(" ", $comment['date']);
             $dateArr = explode("/", $dateTimeArr[0]);
             $Comment = new Comments();
             $Comment->setContent($comment["content"])
