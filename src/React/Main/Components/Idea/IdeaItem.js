@@ -236,11 +236,11 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                             }
                         </div>
                         <div className={"f-cards-div-wrap-text"}>
-                            <NavLink to={global.lang + "/idea/" + idea.idea_id}>
+                            <a href={global.lang + "/idea/" + idea.idea_id}>
                                 <span className={"f-cards-content-text"}>
                                     {idea.title}
                                 </span>
-                            </NavLink>
+                            </a>
                         </div>
 
                         <div className={"f-cards-div-wrap-text"}>

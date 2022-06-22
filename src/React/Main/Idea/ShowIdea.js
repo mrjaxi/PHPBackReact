@@ -185,10 +185,12 @@ const ShowIdea = () => {
                                             { ideasInfinite.length > 0 ?
                                                 <>
                                                     <span className={"f-cards-hashtag"} style={{
-                                                        marginBottom: "2em",
-                                                        color: "black",
-                                                        fontSize: 21
-                                                    }}>Также может быть интересно:</span>
+                                                        marginTop: 50,
+                                                        marginBottom: 33,
+                                                        fontWeight: 500,
+                                                        color: "#1D1D1D",
+                                                        fontSize: 24
+                                                    }}>Посмотрите похожие публикации</span>
                                                     <InfiniteScroll
                                                         style={{overflow: 'hidden',}}
                                                         next={() => {
