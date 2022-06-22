@@ -783,7 +783,7 @@ class IdeasController extends AbstractController
         }
         $votesArr = array();
         foreach ($votes as $vote) {
-            $dateTimeArr = explode(" ", $idea['date']);
+            $dateTimeArr = explode(" ", $vote['date']);
             $dateArr = explode("/", $dateTimeArr[0]);
             $Vote = new Votes();
             $Vote->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]))
