@@ -709,7 +709,6 @@ class IdeasController extends AbstractController
      */
     public function importPhpBackData(Request $request): Response
     {
-        // TODO: доделать импорт данных
         $data = json_decode($request->getContent(), true);
         if (empty($data) || empty($data["pass"]) ) {
             return $this->json(['state' => 'error', 'message' => "Данные не получены"]);
@@ -725,9 +724,9 @@ class IdeasController extends AbstractController
         $usersArr = array();
         foreach ($users as &$user) {
             $User = $this->userRepository->findOneBy(["email" => $user["email"]]);
-            if(empty($User)) {
+            if (empty($User)) {
                 $User = $this->userRepository->findOneBy(["username" => $user["email"]]);
-                if(empty($User)) {
+                if (empty($User)) {
                     $User = new User();
                     $password = AppController::randomPassword();
                     $role = $user["isadmin"] > 0 ? ["ROLE_ADMIN"] : ['ROLE_USER'];
@@ -742,73 +741,60 @@ class IdeasController extends AbstractController
                 }
             }
             $usersArr[$user["id"]] = $User;
-//            dd($User);
-            foreach ($ideas as &$idea){
-                if($user["id"] === $idea["authorid"])
-                {
-                    $Idea = $this->ideasRepository->findOneBy(["title" => $idea["title"]]);
-                    if(empty($Idea)) {
-                        $status = $this->statusRepository->findOneBy(["name" => $idea["status"]]);
-                        if (empty($status)) {
-                            $status = $this->statusRepository->findOneBy(["name" => "new"]);
-                        }
-                        $category = $this->getCategoryOrCreate(((int)$idea["categoryid"] - 1));
-                        $type = $this->getTypeOrCreate((int)$idea["typeid"]);
-                        $dateTimeArr = explode(" ", $idea['date']);
-                        $dateArr = explode("/", $dateTimeArr[0]);
-                        $Idea = new Ideas();
-                        $Idea->setTitle($idea['title'])
-                            ->setContent(str_replace("\n", '', $idea['content']))
-                            ->setUser($User)
-                            ->setCategory($category)
-                            ->setType($type)
-                            ->setStatus($status)
-                            ->setPhoto($idea['photo'] ? "https://tip.atmaguru.online/" . $idea['photo'] : null)
-                            ->setHref($idea['href'])
-                            ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]));
-                        $this->ideasRepository->save($Idea);
-                    }
-//                    if($idea["id"] === "3"){
-//                        dd($Idea);
-//                    }
-                    foreach ($comments as $comment){
-                        $user_ids = array_keys($usersArr);
-                        $keyUser = array_search($comment["userid"], $user_ids);
-                        if($keyUser && $idea["id"] === $comment["ideaid"]){
-                            $Comment = $this->commentsRepository->findOneBy(["content" => $comment["content"]]);
-                            if(empty($Comment)) {
-                                $dateTimeArr = explode(" ", $idea['date']);
-                                $dateArr = explode("/", $dateTimeArr[0]);
-                                $Comment = new Comments();
-                                $Comment->setContent($comment["content"])
-                                    ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0] ))
-                                    ->setIdea($Idea)
-                                    ->setUser($User);
-                                $this->commentsRepository->save($Comment);
-//                                dd($Comment);
-                            }
-                        }
-                    }
-                    foreach ($votes as $vote){
-                        if($user["id"] === $vote["userid"] && $idea["id"] === $vote["ideaid"]){
-                            $Vote = $this->votesRepository->findOneBy(["idea_id" => $Idea->getId()]);
-                            if(empty($Vote)) {
-                                $dateTimeArr = explode(" ", $idea['date']);
-                                $dateArr = explode("/", $dateTimeArr[0]);
-                                $Vote = new Votes();
-                                $Vote->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]))
-                                    ->setUser($User)
-                                    ->setIdea($Idea)
-                                    ->setType("like");
-                                $this->votesRepository->save($Vote);
-//                                dd($Vote);
-                            }
-                        }
-                    }
-                }
-            }
         }
-        return $this->json(['state' => 'success']);
+        $ideasArr = array();
+        foreach ($ideas as &$idea) {
+            $Idea = $this->ideasRepository->findOneBy(["title" => $idea["title"]]);
+            if (empty($Idea)) {
+                $status = $this->statusRepository->findOneBy(["name" => $idea["status"]]);
+                if (empty($status)) {
+                    $status = $this->statusRepository->findOneBy(["name" => "new"]);
+                }
+                $category = $this->getCategoryOrCreate(((int)$idea["categoryid"] - 1));
+                $type = $this->getTypeOrCreate((int)$idea["typeid"]);
+                $dateTimeArr = explode(" ", $idea['date']);
+                $dateArr = explode("/", $dateTimeArr[0]);
+                $Idea = new Ideas();
+                $Idea->setTitle($idea['title'])
+                    ->setContent(str_replace("\n", '', $idea['content']))
+                    ->setUser($usersArr[$idea["authorid"]])
+                    ->setCategory($category)
+                    ->setType($type)
+                    ->setStatus($status)
+                    ->setPhoto($idea['photo'] ? "https://tip.atmaguru.online/" . $idea['photo'] : null)
+                    ->setHref($idea['href'])
+                    ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]));
+                $this->ideasRepository->save($Idea);
+            }
+            $ideasArr[$idea["id"]] = $Idea;
+        }
+        $commentsArr = array();
+        foreach ($comments as $comment) {
+            $dateTimeArr = explode(" ", $idea['date']);
+            $dateArr = explode("/", $dateTimeArr[0]);
+            $Comment = new Comments();
+            $Comment->setContent($comment["content"])
+                ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]))
+                ->setUser($usersArr[$comment["userid"]])
+                ->setIdea($ideasArr[$comment["ideaid"]]);
+            $this->commentsRepository->save($Comment);
+//                dd($Comment);
+            $commentsArr[$comment["id"]] = $Comment;
+        }
+        $votesArr = array();
+        foreach ($votes as $vote) {
+            $dateTimeArr = explode(" ", $idea['date']);
+            $dateArr = explode("/", $dateTimeArr[0]);
+            $Vote = new Votes();
+            $Vote->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]))
+                ->setUser($usersArr[$vote["userid"]])
+                ->setIdea($ideasArr[$vote["ideaid"]])
+                ->setType("like");
+            $this->votesRepository->save($Vote);
+            $votesArr[$vote["id"]] = $Vote;
+//            dd($Vote);
+        }
+        return $this->json([ 'state' => 'success' ]);
     }
 
     /**
