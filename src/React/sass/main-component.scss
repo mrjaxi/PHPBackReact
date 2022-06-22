@@ -403,6 +403,7 @@ button:focus {
     &-write-comments {
         display: flex;
         flex-direction: column;
+        margin-top: 45px;
 
         &-title {
             font-size: 48px;
@@ -416,7 +417,7 @@ button:focus {
             outline: none;
             -moz-appearance: none;
             border-radius: 12px;
-            border: 1px solid #ffffff00;
+            border: none;
             padding: 15px;
             font-size: 21px;
         }
@@ -570,6 +571,7 @@ button:focus {
             text-transform: uppercase;
             border-radius: 6px;
             font-size: 12px;
+            line-height: 1.6;
         }
 
         &-type-completed {

@@ -226,7 +226,7 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                                         }
                                     </Select> :
                                     <div>
-                                        <p className={"f-cards-type f-cards-type-viewed"} style={{
+                                        <p className={"f-cards-type-viewed"} style={{
                                             // marginTop: "1em",
                                             color: idea.status?.color ? idea.status?.color : "#000000",
                                             backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",

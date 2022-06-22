@@ -131,9 +131,9 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                 },
                             ]}
                         >
-                            <TextArea clearableInput={true} style={{backgroundColor: '#FFFFFF'}}
+                            <TextArea clearableInput={true} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
                                       disabled={global.layout === "guest"}
-                                      autoSize={true} className={"f-write-comments-input"}
+                                      className={"f-write-comments-input"}
                                       placeholder={global.layout !== "guest" ?
                                           "Напишите что-нибудь..." : "Войдите, чтобы оставлять комментарии, публиковать и оценивать идеи"}/>
                         </Form.Item>

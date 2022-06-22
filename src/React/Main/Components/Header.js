@@ -13,6 +13,7 @@ const Header = ({ search=false }) => {
 
     const logout = async () => {
          await axios.post("/ru/logout");
+         global._history.replace(global.lang + "/")
          window.location.reload(true)
     };
 
