@@ -152,8 +152,14 @@ const Login = ({visible, setVisible}) => {
                                 {/*</Form.Item>*/}
                                 <Form.Item>
                                     <Button
-                                        className={"f-write-comments-button"}
-                                        style={{ paddingRight: 20, paddingLeft: 20, boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)' }}
+                                        style={{
+                                            paddingRight: 27,
+                                            paddingLeft: 27,
+                                            boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                            borderRadius: 64,
+                                            fontSize: 20,
+                                            height: 60,
+                                        }}
                                         disabled={blockButton} loading={loading} type="primary" htmlType="submit"
                                             shape="round">
                                         Отправить

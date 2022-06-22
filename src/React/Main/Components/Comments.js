@@ -141,7 +141,14 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                             {
                                 global.layout !== "guest" ?
                                     <Button
-                                        className={"f-write-comments-button"}
+                                        style={{
+                                            paddingRight: 27,
+                                            paddingLeft: 27,
+                                            boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                            borderRadius: 64,
+                                            fontSize: 20,
+                                            height: 60,
+                                        }}
                                         type="primary"
                                         htmlType="submit"
                                         shape="round"
@@ -151,10 +158,16 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                     </Button>
                                     : <Button
                                         onClick={() => setVisible(!visible)}
-                                        className={"f-write-comments-button"}
+                                        style={{
+                                            paddingRight: 32,
+                                            paddingLeft: 32,
+                                            boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                            borderRadius: 64,
+                                            fontSize: 20,
+                                            height: 60,
+                                        }}
                                         type="primary"
                                         shape="round"
-                                        style={{ paddingRight: 40, paddingLeft: 40 }}
                                     >
                                         Войти
                                     </Button>

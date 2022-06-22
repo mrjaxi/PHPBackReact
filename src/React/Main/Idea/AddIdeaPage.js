@@ -121,6 +121,20 @@ const AddIdeaPage = () => {
         },
     };
 
+    const beforeUpload = (file) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            global.openNotification("Предупреждение", "Поддерживает только изображения» в формате JPG / PNG", "warn");
+            return false
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            global.openNotification("Предупреждение","Размер изображения не может превышать 2 МБ!", "warn");
+            return false
+        }
+        return isJpgOrPng && isLt2M;
+    };
+
     return (
         <>
             <div className={"f-login"}>
@@ -217,25 +231,44 @@ const AddIdeaPage = () => {
                         name={"file"}
                     >
                         <Upload
+                            accept=".jpeg, .png, .jpg"
                             action={ApiRoutes.API_UPLOAD_IMAGE}
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}
                             listType="picture"
                             defaultFileList={[...fileList]}
+                            beforeUpload={(file) => beforeUpload(file)}
                         >
                             <Button icon={<UploadOutlined/>}>Загрузить изображение</Button>
                         </Upload>
                     </Form.Item>
                     <Form.Item>
                         <Button
-                            className={"f-write-comments-button"}
-                            style={{ paddingRight: 20, paddingLeft: 20, boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)' }}
-                            loading={loading} type="primary" htmlType="submit"
-                                shape="round">Отправить</Button>
+                            style={{
+                                paddingRight: 27,
+                                paddingLeft: 27,
+                                boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                borderRadius: 64,
+                                fontSize: 20,
+                                height: 60,
+                            }}
+                            loading={loading}
+                            type="primary"
+                            htmlType="submit"
+                            shape="round">Отправить</Button>
                         <Button
-                            className={"f-write-comments-button"}
-                            style={{marginLeft: 10, paddingRight: 20, paddingLeft: 20, boxShadow: 'none', color: '#CCD1D9'}}
+                            style={{
+                                    marginLeft: 10,
+                                    paddingRight: 27,
+                                    paddingLeft: 27,
+                                    boxShadow: 'none',
+                                    color: '#CCD1D9',
+                                    backgroundColor: 'white',
+                                    border: "none",
+                                    fontSize: 20,
+                                    height: 60,
+                            }}
                             shape="round"><NavLink to={""}>Закрыть</NavLink></Button>
                     </Form.Item>
                 </Form>
