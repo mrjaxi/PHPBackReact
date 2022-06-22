@@ -246,11 +246,12 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                         <div className={"f-cards-div-wrap-text"}>
                             <span className={"f-cards-content-description"}>
                                 {
-                                    idea.text.split(" ").length < 40 ?
+                                    idea.text.split(" ").length <= 40 ?
                                         <span>{idea.text}</span> :
                                         idea.text.split(" ").length > 40 && !idea.showFullText ?
                                             <span>{idea.text.split(" ").filter((idea, index) => index < 40).join(" ")}... <a
-                                                onClick={() => showText(idea.showFullText)}>Еще</a></span> :
+                                                onClick={() => showText(idea.showFullText)}>Еще</a>
+                                            </span> :
                                             <span>{idea.text} <a style={{zIndex: 3}}
                                                                  onClick={() => showText(idea.showFullText)}>Скрыть</a></span>
                                 }
