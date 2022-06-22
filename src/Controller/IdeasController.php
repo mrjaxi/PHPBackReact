@@ -783,10 +783,8 @@ class IdeasController extends AbstractController
         }
         $votesArr = array();
         foreach ($votes as $vote) {
-            $dateTimeArr = explode(" ", $vote['date']);
-            $dateArr = explode("/", $dateTimeArr[0]);
             $Vote = new Votes();
-            $Vote->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]))
+            $Vote->setDate(new DateTime())
                 ->setUser($usersArr[$vote["userid"]])
                 ->setIdea($ideasArr[$vote["ideaid"]])
                 ->setType("like");
