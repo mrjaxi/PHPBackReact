@@ -155,7 +155,7 @@ const Login = ({visible, setVisible}) => {
                                         style={{
                                             paddingRight: 27,
                                             paddingLeft: 27,
-                                            boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                            boxShadow: blockButton ? '0px 16px 32px 4px rgba(61, 114, 237, 0.24)' : 'none',
                                             borderRadius: 64,
                                             fontSize: 20,
                                             height: 60,
