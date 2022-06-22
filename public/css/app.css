@@ -1750,7 +1750,6 @@ button:focus {
   font-weight: 500;
   color: #1D1D1F;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 .f-cards-text-bottom {

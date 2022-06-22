@@ -141,9 +141,6 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                 {/*<div style={{ width: 100, height: 100, backgroundColor: 'black', color: 'white', fontSize: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
                 {/*    {index}*/}
                 {/*</div>*/}
-                <text className={"f-cards-hashtag"} style={{
-                    marginBottom: "1em"
-                }}>{date}</text>
                 <div className={"f-text-tags-wrap"}>
                     <p style={{ marginRight: 30 }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                        onClick={() => {
@@ -195,15 +192,20 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                                             : <UserOutlined/>
                                         }/>
                                 <div className={"f-cards-wrap-text-style"}>
-                                        <span className={"f-cards-text"}>{idea.username}
-                                            {
-                                                idea.roles.includes("ROLE_ADMIN") &&
-                                                <img style={{marginBottom: 3, marginLeft: 5}}
-                                                     src={"/i/official.svg"} width={15}
-                                                     height={15}/>
-                                            }
+                                        <div>
+                                            <span className={"f-cards-text"}>{idea.username}
+                                                {
+                                                    idea.roles.includes("ROLE_ADMIN") &&
+                                                    <img style={{marginBottom: 3, marginLeft: 5}}
+                                                         src={"/i/official.svg"} width={15}
+                                                         height={15}/>
+                                                }
+                                            </span>
+                                        </div>
+                                        <span className={"f-cards-text-bottom"}>{idea.role}
+                                            <span> · </span>
+                                            {date}
                                         </span>
-                                    <span className={"f-cards-text-bottom"}>{idea.role}</span>
                                 </div>
                             </div>
                             {
