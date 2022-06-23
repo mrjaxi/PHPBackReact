@@ -1,5 +1,5 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import { useParams } from "react-router";
+import {useHistory, useParams} from "react-router";
 import { Col } from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
@@ -22,16 +22,17 @@ const ShowIdea = () => {
     const [stopInfinity, setStopInfinity] = useState(false);
     const [wait, setWait] = useState(true);
 
+    const history = useHistory();
     const params = useParams();
 
     useLayoutEffect(() => {
-        updateStatuses()
+        updateStatuses();
         getIdea();
-    }, []);
+    }, [history.location.pathname]);
 
     useEffect(() => {
-        getIdeas()
-    }, [page])
+        getIdeas();
+    }, [page]);
 
     const getIdea = () => {
         setLoading(true)
@@ -68,6 +69,7 @@ const ShowIdea = () => {
                             })
                         });
                     }
+                    console.log(data)
                     break;
                 case "error":
                     global.openNotification("Ошибка", response.data?.message, "error")
@@ -211,7 +213,7 @@ const ShowIdea = () => {
                                                             loader={(loadingInfinity) ? <LoadingIdeas type={true}/> : <></>}
                                                         >{
                                                             ideasInfinite.map((idea, index) => (
-                                                                <IdeaItem item={idea} index={index} setItem={setIdea}
+                                                                <IdeaItem key={idea.id} item={idea} index={index} setItem={setIdea}
                                                                           statuses={statuses}/>
                                                             ))
                                                         }</InfiniteScroll>
