@@ -3,7 +3,6 @@ import {useHistory, useParams} from "react-router";
 import { Col } from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
-import FlatList from "flatlist-react";
 import Header from "../Components/Header";
 import IdeaItem from "../Components/Idea/IdeaItem";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
@@ -69,7 +68,6 @@ const ShowIdea = () => {
                             })
                         });
                     }
-                    console.log(data)
                     break;
                 case "error":
                     global.openNotification("Ошибка", response.data?.message, "error")
@@ -178,22 +176,15 @@ const ShowIdea = () => {
                                         justifyContent: 'center',
                                         flexDirection: "column",
                                         alignItems: "center",
-                                        width: '50vw'
+                                        width: '50vw',
+                                        minHeight: '60vh'
                                     }}>
                                         { loading ? <LoadingIdeas/> : (
                                             <>
-                                                <FlatList
-                                                    list={ideas}
-                                                    renderItem={(idea, index) => (
-                                                        <IdeaItem item={idea} index={index} setItem={setIdea}
-                                                                  statuses={statuses}/>
-                                                    )}
-                                                    renderWhenEmpty={() =>(
-                                                        <EmptyIdeas text={"Такой записи не существует..."}/>
-                                                    )}
-                                                    // sortBy={["firstName", {key: "lastName", descending: true}]}
-                                                    // groupBy={person => person.info.age > 18 ? 'Over 18' : 'Under 18'}
-                                                />
+                                                {
+                                                    ideas[0] ? <IdeaItem key={ideas[0].id} item={ideas[0]} index={1} setItem={setIdea}
+                                                                     statuses={statuses}/> : <EmptyIdeas text={"Такой записи не существует..."}/>
+                                                }
                                                 { ideasInfinite.length > 0 ?
                                                     <>
                                                     <span className={"f-cards-hashtag"} style={{

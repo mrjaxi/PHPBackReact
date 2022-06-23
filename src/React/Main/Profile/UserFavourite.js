@@ -8,8 +8,12 @@ import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import FlatList from "flatlist-react";
 import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
+import UserIdeas from "./UserIdeas";
 
-const UserFavourite = () => {
+const UserFavourite = ({includedTypes,
+                           includedCategory,
+                           setIncludedCategories,
+                           setIncludedTypes}) => {
 
     let data = [];
 
@@ -52,16 +56,16 @@ const UserFavourite = () => {
                     })
                 })
             }
-            setIdeas(data)
+            setIdeas(data);
             setLoading(false)
         })
     };
 
     const setIdea = (idea, index) => {
-        let newIdeas = [...ideas]
-        newIdeas[index] = idea
+        let newIdeas = [...ideas];
+        newIdeas[index] = idea;
         setIdeas(newIdeas)
-    }
+    };
 
     const updateStatuses = () => {
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
@@ -86,7 +90,10 @@ const UserFavourite = () => {
                             list={ideas}
                             renderItem={(idea, index) => {
                                 return (
-                                    <IdeaItem item={idea} index={index} setItem={setIdea}
+                                    <IdeaItem includedTypes={includedTypes}
+                                              includedCategory={includedCategory}
+                                              setIncludedCategories={setIncludedCategories}
+                                              setIncludedTypes={setIncludedTypes} item={idea} index={index} setItem={setIdea}
                                               statuses={statuses}/>
                                 )
                             }}

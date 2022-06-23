@@ -50,7 +50,6 @@ const UserIdeas = () => {
                             })
                         });
                     }
-                    console.log("GET IDEAS NICE")
                     break;
                 case "error":
                     global.openNotification("Ошибка", response.data?.message, "error")

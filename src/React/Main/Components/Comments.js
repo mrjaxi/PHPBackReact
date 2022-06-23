@@ -57,6 +57,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                             commentsData.map((comment, index) => (
                                 <>
                                     <div
+                                        key={index}
                                         className={"f-cards-avatar f-cards-avatar-bottom-border"}
                                         style={{paddingTop: 40}}
                                     >
@@ -131,15 +132,25 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                 },
                             ]}
                         >
-                            <TextArea clearableInput={true} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
-                                      autoSize={{minRows: 5}}
-                                      disabled={global.layout === "guest"}
-                                      className={"f-write-comments-input"}
-                                      placeholder={global.layout !== "guest" ?
-                                          "Напишите что-нибудь..." : ""}/>
                             {
-                                global.layout == "guest" &&
-                                <div className={'disable'}><a style={{ color: '#3D72ED' }} onClick={() => setVisible(!visible)}>Войдите</a>, чтобы оставлять комментарии, публиковать и оценивать идеи</div>
+                                global.layout === "guest" ?
+                                    <>
+                                        <TextArea name={"text-area"} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
+                                                  autoSize={{minRows: 5}}
+                                                  disabled={global.layout === "guest"}
+                                                  className={"f-write-comments-input"}
+                                                  placeholder={global.layout !== "guest" ?
+                                                      "Напишите что-нибудь..." : ""}
+                                        />
+                                        <div className={'disable'}><a style={{ color: '#3D72ED' }} onClick={() => setVisible(!visible)}>Войдите</a>, чтобы оставлять комментарии, публиковать и оценивать идеи</div>
+                                    </> :
+                                    <TextArea name={"text-area"} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
+                                              autoSize={{minRows: 5}}
+                                              disabled={global.layout === "guest"}
+                                              className={"f-write-comments-input"}
+                                              placeholder={global.layout !== "guest" ?
+                                                  "Напишите что-нибудь..." : ""}
+                                    />
                             }
                         </Form.Item>
                         <Form.Item>

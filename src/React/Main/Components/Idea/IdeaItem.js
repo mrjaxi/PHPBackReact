@@ -140,9 +140,6 @@ const IdeaItem = ({ item, index, setItem, statuses,
     return (
         <>
             <div className={"f-cards"} key={index}>
-                {/*<div style={{ width: 100, height: 100, backgroundColor: 'black', color: 'white', fontSize: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
-                {/*    {index}*/}
-                {/*</div>*/}
                 <div className={"f-text-tags-wrap"}>
                     <div style={{ marginRight: 20,
                         borderRadius: 32, paddingLeft: 17, paddingRight: 17, paddingTop: 12, paddingBottom: 13, height: 48,

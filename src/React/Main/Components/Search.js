@@ -2,11 +2,14 @@ import {Avatar, Modal} from "antd";
 import React, {useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
-import {NavLink} from "react-router-dom";
+import {NavLink, useHistory} from "react-router-dom";
 import Highlighter from "react-highlight-words";
 import {CloseOutlined, UserOutlined} from "@ant-design/icons";
+import Header from "./Header";
 
-const Search = ({ visible, setVisible }) => {
+const Search = ({ visible, setVisible, includedTypes,
+                    includedCategory, setIncludedTypes,
+                    setIncludedCategories}) => {
 
     const [searchItems, setSearchItems] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -68,10 +71,27 @@ const Search = ({ visible, setVisible }) => {
         };
 
         if(categoryId){
-            params["categories"] = JSON.stringify([includedCategories])
+            setIncludedCategories(categoryId)
+
+            let prevIncludedCategory = [...includedCategory];
+            if (prevIncludedCategory.indexOf(categoryId) >= 0) {
+                prevIncludedCategory = prevIncludedCategory.filter(item => item !== categoryId)
+            } else {
+                prevIncludedCategory.push(categoryId);
+            }
+            setIncludedCategories(prevIncludedCategory);
+            params["categories"] = JSON.stringify(prevIncludedCategory);
         }
         if(typesId){
-            params["types"] = JSON.stringify([typesId])
+            let prevIncludesTypes = [...includedTypes];
+            if (prevIncludesTypes.indexOf(typesId) >= 0){
+                prevIncludesTypes = prevIncludesTypes.filter(item => item !== typesId)
+            } else {
+                prevIncludesTypes.push(typesId);
+            }
+            setIncludedTypes(prevIncludesTypes);
+
+            params["types"] = JSON.stringify(prevIncludesTypes)
         }
 
         let serializedParams = "";
@@ -83,8 +103,7 @@ const Search = ({ visible, setVisible }) => {
             }
         }
         global._history.push(`${global.lang}/?${serializedParams}`);
-
-        window.location.reload(true)
+        setVisible(!visible)
     };
 
     return (

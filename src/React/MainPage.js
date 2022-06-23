@@ -1,5 +1,5 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import { NavLink } from "react-router-dom";
+import {NavLink, useHistory} from "react-router-dom";
 import './sass/main-component.scss'
 import {Col} from "antd";
 import axios from "axios";
@@ -31,6 +31,8 @@ const MainPage = (props) => {
 
     const [loading, setLoading] = useState(true);
     const [loadingInfinite, setLoadingInfinite] = useState(true);
+
+    const history = useHistory();
 
     useLayoutEffect(() => {
         getCategory();
@@ -196,7 +198,13 @@ const MainPage = (props) => {
                 <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
                 <Col className={"f-main"}>
                     <div key={3}>
-                        <Header search={true}/>
+                        <Header
+                            setIncludedTypes={setIncludedTypes}
+                            setIncludedCategories={setIncludedCategories}
+                            includedCategory={includedCategories}
+                            includedTypes={includedTypes}
+                            search={true}
+                        />
                         <section className={"max_width"} style={{marginTop: "100px"}}>
                             <div className={"f-section"}>
                                 <div>
@@ -271,7 +279,6 @@ const MainPage = (props) => {
                                             statuses.map((status) => (
                                                 <a key={status.id} className={"f-side-panel-button-section "}
                                                    onClick={() => {
-                                                       // console.log(`selectType(${status.id})`)
                                                        selectStatus(status.id)
                                                    }}
                                                    style={{
@@ -292,7 +299,6 @@ const MainPage = (props) => {
                                             types.map((type) => (
                                                 <a key={type.id} className={"f-side-panel-button"}
                                                    onClick={() => {
-                                                       // console.log(`selectType(${type.id})`)
                                                        selectType(type.id)
                                                    }}
                                                    style={{color: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED"),

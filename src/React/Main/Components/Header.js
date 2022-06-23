@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {Avatar} from "antd";
 import {DownOutlined, UpOutlined, UserOutlined} from "@ant-design/icons";
-import {NavLink} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import axios from "axios";
 import ProfileAvatar from "../Profile/ProfileAvatar";
 import Search from "./Search";
 import Login from "../Auth/Login";
 
-const Header = ({ search=false }) => {
+const Header = ({ search=false, includedTypes = () => false, includedCategory = () => false, setIncludedTypes = () => false,
+                    setIncludedCategories = () => false }) => {
     const [visibleSearch, setVisibleSearch] = useState(false)
     const [visibleLogin, setVisibleLogin] = useState();
 
@@ -29,7 +30,14 @@ const Header = ({ search=false }) => {
                 <div style={{ display: "flex", }}>
                     { search &&
                         <>
-                            <Search visible={visibleSearch} setVisible={setVisibleSearch}/>
+                            <Search
+                                includedTypes={includedTypes}
+                                includedCategory={includedCategory}
+                                visible={visibleSearch}
+                                setVisible={setVisibleSearch}
+                                setIncludedTypes={setIncludedTypes}
+                                setIncludedCategories={setIncludedCategories}
+                            />
                             <a onClick={() => setVisibleSearch(!visibleSearch)}
                                 style={{
                                     marginTop: "auto",
@@ -55,7 +63,7 @@ const Header = ({ search=false }) => {
                                     </div>
                                 </button>
                                 <div className="dropdown-content">
-                                    <NavLink style={{
+                                    <Link style={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: "space-between",
@@ -78,7 +86,7 @@ const Header = ({ search=false }) => {
                                                 marginLeft: 7.5
                                             }}/>
                                         </div>
-                                    </NavLink>
+                                    </Link>
                                     <a type={"button"} href={"/"}>Настройки профиля</a>
                                     <a type={"button"} onClick={() => logout()}>Выход</a>
                                 </div>

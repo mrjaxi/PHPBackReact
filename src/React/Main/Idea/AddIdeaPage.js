@@ -139,6 +139,7 @@ const AddIdeaPage = () => {
         <>
             <div className={"f-login"}>
                 <Form
+                    name={"login"}
                     onFinish={(values) => onSend(values)}
                 >
                     <Title style={{marginBottom: 48}}>Есть идея?</Title>
