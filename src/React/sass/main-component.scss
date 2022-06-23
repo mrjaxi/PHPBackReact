@@ -422,6 +422,13 @@ button:focus {
             font-size: 21px;
         }
 
+        & .disable {
+            position: absolute;
+            top: 27px;
+            left: 22px;
+            font-size: 21px;
+            color: #AAB2BD;
+        }
         &-button {
             border: none;
             outline: none;

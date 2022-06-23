@@ -132,10 +132,15 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                             ]}
                         >
                             <TextArea clearableInput={true} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
+                                      autoSize={{minRows: 5}}
                                       disabled={global.layout === "guest"}
                                       className={"f-write-comments-input"}
                                       placeholder={global.layout !== "guest" ?
-                                          "Напишите что-нибудь..." : "Войдите, чтобы оставлять комментарии, публиковать и оценивать идеи"}/>
+                                          "Напишите что-нибудь..." : ""}/>
+                            {
+                                global.layout == "guest" &&
+                                <div className={'disable'}><a style={{ color: '#3D72ED' }} onClick={() => setVisible(!visible)}>Войдите</a>, чтобы оставлять комментарии, публиковать и оценивать идеи</div>
+                            }
                         </Form.Item>
                         <Form.Item>
                             {
@@ -157,19 +162,19 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
                                         Отправить
                                     </Button>
                                     : <Button
-                                        onClick={() => setVisible(!visible)}
                                         style={{
                                             paddingRight: 32,
                                             paddingLeft: 32,
-                                            boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                            backgroundColor: '#E6E9ED',
+                                            border: 'none',
                                             borderRadius: 64,
                                             fontSize: 20,
                                             height: 60,
                                         }}
-                                        type="primary"
+                                        disabled={true}
                                         shape="round"
                                     >
-                                        Войти
+                                        Отправить
                                     </Button>
                             }
                         </Form.Item>
