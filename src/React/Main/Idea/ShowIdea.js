@@ -154,9 +154,8 @@ const ShowIdea = () => {
 
     if (wait) {
         return (
-            <div className="loader-wrapper">
-                <div className="loader" />
-            </div>
+            <>
+            </>
         );
     } else {
         return (

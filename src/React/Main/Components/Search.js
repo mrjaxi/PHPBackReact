@@ -33,6 +33,7 @@ const Search = ({ visible, setVisible }) => {
                         category: idea.category.name,
                         like: Number(idea.likes),
                         username: idea.user?.first_name,
+                        typeId: idea.type.id,
                         type: idea.type.name,
                         currentUserIsVote: idea.currentUserIsVote,
                         date: idea?.date
@@ -59,21 +60,53 @@ const Search = ({ visible, setVisible }) => {
         getCategory()
     });
 
+    const select = (categoryId, typesId) => {
+        let params = {
+            order: "id",
+            type: "desc",
+            page: "1",
+        };
+
+        if(categoryId){
+            params["categories"] = JSON.stringify([includedCategories])
+        }
+        if(typesId){
+            params["types"] = JSON.stringify([typesId])
+        }
+
+        let serializedParams = "";
+        for (let key in params) {
+            if(serializedParams === ""){
+                serializedParams += `${key}=${params[key]}`
+            } else {
+                serializedParams += `&${key}=${params[key]}`
+            }
+        }
+        global._history.push(`${global.lang}/?${serializedParams}`);
+
+        window.location.reload(true)
+    };
+
     return (
         <Modal
             title={
-                <form>
-                    <input autoFocus={true} value={searchText} style={{width: "97%",}} onChange={event => {
-                        searchIdeas(event.target.value.trim()), setSearchText(event.target.value.trim())
-                    }} className={"f-input-search"} placeholder={"Поиск..."}/>
-                    {searchText &&
-                    <a style={{color: '#AAB2BD'}} onClick={() => {
-                        setSearchText(""), searchIdeas("")
-                    }}>
-                        <CloseOutlined/>
+                <>
+                    <form>
+                        <input autoFocus={true} value={searchText} style={{width: "97%",}} onChange={event => {
+                            searchIdeas(event.target.value), setSearchText(event.target.value)
+                        }} className={"f-input-search"} placeholder={"Поиск..."}/>
+                        {searchText &&
+                        <a style={{color: '#AAB2BD', marginLeft: 5}} onClick={() => {
+                            setSearchText(""), searchIdeas("")
+                        }}>
+                            <CloseOutlined/>
+                        </a>
+                        }
+                    </form>
+                    <a onClick={() => setVisible(!visible)} style={{ position: 'absolute', right: -40, top: 5 }}>
+                        <img style={{ filter: 'brightness(10)' }} src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>
                     </a>
-                    }
-                </form>
+                </>
             }
             centered
             closable={false}
@@ -124,8 +157,8 @@ const Search = ({ visible, setVisible }) => {
                                     <div className={"f-cards"}>
                                         <div>
                                             <div className={"f-text-tags-wrap"}>
-                                                <p style={{ marginRight: 30, marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.category}</p>
-                                                <p style={{ marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.type}</p>
+                                                <p style={{ marginRight: 30, marginLeft: 0 }} onClick={() => select(item.categoryId, null)} className={"f-cards-hashtag"}>#{item?.category}</p>
+                                                <p style={{ marginLeft: 0 }} onClick={() => select(null, item.typeId)} className={"f-cards-hashtag"}>#{item?.type}</p>
                                             </div>
                                             <div className={"f-cards-card-wrap"}>
                                                 <div className={"f-cards-inner"}>

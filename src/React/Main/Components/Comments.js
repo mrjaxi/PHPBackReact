@@ -117,7 +117,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
             </div>
             {
                 allowComments &&
-                <div className={"f-write-comments"}>
+                <div className={"f-write-comments"} key={2}>
                     <Title>Написать</Title>
                     <Form form={form}
                           onFinish={(values) => sendComment(values.comment)}

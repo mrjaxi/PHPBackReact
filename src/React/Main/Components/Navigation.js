@@ -5,7 +5,7 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
 
     return (
         <>
-            <navigation className={"f-nav-wrap"}>
+            <div className={"f-nav-wrap"}>
                 <div className={"f-nav max_width"} style={{
                     maxWidth: '80%',
                     padding: 0,
@@ -14,14 +14,14 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
                 }}>
                     {
                         categories.map((category) => (
-                            <a onClick={() => {
+                            <a key={category.id} onClick={() => {
                                 selectCategory(category.id)
                             }}
                                className={"f-nav-button " + ((includedCategory.includes(category.id)) && "f-nav-button-active")}>{category.name}</a>
                         ))
                     }
                 </div>
-            </navigation>
+            </div>
         </>
     )
 };

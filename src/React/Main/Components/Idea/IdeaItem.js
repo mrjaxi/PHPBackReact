@@ -3,14 +3,16 @@ import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../Comments";
 import {Avatar, Image, Select, Tooltip} from "antd";
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import Icon, {UserOutlined} from "@ant-design/icons";
 import Linkify from 'react-linkify';
 const {Option} = Select;
 
 import Like from '/public/i/like.svg'
 
-const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, selectCategory }) => {
+const IdeaItem = ({ item, index, setItem, statuses,
+                      selectType = () => false, selectCategory = () => false,
+                      includedTypes = [], types = [], includedCategory = []}) => {
 
     const [idea, setIdea] = useState(item);
     const [date, setDate] = useState("");
@@ -137,22 +139,28 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
 
     return (
         <>
-            <div className={"f-cards"} key={index} id={index}>
+            <div className={"f-cards"} key={index}>
                 {/*<div style={{ width: 100, height: 100, backgroundColor: 'black', color: 'white', fontSize: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
                 {/*    {index}*/}
                 {/*</div>*/}
                 <div className={"f-text-tags-wrap"}>
-                    <p style={{ marginRight: 30 }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                    <div style={{ marginRight: 20,
+                        borderRadius: 32, paddingLeft: 17, paddingRight: 17, paddingTop: 12, paddingBottom: 13, height: 48,
+                        backgroundColor: !includedCategory.includes(idea.categoryId) ? '#FFFFFF48' : '#FFFFFF',
+                        color: '#1D1D1F'
+                    }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                        onClick={() => {
                            selectCategory(idea.categoryId)
-                       }}>#{idea?.category}</p>
-                    <p style={{ marginLeft: 0 }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                       }}>{idea?.category}</div>
+                    <p style={{
+                        borderRadius: 32, paddingLeft: 17, paddingRight: 17, paddingTop: 12, paddingBottom: 13, height: 48,
+                        marginLeft: 0, color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1].color) && types[idea.typeId - 1].color,
+                    }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                        onClick={() => {
-                           // console.log(`selectType(${idea.typeId})`)
                            selectType(idea.typeId)
                        }}>#{idea?.type}</p>
                 </div>
-                <div className={"f-cards-card-wrap"}>
+                <div className={"f-cards-card-wrap"} key={index}>
                     {
                         idea?.photo !== null &&
                         <div className={"f-cards-image-type"}
@@ -175,8 +183,8 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                                     }}
                                 >
                                     {
-                                        idea?.photo.split(";").map(item => (
-                                            <Image src={item} />
+                                        idea?.photo.split(";").map((item, index) => (
+                                            <Image key={index} src={item} />
                                         ))
                                     }
                                 </Image.PreviewGroup>
@@ -236,11 +244,11 @@ const IdeaItem = ({ item, index, setItem, statuses, selectType = () => false, se
                             }
                         </div>
                         <div className={"f-cards-div-wrap-text"}>
-                            <a href={global.lang + "/idea/" + idea.idea_id + "/"}>
+                            <Link to={global.lang + "/idea/" + idea.idea_id + "/"}>
                                 <span className={"f-cards-content-text"}>
                                     {idea.title}
                                 </span>
-                            </a>
+                            </Link>
                         </div>
 
                         <div className={"f-cards-div-wrap-text"}>

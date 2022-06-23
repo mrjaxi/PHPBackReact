@@ -180,24 +180,23 @@ const MainPage = (props) => {
     };
 
     const setIdea = (idea, index) => {
-        let newIdeas = [...ideas]
-        newIdeas[index] = idea
-        setIdeas(newIdeas)
+        let newIdeas = [...ideas];
+        newIdeas[index] = idea;
+        setIdeas(newIdeas);
         updateStatuses()
-    }
+    };
 
     if (wait) {
         return (
-            <div className="loader-wrapper">
-                <div className="loader" />
-            </div>
+            <>
+                </>
         );
     } else {
         return (
             <>
                 <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
                 <Col className={"f-main"}>
-                    <div>
+                    <div key={3}>
                         <Header search={true}/>
                         <section className={"max_width"} style={{marginTop: "100px"}}>
                             <div className={"f-section"}>
@@ -250,12 +249,15 @@ const MainPage = (props) => {
                                             {
                                                 ideas.map((idea, index) => (
                                                     <IdeaItem
+                                                        key={index}
                                                         item={idea}
                                                         index={index + 1}
                                                         setItem={setIdea}
-                                                        statuses={statuses}
+                                                        types={types}
+                                                        includedCategory={includedCategories}
                                                         selectType={selectType}
                                                         selectCategory={selectCategory}
+                                                        includedTypes={includedTypes}
                                                     />
                                                 ))
                                             }
@@ -266,8 +268,8 @@ const MainPage = (props) => {
                                 <div className={"f-side-block"}>
                                     <div className={"f-side-panel-wrap"}>
                                         {
-                                            statuses.map((status, index) => (
-                                                <a className={"f-side-panel-button-section "}
+                                            statuses.map((status) => (
+                                                <a key={status.id} className={"f-side-panel-button-section "}
                                                    onClick={() => {
                                                        // console.log(`selectType(${status.id})`)
                                                        selectStatus(status.id)
@@ -288,7 +290,7 @@ const MainPage = (props) => {
                                     <div className={"f-side-panel-wrap"}>
                                         {
                                             types.map((type) => (
-                                                <a className={"f-side-panel-button"}
+                                                <a key={type.id} className={"f-side-panel-button"}
                                                    onClick={() => {
                                                        // console.log(`selectType(${type.id})`)
                                                        selectType(type.id)

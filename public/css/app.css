@@ -1341,6 +1341,7 @@ button:focus {
   width: 99%;
   border: none;
   font-size: 21px;
+  padding-left: 15px;
   color: #191919;
 }
 .f-text-tags-wrap {
@@ -1781,7 +1782,7 @@ button:focus {
   justify-content: center;
   align-items: center;
   border-radius: 88px;
-  background-color: rgba(255, 255, 255, 0.6392156863);
+  background-color: #FFFFFF;
   padding: 15px 20px 15px 20px;
   margin-left: 30px;
 }
