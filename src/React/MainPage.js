@@ -1,12 +1,11 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import './sass/main-component.scss'
-import {Col, Skeleton} from "antd";
+import {Col} from "antd";
 import axios from "axios";
 import Header from "./Main/Components/Header";
 import Navigation from "./Main/Components/Navigation";
 import ApiRoutes from "./Routes/ApiRoutes";
-import FlatList from 'flatlist-react';
 import IdeaItem from "./Main/Components/Idea/IdeaItem";
 import LoadingIdeas from "./Main/Components/Idea/LoadingIdeas";
 import EmptyIdeas from "./Main/Components/Idea/EmptyIdeas";
@@ -254,6 +253,7 @@ const MainPage = (props) => {
                                                         index={index + 1}
                                                         setItem={setIdea}
                                                         types={types}
+                                                        statuses={statuses}
                                                         includedCategory={includedCategories}
                                                         selectType={selectType}
                                                         selectCategory={selectCategory}
