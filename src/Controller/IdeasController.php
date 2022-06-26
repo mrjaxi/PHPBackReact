@@ -597,8 +597,7 @@ class IdeasController extends AbstractController
         } else {
             return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
         }
-        $ideaStatusName = $idea->get_Status()->getName();
-        if ($ideaStatusName == 'completed' or $ideaStatusName == 'declined') {
+        if (!$idea->getAllowComments()) {
             return $this->json(['state' => 'error', 'message' => "Нельзя убрать голос с этой идеи"]);
         }
         // Проверка проголосовал ли он уже за эту идею
@@ -764,6 +763,10 @@ class IdeasController extends AbstractController
                     ->setPhoto($idea['photo'] ? "https://tip.atmaguru.online/" . $idea['photo'] : null)
                     ->setHref($idea['href'])
                     ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]));
+                if($status->getName() === "completed" || $status->getName() === "declined"){
+                    $Idea->setAllowComments(false);
+                }
+
                 $this->ideasRepository->save($Idea);
             }
             $ideasArr[$idea["id"]] = $Idea;

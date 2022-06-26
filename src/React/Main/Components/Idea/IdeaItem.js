@@ -2,7 +2,7 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../Comments";
-import {Avatar, Image, Select, Tooltip} from "antd";
+import {Avatar, Image, Select, Tooltip, Button} from "antd";
 import {Link} from "react-router-dom";
 import Icon, {UserOutlined} from "@ant-design/icons";
 import Linkify from 'react-linkify';
@@ -141,14 +141,21 @@ const IdeaItem = ({ item, index, setItem, statuses,
         <>
             <div className={"f-cards"} key={index}>
                 <div className={"f-text-tags-wrap"}>
-                    <div style={{ marginRight: 20,
-                        borderRadius: 32, paddingLeft: 17, paddingRight: 17, paddingTop: 12, paddingBottom: 13, height: 48,
-                        backgroundColor: !includedCategory.includes(idea.categoryId) ? '#FFFFFF48' : '#FFFFFF',
-                        color: '#1D1D1F'
-                    }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
-                       onClick={() => {
-                           selectCategory(idea.categoryId)
-                       }}>{idea?.category}</div>
+                    <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                         style={{
+                             marginRight: 20,
+                             borderRadius: 32,
+                             paddingLeft: 17,
+                             paddingRight: 17,
+                             paddingTop: 12,
+                             paddingBottom: 13,
+                             height: 48,
+                             backgroundColor: !includedCategory.includes(idea.categoryId) ? '#FFFFFF48' : '#FFFFFF',
+                             color: '#1D1D1F'
+                         }}
+                         onClick={() => {
+                             selectCategory(idea.categoryId)
+                         }}>{idea?.category}</div>
                     <p style={{
                         borderRadius: 32, paddingLeft: 17, paddingRight: 17, paddingTop: 12, paddingBottom: 13, height: 48,
                         marginLeft: 0, color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1].color) && types[idea.typeId - 1].color,
@@ -276,27 +283,43 @@ const IdeaItem = ({ item, index, setItem, statuses,
                                 {
                                     global.layout === 'guest' ?
                                     <Tooltip color={"black"} title="Авторизуйтесь, чтобы оценить">
-                                        <button disabled={true} type={"button"} style={{
-                                            backgroundColor: 'white',
-                                            cursor: 'not-allowed',
-                                            border: 'none',
-                                        }}
-                                           className={"f-cards-under-block-like"}
-                                           onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
+                                        <button className={"f-cards-under-block-like"}
+                                                disabled={true}
+                                                type={"button"}
+                                                style={{
+                                                    backgroundColor: 'white',
+                                                    cursor: 'not-allowed',
+                                                    border: 'none',
+                                                }}
+                                        >
                                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 <Icon component={Like} style={{ fontSize: 23 }} />
                                                 <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
                                             </div>
                                         </button>
-                                    </Tooltip> :
-                                    <button type={"button"} style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "", border: 'none', cursor: 'pointer'}}
-                                       className={"f-cards-under-block-like"}
-                                       onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
-                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Icon component={Like} style={{ fontSize: 23 }} />
-                                            <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
-                                        </div>
-                                    </button>
+                                    </Tooltip> : idea.allowComments === false ?
+                                        <Tooltip color={"black"} title="Голосование за эту идею закрыто">
+                                            <div className={"f-cards-under-block-like"} style={{
+                                                backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "",
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                cursor: 'not-allowed',
+                                            }}>
+                                                <Icon component={Like} style={{fontSize: 23}}/>
+                                                <span
+                                                    style={{color: idea.currentUserIsVote === true ? "#FFF" : ""}}
+                                                    className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                            </div>
+                                        </Tooltip> :
+                                            <button type={"button"} style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "", border: 'none', cursor: 'pointer'}}
+                                               className={"f-cards-under-block-like"}
+                                               onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Icon component={Like} style={{ fontSize: 23 }} />
+                                                    <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                                </div>
+                                            </button>
                                 }
                             </div>
                             {/*<div>*/}

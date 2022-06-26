@@ -5,7 +5,7 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
 
     return (
         <>
-            <div className={"f-nav-wrap"}>
+            <navigation className={"f-nav-wrap"}>
                 <div className={"f-nav max_width"} style={{
                     maxWidth: '80%',
                     padding: 0,
@@ -21,7 +21,7 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
                         ))
                     }
                 </div>
-            </div>
+            </navigation>
         </>
     )
 };

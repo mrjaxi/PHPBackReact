@@ -4,8 +4,6 @@ import Header from "../Components/Header";
 import UserIdeas from "./UserIdeas";
 import UserComments from "./UserComments";
 import UserFavourite from "./UserFavourite";
-// import UserComments from "../Profile/UserComments"
-// import UserIdeas from "./UserIdeas";
 
 const Profile = () => {
     const [selectedHeaderItem, setSelectedHeaderItem] = useState(0);

@@ -1,5 +1,5 @@
+import React, {useLayoutEffect, useState} from "react";
 import {Avatar, Modal} from "antd";
-import React, {useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import {NavLink, useHistory} from "react-router-dom";
@@ -15,6 +15,10 @@ const Search = ({ visible, setVisible, includedTypes,
     const [loading, setLoading] = useState(false);
     const [statuses, setStatus] = useState([]);
     const [searchText, setSearchText] = useState("");
+
+    useLayoutEffect(() => {
+        getCategory()
+    }, []);
 
     const searchIdeas = (text) => {
         setLoading(true);
@@ -58,10 +62,6 @@ const Search = ({ visible, setVisible, includedTypes,
         });
         setLoading(false);
     };
-
-    useState(() => {
-        getCategory()
-    });
 
     const select = (categoryId, typesId) => {
         let params = {

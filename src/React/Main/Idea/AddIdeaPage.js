@@ -171,7 +171,7 @@ const AddIdeaPage = () => {
                                     loadingMessage={() => null}
                                     noOptionsMessage={() => null}
                                     getOptionLabel={e =>
-                                        <div onClick={() => global._history.push(global.lang + "/idea/" + e.id + "/")}>{e.title}</div>
+                                        <div onClick={() => window.open(global.lang + "/idea/" + e.id + "/")}>{e.title}</div>
                                     }
                                     getOptionValue={e => e.id}
                                     loadOptions={loadOptions}
@@ -226,7 +226,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <TextArea style={{fontSize: 17}} rows={4} placeholder={"Описание"} autoSize={true}/>
+                        <TextArea style={{fontSize: 17}} rows={4} placeholder={"Описание"} autoSize={{ minRows: 4 }}/>
                     </Form.Item>
                     <Form.Item
                         name={"file"}

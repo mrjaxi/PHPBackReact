@@ -1302,6 +1302,10 @@ body {
   border-radius: 32px !important;
 }
 
+.ant-modal-mask {
+  overflow-y: scroll;
+}
+
 input:focus,
 select:focus,
 textarea:focus,

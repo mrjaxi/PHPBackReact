@@ -79,9 +79,17 @@ const Login = ({visible, setVisible}) => {
                 destroyOnClose={true}
                 width={"100vw"}
                 style={{
-                    height: '100vh',
+                    padding: "20px 100px 70px",
                 }}
                 footer={null}
+                bodyStyle={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: "24px 24px 0",
+                    minHeight: "80vh",
+                }}
             >
                 {
                     isSent ?
