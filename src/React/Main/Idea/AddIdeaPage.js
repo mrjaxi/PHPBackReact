@@ -29,26 +29,33 @@ const AddIdeaPage = () => {
         }
         let prevSearchItems = [];
 
-        axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) }).then(response => {
-            if (response.data?.ideas && response.data.state === "success") {
-                response.data?.ideas.map(idea => {
-                    prevSearchItems.push({
-                        id: idea.id,
-                        title: idea.title,
-                        comments: idea.comments,
-                        text: idea.content,
-                        like: Number(idea.likes),
-                        showFullText: false,
-                        currentUserIsVote: idea.currentUserIsVote,
-                    })
-                });
-            } else if (response.data.state === "error") {
-                prevSearchItems = []
-            } else {
-                prevSearchItems = null
-            }
-            setSearchItems(prevSearchItems);
-        })
+        if (text.length < 10) {
+            axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {
+                withCredentials: true,
+                cancelToken: new cancelTokenSource(function executor(c) {
+                    cancel = c;
+                })
+            }).then(response => {
+                if (response.data?.ideas && response.data.state === "success") {
+                    response.data?.ideas.map(idea => {
+                        prevSearchItems.push({
+                            id: idea.id,
+                            title: idea.title,
+                            comments: idea.comments,
+                            text: idea.content,
+                            like: Number(idea.likes),
+                            showFullText: false,
+                            currentUserIsVote: idea.currentUserIsVote,
+                        })
+                    });
+                } else if (response.data.state === "error") {
+                    prevSearchItems = []
+                } else {
+                    prevSearchItems = null
+                }
+                setSearchItems(prevSearchItems);
+            })
+        }
     };
 
     const onChange = ({fileList: newFileList}) => {
@@ -118,19 +125,6 @@ const AddIdeaPage = () => {
     useLayoutEffect(() => {
         getCategory()
     }, []);
-
-    const colourStyles = {
-        placeholder: styles => ({ ...styles, color: '#c1c1c1'}),
-        control: styles => ({ ...styles, height: 40, width: 440, borderColor: '#d9d9d9', fontSize: 17, borderRadius: 8}),
-        // control: styles => ({ ...styles, backgroundColor: 'white', width: 440, height: 20, borderRadius: 8, fontSize: 17,}),
-        option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-            return {
-                ...styles,
-                color: 'black',
-                cursor: isDisabled ? 'not-allowed' : 'default',
-            };
-        },
-    };
 
     const beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
