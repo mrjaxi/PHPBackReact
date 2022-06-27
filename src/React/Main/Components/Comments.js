@@ -8,7 +8,7 @@ import Login from "../Auth/Login";
 const {Title} = Typography;
 const {TextArea} = Input;
 
-const Comments = ({comments, setComments, idea, index, allowComments}) => {
+const Comments = ({comments, setComments, idea, index, allowComments, flag}) => {
 
     const [form] = Form.useForm();
     const [showComments, setShowComments] = useState(true);
@@ -47,6 +47,7 @@ const Comments = ({comments, setComments, idea, index, allowComments}) => {
             <span className={"f-comments-tip-text"}>Комментарии</span>
             <div className={"f-comments-scroll"}>
                 {
+                    flag ? <></> :
                     commentsData.length === 0 ? (
                             <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{marginTop: 20}}>
                             <span className={"f-cards-content-description"}>{

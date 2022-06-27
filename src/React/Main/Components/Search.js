@@ -5,7 +5,8 @@ import ApiRoutes from "../../Routes/ApiRoutes";
 import {NavLink, useHistory} from "react-router-dom";
 import Highlighter from "react-highlight-words";
 import {CloseOutlined, UserOutlined} from "@ant-design/icons";
-import Header from "./Header";
+const cancelTokenSource = axios.CancelToken;
+let cancel;
 
 const Search = ({ visible, setVisible, includedTypes,
                     includedCategory, setIncludedTypes,
@@ -21,11 +22,14 @@ const Search = ({ visible, setVisible, includedTypes,
     }, []);
 
     const searchIdeas = (text) => {
+        if (cancel !== undefined) {
+            cancel();
+        }
         setLoading(true);
 
         let prevSearchItems = [];
 
-        axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}).then(response => {
+            axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) }).then(response => {
             if (response.data?.ideas && response.data.state === "success") {
                 response.data?.ideas.map(idea => {
                     prevSearchItems.push({

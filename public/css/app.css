@@ -1236,6 +1236,10 @@ body {
   font-family: Inter, sans-serif, Arial;
 }
 
+.ant-modal-wrap-search {
+  overflow-y: scroll;
+}
+
 .infinite-scroll-component__outerdiv {
   width: 100%;
 }
@@ -1583,6 +1587,7 @@ button:focus {
 }
 .f-nav-button:hover {
   background-color: white;
+  box-shadow: 0px 24px 32px 4px rgba(101, 109, 119, 0.08);
 }
 .f-block-select {
   color: #ffffff;
@@ -1732,13 +1737,14 @@ button:focus {
 }
 .f-cards-type-viewed {
   background-color: #E6E9ED;
-  padding: 7px 10px;
+  padding: 7px 7px;
   color: #AAB2BD;
   font-weight: 500;
   text-transform: uppercase;
   border-radius: 6px;
   font-size: 12px;
   line-height: 1.6;
+  letter-spacing: 0.04em;
 }
 .f-cards-type-completed {
   background-color: #DFF1E1;
@@ -1895,6 +1901,24 @@ button:focus {
 .f-login-btn {
   box-shadow: 0 16px 32px 4px rgba(61, 114, 237, 0.24);
   height: 50px;
+}
+.i-idea-wrap {
+  width: 480px;
+}
+.i-idea-card {
+  width: 100%;
+  background-color: white;
+  margin-top: 28px;
+}
+.i-idea-card:first-child {
+  margin-top: 38px;
+}
+.i-idea-bottom {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 @charset "UTF-8";
 .u {

@@ -1,42 +1,54 @@
 import React, { useLayoutEffect, useState } from "react";
-import { Button, Form, Input, Select, Upload } from "antd";
+import {Button, Form, Input, Select, Tooltip, Upload} from "antd";
 import { Typography } from 'antd';
-import { NavLink } from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import axios from "axios";
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
 const {Option} = Select;
 import ApiRoutes from "../../Routes/ApiRoutes";
-import AsyncSelect from 'react-select/async';
+import Icon from "@ant-design/icons/es";
+import Like from "../../../../public/i/like.svg";
+import {DownOutlined, UpOutlined} from "@ant-design/icons";
 const { TextArea } = Input;
 const { Title } = Typography;
+const cancelTokenSource = axios.CancelToken;
+let cancel;
 
 const AddIdeaPage = () => {
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
 
     const [fileList, setFileList] = useState([]);
-    const [selectedValue, setSelectedValue] = useState(null);
-
+    const [searchItems, setSearchItems] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [showAllItems, setShowAllItems] = useState(false);
 
-    const handleInputChange = (value, { action }) => {
-        if (action === "input-change"){
-            setSelectedValue(value)
+    const onSearch = (text) => {
+        if (cancel !== undefined) {
+            cancel();
         }
-    };
+        let prevSearchItems = [];
 
-    const loadOptions = (inputValue) => {
-        return fetch(ApiRoutes.API_SEARCH,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                cache: 'no-cache',
-                body: JSON.stringify({title: inputValue, content: ""})
+        axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) }).then(response => {
+            if (response.data?.ideas && response.data.state === "success") {
+                response.data?.ideas.map(idea => {
+                    prevSearchItems.push({
+                        id: idea.id,
+                        title: idea.title,
+                        comments: idea.comments,
+                        text: idea.content,
+                        like: Number(idea.likes),
+                        showFullText: false,
+                        currentUserIsVote: idea.currentUserIsVote,
+                    })
+                });
+            } else if (response.data.state === "error") {
+                prevSearchItems = []
+            } else {
+                prevSearchItems = null
             }
-        ).then((res) => res.json())
-            .then(data => data.ideas);
+            setSearchItems(prevSearchItems);
+        })
     };
 
     const onChange = ({fileList: newFileList}) => {
@@ -152,33 +164,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <div className="ant-form-item-control-input">
-                            <div className="ant-form-item-control-input-content">
-                                <AsyncSelect
-                                    id={"header"}
-                                    setFieldsValue={selectedValue}
-                                    value={selectedValue}
-                                    defaultInputValue={selectedValue}
-                                    inputValue={selectedValue}
-                                    placeholder={"Заголовок"}
-                                    styles={colourStyles}
-                                    className={"f-react-select"}
-                                    components={{
-                                        IndicatorSeparator: () => null,
-                                        DropdownIndicator: () => null,
-                                    }}
-                                    loadingMessage={() => null}
-                                    noOptionsMessage={() => null}
-                                    getOptionLabel={e =>
-                                        <div onClick={() => window.open(global.lang + "/idea/" + e.id + "/")}>{e.title}</div>
-                                    }
-                                    getOptionValue={e => e.id}
-                                    loadOptions={loadOptions}
-                                    onInputChange={handleInputChange}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                        </div>
+                        <Input onChange={(e) => onSearch(e.currentTarget.value)} size={"large"} style={{fontSize: 17, width: '480px',}} placeholder={"Заголовок"} />
                     </Form.Item>
                     <Form.Item
                         name={"category"}
@@ -189,7 +175,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Select size={"large"} style={{fontSize: 17, width: '440px',}}
+                        <Select size={"large"} style={{fontSize: 17, width: '480px',}}
                                 placeholder={"Выберите категорию"}>
                             {
                                 category.map(categories => {
@@ -207,7 +193,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Select size={"large"} style={{fontSize: 17, width: '440px'}} placeholder={"Выберите тип"}>
+                        <Select size={"large"} style={{fontSize: 17, width: '480px'}} placeholder={"Выберите тип"}>
                             {
                                 types.map(types => {
                                     return <Option value={types.id}>{types.value}</Option>
@@ -227,6 +213,81 @@ const AddIdeaPage = () => {
                     >
                         <TextArea style={{fontSize: 17}} rows={4} placeholder={"Описание"} autoSize={{ minRows: 4 }}/>
                     </Form.Item>
+                    { searchItems?.length > 0 &&
+                        <Form.Item>
+                            <Title style={{ color: '#1D1D1D', fontSize: 32 }}>Похожие идеи</Title>
+                            <div className={"i-idea-wrap"}>
+                                {
+                                    showAllItems ?
+                                    searchItems.map((item) => (
+                                        <div className={"i-idea-card"} key={item.id}>
+                                            <Link to={global.lang + "/idea/" + item.id + "/"}>
+                                                <span style={{ fontSize: 17, fontWeight: 500, color: '#1D1D1D' }}>{item.title}</span>
+                                                <div style={{ color: '#1D1D1D' }}>
+                                                    {
+                                                        item.text.split(" ").length <= 25 ?
+                                                            <span>{item.text}</span> :
+                                                            item.text.split(" ").length > 25 && !item.showFullText ?
+                                                                <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}...</span> :
+                                                                <span>{item.text}</span>
+                                                    }
+                                                </div>
+                                            </Link>
+                                            <div className={"i-idea-bottom"}>
+                                                <a className={"f-cards-under-block-comment"}>
+                                                    {global.numWord(52, ["комментарий", "комментария", "комментариев"])}
+                                                </a>
+                                                <button type={"button"} style={{border: 'none', cursor: 'pointer', marginLeft: 20}}
+                                                        className={"f-cards-under-block-like"}>
+                                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                        <Icon component={Like} style={{ fontSize: 23 }} />
+                                                        <span className={"f-cards-under-block-like-text"}>{item.like}</span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                            <div style={{ width: '100%', height: 1, backgroundColor: '#E6E9ED', marginTop: 25 }}></div>
+                                        </div>
+                                    )) :
+                                        searchItems.filter((item, index) => index < 2).map((item) => (
+                                            <div className={"i-idea-card"} key={item.id}>
+                                                <Link to={global.lang + "/idea/" + item.id + "/"}>
+                                                    <span style={{ fontSize: 19, fontWeight: 500, color: '#1D1D1D' }}>{item.title}</span>
+                                                    <div style={{ color: '#1D1D1D' }}>
+                                                        {
+                                                            item.text.split(" ").length <= 25 ?
+                                                                <span>{item.text}</span> :
+                                                                item.text.split(" ").length > 25 && !item.showFullText ?
+                                                                    <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}...</span> :
+                                                                    <span>{item.text}</span>
+                                                        }
+                                                    </div>
+                                                </Link>
+                                                <div className={"i-idea-bottom"}>
+                                                    <a style={{ color: '#AAB2BD', fontSize: 17 }}>
+                                                        {global.numWord(12, ["комментарий", "комментария", "комментариев"])}
+                                                    </a>
+                                                    <button type={"button"} style={{border: 'none', cursor: 'pointer', marginLeft: 20}}
+                                                            className={"f-cards-under-block-like"}>
+                                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                            <Icon component={Like} style={{ fontSize: 23 }} />
+                                                            <span className={"f-cards-under-block-like-text"}>{item.like}</span>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                                <div style={{ width: '100%', height: 1, backgroundColor: '#E6E9ED', marginTop: 25 }}></div>
+                                            </div>
+                                        ))
+                                }
+                            </div>
+                            {
+                                searchItems?.length > 2 &&
+                                <div onClick={() => setShowAllItems(!showAllItems)} style={{ marginTop: 25, color: '#3D72ED', marginBottom: 15, cursor: 'pointer' }}>
+                                    {showAllItems ? "Скрыть  " : "Еще  "}
+                                    {showAllItems ? <UpOutlined/> : <DownOutlined/>}
+                                </div>
+                            }
+                        </Form.Item>
+                    }
                     <Form.Item
                         name={"file"}
                     >

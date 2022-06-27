@@ -100,7 +100,9 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                 </div>
             </header>
             <div className={"logo logo-circle"}/>
-            <div className={"logo logo-ag"}/>
+            <Link to={global.lang + "/"}>
+                <div  style={{ zIndex: 500 }} className={"logo logo-ag"}/>
+            </Link>
         </>
     )
 };

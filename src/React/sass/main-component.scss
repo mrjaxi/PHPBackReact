@@ -5,6 +5,9 @@ body {
     overflow-y: scroll;
     font-family: Inter, sans-serif, Arial;
 }
+.ant-modal-wrap-search {
+    overflow-y: scroll;
+}
 
 .infinite-scroll-component__outerdiv {
     width: 100%;
@@ -394,6 +397,7 @@ button:focus {
 
         &-button:hover {
             background-color: white;
+            box-shadow: 0px 24px 32px 4px rgba(101, 109, 119, 0.08);
         }
     }
 
@@ -573,13 +577,14 @@ button:focus {
 
         &-type-viewed {
             background-color: #E6E9ED;
-            padding: 7px 10px;
+            padding: 7px 7px;
             color: #AAB2BD;
             font-weight: 500;
             text-transform: uppercase;
             border-radius: 6px;
             font-size: 12px;
             line-height: 1.6;
+            letter-spacing: 0.04em;
         }
 
         &-type-completed {

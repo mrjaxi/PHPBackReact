@@ -1,7 +1,7 @@
 import 'antd/dist/antd.less';
 import './sass/app.scss';
 import './sass/main-component.scss'
-
+import './sass/add-idea.scss'
 import './sass/user.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -68,7 +68,7 @@ global.numWord = (number, words, returnNum=true) => {
     if(num > 19) {
         num = num % 10
     }
-    let out = (returnNum) ? `${num} ` : ""
+    let out = (returnNum) ? `${number} ` : ""
     switch (num) {
         case 1:  out += words[0]; break;
         case 2:

@@ -9,8 +9,8 @@ import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Col } from "antd";
 
-const ShowIdea = () => {
-    const urlParams = new URLSearchParams(props.location.search);
+const ShowIdea = (props) => {
+    const urlPrams = new URLSearchParams(props.location.search);
 
     const [ideas, setIdeas] = useState([]);
     const [ideasInfinite, setIdeasInfinite] = useState([]);

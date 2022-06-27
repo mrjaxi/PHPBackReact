@@ -1,0 +1,23 @@
+.i {
+    &-idea-wrap {
+        width: 480px;
+    }
+
+    &-idea-card {
+        width: 100%;
+        background-color: white;
+        margin-top: 28px;
+
+        &:first-child {
+            margin-top: 38px;
+        }
+    }
+
+    &-idea-bottom {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+    }
+}
