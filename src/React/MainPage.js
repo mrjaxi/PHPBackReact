@@ -213,11 +213,11 @@ const MainPage = (props) => {
                                 <div>
                                     <p className={"f-section-wrap-p-text"} style={{
                                         marginBottom: 0,
-                                        marginTop: "20px",
-                                    }}>Мы ценим мнение</p>
-                                    <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>клиентов и рады,</p>
-                                    <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>когда вы делитесь</p>
-                                    <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>им с нами</p>
+                                        marginLeft: 20,
+                                        marginTop: 20,
+                                        width: '70%'
+                                    }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами</p>
+
                                 </div>
                             </div>
                         </section>
