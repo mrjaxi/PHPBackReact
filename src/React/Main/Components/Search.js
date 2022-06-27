@@ -134,7 +134,10 @@ const Search = ({ visible, setVisible, includedTypes,
             onCancel={() => setVisible(false)}
             width={"100vw"}
             style={{
-                padding: "20px 100px 70px",
+                top: 30,
+                verticalAlign: "top",
+                // paddingTop: searchItems.length === 0 ? 0 : 30,
+                padding: "0 100px 70px",
             }}
             footer={null}
             bodyStyle={{
@@ -145,6 +148,7 @@ const Search = ({ visible, setVisible, includedTypes,
                 padding: "24px 24px 0",
                 minHeight: "80vh",
             }}
+            wrapClassName={"ant-modal-wrap-search"}
         >
             {
                 searchItems === null

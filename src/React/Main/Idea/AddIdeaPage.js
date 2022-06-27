@@ -13,7 +13,6 @@ const { Title } = Typography;
 const AddIdeaPage = () => {
     const [category, setCategory] = useState([]);
     const [types, setTypes] = useState([]);
-    const [value, setValue] = useState([]);
 
     const [fileList, setFileList] = useState([]);
     const [selectedValue, setSelectedValue] = useState(null);
@@ -139,7 +138,7 @@ const AddIdeaPage = () => {
         <>
             <div className={"f-login"}>
                 <Form
-                    name={"login"}
+                    name={"addIdea"}
                     onFinish={(values) => onSend(values)}
                 >
                     <Title style={{marginBottom: 48}}>Есть идея?</Title>

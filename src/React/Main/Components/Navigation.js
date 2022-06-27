@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from "react";
-import Search from "./Search";
+import React from "react";
 
 const Navigation = ({categories, selectCategory, includedCategory}) => {
 
     return (
         <>
-            <navigation className={"f-nav-wrap"}>
+            <nav className={"f-nav"}>
                 <div className={"f-nav max_width"} style={{
                     maxWidth: '80%',
                     padding: 0,
@@ -21,7 +20,7 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
                         ))
                     }
                 </div>
-            </navigation>
+            </nav>
         </>
     )
 };

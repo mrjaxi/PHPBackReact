@@ -168,9 +168,9 @@ const MainPage = (props) => {
 
     const getCategory = () => {
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            setTypes(response.data.types);
-            setStatuses(response.data.statuses);
-            setCategories(response.data.categories);
+            setTypes(response.data?.types);
+            setStatuses(response.data?.statuses);
+            setCategories(response.data?.categories);
         });
     };
 

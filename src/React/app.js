@@ -88,7 +88,7 @@ global.getDateString = (date, time = true,short = true) => {
         "июля", "авг", "сент", "окт", "нояб", "дек"];
     if(time){
         return `${Number(date.getUTCDate())} ${short ? monthsShort[date.getUTCMonth()] : months[date.getUTCMonth()]} ${date.getUTCFullYear()}` +
-            ` в ${date.getHours()}:${date.getUTCMinutes()}`
+            ` в ${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`}:${date.getUTCMinutes() > 9 ? date.getUTCMinutes() : `0${date.getUTCMinutes()}`}`
     } else {
         return `${Number(date.getUTCDate())} ${short ? monthsShort[date.getUTCMonth()] : months[date.getUTCMonth()]} ${date.getUTCFullYear()}`
     }

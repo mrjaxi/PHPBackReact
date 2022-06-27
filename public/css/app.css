@@ -1302,7 +1302,7 @@ body {
   border-radius: 32px !important;
 }
 
-.ant-modal-mask {
+.ant-modal-wrap-search {
   overflow-y: scroll;
 }
 

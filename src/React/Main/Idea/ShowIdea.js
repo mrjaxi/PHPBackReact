@@ -1,6 +1,5 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import {useHistory, useParams} from "react-router";
-import { Col } from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import Header from "../Components/Header";
@@ -8,8 +7,10 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Col } from "antd";
 
 const ShowIdea = () => {
+    const urlParams = new URLSearchParams(props.location.search);
 
     const [ideas, setIdeas] = useState([]);
     const [ideasInfinite, setIdeasInfinite] = useState([]);
@@ -185,7 +186,7 @@ const ShowIdea = () => {
                                         { loading ? <LoadingIdeas/> : (
                                             <>
                                                 {
-                                                    ideas[0] ? <IdeaItem key={ideas[0].id} item={ideas[0]} index={1} setItem={setIdea}
+                                                    ideas[0] ? <IdeaItem item={ideas[0]} index={ideas[0].idea_id} setItem={setIdea}
                                                                      statuses={statuses}/> : <EmptyIdeas text={"Такой записи не существует..."}/>
                                                 }
                                                 { ideasInfinite.length > 0 ?
@@ -207,7 +208,7 @@ const ShowIdea = () => {
                                                             loader={(loadingInfinity) ? <LoadingIdeas type={true}/> : <></>}
                                                         >{
                                                             ideasInfinite.map((idea, index) => (
-                                                                <IdeaItem key={idea.id} item={idea} index={index} setItem={setIdea}
+                                                                <IdeaItem item={idea} index={idea.idea_id} setItem={setIdea}
                                                                           statuses={statuses}/>
                                                             ))
                                                         }</InfiniteScroll>

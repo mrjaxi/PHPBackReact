@@ -139,7 +139,7 @@ const IdeaItem = ({ item, index, setItem, statuses,
 
     return (
         <>
-            <div className={"f-cards"} key={index}>
+            <div className={"f-cards"} key={index} id={index}>
                 <div className={"f-text-tags-wrap"}>
                     <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                          style={{
