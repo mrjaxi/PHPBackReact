@@ -222,7 +222,7 @@ const AddIdeaPage = () => {
                                     searchItems.map((item) => (
                                         <div className={"i-idea-card"} key={item.id}>
                                             <Link to={global.lang + "/idea/" + item.id + "/"}>
-                                                <span style={{ fontSize: 17, fontWeight: 500, color: '#1D1D1D' }}>{item.title}</span>
+                                                <span style={{ fontSize: 19, fontWeight: 500, color: '#1D1D1D' }}>{item.title}</span>
                                                 <div style={{ color: '#1D1D1D' }}>
                                                     {
                                                         item.text.split(" ").length <= 25 ?
@@ -234,8 +234,8 @@ const AddIdeaPage = () => {
                                                 </div>
                                             </Link>
                                             <div className={"i-idea-bottom"}>
-                                                <a className={"f-cards-under-block-comment"}>
-                                                    {global.numWord(52, ["комментарий", "комментария", "комментариев"])}
+                                                <a style={{ color: '#AAB2BD', fontSize: 17 }}>
+                                                    {global.numWord(12, ["комментарий", "комментария", "комментариев"])}
                                                 </a>
                                                 <button type={"button"} style={{border: 'none', cursor: 'pointer', marginLeft: 20}}
                                                         className={"f-cards-under-block-like"}>
