@@ -187,137 +187,126 @@ const MainPage = (props) => {
         updateStatuses()
     };
 
-    if (wait) {
-        return (
-            <div id="root">
-                <div className="loader-wrapper">
-                    <div className="loader"></div>
-                </div>
-            </div>
-        );
-    } else {
-        return (
-            <>
-                <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
-                <Col className={"f-main"}>
-                    <div key={3}>
-                        <Header
-                            setIncludedTypes={setIncludedTypes}
-                            setIncludedCategories={setIncludedCategories}
-                            includedCategory={includedCategories}
-                            includedTypes={includedTypes}
-                            search={true}
-                        />
-                        <section className={"max_width"} style={{marginTop: "100px"}}>
-                            <div className={"f-section"}>
-                                <div>
-                                    <p className={"f-section-wrap-p-text"} style={{
-                                        marginBottom: 0,
-                                        marginLeft: 20,
-                                        marginTop: 20,
-                                        width: '70%'
-                                    }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами</p>
-
+    return (
+        <>
+            <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
+            <Col className={"f-main"}>
+                <div key={3}>
+                    <Header
+                        setIncludedTypes={setIncludedTypes}
+                        setIncludedCategories={setIncludedCategories}
+                        includedCategory={includedCategories}
+                        includedTypes={includedTypes}
+                        search={true}
+                    />
+                    <section className={"max_width"} style={{marginTop: "100px"}}>
+                        <div className={"f-section"}>
+                            <div>
+                                <p className={"f-section-wrap-p-text"} style={{
+                                    marginBottom: 0,
+                                    marginLeft: 20,
+                                    marginTop: 20,
+                                    width: '70%'
+                                }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами</p>
+                            </div>
+                        </div>
+                    </section>
+                    <Navigation
+                        categories={categories}
+                        selectCategory={selectCategory}
+                        includedCategory={includedCategories}
+                    />
+                    {
+                        global.layout !== "guest" ?
+                            <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
+                                <p className={"f-new-idea-text"}>Новая идея</p>
+                            </NavLink> :
+                            <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}>
+                                <p className={"f-new-idea-text"}>Новая идея</p>
+                            </a>
+                    }
+                    <div className={"f-row-type max_width"}>
+                        <div
+                            style={{
+                                width: '100%',
+                                flexDirection: "column",
+                                paddingRight: "100px",
+                                paddingLeft: "20%",
+                                marginBottom: "180px",
+                            }}
+                        >
+                            {loading ? <LoadingIdeas type={true}/> :
+                                ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
+                                    : <InfiniteScroll
+                                        style={{overflow: 'hidden'}}
+                                        next={() => {
+                                            setPage(page + 1)
+                                        }}
+                                        hasMore={true}
+                                        dataLength={ideas.length}
+                                        loader={loadingInfinite ? <LoadingIdeas type={true}/> : <></>}
+                                    >
+                                        {
+                                            ideas.map((idea, index) => (
+                                                <IdeaItem
+                                                    key={index}
+                                                    item={idea}
+                                                    index={index + 1}
+                                                    setItem={setIdea}
+                                                    types={types}
+                                                    statuses={statuses}
+                                                    includedCategory={includedCategories}
+                                                    selectType={selectType}
+                                                    selectCategory={selectCategory}
+                                                    includedTypes={includedTypes}
+                                                />
+                                            ))
+                                        }
+                                    </InfiniteScroll>
+                            }
+                        </div>
+                        <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>
+                            <div className={"f-side-block"}>
+                                <div className={"f-side-panel-wrap"}>
+                                    {
+                                        statuses.map((status) => (
+                                            <a key={status.id} className={"f-side-panel-button-section "}
+                                               onClick={() => {
+                                                   selectStatus(status.id)
+                                               }}
+                                               style={{
+                                                   color: includedStatuses.includes(status.id) && "#fff",
+                                                   backgroundColor: includedStatuses.includes(status.id) && (status?.color ? status?.color : "#ffffff00"),
+                                                   borderRadius: "65px",
+                                               }}
+                                            >{status.translate}
+                                                <span
+                                                    className={"f-side-panel-count-subtext " + (includedStatuses.includes(status.id) && "f-block")}
+                                                >{status.ideasCount}</span>
+                                            </a>
+                                        ))
+                                    }
+                                </div>
+                                <div className={"f-side-panel-wrap"}>
+                                    {
+                                        types.map((type) => (
+                                            <a key={type.id} className={"f-side-panel-button"}
+                                               onClick={() => {
+                                                   selectType(type.id)
+                                               }}
+                                               style={{color: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED"),
+                                                   borderColor: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED") }}
+                                            >#{type.name}</a>
+                                        ))
+                                    }
                                 </div>
                             </div>
                         </section>
-                        <Navigation
-                            categories={categories}
-                            selectCategory={selectCategory}
-                            includedCategory={includedCategories}
-                        />
-                        {
-                            global.layout !== "guest" ?
-                                <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
-                                    <p className={"f-new-idea-text"}>Новая идея</p>
-                                </NavLink> :
-                                <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}>
-                                    <p className={"f-new-idea-text"}>Новая идея</p>
-                                </a>
-                        }
-                        <div className={"f-row-type max_width"}>
-                            <div
-                                style={{
-                                    width: '100%',
-                                    flexDirection: "column",
-                                    paddingRight: "100px",
-                                    paddingLeft: "20%",
-                                    marginBottom: "180px",
-                                }}
-                            >
-                                {loading ? <LoadingIdeas type={true}/> :
-                                    ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
-                                        : <InfiniteScroll
-                                            style={{overflow: 'hidden'}}
-                                            next={() => {
-                                                setPage(page + 1)
-                                            }}
-                                            hasMore={true}
-                                            dataLength={ideas.length}
-                                            loader={loadingInfinite ? <LoadingIdeas type={true}/> : <></>}
-                                        >
-                                            {
-                                                ideas.map((idea, index) => (
-                                                    <IdeaItem
-                                                        key={index}
-                                                        item={idea}
-                                                        index={index + 1}
-                                                        setItem={setIdea}
-                                                        types={types}
-                                                        statuses={statuses}
-                                                        includedCategory={includedCategories}
-                                                        selectType={selectType}
-                                                        selectCategory={selectCategory}
-                                                        includedTypes={includedTypes}
-                                                    />
-                                                ))
-                                            }
-                                        </InfiniteScroll>
-                                }
-                            </div>
-                            <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>
-                                <div className={"f-side-block"}>
-                                    <div className={"f-side-panel-wrap"}>
-                                        {
-                                            statuses.map((status) => (
-                                                <a key={status.id} className={"f-side-panel-button-section "}
-                                                   onClick={() => {
-                                                       selectStatus(status.id)
-                                                   }}
-                                                   style={{
-                                                       color: includedStatuses.includes(status.id) && "#fff",
-                                                       backgroundColor: includedStatuses.includes(status.id) && (status?.color ? status?.color : "#ffffff00"),
-                                                       borderRadius: "65px",
-                                                   }}
-                                                >{status.translate}
-                                                    <span
-                                                        className={"f-side-panel-count-subtext " + (includedStatuses.includes(status.id) && "f-block")}
-                                                    >{status.ideasCount}</span>
-                                                </a>
-                                            ))
-                                        }
-                                    </div>
-                                    <div className={"f-side-panel-wrap"}>
-                                        {
-                                            types.map((type) => (
-                                                <a key={type.id} className={"f-side-panel-button"}
-                                                   onClick={() => {
-                                                       selectType(type.id)
-                                                   }}
-                                                   style={{color: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED"),
-                                                       borderColor: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED") }}
-                                                >#{type.name}</a>
-                                            ))
-                                        }
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
                     </div>
-                </Col>
-            </>
-        )
-    }
+                </div>
+            </Col>
+        </>
+    )
 };
 
 export default MainPage;

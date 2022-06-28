@@ -153,79 +153,70 @@ const ShowIdea = (props) => {
         })
     };
 
-    if (wait) {
-        return (
-            <div id="root">
-                <div className="loader-wrapper">
-                    <div className="loader"></div>
-                </div>
-            </div>
-        );
-    } else {
-        return (
-            <>
-                <Col className={"f-main"} style={{ minHeight: '100vh' }}>
-                    <div>
-                        <Header />
-                        <div className={"max_width"} style={{paddingTop: "15vh"}}>
-                            <div style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: 'center',
-                                alignItems: "center",
-                            }}>
-                                <div className={"max_width"}>
-                                    <div style={{
-                                        display: "flex",
-                                        justifyContent: 'center',
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        width: '50vw',
-                                        minHeight: '60vh'
-                                    }}>
-                                        { loading ? <LoadingIdeas/> : (
-                                            <>
-                                                {
-                                                    ideas[0] ? <IdeaItem item={ideas[0]} index={ideas[0].idea_id} setItem={setIdea}
-                                                                     statuses={statuses}/> : <EmptyIdeas text={"Такой записи не существует..."}/>
-                                                }
-                                                { ideasInfinite.length > 0 ?
-                                                    <>
-                                                    <span className={"f-cards-hashtag"} style={{
-                                                        marginTop: 50,
-                                                        marginBottom: 33,
-                                                        fontWeight: 500,
-                                                        color: "#1D1D1D",
-                                                        fontSize: 24
-                                                    }}>Посмотрите похожие публикации</span>
-                                                        <InfiniteScroll
-                                                            style={{overflow: 'hidden',}}
-                                                            next={() => {
-                                                                setPage(page + 1)
-                                                            }}
-                                                            hasMore={true}
-                                                            dataLength={ideasInfinite.length}
-                                                            loader={(loadingInfinity) ? <LoadingIdeas type={true}/> : <></>}
-                                                        >{
-                                                            ideasInfinite.map((idea, index) => (
-                                                                <IdeaItem item={idea} index={idea.idea_id} setItem={setIdea}
-                                                                          statuses={statuses}/>
-                                                            ))
-                                                        }</InfiniteScroll>
-                                                    </>
-                                                    : <></>
-                                                }
-                                            </>)
-                                        }
-                                    </div>
+
+    return (
+        <>
+            <Col className={"f-main"} style={{ minHeight: '100vh' }}>
+                <div>
+                    <Header />
+                    <div className={"max_width"} style={{paddingTop: "15vh"}}>
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: 'center',
+                            alignItems: "center",
+                        }}>
+                            <div className={"max_width"}>
+                                <div style={{
+                                    display: "flex",
+                                    justifyContent: 'center',
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    width: '50vw',
+                                    minHeight: '60vh'
+                                }}>
+                                    { loading ? <LoadingIdeas/> : (
+                                        <>
+                                            {
+                                                ideas[0] ? <IdeaItem item={ideas[0]} index={ideas[0].idea_id} setItem={setIdea}
+                                                                 statuses={statuses}/> : <EmptyIdeas text={"Такой записи не существует..."}/>
+                                            }
+                                            { ideasInfinite.length > 0 ?
+                                                <>
+                                                <span className={"f-cards-hashtag"} style={{
+                                                    marginTop: 50,
+                                                    marginBottom: 33,
+                                                    fontWeight: 500,
+                                                    color: "#1D1D1D",
+                                                    fontSize: 24
+                                                }}>Посмотрите похожие публикации</span>
+                                                    <InfiniteScroll
+                                                        style={{overflow: 'hidden',}}
+                                                        next={() => {
+                                                            setPage(page + 1)
+                                                        }}
+                                                        hasMore={true}
+                                                        dataLength={ideasInfinite.length}
+                                                        loader={(loadingInfinity) ? <LoadingIdeas type={true}/> : <></>}
+                                                    >{
+                                                        ideasInfinite.map((idea, index) => (
+                                                            <IdeaItem item={idea} index={idea.idea_id} setItem={setIdea}
+                                                                      statuses={statuses}/>
+                                                        ))
+                                                    }</InfiniteScroll>
+                                                </>
+                                                : <></>
+                                            }
+                                        </>)
+                                    }
                                 </div>
                             </div>
                         </div>
                     </div>
-                </Col>
-            </>
-        )
-    }
+                </div>
+            </Col>
+        </>
+    )
 };
 
 export default ShowIdea;
