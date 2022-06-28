@@ -1,11 +1,14 @@
 import React, {useState} from "react";
-import {Col, Select} from "antd";
+import { useParams } from "react-router";
+import { Col } from "antd";
 import Header from "../Components/Header";
 import UserIdeas from "./UserIdeas";
 import UserComments from "./UserComments";
 import UserFavourite from "./UserFavourite";
 
 const Profile = () => {
+
+    const params = useParams();
     const [selectedHeaderItem, setSelectedHeaderItem] = useState(0);
 
     return (
@@ -42,11 +45,11 @@ const Profile = () => {
                 </div>
                 {
                     selectedHeaderItem === 0 ?
-                        <UserIdeas/> :
+                        <UserIdeas user_id={params.id}/> :
                         selectedHeaderItem === 1 ?
-                            <UserComments/> :
+                            <UserComments user_id={params.id}/> :
                             selectedHeaderItem === 2 &&
-                            <UserFavourite/>
+                                <UserFavourite user_id={params.id}/>
                 }
             </Col>
         </>

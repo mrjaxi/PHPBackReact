@@ -71,7 +71,7 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                                         margin: "0px 20px 14.5px 30px",
                                         zIndex: 10,
                                         borderBottom: "1px solid rgb(230, 233, 237)"
-                                    }} to={global.lang + "/profile/"}>
+                                    }} to={global.lang + `/profile/${global.user.id}`}>
                                         <span style={{
                                             textOverflow: "ellipsis",
                                             overflow: "hidden",

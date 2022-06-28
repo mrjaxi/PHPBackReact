@@ -2,9 +2,9 @@ import React, {useLayoutEffect, useState} from "react";
 import {Avatar, Modal} from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
-import {NavLink, useHistory} from "react-router-dom";
 import Highlighter from "react-highlight-words";
-import {CloseOutlined, UserOutlined} from "@ant-design/icons";
+import { NavLink } from "react-router-dom";
+import { CloseOutlined, UserOutlined } from "@ant-design/icons";
 const cancelTokenSource = axios.CancelToken;
 let cancel;
 
@@ -29,34 +29,35 @@ const Search = ({ visible, setVisible, includedTypes,
 
         let prevSearchItems = [];
 
-            axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) }).then(response => {
-            if (response.data?.ideas && response.data.state === "success") {
-                response.data?.ideas.map(idea => {
-                    prevSearchItems.push({
-                        id: idea.id,
-                        title: idea.title,
-                        text: idea.content,
-                        roles: idea.user.roles,
-                        role: idea.user.role_name,
-                        userImage: idea.user.image,
-                        status: idea.status,
-                        categoryId: idea.category.id,
-                        category: idea.category.name,
-                        like: Number(idea.likes),
-                        username: idea.user?.first_name,
-                        typeId: idea.type.id,
-                        type: idea.type.name,
-                        currentUserIsVote: idea.currentUserIsVote,
-                        date: idea?.date
-                    })
-                });
-            } else if (response.data.state === "error") {
-                prevSearchItems = []
-            } else {
-                prevSearchItems = null
-            }
-            setSearchItems(prevSearchItems);
-        })
+        axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) })
+            .then(response => {
+                if (response.data?.ideas && response.data.state === "success") {
+                    response.data?.ideas.map(idea => {
+                        prevSearchItems.push({
+                            idea_id: idea.id,
+                            title: idea.title,
+                            text: idea.content,
+                            roles: idea.user.roles,
+                            role: idea.user.role_name,
+                            userImage: idea.user.image,
+                            status: idea.status,
+                            categoryId: idea.category.id,
+                            category: idea.category.name,
+                            like: Number(idea.likes),
+                            username: idea.user?.first_name,
+                            typeId: idea.type.id,
+                            type: idea.type.name,
+                            currentUserIsVote: idea.currentUserIsVote,
+                            date: global.getDateString(new Date(idea?.date), false,false)
+                        })
+                    });
+                } else if (response.data.state === "error") {
+                    prevSearchItems = []
+                } else {
+                    prevSearchItems = null
+                }
+                setSearchItems(prevSearchItems);
+            })
     };
 
     const getCategory = () => {
@@ -198,8 +199,11 @@ const Search = ({ visible, setVisible, includedTypes,
                                                                     }/>
                                                             <div className={"f-cards-wrap-text"}>
                                                                 <span className={"f-cards-text"}>{item.username}</span>
-                                                                <span
-                                                                    className={"f-cards-text-bottom"}>{item.role}</span>
+                                                                <span className={"f-cards-text-bottom"}>
+                                                                    {item.role}
+                                                                    <span> · </span>
+                                                                    {item.date}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         <div style={{
@@ -216,7 +220,7 @@ const Search = ({ visible, setVisible, includedTypes,
                                                         </div>
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
-                                                        <NavLink to={global.lang + "/idea/" + item.id}>
+                                                        <NavLink to={global.lang + "/idea/" + item.idea_id}>
                                                         <span className={"f-cards-content-text"}>
                                                             <Highlighter
                                                                 searchWords={searchText.split(" ").filter(item => item.length > 1)}

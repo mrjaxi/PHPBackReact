@@ -8,7 +8,7 @@ import {Avatar} from "antd";
 import {UserOutlined} from "@ant-design/icons";
 import Linkify from "react-linkify";
 
-const UserComments = () => {
+const UserComments = ({ user_id }) => {
 
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ const UserComments = () => {
 
     const getUserComments = () => {
         setLoading(true)
-        axios.get(ApiRoutes.API_GET_USER_DATA.format(global.user.id) + "?" + global.serialize({page: "2"})).then(response => {
+        axios.get(ApiRoutes.API_GET_USER_DATA.format(user_id) + "?" + global.serialize({page: "2"})).then(response => {
             if (response.data.state === "success" && response.data?.comments) {
                 response.data.comments.map(comment => {
                     let newComment = {

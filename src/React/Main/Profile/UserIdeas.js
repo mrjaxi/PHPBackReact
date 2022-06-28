@@ -6,7 +6,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserIdeas = () => {
+const UserIdeas = ({ user_id }) => {
 
     let data = [];
 
@@ -21,7 +21,7 @@ const UserIdeas = () => {
 
     const getUserIdeas = () => {
         setLoading(true);
-        axios.get(ApiRoutes.API_GET_USER_DATA.format(global.user.id) + "?" + global.serialize({page: "1"})).then(response => {
+        axios.get(ApiRoutes.API_GET_USER_DATA.format(user_id) + "?" + global.serialize({page: "1"})).then(response => {
             switch (response.data?.state) {
                 case "success":
                     if (response.data?.ideas) {
