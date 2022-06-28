@@ -10,10 +10,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 import UserIdeas from "./UserIdeas";
 
-const UserFavourite = ({includedTypes,
-                           includedCategory,
-                           setIncludedCategories,
-                           setIncludedTypes}) => {
+const UserFavourite = ({ user_id }) => {
 
     let data = [];
 
@@ -28,7 +25,7 @@ const UserFavourite = ({includedTypes,
 
     const getUserFavourites = () => {
         setLoading(true);
-        axios.get(ApiRoutes.API_GET_USER_DATA.format(global.user.id) + "?" + global.serialize({page: "3"})).then(response => {
+        axios.get(ApiRoutes.API_GET_USER_DATA.format(user_id) + "?" + global.serialize({page: "3"})).then(response => {
             if (response.data.state === "success" && response.data?.likes){
                 response.data.likes.map(item => {
                     let idea = item.idea
@@ -90,10 +87,7 @@ const UserFavourite = ({includedTypes,
                             list={ideas}
                             renderItem={(idea, index) => {
                                 return (
-                                    <IdeaItem includedTypes={includedTypes}
-                                              includedCategory={includedCategory}
-                                              setIncludedCategories={setIncludedCategories}
-                                              setIncludedTypes={setIncludedTypes} item={idea} index={index} setItem={setIdea}
+                                    <IdeaItem item={idea} index={index} setItem={setIdea}
                                               statuses={statuses}/>
                                 )
                             }}

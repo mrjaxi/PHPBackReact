@@ -1634,6 +1634,7 @@ button:focus {
 .f-cards {
   display: flex;
   width: 100%;
+  max-width: 1000px;
   flex-direction: column;
   margin-bottom: 50px;
   justify-content: center;

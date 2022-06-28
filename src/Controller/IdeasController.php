@@ -109,7 +109,7 @@ class IdeasController extends AbstractController
 
         $urlIdea = $baseURL . "/idea/" . $idea->getId();
         $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
-        if ($this->sendMail($mailer, $message, "Новый отзыв")) {
+        if ($this->sendMailToAdmin($mailer, $message, "Новый отзыв")) {
             return $this->json([
                 "state" => "success",
                 "idea_id" => $idea->getId()
@@ -174,7 +174,7 @@ class IdeasController extends AbstractController
             ));
 
         $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$baseURL}{$urlIdea}";
-        if ($this->sendMail($mailer, $message, "Новый отзыв")) {
+        if ($this->sendMailToAdmin($mailer, $message, "Новый отзыв")) {
             return $this->json([
                 "state" => "success",
                 "url" => $redirectURL
@@ -368,6 +368,7 @@ class IdeasController extends AbstractController
         $ideas = $this->decorateIdeas($ideas);
         if (!empty($ideas)) {
             foreach ($ideas as &$idea) {
+                $idea["commentsCount"] = count($idea['comments']);
                 unset($idea['comments']);
             }
         }
@@ -416,10 +417,12 @@ class IdeasController extends AbstractController
     /**
      * @Route("/api/user/ideas/newComment/")
      * @param Request $request
+     * @param MailerInterface $mailer
      * @return Response
      */
-    public function newComment(Request $request): Response
+    public function newComment(Request $request, MailerInterface $mailer): Response
     {
+        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
         /** @var User $user */
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
@@ -449,6 +452,12 @@ class IdeasController extends AbstractController
             ->setUser($user)
             ->setContent($content);
         $this->commentsRepository->save($newComment);
+
+//        if($user->getId() !== $idea->get_User()->getId()){
+//            $urlIdea = $baseURL . "/idea/" . $idea->getId();
+//            $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
+//            $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+//        }
 
         return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
     }
@@ -871,18 +880,7 @@ class IdeasController extends AbstractController
         return $user;
     }
 
-    private function saveFile($request)
-    {
-        $project_dir = $this->getParameter('kernel.project_dir') . '/public/' . $this->getParameter('app.name') . '/';
-        $upload = AppController::saveFile($request, $project_dir, $this->getDoctrine()->getManager());
-        if (!empty($upload["filename"])) {
-            return $upload["filename"];
-        } else {
-            return null;
-        }
-    }
-
-    private function sendMail(MailerInterface $mailer, string $message, string $subject): bool
+    private function sendMailToAdmin(MailerInterface $mailer, string $message, string $subject): bool
     {
         // Берем почты из бд
         $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
@@ -891,47 +889,30 @@ class IdeasController extends AbstractController
         try {
             if (!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)) {
                 AppController::sendEmail($mailer, $message, $subject, $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
+                return true;
+            } else {
+                return false;
             }
-            return true;
         } catch (TransportExceptionInterface $e) {
             return false;
         }
     }
 
-    // array_sort($array, 'key', SORT_DESC);
-    private function array_sort($array, $on, $order = SORT_ASC)
+    private function sendToMail(MailerInterface $mailer, string $message, string $subject, string $toMail): bool
     {
-        $new_array = array();
-        $sortable_array = array();
-
-        if (!empty($array)) {
-            foreach ($array as $k => $v) {
-                if (is_array($v)) {
-                    foreach ($v as $k2 => $v2) {
-                        if ($k2 == $on) {
-                            $sortable_array[$k] = $v2;
-                        }
-                    }
-                } else {
-                    $sortable_array[$k] = $v;
-                }
+        // Берем почты из бд
+        $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
+        $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+        try {
+            if (!empty($toMail) and !empty($from_mail) and !empty($bcc_mail)) {
+                AppController::sendEmail($mailer, $message, $subject, $toMail, $from_mail->getValue(), $bcc_mail->getValue());
+                return true;
+            } else {
+                return false;
             }
-
-            switch ($order) {
-                case SORT_ASC:
-                    asort($sortable_array);
-                    break;
-                case SORT_DESC:
-                    arsort($sortable_array);
-                    break;
-            }
-
-            foreach ($sortable_array as $k => $v) {
-                $new_array[$k] = $array[$k];
-            }
+        } catch (TransportExceptionInterface $e) {
+            return false;
         }
-
-        return array_values((array)$new_array);
     }
 
     /**
