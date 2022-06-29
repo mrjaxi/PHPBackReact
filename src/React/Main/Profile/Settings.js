@@ -59,7 +59,7 @@ const Settings = () => {
             <div className={"f-login"} style={{ display: 'flex', flexDirection: 'column', paddingBottom: 95 }}>
                 <div style={{ marginTop: 120 }}>
                     <Form
-                        onFinish={(value) => console.log(value)}
+                        onFinish={(value) => onSend(value)}
                         name={"settings"}
                         initialValues={global.user}
                         style={{ marginTop: 40 }}

@@ -10,7 +10,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 import UserIdeas from "./UserIdeas";
 
-const UserFavourite = ({ user, user_id }) => {
+const UserFavourite = ({ user, user_id, setCount }) => {
 
     let data = [];
 
@@ -24,12 +24,21 @@ const UserFavourite = ({ user, user_id }) => {
     }, []);
 
     useEffect(() => {
-        let prevIdeas = [...ideas]
-        prevIdeas.map(idea => {
-            idea.roles = user?.roles
-            idea.role = user?.role_name
-        })
-        setIdeas(prevIdeas)
+        if(ideas.length >= 0)
+            setCount(ideas.length)
+    }, [ideas])
+
+    useEffect(() => {
+        if(user){
+            let prevIdeas = [...ideas]
+            prevIdeas.map(idea => {
+                if(idea?.user.id === global.user.id){
+                    idea.roles = user?.roles
+                    idea.role = user?.role_name
+                }
+            })
+            setIdeas(prevIdeas)
+        }
     }, [user])
 
     const getUserFavourites = () => {
@@ -44,8 +53,8 @@ const UserFavourite = ({ user, user_id }) => {
                         text: idea.content,
                         showComments: false,//item.comments.length > 0,
                         showFullText: false,
-                        roles: user?.roles,
-                        role: user?.role_name,
+                        roles: idea?.user.roles,
+                        role: idea?.user.role_name,
                         status: idea.status,
                         photo: idea.photo,
                         comments: idea.comments,
@@ -92,7 +101,7 @@ const UserFavourite = ({ user, user_id }) => {
                         )
                     }}
                     renderWhenEmpty={() =>
-                        <EmptyIdeas text={"Вы еще оценили ни одной записи"}/>
+                        <EmptyIdeas text={user.id === global.user.id ? "Вы еще не оценили ни одну запись" : "Пользователь еще не оценил ни одной записи"}/>
                     }
                 />
             }

@@ -1,5 +1,5 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import { useParams } from "react-router";
+import {useHistory, useParams} from "react-router";
 import {Avatar, Col, Select, Skeleton} from "antd";
 import Header from "../Components/Header";
 import UserIdeas from "./UserIdeas";
@@ -14,6 +14,7 @@ const {Option} = Select;
 const Profile = () => {
 
     const params = useParams();
+    const history = useHistory();
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [selectedHeaderItem, setSelectedHeaderItem] = useState(0);
     const [roles, setRoles] = useState([])
@@ -33,9 +34,31 @@ const Profile = () => {
         system_id: null,
     });
 
+    const [ideasCount, setIdeasCount] = useState(-1);
+    const [commentsCount, setCommentsCount] = useState(-1);
+    const [likesCount, setLikesCount] = useState(-1);
+
     useLayoutEffect(() => {
+        setUser({
+            id: params.id,
+            username: "",
+            email: "",
+            phone: "",
+            roles: [],
+            role_name: "",
+            fio: "",
+            first_name: "",
+            middle_name: "",
+            last_name: "",
+            image: "",
+            is_active: true,
+            system_id: null,
+        })
+        setRoles([])
+        setSelectedHeaderItem(0)
+        setLoadingProfile(true)
         getUser();
-    }, [])
+    }, [history.location.pathname])
 
     useEffect(() => {
         if(user?.email) {
@@ -56,6 +79,10 @@ const Profile = () => {
                         username += response.data.profile?.last_name ? response.data.profile.last_name : "";
                         response.data.profile.fio = username
                         setUser(response.data.profile)
+
+                        setIdeasCount(response.data?.count.ideas)
+                        setCommentsCount(response.data?.count.comments)
+                        setLikesCount(response.data?.count.likes)
                     }
                     break;
                 case "error":
@@ -170,17 +197,17 @@ const Profile = () => {
                             <div style={{ display: 'flex', marginLeft: "30px", }}>
                                 <a onClick={() => setSelectedHeaderItem(0)} className={"f-profile-header"}
                                    style={{color: selectedHeaderItem === 0 && "#1D1D1F"}}>
-                                    Публикации
+                                    Публикации <a style={{color:"#AAB2BD"}}>{ideasCount >= 0 ? ideasCount : 0}</a>
                                     {selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/>}
                                 </a>
                                 <a onClick={() => setSelectedHeaderItem(1)} className={"f-profile-header"}
                                    style={{color: selectedHeaderItem === 1 && "#1D1D1F"}}>
-                                    Комментарии
+                                    Комментарии <a style={{color:"#AAB2BD"}}>{commentsCount >= 0 ? commentsCount : 0}</a>
                                     {selectedHeaderItem === 1 && <div className={"f-bottom-selected"}/>}
                                 </a>
                                 <a onClick={() => setSelectedHeaderItem(2)} className={"f-profile-header"}
                                    style={{color: selectedHeaderItem === 2 && "#1D1D1F"}}>
-                                    Понравилось
+                                    Понравилось <a style={{color:"#AAB2BD"}}>{likesCount >= 0 ? likesCount : 0}</a>
                                     {selectedHeaderItem === 2 && <div className={"f-bottom-selected"}/>}
                                 </a>
                             </div>
@@ -195,13 +222,13 @@ const Profile = () => {
                             width: '50vw'
                         }}>
                             {
-                                loadingProfile && roles !== [] ? <LoadingIdeas type={true}/>
+                                !user || loadingProfile || !roles[0] ? <LoadingIdeas type={true}/>
                                     : selectedHeaderItem === 0 ?
-                                        <UserIdeas user={user} user_id={params.id}/> :
+                                        <UserIdeas user={user} user_id={params.id} setCount={setIdeasCount}/> :
                                         selectedHeaderItem === 1 ?
-                                            <UserComments user={user} user_id={params.id}/> :
+                                            <UserComments user={user} user_id={params.id} setCount={setCommentsCount}/> :
                                             selectedHeaderItem === 2 &&
-                                            <UserFavourite user={user} user_id={params.id}/>
+                                            <UserFavourite user={user} user_id={params.id} setCount={setLikesCount}/>
                             }
                         </div>
                     </div>

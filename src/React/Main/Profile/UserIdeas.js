@@ -6,7 +6,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserIdeas = ({ user, user_id }) => {
+const UserIdeas = ({ user, user_id, setCount }) => {
 
     let data = [];
 
@@ -20,12 +20,19 @@ const UserIdeas = ({ user, user_id }) => {
     }, []);
 
     useEffect(() => {
-        let prevIdeas = [...ideas]
-        prevIdeas.map(idea => {
-            idea.roles = user?.roles
-            idea.role = user?.role_name
-        })
-        setIdeas(prevIdeas)
+        if(ideas.length >= 0)
+            setCount(ideas.length)
+    }, [ideas])
+
+    useEffect(() => {
+        if(user) {
+            let prevIdeas = [...ideas]
+            prevIdeas.map(idea => {
+                idea.roles = user?.roles
+                idea.role = user?.role_name
+            })
+            setIdeas(prevIdeas)
+        }
     }, [user])
 
     const getUserIdeas = () => {
@@ -97,7 +104,7 @@ const UserIdeas = ({ user, user_id }) => {
                         )
                     }}
                     renderWhenEmpty={() =>
-                        <EmptyIdeas text={"Вы еще не добавили ни одной записи"}/>
+                        <EmptyIdeas text={user.id === global.user.id ? "Вы еще не добавили ни одну запись" : "Пользователь еще не добавил ни одной записи"}/>
                     }
                 />
             }

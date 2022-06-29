@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comments;
 use App\Entity\Ideas;
+use App\Repository\IdeasRepository;
 use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
 use App\Repository\VotesRepository;
@@ -26,14 +27,17 @@ class UserController extends AbstractController
     private UserRepository $userRepository;
     private SettingsRepository $settingsRepository;
     private VotesRepository $votesRepository;
+    private IdeasRepository $ideasRepository;
     private UserPasswordEncoderInterface $encoder;
 
     public function __construct(UserRepository $userRepository, SettingsRepository $settingsRepository,
-                                VotesRepository $votesRepository, UserPasswordEncoderInterface $encoder)
+                                VotesRepository $votesRepository, IdeasRepository $ideasRepository,
+                                UserPasswordEncoderInterface $encoder)
     {
         $this->userRepository = $userRepository;
         $this->settingsRepository = $settingsRepository;
         $this->votesRepository = $votesRepository;
+        $this->ideasRepository = $ideasRepository;
         $this->encoder = $encoder;
     }
 
@@ -301,15 +305,26 @@ class UserController extends AbstractController
         $user->setFirstName($data['first_name']);
         if (!empty($data['middle_name'])) {
             $user->setMiddleName($data['middle_name']);
+        } else {
+            $user->setMiddleName(null);
         }
+
         if (!empty($data['last_name'])) {
             $user->setLastName($data['last_name']);
+        } else {
+            $user->setLastName(null);
         }
+
         if (!empty($data['image'])) {
             $user->setImage($data['image']);
+        } else {
+            $user->setImage(null);
         }
+
         if (!empty($data['phone'])) {
             $user->setPhone($data['phone']);
+        } else {
+            $user->setPhone(null);
         }
         $this->userRepository->save($user);
 
@@ -333,6 +348,11 @@ class UserController extends AbstractController
         $response = array(
             'state' => 'success',
             'profile' => $user->get_Profile(),
+            'count' => array(
+                'ideas' => count($user->get_Ideas()),
+                'comments' => count($user->get_CommentsArray()),
+                'likes' => count($user->get_VotesArray()),
+            )
         );
         switch ($page) {
             case 1:
@@ -341,19 +361,27 @@ class UserController extends AbstractController
                 $response["ideas"] = $ideas;
                 break;
             case 2:
+                $ideas = [];
+                $ideasIds = []; // in_array("ROLE_ADMIN", $user->getRoles())
                 $comments = $user->get_CommentsArray(true);
                 foreach ($comments as &$comment) {
-                    $comment["idea_id"] = $comment["idea"]->getId();
-                    unset($comment["idea"]);
+                    /** @var Ideas $commentIdea */
+                    $commentIdea = $comment["idea"];
+                    $ideasIds[] = $commentIdea->getId();
                 }
-//                foreach ($comments as &$comment) {
-//                    $decorIdea = $this->decorateArrayIdeas(array($comment['idea']));
-//
-//                    $comment['idea'] = $decorIdea[0] ?: null;
-//                    $comment["idea"]["comments"] = [];
-//                }
-
-                $response["comments"] = $comments;
+                $ideasIds = array_values(array_unique($ideasIds));
+                foreach ($ideasIds as &$idea_id) {
+                    $idea = $this->ideasRepository->find($idea_id);
+                    $decorIdea = $this->decorateArrayIdeas(array($idea))[0];
+                    foreach ($decorIdea["comments"] as $key => $comment) {
+                        if($comment["user"]["id"] !== $user->getId()){
+                            unset($decorIdea["comments"][$key]);
+                        }
+                    }
+                    $decorIdea["comments"] = array_values($decorIdea["comments"]);
+                    $ideas[] = $decorIdea;
+                }
+                $response["ideas"] = $ideas;
                 break;
             case 3:
                 $likes = $user->get_VotesArray(true);
@@ -365,7 +393,8 @@ class UserController extends AbstractController
                 $response["likes"] = $likes;
                 break;
             default:
-                return $this->json(['state' => 'trouble', 'profile' => $user->get_Profile(), 'message' => "Такой страницы профиля нет"]);
+                $response["message"] = "Такой страницы профиля нет";
+                return $this->json($response);
                 break;
         }
 

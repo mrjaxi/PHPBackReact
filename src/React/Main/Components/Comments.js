@@ -72,24 +72,24 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                                                         }/>
                                             </Link>
                                             <div className={"f-cards-wrap-text"}>
-                                                <Link to={global.lang + `/profile/${comment.user.id}`}>
                                                 <span
                                                     className={"f-cards-text"}
                                                     style={{justifyContent: "flex-start"}}
                                                 >
-                                                    <span>
-                                                        {comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")}
-                                                        {
-                                                            ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles.includes(el)) &&
-                                                            <img style={{marginBottom: 3}} src={"/i/official.svg"}
-                                                                 width={15} height={15}/>
-                                                        }
-                                                    </span>
+                                                    <Link to={global.lang + `/profile/${comment.user.id}`}>
+                                                        <span style={{color: "black"}}>
+                                                            {comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")}
+                                                            {
+                                                                ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles.includes(el)) &&
+                                                                <img style={{marginBottom: 3}} src={"/i/official.svg"}
+                                                                     width={15} height={15}/>
+                                                            }
+                                                        </span>
+                                                    </Link>
                                                     {/*{*/}
                                                     {/*    <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 10, fontWeight: 400 }}>ред.</span>*/}
                                                     {/*}*/}
                                                 </span>
-                                                </Link>
                                                 <span className={"f-cards-content-description"}>
                                                     {
                                                         comment?.content

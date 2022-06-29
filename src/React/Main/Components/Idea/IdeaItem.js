@@ -12,7 +12,8 @@ import Like from '/public/i/like.svg'
 
 const IdeaItem = ({ item, index, setItem, statuses,
                       selectType = () => false, selectCategory = () => false,
-                      includedTypes = [], types = [], includedCategory = []}) => {
+                      includedTypes = [], types = [], includedCategory = [],
+                      showContent = true, showCommentsCount = true, showLikes = true }) => {
 
     const [idea, setIdea] = useState(item);
     const [date, setDate] = useState("");
@@ -249,17 +250,17 @@ const IdeaItem = ({ item, index, setItem, statuses,
                                     </div>
                             }
                         </div>
-                        <div className={"f-cards-div-wrap-text"}>
+                        <div className={"f-cards-div-wrap-text"} style={{ marginBottom: showContent ? 20 : 0 }}>
                             <Link to={global.lang + "/idea/" + idea.idea_id + "/"}>
                                 <span className={"f-cards-content-text"}>
                                     {idea.title}
                                 </span>
                             </Link>
                         </div>
-
-                        <div className={"f-cards-div-wrap-text"}>
-                            <span className={"f-cards-content-description"}>
-                                <Linkify>
+                        { showContent &&
+                            <div className={"f-cards-div-wrap-text"}>
+                                <span className={"f-cards-content-description"}>
+                                    <Linkify>
                                     {
                                         idea.text.split(" ").length <= 40 ?
                                             <span>{idea.text}</span> :
@@ -270,19 +271,22 @@ const IdeaItem = ({ item, index, setItem, statuses,
                                                 <span>{idea.text} <a style={{zIndex: 3}}
                                                                      onClick={() => showText(idea.showFullText)}>Скрыть</a></span>
                                     }
-                                </Linkify>
-                            </span>
-                        </div>
-                        <div className={"f-cards-under-block"}>
-                            <div>
-                                <a onClick={() => {
-                                    showComments()
-                                }} className={"f-cards-under-block-comment"}>
-                                    {global.numWord(idea.comments.length, ["комментарий", "комментария", "комментариев"])}
-                                </a>
+                                    </Linkify>
+                                </span>
                             </div>
+                        }
+                        <div className={"f-cards-under-block"}>
+                            { showCommentsCount &&
+                                <div>
+                                    <a onClick={() => {
+                                        showComments()
+                                    }} className={"f-cards-under-block-comment"}>
+                                        {global.numWord(idea.comments.length, ["комментарий", "комментария", "комментариев"])}
+                                    </a>
+                                </div>
+                            }
                             <div>
-                                {
+                                { showLikes ?
                                     global.layout === 'guest' ?
                                     <Tooltip color={"black"} title="Авторизуйтесь, чтобы оценить">
                                         <button className={"f-cards-under-block-like"}
@@ -322,6 +326,7 @@ const IdeaItem = ({ item, index, setItem, statuses,
                                                     <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
                                                 </div>
                                             </button>
+                                    : <></>
                                 }
                             </div>
                             {/*<div>*/}
