@@ -147,19 +147,20 @@ const Profile = () => {
                                                 {
                                                     global.layout === "admin" && roles[0] ?
                                                         <Select
+                                                            value={roles[0]}
                                                             size={'large'}
-                                                            onSelect={(value, data) => {
-                                                                changeRole(value, data.data)
+                                                            onSelect={(value, option) => {
+                                                                changeRole(value, option.data)
                                                             }}
                                                             // bordered={false}
                                                             style={{height: '100%'}}
-                                                            defaultValue={roles[0]}
+                                                            // defaultValue={roles[0]}
                                                         >
                                                             <Option data={"Генератор идей"} value={"ROLE_USER"}>Генератор идей</Option>
                                                             <Option data={"Администратор"} value={"ROLE_ADMIN"}>Администратор</Option>
                                                             <Option data={"Разработчик"} value={"ROLE_DEVELOPER"}>Разработчик</Option>
-                                                        </Select> :
-                                                        <></>
+                                                        </Select>
+                                                        : <></>
                                                 }
                                             </div>
                                         </div>

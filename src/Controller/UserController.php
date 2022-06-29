@@ -265,6 +265,8 @@ class UserController extends AbstractController
      */
     public function setRole(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
         $data = json_decode($request->getContent(), true);
         if(empty($data['user_id']) || empty($data['new_role'])){
             return $this->json(['state' => 'error', 'message' => "Передайте user_id и new_role"]);
@@ -272,6 +274,9 @@ class UserController extends AbstractController
         $user = $this->userRepository->find($data['user_id']);
         if(empty($user)){
             return $this->json(['state' => 'error', 'message' => "Такого пользователя не существует"]);
+        }
+        if($currentUser->getId() === $user->getId()){
+            return $this->json(['state' => 'error', 'message' => "Вы не можете изменить свою роль"]);
         }
         $user->setRoles([$data['new_role']]);
         $this->userRepository->save($user);
