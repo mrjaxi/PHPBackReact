@@ -4,6 +4,7 @@ import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import {UserOutlined} from "@ant-design/icons";
 import Login from "../Auth/Login";
+import {Link} from "react-router-dom";
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -60,23 +61,26 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                                     <div
                                         key={index}
                                         className={"f-cards-avatar f-cards-avatar-bottom-border"}
-                                        style={{paddingTop: 40}}
+                                        style={{paddingTop: 40, display: "block",}}
                                     >
                                         <div className={"f-cards-row-wrap"}>
-                                            <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
-                                                    src={comment.user.image
-                                                        ? <img src={comment.user.image}/>
-                                                        : <UserOutlined/>
-                                                    }/>
+                                            <Link to={global.lang + `/profile/${comment.user.id}`}>
+                                                <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                                        src={comment.user.image
+                                                            ? <img src={comment.user.image}/>
+                                                            : <UserOutlined/>
+                                                        }/>
+                                            </Link>
                                             <div className={"f-cards-wrap-text"}>
+                                                <Link to={global.lang + `/profile/${comment.user.id}`}>
                                                 <span
                                                     className={"f-cards-text"}
-                                                    style={{ justifyContent: "flex-start" }}
+                                                    style={{justifyContent: "flex-start"}}
                                                 >
                                                     <span>
                                                         {comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")}
                                                         {
-                                                            comment?.user.roles.includes("ROLE_ADMIN") &&
+                                                            ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles.includes(el)) &&
                                                             <img style={{marginBottom: 3}} src={"/i/official.svg"}
                                                                  width={15} height={15}/>
                                                         }
@@ -85,12 +89,13 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                                                     {/*    <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 10, fontWeight: 400 }}>ред.</span>*/}
                                                     {/*}*/}
                                                 </span>
+                                                </Link>
                                                 <span className={"f-cards-content-description"}>
                                                     {
                                                         comment?.content
                                                     }
                                                 </span>
-                                                <span style={{ color: '#AAB2BD', fontSize: 15, fontWeight: 400 }}>
+                                                <span style={{color: '#AAB2BD', fontSize: 15, fontWeight: 400}}>
                                                     {
                                                         comment?.dateString
                                                     }

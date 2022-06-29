@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import FlatList from "flatlist-react";
@@ -6,7 +6,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserIdeas = ({ user_id }) => {
+const UserIdeas = ({ user, user_id }) => {
 
     let data = [];
 
@@ -18,6 +18,15 @@ const UserIdeas = ({ user_id }) => {
         updateStatuses();
         getUserIdeas()
     }, []);
+
+    useEffect(() => {
+        let prevIdeas = [...ideas]
+        prevIdeas.map(idea => {
+            idea.roles = user?.roles
+            idea.role = user?.role_name
+        })
+        setIdeas(prevIdeas)
+    }, [user])
 
     const getUserIdeas = () => {
         setLoading(true);
@@ -32,8 +41,8 @@ const UserIdeas = ({ user_id }) => {
                                 text: idea.content,
                                 showComments: false,//idea.comments.length > 0,
                                 showFullText: false,
-                                roles: idea.user.roles,
-                                role: idea.user.role_name,
+                                roles: user?.roles,
+                                role: user?.role_name,
                                 status: idea.status,
                                 photo: idea.photo,
                                 comments: idea.comments,
@@ -41,6 +50,7 @@ const UserIdeas = ({ user_id }) => {
                                 dislike: 2,
                                 categoryId: idea.category.id,
                                 category: idea.category.name,
+                                user: idea.user,
                                 username: idea.user?.first_name,
                                 userImage: idea.user.image,
                                 type: idea.type.name,
@@ -77,32 +87,20 @@ const UserIdeas = ({ user_id }) => {
 
     return (
         <>
-            <div className={"max_width"}
-                 style={{ paddingTop: 50 }}
-            >
-                <div style={{
-                    display: "flex",
-                    justifyContent: 'center',
-                    flexDirection: "column",
-                    alignItems: "center",
-                    width: '50vw'
-                }}>
-                    {loading ? <LoadingIdeas type={true}/> :
-                        <FlatList
-                            list={ideas}
-                            renderItem={(idea, index) => {
-                                return (
-                                    <IdeaItem item={idea} index={index} setItem={setIdea}
-                                              statuses={statuses}/>
-                                )
-                            }}
-                            renderWhenEmpty={() =>
-                                <EmptyIdeas text={"Вы еще не добавили ни одной записи"}/>
-                            }
-                        />
+            {loading ? <LoadingIdeas type={true}/> :
+                <FlatList
+                    list={ideas}
+                    renderItem={(idea, index) => {
+                        return (
+                            <IdeaItem item={idea} index={index} setItem={setIdea}
+                                      statuses={statuses}/>
+                        )
+                    }}
+                    renderWhenEmpty={() =>
+                        <EmptyIdeas text={"Вы еще не добавили ни одной записи"}/>
                     }
-                </div>
-            </div>
+                />
+            }
         </>
     )
 };

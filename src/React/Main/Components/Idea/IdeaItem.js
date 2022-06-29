@@ -150,7 +150,7 @@ const IdeaItem = ({ item, index, setItem, statuses,
                              paddingTop: 12,
                              paddingBottom: 13,
                              height: 48,
-                             backgroundColor: !includedCategory.includes(idea.categoryId) ? '#FFFFFF48' : '#FFFFFF',
+                             backgroundColor: !includedCategory.includes(idea?.categoryId) ? '#FFFFFF48' : '#FFFFFF',
                              color: '#1D1D1F'
                          }}
                          onClick={() => {
@@ -158,7 +158,7 @@ const IdeaItem = ({ item, index, setItem, statuses,
                          }}>{idea?.category}</div>
                     <p style={{
                         borderRadius: 32, paddingLeft: 17, paddingRight: 17, paddingTop: 12, paddingBottom: 13, height: 48,
-                        marginLeft: 0, color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1].color) && types[idea.typeId - 1].color,
+                        marginLeft: 0, color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1]?.color) && types[idea.typeId - 1]?.color,
                     }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                        onClick={() => {
                            selectType(idea.typeId)
@@ -197,17 +197,18 @@ const IdeaItem = ({ item, index, setItem, statuses,
                     }
                     <div className={"f-cards-inner"} style={{ marginTop: idea?.photo !== null ? -40 : 0 }}>
                         <div className={"f-cards-avatar"}>
-                            <div className={"f-cards-row-wrap"}>
-                                <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
-                                        src={idea.userImage
-                                            ? <img src={idea.userImage}/>
-                                            : <UserOutlined/>
-                                        }/>
-                                <div className={"f-cards-wrap-text-style"}>
+                            <Link to={global.lang + `/profile/${idea.user.id}`}>
+                                <div className={"f-cards-row-wrap"}>
+                                    <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                            src={idea.userImage
+                                                ? <img src={idea.userImage}/>
+                                                : <UserOutlined/>
+                                            }/>
+                                    <div className={"f-cards-wrap-text-style"}>
                                         <div>
                                             <span className={"f-cards-text"}>{idea.username}
                                                 {
-                                                    idea.roles.includes("ROLE_ADMIN") &&
+                                                    ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => idea?.roles.includes(el)) &&
                                                     <img style={{marginBottom: 3, marginLeft: 5}}
                                                          src={"/i/official.svg"} width={15}
                                                          height={15}/>
@@ -218,8 +219,9 @@ const IdeaItem = ({ item, index, setItem, statuses,
                                             <span> · </span>
                                             {date}
                                         </span>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                             {
                                 global.layout === "admin" ?
                                     <Select

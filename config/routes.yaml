@@ -16,9 +16,6 @@ api_add_idea:
 api_user_register:
   path: /api/ag/register/
   controller: App\Controller\UserController::register
-api_user_setProfile:
-  path: /api/ag/user/setProfile/
-  controller: App\Controller\UserController::setProfile
 api_user_get_by_email:
   path: /api/ag/getUserByEmail/
   controller: App\Controller\UserController::getUserByEmail
@@ -74,6 +71,9 @@ api_new_comment:
 api_change_comment:
   path: /api/user/ideas/changeComment/
   controller: App\Controller\IdeasController::changeComment
+api_user_setProfile:
+  path: /api/user/setProfile/
+  controller: App\Controller\UserController::setProfile
 
 # Как для админа так и для пользователя
 api_delete_comment:
@@ -84,6 +84,9 @@ api_delete_comment:
 api_set_status:
   path: /api/admin/ideas/setStatus/
   controller: App\Controller\IdeasController::setStatus
+api_set_role:
+  path: /api/admin/ideas/setRole/
+  controller: App\Controller\UserController::setRole
 
 
 # роуты реакта

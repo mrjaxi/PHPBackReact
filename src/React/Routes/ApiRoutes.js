@@ -10,6 +10,7 @@ const ApiRoutes = {
     API_GET_IDEAS: "/api/web/ideas/getIdeas/",
     API_NEW_IDEA: "/api/user/ideas/new/",
     API_SET_STATUS: "/api/admin/ideas/setStatus/",
+    API_SET_ROLE: "/api/admin/ideas/setRole/",
     API_NEW_VOTE: "/api/user/ideas/newVote/",
     API_DELETE_VOTE: "/api/user/delete/vote/",
     API_NEW_COMMENT: "/api/user/ideas/newComment/",

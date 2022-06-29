@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {Col, Select} from "antd";
 import Comments from "../Components/Comments";
 const { Option } = Select
@@ -10,7 +10,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 import UserIdeas from "./UserIdeas";
 
-const UserFavourite = ({ user_id }) => {
+const UserFavourite = ({ user, user_id }) => {
 
     let data = [];
 
@@ -18,10 +18,19 @@ const UserFavourite = ({ user_id }) => {
     const [loading, setLoading] = useState(true);
     const [ideas, setIdeas] = useState([]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         updateStatuses();
         getUserFavourites()
     }, []);
+
+    useEffect(() => {
+        let prevIdeas = [...ideas]
+        prevIdeas.map(idea => {
+            idea.roles = user?.roles
+            idea.role = user?.role_name
+        })
+        setIdeas(prevIdeas)
+    }, [user])
 
     const getUserFavourites = () => {
         setLoading(true);
@@ -35,8 +44,8 @@ const UserFavourite = ({ user_id }) => {
                         text: idea.content,
                         showComments: false,//item.comments.length > 0,
                         showFullText: false,
-                        roles: idea.user.roles,
-                        role: idea.user.role_name,
+                        roles: user?.roles,
+                        role: user?.role_name,
                         status: idea.status,
                         photo: idea.photo,
                         comments: idea.comments,
@@ -44,6 +53,7 @@ const UserFavourite = ({ user_id }) => {
                         dislike: 2,
                         categoryId: idea.category.id,
                         category: idea.category.name,
+                        user: idea.user,
                         username: idea.user?.first_name,
                         userImage: idea.user.image,
                         type: idea.type.name,
@@ -72,32 +82,20 @@ const UserFavourite = ({ user_id }) => {
 
     return (
         <>
-            <div className={"max_width"}
-                 style={{ paddingTop: 50 }}
-            >
-                <div style={{
-                    display: "flex",
-                    justifyContent: 'center',
-                    flexDirection: "column",
-                    alignItems: "center",
-                    width: '50vw'
-                }}>
-                    {loading ? <LoadingIdeas type={true}/> :
-                        <FlatList
-                            list={ideas}
-                            renderItem={(idea, index) => {
-                                return (
-                                    <IdeaItem item={idea} index={index} setItem={setIdea}
-                                              statuses={statuses}/>
-                                )
-                            }}
-                            renderWhenEmpty={() =>
-                                <EmptyIdeas text={"Вы еще оценили ни одной записи"}/>
-                            }
-                        />
+            {loading ? <LoadingIdeas type={true}/> :
+                <FlatList
+                    list={ideas}
+                    renderItem={(idea, index) => {
+                        return (
+                            <IdeaItem item={idea} index={index} setItem={setIdea}
+                                      statuses={statuses}/>
+                        )
+                    }}
+                    renderWhenEmpty={() =>
+                        <EmptyIdeas text={"Вы еще оценили ни одной записи"}/>
                     }
-                </div>
-            </div>
+                />
+            }
         </>
     )
 };

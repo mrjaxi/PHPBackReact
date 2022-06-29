@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import {NavLink, useHistory} from "react-router-dom";
 import './sass/main-component.scss'
-import {Col} from "antd";
+import {Col, Skeleton} from "antd";
 import axios from "axios";
 import Header from "./Main/Components/Header";
 import Navigation from "./Main/Components/Navigation";
@@ -31,6 +31,7 @@ const MainPage = (props) => {
 
     const [loading, setLoading] = useState(true);
     const [loadingInfinite, setLoadingInfinite] = useState(true);
+    const [loadingCategory, setLoadingCategory] = useState(true);
 
     const history = useHistory();
 
@@ -139,6 +140,7 @@ const MainPage = (props) => {
                                     comments: idea.comments,
                                     like: Number(idea.likes),
                                     dislike: 0,
+                                    user: idea.user,
                                     username: idea.user?.first_name,
                                     userImage: idea.user.image,
                                     categoryId: idea.category.id,
@@ -171,6 +173,7 @@ const MainPage = (props) => {
             setTypes(response.data?.types);
             setStatuses(response.data?.statuses);
             setCategories(response.data?.categories);
+            setLoadingCategory(false);
         });
     };
 
@@ -235,7 +238,7 @@ const MainPage = (props) => {
                                 marginBottom: "180px",
                             }}
                         >
-                            {loading ? <LoadingIdeas type={true}/> :
+                            { loadingCategory || loading ? <LoadingIdeas type={true}/> :
                                 ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
                                     : <InfiniteScroll
                                         style={{overflow: 'hidden'}}
@@ -268,9 +271,9 @@ const MainPage = (props) => {
                         <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"}>
-                                    {
+                                    { statuses?.length > 0 ?
                                         statuses.map((status) => (
-                                            <a key={status.id} className={"f-side-panel-button-section "}
+                                            <a key={status.id} className={"f-side-panel-button-section"}
                                                onClick={() => {
                                                    selectStatus(status.id)
                                                }}
@@ -285,10 +288,17 @@ const MainPage = (props) => {
                                                 >{status.ideasCount}</span>
                                             </a>
                                         ))
+                                        : [1,2,3,4,5].map((status) => (
+                                            <Skeleton active paragraph={{ rows: 0 }}>
+                                                <a className={"f-side-panel-button-section"} style={{width: 260, height: 50}}>
+                                                    <span className={"f-side-panel-count-subtext"}/>
+                                                </a>
+                                            </Skeleton>
+                                        ))
                                     }
                                 </div>
                                 <div className={"f-side-panel-wrap"}>
-                                    {
+                                    { types?.length > 0 ?
                                         types.map((type) => (
                                             <a key={type.id} className={"f-side-panel-button"}
                                                onClick={() => {
@@ -297,6 +307,11 @@ const MainPage = (props) => {
                                                style={{color: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED"),
                                                    borderColor: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED") }}
                                             >#{type.name}</a>
+                                        ))
+                                        : [1,2,3,4,5].map((type) => (
+                                            <Skeleton active paragraph={{ rows: 0 }}>
+                                                <a className={"f-side-panel-button"} style={{width: 260, height: 50}}/>
+                                            </Skeleton>
                                         ))
                                     }
                                 </div>

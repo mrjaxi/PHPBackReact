@@ -56,7 +56,7 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}>
-                                        <div style={{ width: 12, height: 12, borderRadius: 100, border: '2px solid #E6E9ED', position: 'absolute', zIndex: 2, top: 10, right: 25, backgroundColor: '#3D72ED' }}></div>
+                                        <div style={{ width: 12, height: 12, borderRadius: 100, border: '2px solid #E6E9ED', position: 'absolute', zIndex: 2, top: 10, right: 25, backgroundColor: '#3D72ED' }}/>
                                         <ProfileAvatar size={48} image={global.user.image}/>
                                         <img src={"/i/downOutlined.svg"} style={{
                                             marginLeft: 7.5

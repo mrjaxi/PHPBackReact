@@ -1317,6 +1317,10 @@ button:focus {
   outline: none;
 }
 
+.noHover {
+  pointer-events: none;
+}
+
 .logo {
   position: absolute;
   background-repeat: no-repeat;
@@ -1389,10 +1393,6 @@ button:focus {
   margin-top: 6px;
 }
 .f-profile-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
   font-size: 17px;
   font-weight: 500;
   color: #AAB2BD;
@@ -1707,7 +1707,6 @@ button:focus {
 .f-cards-row-wrap {
   display: flex;
   flex-direction: row;
-  width: 60%;
 }
 .f-cards-avatar {
   display: flex;

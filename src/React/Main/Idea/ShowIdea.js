@@ -28,6 +28,9 @@ const ShowIdea = (props) => {
     useLayoutEffect(() => {
         updateStatuses();
         getIdea();
+        setIdeasInfinite([])
+        setStopInfinity(false)
+        setPage(0);
     }, [history.location.pathname]);
 
     useEffect(() => {
@@ -60,6 +63,7 @@ const ShowIdea = (props) => {
                                 category: idea.category.name,
                                 like: Number(idea.likes),
                                 dislike: 2,
+                                user: idea.user,
                                 username: idea.user?.first_name,
                                 userImage: idea.user.image,
                                 type: idea.type.name,
@@ -114,6 +118,7 @@ const ShowIdea = (props) => {
                                             dislike: 0,
                                             categoryId: idea.category.id,
                                             category: idea.category.name,
+                                            user: idea.user,
                                             username: idea.user?.first_name,
                                             userImage: idea.user.image,
                                             type: idea.type.name,

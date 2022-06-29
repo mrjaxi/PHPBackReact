@@ -89,6 +89,9 @@ textarea:focus,
 button:focus {
     outline: none;
 }
+.noHover{
+    pointer-events: none;
+}
 
 .logo {
     position: absolute;
@@ -536,7 +539,6 @@ button:focus {
         &-row-wrap {
             display: flex;
             flex-direction: row;
-            width: 60%;
         }
 
         &-avatar {

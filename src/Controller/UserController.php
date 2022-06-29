@@ -20,8 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Constraints\Date;
-use function Symfony\Component\DomCrawler\last;
 
 class UserController extends AbstractController
 {
@@ -261,26 +259,41 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/ag/user/setProfile/")
+     * @Route("/api/admin/ideas/setRole/")
+     * @param Request $request
+     * @return Response
+     */
+    public function setRole(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if(empty($data['user_id']) || empty($data['new_role'])){
+            return $this->json(['state' => 'error', 'message' => "Передайте user_id и new_role"]);
+        }
+        $user = $this->userRepository->find($data['user_id']);
+        if(empty($user)){
+            return $this->json(['state' => 'error', 'message' => "Такого пользователя не существует"]);
+        }
+        $user->setRoles([$data['new_role']]);
+        $this->userRepository->save($user);
+
+        return $this->json(['state' => 'success', 'profile' => $user->get_Profile()]);
+    }
+
+    /**
+     * @Route("/api/user/setProfile/")
      * @param Request $request
      * @return Response
      */
     public function setProfile(Request $request): Response
     {
-        $data = json_decode($request->getContent(), true);
-        if (empty($data['email']) or empty($data['first_name'])) {
-            return $this->json(['state' => 'error', 'message' => "Передайте email, first_name"]);
-        }
-
         /** @var User $user */
-        $user = $this->userRepository->findOneBy(["email" => $data['email']]);
-        if (empty($user)) {
-            return $this->json(['state' => 'error', 'message' => "Такого пользователя не существует"]);
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (empty($data['first_name'])) {
+            return $this->json(['state' => 'error', 'message' => "Передайте first_name"]);
         }
 
-        $user->setEmail($data['email'])
-            ->setUsername($data['email'])
-            ->setFirstName($data['first_name']);
+        $user->setFirstName($data['first_name']);
         if (!empty($data['middle_name'])) {
             $user->setMiddleName($data['middle_name']);
         }
@@ -292,13 +305,6 @@ class UserController extends AbstractController
         }
         if (!empty($data['phone'])) {
             $user->setPhone($data['phone']);
-        }
-        if (!empty($data['system_id'])) {
-            $user->setSystemId($data['system_id']);
-        }
-        if (!empty($data['pass'])) {
-            $user->setPassword($this->encoder->encodePassword($user, $data['pass']))
-                ->setOpenPassword($data['pass']);
         }
         $this->userRepository->save($user);
 
@@ -318,16 +324,12 @@ class UserController extends AbstractController
         if (empty($user)) {
             return $this->json(['state' => 'error', 'message' => "Такого пользователя нет"]);
         }
-//        $data = json_decode($request->getContent(), true);
-        $data = $request->get("page");
-        if (empty($data)) {
-            return $this->json(['state' => 'error', 'message' => "Передайте параметр page"]);
-        }
+        $page = (int)$request->get("page");
         $response = array(
             'state' => 'success',
             'profile' => $user->get_Profile(),
         );
-        switch ($data) {
+        switch ($page) {
             case 1:
                 $ideas = $user->get_Ideas();
                 $ideas = $this->decorateCollectionIdeas($ideas);
