@@ -9,18 +9,26 @@ import ApiRoutes from "../../Routes/ApiRoutes";
 
 const Settings = () => {
 
-    const [loading, setLoading] = useState(false);
     const [sendLoading, setSendLoading] = useState(false)
     const [file, setFile] = useState("");
 
     const onSend = (value) => {
         setSendLoading(true);
+
+        console.log(value)
         if (file){
             value.image = file
         }
 
         axios.post(ApiRoutes.API_SET_PROFILE, value).then(response => {
-            console.log(response);
+            if (response.data.state === "success"){
+                global.user.image = file
+                global.openNotification("Успешно", "Данные сохранены", "success")
+            } else {
+                global.openNotification("Ошибка", "Данные не сохранены", "success")
+            }
+
+            setFile(value.image)
             setSendLoading(false)
         })
     };
@@ -30,7 +38,6 @@ const Settings = () => {
         action: ApiRoutes.API_UPLOAD_IMAGE,
         showUploadList: false,
         beforeUpload: (file) => {
-            setLoading(true);
             const isPNG = (file.type === 'image/png' | file.type === "image/jpeg");
 
             if (!isPNG) {
@@ -41,11 +48,6 @@ const Settings = () => {
         },
         onChange: (info) => {
             setFile(info.file?.response?.filename);
-            if(info.file?.response?.filename){
-                console.log(info.file?.response?.filename)
-                global.user.image = info.file?.response?.filename
-                setLoading(false);
-            }
         },
     };
 
