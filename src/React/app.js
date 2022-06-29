@@ -1,8 +1,7 @@
 import 'antd/dist/antd.less';
-import './sass/app.scss';
 import './sass/main-component.scss'
 import './sass/add-idea.scss'
-import './sass/user.scss';
+import './sass/settings.scss'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Layout, notification} from 'antd';

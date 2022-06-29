@@ -1,0 +1,36 @@
+.t {
+    &-settings {
+        position: relative;
+        margin-top: 20px;
+        width: 260px;
+        height: 260px;
+    }
+
+    &-avatar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #AAB2BD;
+    }
+
+    &-upload-button {
+        border: none;
+        width: 54px;
+        height: 54px;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        border-radius: 400px;
+        background-color: #C4C4C4;
+        backdrop-filter: blur(56px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transform: scale(1);
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+}

@@ -88,7 +88,7 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                                             }}/>
                                         </div>
                                     </Link>
-                                    <a type={"button"} href={"/"}>Настройки профиля</a>
+                                    <Link type={"button"} to={global.lang + "/user/settings/"}>Настройки профиля</Link>
                                     <a type={"button"} onClick={() => logout()}>Выход</a>
                                 </div>
                             </div>)

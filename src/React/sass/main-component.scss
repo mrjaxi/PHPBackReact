@@ -13,6 +13,10 @@ body {
     width: 100%;
 }
 
+.ant-image-mask:hover {
+    opacity: 0;
+}
+
 .max_width {
     margin: 0 auto;
     max-width: 90%;
