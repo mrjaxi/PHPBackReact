@@ -1,12 +1,16 @@
-import {Avatar} from "antd";
-import {UserOutlined} from "@ant-design/icons";
+import {Avatar, Image, Spin} from "antd";
+import {LoadingOutlined, UserOutlined} from "@ant-design/icons";
 import React from "react";
 
 const ProfileAvatar = ({size, image}) => {
    return (
        <Avatar size={size} style={{backgroundColor: '#AAB2BD'}}
                src={image && global.layout !== 'guest'
-                   ? <img style={{ height: `${size}px`}} src={image}/>
+                   ? <Image placeholder={
+                       <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'  }}>
+                           <Spin indicator={<LoadingOutlined style={{ fontSize: 14 }} spin />} />
+                       </div>
+                   } preview={false} style={{ height: `${size}px`}} src={image}/>
                    : <UserOutlined/>
                }/>
    )

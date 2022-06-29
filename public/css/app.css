@@ -698,6 +698,11 @@ button:focus {
 }
 .t-settings {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F5F7FA;
+  border-radius: 200px;
   margin-top: 20px;
   width: 260px;
   height: 260px;
