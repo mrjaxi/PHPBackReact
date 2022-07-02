@@ -23,20 +23,20 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
         setLoading(true)
         axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text})
             .then( response => {
-                if (response.data.state === "success") {
-                    form.resetFields()
-                    let data = [...rawCommentsData];
-                    data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
-                    setCommentsData(data);
-                    setRawCommentsData(data);
-                    setComments(data)
-                    setShowComments(false)
-                } else if(response.data.state === "error") {
-                    global.openNotification("Ошибка", response.data?.message, "error")
-                } else {
-                    global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                }
-
+                global.handleResponse(response,
+                    function () {
+                        form.resetFields()
+                        let data = [...rawCommentsData];
+                        data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
+                        setCommentsData(data);
+                        setRawCommentsData(data);
+                        setComments(data)
+                        setShowComments(false)
+                    },
+                    function () {
+                        global.openNotification("Ошибка", response.data?.message, "error")
+                    },
+                )
                 setLoading(false);
             }
         )

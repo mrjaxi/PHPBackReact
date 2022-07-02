@@ -12,10 +12,45 @@ import EmptyIdeas from "./Main/Components/Idea/EmptyIdeas";
 import Login from "./Main/Auth/Login";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+global.handleResponse = function( response, success=()=>{}, error=()=>{}, trouble=()=>{}, defaultFunc=()=>{} ) {
+    switch (response.data?.state) {
+        case "success":
+            // console.log("SUCCESS HANDLE")
+            success()
+            break;
+        case "error":
+            // console.log("ERROR HANDLE")
+            error()
+            break;
+        case "trouble":
+            // console.log("TROUBLE HANDLE")
+            trouble()
+            break;
+        default:
+            // console.log("DEFAULT HANDLE")
+            defaultFunc()
+            global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
+            break;
+    }
+    /** Вот так ловить ответы от сервера:
+        .then(response => {
+            global.handleResponse(response,
+                function () {
+                    // Код при success ответе
+                },
+                function () {
+                    // Код при error ответе
+                },
+                function () {
+                    // Код при trouble ответе
+                },
+            )
+        })
+     * */
+}
+
 const MainPage = (props) => {
     const urlParams = new URLSearchParams(props.location.search);
-
-    const [wait, setWait] = useState(true);
 
     const [types, setTypes] = useState([]);
     const [statuses, setStatuses] = useState([]);
@@ -123,48 +158,17 @@ const MainPage = (props) => {
         global._history.replace(`${global.lang}/?${serializedParams}`);
         axios.get(ApiRoutes.API_GET_IDEAS + "?" + serializedParams)
             .then(response => {
-                switch (response.data?.state) {
-                    case "success":
-                        if (response.data?.ideas !== null) {
-                            response.data.ideas.map(idea => {
-                                data.push({
-                                    idea_id: idea.id,
-                                    title: idea.title,
-                                    text: idea.content,
-                                    showComments: false,//idea.comments.length > 0,
-                                    showFullText: false,
-                                    roles: idea.user.roles,
-                                    role: idea.user.role_name,
-                                    status: idea.status,
-                                    photo: idea.photo,
-                                    comments: idea.comments,
-                                    like: Number(idea.likes),
-                                    dislike: 0,
-                                    user: idea.user,
-                                    username: idea.user?.first_name,
-                                    userImage: idea.user.image,
-                                    categoryId: idea.category.id,
-                                    category: idea.category.name,
-                                    type: idea.type.name,
-                                    typeId: idea.type.id,
-                                    currentUserIsVote: idea.currentUserIsVote,
-                                    allowComments: idea.allowComments,
-                                    date: idea?.date
-                                })
-                            });
-                        }
+                global.handleResponse(response,
+                    function () {
+                        data = global.parseToIdeaItems(response.data?.ideas, data)
                         setIdeas(data);
                         setLoading(false)
                         setLoadingInfinite(false);
-                        break;
-                    case "error":
+                    },
+                    function () {
                         global.openNotification("Ошибка", response.data?.message, "error")
-                        break;
-                    default:
-                        global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                        break;
-                }
-                setWait(false);
+                    }
+                )
             })
     };
 

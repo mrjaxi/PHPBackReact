@@ -9,12 +9,19 @@ const Redirect = (props) => {
 
         if (query.get("url") && query.get("user")){
             axios.post(ApiRoutes.API_DECODE_USER_DATA, {user: query.get("user")}).then(response => {
-                if (response.data.state === "success") {
-                    axios.post(ApiRoutes.API_LOGIN, global.serialize({username: response.data?.user.username, password: response.data?.user.password, remember: true}), {withCredentials: true}).then(login => {
-                        global.getProfile();
-                        global._history.push(query.get("url"))
-                    })
-                }
+                global.handleResponse(response,
+                    function () {
+                        axios.post(ApiRoutes.API_LOGIN, global.serialize({
+                                username: response.data?.user.username,
+                                password: response.data?.user.password,
+                                remember: true
+                            }), {withCredentials: true})
+                            .then(login => {
+                                global.getProfile();
+                                global._history.push(query.get("url"))
+                            })
+                    },
+                )
             })
         }
     };

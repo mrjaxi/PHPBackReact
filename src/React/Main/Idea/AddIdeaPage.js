@@ -29,36 +29,43 @@ const AddIdeaPage = () => {
         }
         let prevSearchItems = [];
 
-        if (text.length < 10) {
+        // if (text.length < 10) {
             axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {
                 withCredentials: true,
                 cancelToken: new cancelTokenSource(function executor(c) {
                     cancel = c;
                 })
             }).then(response => {
-                if (response.data?.ideas && response.data.state === "success") {
-                    response.data?.ideas.map(idea => {
-                        prevSearchItems.push({
-                            id: idea.id,
-                            title: idea.title,
-                            comments: idea.comments,
-                            text: idea.content,
-                            like: Number(idea.likes),
-                            showFullText: false,
-                            currentUserIsVote: idea.currentUserIsVote,
-                        })
-                    });
-                } else if (response.data.state === "error") {
-                    prevSearchItems = []
-                } else {
-                    prevSearchItems = null
-                }
+                global.handleResponse(response,
+                    function () {
+                        if(response.data?.ideas){
+                            response.data.ideas.map(idea => {
+                                prevSearchItems.push({
+                                    id: idea.id,
+                                    title: idea.title,
+                                    text: idea.content,
+                                    comments: idea?.commentsCount,
+                                    like: Number(idea?.likes),
+                                    showFullText: false,
+                                    currentUserIsVote: idea.currentUserIsVote,
+                                })
+                            });
+                        }
+                    },
+                    function () {
+                        prevSearchItems = []
+                    },
+                    () => {},
+                    function () {
+                        prevSearchItems = null
+                    },
+                )
                 setSearchItems(prevSearchItems);
             })
-        }
+        // }
     };
 
-    const onChange = ({fileList: newFileList}) => {
+    const onChange = ({ fileList: newFileList }) => {
         setFileList(newFileList);
     };
 
@@ -86,18 +93,17 @@ const AddIdeaPage = () => {
             type: data.type,
             photo: data?.file !== undefined ? data.file.fileList.map(item => item.response.filename).join(";") : ''
         }).then(response => {
-            switch (response.data.state) {
-                case "trouble":
-                case "success":
+            global.handleResponse(response,
+                function () {
                     global._history.push(global.lang + '/idea/'+response.data.idea_id + "/")
-                    break;
-                case "error":
+                },
+                function () {
                     global.openNotification("Ошибка", response.data?.message, "error")
-                    break;
-                default:
-                    global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                    break;
-            }
+                },
+                function () {
+                    global._history.push(global.lang + '/idea/'+response.data.idea_id + "/")
+                },
+            )
             setLoading(false)
         })
     };
@@ -140,6 +146,38 @@ const AddIdeaPage = () => {
         return isJpgOrPng && isLt2M;
     };
 
+    function getIdeaItem(idea) {
+        return (
+            <div className={"i-idea-card"} key={idea.id} style={{ marginBottom: 25 }}>
+                <Link to={global.lang + "/idea/" + idea.id + "/"} target="_blank">
+                    <span style={{ fontSize: 19, fontWeight: 500, color: '#1D1D1D' }}>{idea.title}</span>
+                    <div style={{ color: '#1D1D1D' }}>
+                        {
+                            idea.text.split(" ").length <= 25 ?
+                                <span>{idea.text}</span> :
+                                idea.text.split(" ").length > 25 && !idea.showFullText ?
+                                    <span>{idea.text.split(" ").filter((item, index) => index < 25).join(" ")}...</span> :
+                                    <span>{idea.text}</span>
+                        }
+                    </div>
+                    <div className={"i-idea-bottom"}>
+                        <a style={{ color: '#AAB2BD', fontSize: 17 }}>
+                            { global.numWord(idea.comments, ["комментарий", "комментария", "комментариев"]) }
+                        </a>
+                        <button type={"button"} style={{border: 'none', cursor: 'pointer', marginLeft: 20}}
+                                className={"f-cards-under-block-like"}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Icon component={Like} style={{ fontSize: 23 }} />
+                                <span className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                            </div>
+                        </button>
+                    </div>
+                </Link>
+                <div style={{width: '100%', height: 1, backgroundColor: '#E6E9ED', marginTop: 25}}/>
+            </div>
+        )
+    }
+
     return (
         <>
             <div className={"f-login"} style={{ paddingBottom: 95, paddingTop: 95 }}>
@@ -153,8 +191,9 @@ const AddIdeaPage = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Заголовок не может быть меньше 5 символов',
-                                min: 5
+                                message: 'Заголовок должен содержать от 5 до 255 символов',
+                                min: 5,
+                                max: 255,
                             },
                         ]}
                     >
@@ -169,8 +208,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Select size={"large"} style={{fontSize: 17, width: '480px',}}
-                                placeholder={"Выберите категорию"}>
+                        <Select size={"large"} style={{fontSize: 17, width: '480px',}} placeholder={"Выберите категорию"}>
                             {
                                 category.map(categories => {
                                     return <Option value={categories.id}>{categories.value}</Option>
@@ -208,79 +246,27 @@ const AddIdeaPage = () => {
                         <TextArea style={{fontSize: 17}} rows={4} placeholder={"Описание"} autoSize={{ minRows: 4 }}/>
                     </Form.Item>
                     { searchItems?.length > 0 &&
-                        <Form.Item>
+                        <div>
                             <Title style={{ color: '#1D1D1D', fontSize: 32 }}>Похожие идеи</Title>
                             <div className={"i-idea-wrap"}>
-                                {
-                                    showAllItems ?
-                                    searchItems.map((item) => (
-                                        <div className={"i-idea-card"} key={item.id}>
-                                            <Link to={global.lang + "/idea/" + item.id + "/"}>
-                                                <span style={{ fontSize: 19, fontWeight: 500, color: '#1D1D1D' }}>{item.title}</span>
-                                                <div style={{ color: '#1D1D1D' }}>
-                                                    {
-                                                        item.text.split(" ").length <= 25 ?
-                                                            <span>{item.text}</span> :
-                                                            item.text.split(" ").length > 25 && !item.showFullText ?
-                                                                <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}...</span> :
-                                                                <span>{item.text}</span>
-                                                    }
-                                                </div>
-                                            </Link>
-                                            <div className={"i-idea-bottom"}>
-                                                <a style={{ color: '#AAB2BD', fontSize: 17 }}>
-                                                    {global.numWord(12, ["комментарий", "комментария", "комментариев"])}
-                                                </a>
-                                                <button type={"button"} style={{border: 'none', cursor: 'pointer', marginLeft: 20}}
-                                                        className={"f-cards-under-block-like"}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                        <Icon component={Like} style={{ fontSize: 23 }} />
-                                                        <span className={"f-cards-under-block-like-text"}>{item.like}</span>
-                                                    </div>
-                                                </button>
-                                            </div>
-                                            <div style={{ width: '100%', height: 1, backgroundColor: '#E6E9ED', marginTop: 25 }}></div>
-                                        </div>
-                                    )) :
-                                        searchItems.filter((item, index) => index < 2).map((item) => (
-                                            <div className={"i-idea-card"} key={item.id}>
-                                                <Link to={global.lang + "/idea/" + item.id + "/"}>
-                                                    <span style={{ fontSize: 19, fontWeight: 500, color: '#1D1D1D' }}>{item.title}</span>
-                                                    <div style={{ color: '#1D1D1D' }}>
-                                                        {
-                                                            item.text.split(" ").length <= 25 ?
-                                                                <span>{item.text}</span> :
-                                                                item.text.split(" ").length > 25 && !item.showFullText ?
-                                                                    <span>{item.text.split(" ").filter((item, index) => index < 25).join(" ")}...</span> :
-                                                                    <span>{item.text}</span>
-                                                        }
-                                                    </div>
-                                                </Link>
-                                                <div className={"i-idea-bottom"}>
-                                                    <a style={{ color: '#AAB2BD', fontSize: 17 }}>
-                                                        {global.numWord(12, ["комментарий", "комментария", "комментариев"])}
-                                                    </a>
-                                                    <button type={"button"} style={{border: 'none', cursor: 'pointer', marginLeft: 20}}
-                                                            className={"f-cards-under-block-like"}>
-                                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                            <Icon component={Like} style={{ fontSize: 23 }} />
-                                                            <span className={"f-cards-under-block-like-text"}>{item.like}</span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                                <div style={{ width: '100%', height: 1, backgroundColor: '#E6E9ED', marginTop: 25 }}></div>
-                                            </div>
-                                        ))
-                                }
+                            {
+                                showAllItems ?
+                                searchItems.map((idea) => (
+                                    getIdeaItem(idea)
+                                ))
+                                : searchItems.filter((item, index) => index < 2).map((idea) => (
+                                    getIdeaItem(idea)
+                                ))
+                            }
                             </div>
                             {
                                 searchItems?.length > 2 &&
-                                <div onClick={() => setShowAllItems(!showAllItems)} style={{ marginTop: 25, color: '#3D72ED', marginBottom: 15, cursor: 'pointer' }}>
-                                    {showAllItems ? "Скрыть  " : "Еще  "}
-                                    {showAllItems ? <UpOutlined/> : <DownOutlined/>}
+                                <div onClick={() => setShowAllItems(!showAllItems)} style={{ color: '#3D72ED', marginBottom: 15, cursor: 'pointer' }}>
+                                    { showAllItems ? "Скрыть  " : "Еще  "}
+                                    { showAllItems ? <UpOutlined/> : <DownOutlined/>}
                                 </div>
                             }
-                        </Form.Item>
+                        </div>
                     }
                     <Form.Item
                         name={"file"}

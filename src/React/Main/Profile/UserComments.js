@@ -10,13 +10,11 @@ import Linkify from "react-linkify";
 import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserComments = ({ user, user_id, setCount }) => {
+const UserComments = ({ user, setCount }) => {
 
     const [statuses, setStatuses] = useState([]);
     const [ideas, setIdeas] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    let ideasData = [];
+    const [loading, setLoading] = useState(true);
 
     useLayoutEffect(() => {
         updateStatuses();
@@ -24,7 +22,7 @@ const UserComments = ({ user, user_id, setCount }) => {
     }, []);
 
     useEffect(() => {
-        if(ideas.length >= 0){
+        if(ideas.length >= 0 && !loading){
             let commentsCount = 0;
             ideas.map(idea => {
                 commentsCount += idea?.comments.length
@@ -37,6 +35,12 @@ const UserComments = ({ user, user_id, setCount }) => {
         if(user) {
             let prevIdeas = [...ideas]
             prevIdeas?.map(idea => {
+                if(idea?.user.id === user.id) {
+                    idea.roles = user?.roles
+                    idea.role = user?.role_name
+                    idea.user.roles = user?.roles
+                    idea.user.role_name = user?.role_name
+                }
                 idea?.comments?.map(comment => {
                     comment.user.roles = user?.roles;
                     comment.user.role_name = user?.role_name;
@@ -48,35 +52,14 @@ const UserComments = ({ user, user_id, setCount }) => {
 
     const getUserComments = () => {
         setLoading(true)
-        axios.get(ApiRoutes.API_GET_USER_DATA.format(user_id) + "?" + global.serialize({page: "2"})).then(response => {
-            if (response.data.state === "success" && response.data?.ideas) {
-                response.data.ideas.map(idea => {
-                    let newIdea = {
-                        idea_id: idea.id,
-                        title: idea.title,
-                        text: idea.content,
-                        showComments: true,//idea.comments.length > 0,
-                        showFullText: false,
-                        roles: idea?.user.roles,
-                        role: idea?.user.role_name,
-                        status: idea.status,
-                        photo: idea.photo,
-                        comments: idea.comments,
-                        like: Number(idea.likes),
-                        dislike: 2,
-                        categoryId: idea.category.id,
-                        category: idea.category.name,
-                        user: idea.user,
-                        username: idea.user?.first_name,
-                        userImage: idea.user.image,
-                        type: idea.type.name,
-                        currentUserIsVote: idea.currentUserIsVote,
-                        allowComments: false,
-                        date: idea?.date
-                    }
-                    ideasData.push(newIdea)
-                })
-            }
+        axios.get(ApiRoutes.API_GET_USER_DATA.format(user.id) + "?" + global.serialize({page: "2"})).then(response => {
+            let ideasData = [];
+            global.handleResponse(response,
+                function () {
+                    ideasData = global.parseToIdeaItems(response.data?.ideas, ideasData, true, false)
+                    // Код при success ответе
+                },
+            )
             setIdeas(ideasData);
             setLoading(false)
         })

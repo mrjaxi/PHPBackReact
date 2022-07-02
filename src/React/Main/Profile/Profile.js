@@ -69,9 +69,8 @@ const Profile = () => {
 
     function getUser() {
         axios.get(ApiRoutes.API_GET_USER_DATA.format(params.id)).then(response => {
-            switch (response.data?.state) {
-                case "trouble":
-                case "success":
+            global.handleResponse(response,
+                function () {
                     if (response.data?.profile) {
                         let username = ""
                         username += response.data.profile?.middle_name ? response.data.profile.middle_name + " " : "";
@@ -84,14 +83,12 @@ const Profile = () => {
                         setCommentsCount(response.data?.count.comments)
                         setLikesCount(response.data?.count.likes)
                     }
-                    break;
-                case "error":
+                },
+                function () {
                     global.openNotification("Ошибка", response.data?.message, "error")
-                    break;
-                default:
-                    global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                    break;
-            }
+                    global._history.replace("/")
+                },
+            )
         })
     }
 
@@ -101,8 +98,8 @@ const Profile = () => {
         }
         axios.post(ApiRoutes.API_SET_ROLE, {user_id: user.id, new_role: value})
             .then(response => {
-                switch (response.data?.state) {
-                    case "success":
+                global.handleResponse(response,
+                    function () {
                         let username = ""
                         username += response.data.profile?.middle_name ? response.data.profile.middle_name + " " : "";
                         username += response.data.profile?.first_name ? response.data.profile.first_name + " " : "";
@@ -110,14 +107,11 @@ const Profile = () => {
                         response.data.profile.fio = username
                         setUser(response.data?.profile)
                         global.openNotification("Успешно", `Роль пользователя изменена на ${response.data?.profile.role_name}`, "success")
-                        break;
-                    case "error":
+                    },
+                    function () {
                         global.openNotification("Ошибка", response.data?.message, "error")
-                        break;
-                    default:
-                        global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                        break;
-                }
+                    },
+                )
             })
     }
 

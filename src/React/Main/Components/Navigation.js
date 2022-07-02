@@ -14,10 +14,12 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
                 }}>
                     { categories?.length > 0 ?
                         categories.map((category) => (
-                            <a key={category.id} onClick={() => {
-                                selectCategory(category.id)
-                            }}
-                               className={"f-nav-button " + ((includedCategory.includes(category.id)) && "f-nav-button-active")}>{category.name}</a>
+                            <a className={"f-nav-button " + ((includedCategory.includes(category.id)) && "f-nav-button-active")}
+                               key={category.id}
+                               onClick={() => selectCategory(category.id) }
+                            >
+                                {category.name}
+                            </a>
                         ))
                         : [1,2,3,4].map((item, index) => (
                             <div className={"f-nav-button noHover"} style={{width: 210, height: 83}}>

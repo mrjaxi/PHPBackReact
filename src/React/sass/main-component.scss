@@ -386,6 +386,7 @@ button:focus {
             border-radius: 64px;
             white-space: nowrap;
             background: rgba(255, 255, 255, 0.48);
+            -webkit-backdrop-filter: blur(56px);
             backdrop-filter: blur(56px);
             color: #1D1D1F;
             font-size: 24px;
@@ -622,18 +623,6 @@ button:focus {
             color: #1D1D1F;
             display: flex;
             align-items: center;
-
-            //&:after {
-            //    content: "";
-            //    position: absolute;
-            //    display: inline-block;
-            //    width: 12px;
-            //    height: 18px;
-            //    background-image: url("data:image/svg+xml;utf8,%3Csvg%20width%3D%2212%22%20height%3D%2217%22%20viewBox%3D%220%200%2012%2017%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M1.68433%2016.8176H9.58667C10.6575%2016.8176%2011.1804%2016.2864%2011.1804%2015.1243V9.03149C11.1804%207.9856%2010.7488%207.44604%209.8606%207.35474V5.26294C9.8606%202.13354%207.8103%200.622803%205.6355%200.622803C3.46069%200.622803%201.4104%202.13354%201.4104%205.26294V7.39624C0.596924%207.52075%200.0905762%208.052%200.0905762%209.03149V15.1243C0.0905762%2016.2864%200.613525%2016.8176%201.68433%2016.8176ZM2.74683%205.08862C2.74683%203.00513%204.08325%201.90112%205.6355%201.90112C7.18774%201.90112%208.52417%203.00513%208.52417%205.08862V7.34644L2.74683%207.35474V5.08862Z%22%20fill%3D%22%23AAB2BD%22%2F%3E%0A%3C%2Fsvg%3E%0A");
-            //    background-repeat: no-repeat;
-            //    margin-top: 3px;
-            //    margin-left: 10px;
-            //}
 
             &-bottom {
                 font-size: 13px;

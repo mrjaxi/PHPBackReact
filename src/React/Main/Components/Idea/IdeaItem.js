@@ -10,6 +10,38 @@ const {Option} = Select;
 
 import Like from '/public/i/like.svg'
 
+global.parseToIdeaItems = (ideas, data=[], showComments=false, allowComments=null) => {
+    let newData = [...data]
+    ideas?.map(idea => {
+        newData.push({
+            idea_id: idea.id,
+            title: idea.title,
+            text: idea.content,
+            showComments: showComments,
+            showFullText: false,
+            roles: idea.user.roles,
+            role: idea.user.role_name,
+            status: idea.status,
+            photo: idea.photo,
+            comments: idea.comments,
+            like: Number(idea.likes),
+            dislike: 0,
+            user: idea.user,
+            username: idea.user?.first_name,
+            userImage: idea.user.image,
+            categoryId: idea.category.id,
+            category: idea.category.name,
+            type: idea.type.name,
+            typeId: idea.type.id,
+            currentUserIsVote: idea.currentUserIsVote,
+            allowComments: allowComments===null ? idea.allowComments : allowComments,
+            date: idea?.date,
+            dateString: global.getDateString(new Date(idea?.date), false,false),
+        })
+    });
+    return newData;
+}
+
 const IdeaItem = ({ item, index, setItem, statuses,
                       selectType = () => false, selectCategory = () => false,
                       includedTypes = [], types = [], includedCategory = [],

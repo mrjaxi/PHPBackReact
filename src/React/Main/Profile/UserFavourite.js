@@ -10,10 +10,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 import UserIdeas from "./UserIdeas";
 
-const UserFavourite = ({ user, user_id, setCount }) => {
-
-    let data = [];
-
+const UserFavourite = ({ user, setCount }) => {
     const [statuses, setStatuses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [ideas, setIdeas] = useState([]);
@@ -24,18 +21,26 @@ const UserFavourite = ({ user, user_id, setCount }) => {
     }, []);
 
     useEffect(() => {
-        if(ideas.length >= 0)
+        if(ideas.length >= 0 && !loading)
             setCount(ideas.length)
     }, [ideas])
 
     useEffect(() => {
-        if(user){
+        if(user) {
             let prevIdeas = [...ideas]
-            prevIdeas.map(idea => {
-                if(idea?.user.id === global.user.id){
+            prevIdeas?.map(idea => {
+                if(idea?.user.id === user.id) {
                     idea.roles = user?.roles
                     idea.role = user?.role_name
+                    idea.user.roles = user?.roles
+                    idea.user.role_name = user?.role_name
                 }
+                idea?.comments?.map(comment => {
+                    if(comment.user.id === user.id) {
+                        comment.user.roles = user?.roles;
+                        comment.user.role_name = user?.role_name;
+                    }
+                })
             })
             setIdeas(prevIdeas)
         }
@@ -43,35 +48,20 @@ const UserFavourite = ({ user, user_id, setCount }) => {
 
     const getUserFavourites = () => {
         setLoading(true);
-        axios.get(ApiRoutes.API_GET_USER_DATA.format(user_id) + "?" + global.serialize({page: "3"})).then(response => {
-            if (response.data.state === "success" && response.data?.likes){
-                response.data.likes.map(item => {
-                    let idea = item.idea
-                    data.push({
-                        idea_id: idea.id,
-                        title: idea.title,
-                        text: idea.content,
-                        showComments: false,//item.comments.length > 0,
-                        showFullText: false,
-                        roles: idea?.user.roles,
-                        role: idea?.user.role_name,
-                        status: idea.status,
-                        photo: idea.photo,
-                        comments: idea.comments,
-                        like: Number(idea.likes),
-                        dislike: 2,
-                        categoryId: idea.category.id,
-                        category: idea.category.name,
-                        user: idea.user,
-                        username: idea.user?.first_name,
-                        userImage: idea.user.image,
-                        type: idea.type.name,
-                        currentUserIsVote: idea.currentUserIsVote,
-                        allowComments: idea.allowComments,
-                        date: idea?.date
+        axios.get(ApiRoutes.API_GET_USER_DATA.format(user.id) + "?" + global.serialize({page: "3"})).then(response => {
+            let data = [];
+            global.handleResponse(response,
+                function () {
+                    let ideasItems = []
+                    response.data?.likes.map(item => {
+                        ideasItems.push(item?.idea);
                     })
-                })
-            }
+                    data = global.parseToIdeaItems(ideasItems)
+                },
+                function () {
+                    global.openNotification("Ошибка", response.data?.message, "error")
+                },
+            )
             setIdeas(data);
             setLoading(false)
         })

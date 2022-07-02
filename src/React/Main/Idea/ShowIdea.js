@@ -20,7 +20,6 @@ const ShowIdea = (props) => {
     const [page, setPage] = useState(0);
     const [loadingInfinity, setLoadingInfinity] = useState(true);
     const [stopInfinity, setStopInfinity] = useState(false);
-    const [wait, setWait] = useState(true);
 
     const history = useHistory();
     const params = useParams();
@@ -39,54 +38,21 @@ const ShowIdea = (props) => {
 
     const getIdea = () => {
         setLoading(true)
-        setWait(true)
         axios.get(ApiRoutes.API_GET_ONE_IDEA.format(params.id)).then(response => {
             let data = [];
-            switch(response.data?.state){
-                case "success":
-                    if (response.data?.idea) {
-                        response.data.idea.map(idea => {
-                            data.push({
-                                idea_id: idea.id,
-                                category_id: idea?.category?.id,
-                                type_id: idea?.type?.id,
-                                title: idea.title,
-                                text: idea.content,
-                                showComments: idea.comments.length > 0,
-                                showFullText: false,
-                                roles: idea.user.roles,
-                                role: idea.user.role_name,
-                                status: idea.status,
-                                photo: idea.photo,
-                                comments: idea.comments,
-                                categoryId: idea.category.id,
-                                category: idea.category.name,
-                                like: Number(idea.likes),
-                                dislike: 2,
-                                user: idea.user,
-                                username: idea.user?.first_name,
-                                userImage: idea.user.image,
-                                type: idea.type.name,
-                                currentUserIsVote: idea.currentUserIsVote,
-                                allowComments: idea.allowComments,
-                                date: idea?.date,
-                            })
-                        });
-                    }
-                    break;
-                case "error":
+            global.handleResponse(response,
+                function () {
+                    data = global.parseToIdeaItems(response.data?.idea)
+                },
+                function () {
                     global.openNotification("Ошибка", response.data?.message, "error")
-                    break;
-                default:
-                    global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                    break;
-            }
+                },
+            )
             setIdeas(data);
             if(data){
                 setPage(1)
             }
             setLoading(false)
-            setWait(false)
         })
     };
 
@@ -95,53 +61,30 @@ const ShowIdea = (props) => {
             let data = [...ideasInfinite];
             let idea_ids = [ideas[0].idea_id];
             setLoadingInfinity(true);
-            axios.get(ApiRoutes.API_GET_IDEAS + `?page=${page}&categories=[${ideas[0].category_id}]&types=[${ideas[0].type_id}]`)
+            axios.get(ApiRoutes.API_GET_IDEAS + `?page=${page}&categories=[${ideas[0].categoryId}]&types=[${ideas[0].typeId}]`)
                 .then(response => {
-                    switch (response.data?.state) {
-                        case "success":
+                    global.handleResponse(response,
+                        function () {
                             if (response.data?.ideas !== null) {
-                                response.data.ideas.map(idea => {
-                                    if (!idea_ids.includes(idea.id)) {
-                                        idea_ids.push(idea.id)
-                                        data.push({
-                                            idea_id: idea.id,
-                                            title: idea.title,
-                                            text: idea.content,
-                                            showComments: false,//idea.comments.length > 0,
-                                            showFullText: false,
-                                            roles: idea.user.roles,
-                                            role: idea.user.role_name,
-                                            status: idea.status,
-                                            photo: idea.photo,
-                                            comments: idea.comments,
-                                            like: Number(idea.likes),
-                                            dislike: 0,
-                                            categoryId: idea.category.id,
-                                            category: idea.category.name,
-                                            user: idea.user,
-                                            username: idea.user?.first_name,
-                                            userImage: idea.user.image,
-                                            type: idea.type.name,
-                                            typeId: idea.type.id,
-                                            currentUserIsVote: idea.currentUserIsVote,
-                                            allowComments: idea.allowComments,
-                                            date: idea?.date
-                                        })
+                                data = global.parseToIdeaItems(response.data.ideas, data)
+                                data = data.filter(idea => {
+                                    if (!idea_ids.includes(idea.idea_id)) {
+                                        idea_ids.push(idea.idea_id)
+                                        return true;
+                                    } else {
+                                        return false;
                                     }
-                                });
+                                })
                             } else {
                                 setStopInfinity(true);
                             }
                             setIdeasInfinite(data);
                             setLoadingInfinity(false);
-                            break;
-                        case "error":
+                        },
+                        function () {
                             global.openNotification("Ошибка", response.data?.message, "error")
-                            break;
-                        default:
-                            global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                            break;
-                    }
+                        },
+                    )
                 })
         }
     };

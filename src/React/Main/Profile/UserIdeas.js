@@ -6,10 +6,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserIdeas = ({ user, user_id, setCount }) => {
-
-    let data = [];
-
+const UserIdeas = ({ user, setCount }) => {
     const [statuses, setStatuses] = useState([]);
     const [ideas, setIdeas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -20,7 +17,7 @@ const UserIdeas = ({ user, user_id, setCount }) => {
     }, []);
 
     useEffect(() => {
-        if(ideas.length >= 0)
+        if(ideas.length >= 0 && !loading)
             setCount(ideas.length)
     }, [ideas])
 
@@ -30,6 +27,14 @@ const UserIdeas = ({ user, user_id, setCount }) => {
             prevIdeas.map(idea => {
                 idea.roles = user?.roles
                 idea.role = user?.role_name
+                idea.user.roles = user?.roles
+                idea.user.role_name = user?.role_name
+                idea?.comments?.map(comment => {
+                    if(comment.user.id === user.id){
+                        comment.user.roles = user?.roles;
+                        comment.user.role_name = user?.role_name;
+                    }
+                })
             })
             setIdeas(prevIdeas)
         }
@@ -37,44 +42,16 @@ const UserIdeas = ({ user, user_id, setCount }) => {
 
     const getUserIdeas = () => {
         setLoading(true);
-        axios.get(ApiRoutes.API_GET_USER_DATA.format(user_id) + "?" + global.serialize({page: "1"})).then(response => {
-            switch (response.data?.state) {
-                case "success":
-                    if (response.data?.ideas) {
-                        response.data.ideas.map(idea => {
-                            data.push({
-                                idea_id: idea.id,
-                                title: idea.title,
-                                text: idea.content,
-                                showComments: false,//idea.comments.length > 0,
-                                showFullText: false,
-                                roles: user?.roles,
-                                role: user?.role_name,
-                                status: idea.status,
-                                photo: idea.photo,
-                                comments: idea.comments,
-                                like: Number(idea.likes),
-                                dislike: 2,
-                                categoryId: idea.category.id,
-                                category: idea.category.name,
-                                user: idea.user,
-                                username: idea.user?.first_name,
-                                userImage: idea.user.image,
-                                type: idea.type.name,
-                                currentUserIsVote: idea.currentUserIsVote,
-                                allowComments: idea.allowComments,
-                                date: idea?.date
-                            })
-                        });
-                    }
-                    break;
-                case "error":
+        axios.get(ApiRoutes.API_GET_USER_DATA.format(user.id) + "?" + global.serialize({page: "1"})).then(response => {
+            let data = [];
+            global.handleResponse(response,
+                function () {
+                    data = global.parseToIdeaItems(response.data?.ideas)
+                },
+                function () {
                     global.openNotification("Ошибка", response.data?.message, "error")
-                    break;
-                default:
-                    global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                    break;
-            }
+                },
+            )
             setIdeas(data);
             setLoading(false)
         })

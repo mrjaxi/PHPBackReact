@@ -358,6 +358,7 @@ class UserController extends AbstractController
             case 1:
                 $ideas = $user->get_Ideas();
                 $ideas = $this->decorateCollectionIdeas($ideas);
+                $ideas = AppController::array_sort($ideas, "id", SORT_DESC);
                 $response["ideas"] = $ideas;
                 break;
             case 2:
@@ -390,6 +391,7 @@ class UserController extends AbstractController
 
                     $like['idea'] = $decorIdea[0] ?: null;
                 }
+                $likes = AppController::array_sort($likes, "id", SORT_DESC);
                 $response["likes"] = $likes;
                 break;
             default:

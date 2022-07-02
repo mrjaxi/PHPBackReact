@@ -23,13 +23,17 @@ const Settings = () => {
         }
 
         axios.post(ApiRoutes.API_SET_PROFILE, value).then(response => {
-            if (response.data.state === "success"){
-                global.user.image = file
-                global.openNotification("Успешно", "Данные сохранены", "success")
-            } else {
-                global.openNotification("Ошибка", "Данные не сохранены", "success")
-            }
-
+            global.handleResponse(response,
+                function () {
+                    if (file) {
+                        global.user = response.data?.profile;
+                    }
+                    global.openNotification("Успешно", "Данные сохранены", "success")
+                },
+                function () {
+                    global.openNotification("Ошибка", "Данные не сохранены", "success")
+                },
+            )
             setFile(value.image)
             setSendLoading(false)
         })
@@ -134,9 +138,12 @@ const Settings = () => {
                                         if (!Number.isInteger(Number(value))) {
                                             callback('Введите номер телефона')
                                         }
+                                        if (value.length > 11){
+                                            callback('Номер не должен превышать 11 цифр')
+                                        }
 
                                         callback()
-                                    }
+                                    },
                                 },
                             ]}
                         >
