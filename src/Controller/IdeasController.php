@@ -457,10 +457,11 @@ class IdeasController extends AbstractController
         $this->commentsRepository->save($newComment);
 
         if($user->getId() !== $idea->get_User()->getId()){
-//            if($lastComment->getDate())
-            $urlIdea = $baseURL . "/idea/" . $idea->getId();
-            $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-            $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+            if($lastComment->getDate()){
+                $urlIdea = $baseURL . "/idea/" . $idea->getId();
+                $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
+                $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+            }
         }
 
         return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);

@@ -63,11 +63,15 @@ class Comments
             "id" => $this->id,
             "content" => $this->content,
             "date" => $this->date->format('Y-m-d H:i:s'),
+            "updated" => null,
             "is_checked" => $this->is_checked,
             "user" => $this->get_UserInfo(),
         ];
         if($idea){
             $info['idea'] = $this->idea;
+        }
+        if(!empty($this->updatedAt)){
+            $info['updated'] = $this->updatedAt->format('Y-m-d H:i:s');
         }
         return $info;
     }
