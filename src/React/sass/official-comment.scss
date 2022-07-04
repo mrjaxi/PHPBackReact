@@ -1,0 +1,28 @@
+.of {
+    &-comment {
+        margin-bottom: 20px;
+        position: relative;
+        top: -40px;
+        background-color: white;
+        z-index: 1;
+        border-radius: 24px;
+        padding: 15px 50px 30px 40px;
+
+        &-under-text {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: flex-start;
+            font-size: 19px;
+            color: #3D72ED;
+            margin-bottom: 45px;
+            margin-top: 25px;
+        }
+
+        &-tip-text {
+            color: #1D1D1F;
+            font-size: 21px;
+            margin-right: 50px;
+        }
+    }
+}

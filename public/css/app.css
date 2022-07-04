@@ -347,8 +347,7 @@ button:focus {
   margin-right: 17px;
   border-radius: 64px;
   white-space: nowrap;
-  background: rgba(255, 255, 255, 0.48);
-  box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.85);
   -webkit-backdrop-filter: blur(56px);
   backdrop-filter: blur(56px);
   color: #1D1D1F;
@@ -541,6 +540,7 @@ button:focus {
 .f-cards-wrap-text-style {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   margin-left: 10px;
 }
 .f-cards-text {
@@ -733,4 +733,28 @@ button:focus {
 }
 .t-upload-button:hover {
   transform: scale(1.05);
+}
+.of-comment {
+  margin-bottom: 20px;
+  position: relative;
+  top: -40px;
+  background-color: white;
+  z-index: 1;
+  border-radius: 24px;
+  padding: 15px 50px 30px 40px;
+}
+.of-comment-under-text {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 19px;
+  color: #3D72ED;
+  margin-bottom: 45px;
+  margin-top: 25px;
+}
+.of-comment-tip-text {
+  color: #1D1D1F;
+  font-size: 21px;
+  margin-right: 50px;
 }

@@ -25,11 +25,11 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
 
     const sendComment = (text) => {
         // Коммент закрыт или нет отсылай куда хочешь
-        text.close = checked;
+        // text.close = checked;
 
-        if (text.comment.trim() !== ""){
+        if (text.trim() !== ""){
             setLoading(true);
-            axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text.comment.trim()})
+            axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text.trim()})
                 .then( response => {
                         global.handleResponse(response,
                             function () {
@@ -149,34 +149,41 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                                                             comment?.dateString
                                                         }
                                                     </span>
-                                                    <span> · </span>
                                                     {
-                                                        editableId !== comment.id ?
-                                                            <a onClick={() => setEditableId(comment.id)} style={{
-                                                                color: editableId !== comment.id && '#AAB2BD',
-                                                                fontSize: 15,
-                                                                fontWeight: 400
-                                                            }}>
-                                                                Редактировать
-                                                            </a> :
-                                                            <>
-                                                                <Button loading={loadingEdit} form={"edit-id"} htmlType="submit" type="link"
-                                                                   style={{
-                                                                       fontSize: 15,
-                                                                       fontWeight: 400,
-                                                                       margin: 0,
-                                                                       padding: 0
-                                                                   }}>Сохранить</Button>
-                                                                <span> · </span>
-                                                                <a onClick={() => setEditableId(false)}
-                                                                    style={{
-                                                                        color: '#AAB2BD',
-                                                                        fontSize: 15,
-                                                                        fontWeight: 400,
-                                                                        margin: 0,
-                                                                        padding: 0
-                                                                    }}>Отмена</a>
-                                                            </>
+                                                        comment.user.id === global.user.id &&
+                                                        <>
+                                                            <span> · </span>
+                                                            {
+                                                                editableId !== comment.id ?
+                                                                    <a onClick={() => setEditableId(comment.id)}
+                                                                       style={{
+                                                                           color: editableId !== comment.id && '#AAB2BD',
+                                                                           fontSize: 15,
+                                                                           fontWeight: 400
+                                                                       }}>
+                                                                        Редактировать
+                                                                    </a> :
+                                                                    <>
+                                                                        <Button loading={loadingEdit} form={"edit-id"}
+                                                                                htmlType="submit" type="link"
+                                                                                style={{
+                                                                                    fontSize: 15,
+                                                                                    fontWeight: 400,
+                                                                                    margin: 0,
+                                                                                    padding: 0
+                                                                                }}>Сохранить</Button>
+                                                                        <span> · </span>
+                                                                        <a onClick={() => setEditableId(false)}
+                                                                           style={{
+                                                                               color: '#AAB2BD',
+                                                                               fontSize: 15,
+                                                                               fontWeight: 400,
+                                                                               margin: 0,
+                                                                               padding: 0
+                                                                           }}>Отмена</a>
+                                                                    </>
+                                                            }
+                                                        </>
                                                     }
                                                 </div>
                                             </div>
@@ -206,7 +213,7 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                 <div className={"f-write-comments"} key={2}>
                     <Title>Написать</Title>
                     <Form form={form}
-                          onFinish={(values) => sendComment(values)}
+                          onFinish={(values) => sendComment(values.comment)}
                     >
                         <Form.Item
                             name={"comment"}

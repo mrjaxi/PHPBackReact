@@ -9,6 +9,7 @@ import Linkify from 'react-linkify';
 const {Option} = Select;
 
 import Like from '/public/i/like.svg'
+import OfficialComment from "../OfficialComment";
 
 global.parseToIdeaItems = (ideas, data=[], showComments=false, allowComments=null) => {
     let newData = [...data]
@@ -27,6 +28,7 @@ global.parseToIdeaItems = (ideas, data=[], showComments=false, allowComments=nul
             like: Number(idea.likes),
             dislike: 0,
             user: idea.user,
+            officialComment: idea.officialComment,
             username: idea.user?.first_name,
             userImage: idea.user.image,
             categoryId: idea.category.id,
@@ -228,7 +230,7 @@ const IdeaItem = ({ item, index, setItem, statuses,
                             </div>
                         </div>
                     }
-                    <div className={"f-cards-inner"} style={{ marginTop: idea?.photo !== null ? -40 : 0 }}>
+                    <div className={"f-cards-inner"} style={{ marginTop: idea?.photo !== null ? -40 : 0, paddingBottom: (idea.officialComment && !idea.showComments) && 60 }}>
                         <div className={"f-cards-avatar"}>
                             <Link to={global.lang + `/profile/${idea.user.id}`}>
                                 <div className={"f-cards-row-wrap"}>
@@ -373,8 +375,13 @@ const IdeaItem = ({ item, index, setItem, statuses,
                             idea.showComments &&
                             <Comments allowComments={idea.allowComments} idea={idea} index={index}
                                       comments={idea.comments} setComments={setIdeaComments}/>
+
                         }
                     </div>
+                    {
+                        (idea.officialComment && !idea.showComments) &&
+                        <OfficialComment commentData={idea.officialComment}/>
+                    }
                 </div>
             </div>
         </>
