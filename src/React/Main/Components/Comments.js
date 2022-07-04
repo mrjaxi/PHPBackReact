@@ -16,13 +16,20 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
     const [commentsData, setCommentsData] = useState(comments.filter((item, index) => index < 3));
     const [rawCommentsData, setRawCommentsData] = useState(comments);
     const [visible, setVisible] = useState(false);
+    const [editableId, setEditableId] = useState(false);
 
+    const [checked, setChecked] = useState(false);
+
+    const [loadingEdit, setLoadingEdit] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const sendComment = (text) => {
-        if (text.trim() !== ""){
-            setLoading(true)
-            axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text})
+        // Коммент закрыт или нет отсылай куда хочешь
+        text.close = checked;
+
+        if (text.comment.trim() !== ""){
+            setLoading(true);
+            axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text.comment.trim()})
                 .then( response => {
                         global.handleResponse(response,
                             function () {
@@ -41,6 +48,27 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                         setLoading(false);
                     }
                 )
+        }
+    };
+
+    const editComment = (index, commentID, newValue) => {
+        setLoadingEdit(true)
+        if (newValue.trim() !== ""){
+            axios.post(ApiRoutes.API_CHANGE_COMMENT, {comment_id: commentID, content: newValue}).then(response => {
+                if (response.data.state === "success"){
+                    let data = [...rawCommentsData];
+                    data[index].content = newValue;
+                    data[index].updated = true;
+                    setCommentsData(data);
+                    setRawCommentsData(data);
+                    setComments(data)
+                    setEditableId(false);
+                    setLoadingEdit(false)
+                    global.openNotification("Успешно", "Комментарий отредактирован", "success")
+                } else {
+                    global.openNotification("Ошибка", "Невозможно редактировать комментарий", "error")
+                }
+            })
         }
     };
 
@@ -88,20 +116,69 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                                                             }
                                                         </span>
                                                     </Link>
-                                                    {/*{*/}
-                                                    {/*    <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 10, fontWeight: 400 }}>ред.</span>*/}
-                                                    {/*}*/}
+                                                    {
+                                                        comment.updated &&
+                                                        <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 10, fontWeight: 400 }}>ред.</span>
+                                                    }
                                                 </span>
-                                                <span className={"f-cards-content-description"}>
+                                                {
+                                                    editableId === comment.id ?
+                                                    <Form
+                                                        id={"edit-id"}
+                                                        name={"edit-comment"}
+                                                        initialValues={comment}
+                                                        onFinish={(value) => editComment(index, comment.id, value.content)}
+                                                    >
+
+                                                        <Form.Item
+                                                            name={"content"}
+                                                            rules={[{required: true, message: "Заполните поле"}]}
+                                                        >
+                                                            <TextArea autoSize={{minRows: 3}} style={{ marginTop: 24 }}/>
+                                                        </Form.Item>
+                                                    </Form> :
+                                                    <span className={"f-cards-content-description"}>
                                                     {
                                                         comment?.content
                                                     }
-                                                </span>
-                                                <span style={{color: '#AAB2BD', fontSize: 15, fontWeight: 400}}>
+                                                    </span>
+                                                }
+                                                <div style={{color: '#AAB2BD'}}>
+                                                    <span style={{fontSize: 15, fontWeight: 400}}>
+                                                        {
+                                                            comment?.dateString
+                                                        }
+                                                    </span>
+                                                    <span> · </span>
                                                     {
-                                                        comment?.dateString
+                                                        editableId !== comment.id ?
+                                                            <a onClick={() => setEditableId(comment.id)} style={{
+                                                                color: editableId !== comment.id && '#AAB2BD',
+                                                                fontSize: 15,
+                                                                fontWeight: 400
+                                                            }}>
+                                                                Редактировать
+                                                            </a> :
+                                                            <>
+                                                                <Button loading={loadingEdit} form={"edit-id"} htmlType="submit" type="link"
+                                                                   style={{
+                                                                       fontSize: 15,
+                                                                       fontWeight: 400,
+                                                                       margin: 0,
+                                                                       padding: 0
+                                                                   }}>Сохранить</Button>
+                                                                <span> · </span>
+                                                                <a onClick={() => setEditableId(false)}
+                                                                    style={{
+                                                                        color: '#AAB2BD',
+                                                                        fontSize: 15,
+                                                                        fontWeight: 400,
+                                                                        margin: 0,
+                                                                        padding: 0
+                                                                    }}>Отмена</a>
+                                                            </>
                                                     }
-                                                </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +206,7 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                 <div className={"f-write-comments"} key={2}>
                     <Title>Написать</Title>
                     <Form form={form}
-                          onFinish={(values) => sendComment(values.comment)}
+                          onFinish={(values) => sendComment(values)}
                     >
                         <Form.Item
                             name={"comment"}
@@ -166,7 +243,7 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                             <Form.Item
                                 name={"close"}
                             >
-                                <Checkbox style={{ color: '#1D1D1F', fontSize: 20, display: 'flex', alignItems: 'center' }}>Опубликовать и закрыть комментарии</Checkbox>
+                                <Checkbox onClick={() => setChecked(!checked)} style={{ color: '#1D1D1F', fontSize: 20, display: 'flex', alignItems: 'center' }}>Опубликовать и закрыть комментарии</Checkbox>
                             </Form.Item>
                         }
                         <Form.Item>
