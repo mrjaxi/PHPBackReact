@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\Ideas;
 use App\Repository\IdeasRepository;
 use App\Repository\SettingsRepository;
@@ -345,7 +346,7 @@ class UserController extends AbstractController
             'state' => 'success',
             'profile' => $user->get_Profile(),
             'count' => array(
-                'ideas' => count($user->get_Ideas()),
+                'ideas' => $user->get_Ideas()->count(),
                 'comments' => count($user->get_CommentsArray()),
                 'likes' => count($user->get_VotesArray()),
             )
@@ -423,6 +424,20 @@ class UserController extends AbstractController
             $idea = $ideas[$i];
             $ideasArr[$i] = $idea->get_Info();
             $ideasArr[$i]["comments"] = $idea->get_CommentsArray();
+
+//            $commentsNotifications = false;
+//            // Проверка на то, есть ли в этой идее непрочитанные комменты
+//            $comments = $idea->get_Comments();
+//            /** @var Comments $comment*/
+//            foreach ($comments as &$comment){
+//                if(!$comment->getIsChecked()){
+//                    $commentsNotifications = true;
+//                    break;
+//                }
+//            }
+//            if($commentsNotifications === true){
+//                break;
+//            }
 
             if (empty($user)) {
                 $ideasArr[$i]["currentUserIsVote"] = "unauthorized";

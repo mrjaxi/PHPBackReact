@@ -68,6 +68,9 @@ api_unvote:
 api_new_comment:
   path: /api/user/ideas/newComment/
   controller: App\Controller\IdeasController::newComment
+api_check_all_comments:
+  path: /api/user/ideas/checkAllComments/
+  controller: App\Controller\IdeasController::checkAllComments
 api_change_comment:
   path: /api/user/ideas/changeComment/
   controller: App\Controller\IdeasController::changeComment

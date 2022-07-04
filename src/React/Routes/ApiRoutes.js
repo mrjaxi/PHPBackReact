@@ -14,6 +14,7 @@ const ApiRoutes = {
     API_NEW_VOTE: "/api/user/ideas/newVote/",
     API_DELETE_VOTE: "/api/user/delete/vote/",
     API_NEW_COMMENT: "/api/user/ideas/newComment/",
+    API_NEW_OFFICIAL_COMMENT: "/api/admin/ideas/setOfficialComment/",
     API_CHANGE_COMMENT: "/api/user/ideas/changeComment/",
     API_DELETE_COMMENT: "/api/user/delete/comment/",
     API_LOGIN: "/ru/login",

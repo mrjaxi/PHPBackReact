@@ -115,7 +115,24 @@ class User implements UserInterface
 
     public function get_Profile(): ?array
     {
-        return [
+        // Проверка на то, есть ли непрочитанные комментарии к идеям пользователя
+        $ideas = $this->get_Ideas();
+        $commentsNotifications = false;
+        /** @var Ideas $idea*/
+        foreach ($ideas as &$idea){
+            $comments = $idea->get_Comments();
+            /** @var Comments $comment*/
+            foreach ($comments as &$comment){
+                if(!$comment->getIsChecked()){
+                    $commentsNotifications = true;
+                    break;
+                }
+            }
+            if($commentsNotifications === true){
+                break;
+            }
+        }
+        return array(
             'id' => $this->id,
             'username' => $this->username,
             'email' => $this->email,
@@ -128,7 +145,8 @@ class User implements UserInterface
             "image" => $this->image,
             "is_active" => $this->is_active,
             "system_id" => $this->system_id,
-        ];
+            "notifications" => $commentsNotifications
+        );
     }
 
     public function getId(): ?int

@@ -88,7 +88,8 @@ class Ideas
     private $type;
 
     /**
-     * @ORM\OneToOne(targetEntity=Comments::class, inversedBy="ideas", cascade={"persist", "remove"})
+     * @var Comments|null
+     * @ORM\OneToOne(targetEntity=Comments::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $official_comment;
@@ -113,7 +114,7 @@ class Ideas
 
     public function get_Info(): array
     {
-        return [
+        $info = array(
             "id" => $this->id,
             "title" => $this->title,
             "content" => $this->content,
@@ -126,7 +127,12 @@ class Ideas
             "user" => $this->get_UserInfo(),
             "category" => $this->get_CategoryInfo(),
             "type" => $this->get_TypeInfo(),
-        ];
+            "officialComment" => null
+        );
+        if(!empty($this->official_comment)){
+            $info["officialComment"] = $this->official_comment->get_Info();
+        }
+        return $info;
     }
 
     /**

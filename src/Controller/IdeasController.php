@@ -18,6 +18,7 @@ use App\Repository\StatusRepository;
 use App\Repository\TypesRepository;
 use App\Repository\UserRepository;
 use App\Repository\VotesRepository;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
@@ -29,6 +30,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints\Date;
+use function Symfony\Component\DomCrawler\add;
 
 class IdeasController extends AbstractController
 {
@@ -432,22 +434,14 @@ class IdeasController extends AbstractController
         } else {
             return $this->json(['state' => 'error', 'message' => "Передайте idea_id и content"]);
         }
-        if (empty($content)) {
-            return $this->json(['state' => 'error', 'message' => "Сообщение не должно быть пустым"]);
-        }
-        if (!empty($idea_id)) {
-            $idea = $this->ideasRepository->find($idea_id);
-            if (empty($idea)) {
-                return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
-            }
-        } else {
-            return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
+        $idea = $this->ideasRepository->find($idea_id);
+        if (empty($idea)) {
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
         }
         if (!$idea->getAllowComments()) {
             return $this->json(['state' => 'error', 'message' => "Под этой идеей нельзя оставлять комментарии"]);
         }
-        /** @var Comments $lastComment
-         */
+        /** @var Comments $lastComment */
         $lastComment = $idea->get_Comments()->last();
 
         $newComment = new Comments();
@@ -457,11 +451,60 @@ class IdeasController extends AbstractController
         $this->commentsRepository->save($newComment);
 
         if($user->getId() !== $idea->get_User()->getId()){
-            if($lastComment->getDate()){
+            if(empty($lastComment)){
                 $urlIdea = $baseURL . "/idea/" . $idea->getId();
                 $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
                 $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+            } else {
+                $lastCommentDate = (clone $lastComment->getDate())->add(new DateInterval("P1D"));
+                if($lastCommentDate < new DateTime()){
+                    $urlIdea = $baseURL . "/idea/" . $idea->getId();
+                    $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
+                    $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+                }
             }
+        }
+
+        return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
+    }
+
+    /**
+     * @Route("/api/admin/ideas/setOfficialComment/")
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @return Response
+     */
+    public function setOfficialComment(Request $request, MailerInterface $mailer): Response
+    {
+        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data['idea_id']) && !empty($data['content'])) {
+            $idea_id = $data['idea_id'];
+            $content = $data['content'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id, content"]);
+        }
+        $idea = $this->ideasRepository->find($idea_id);
+        if (empty($idea)) {
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+        }
+
+        $newComment = new Comments();
+        $newComment->setIdea($idea)
+            ->setUser($user)
+            ->setContent($content);
+        $this->commentsRepository->save($newComment);
+
+        $idea->setAllowComments(false)
+            ->setOfficialComment($newComment);
+        $this->ideasRepository->save($idea);
+
+        if($user->getId() !== $idea->get_User()->getId()){
+            $urlIdea = $baseURL . "/idea/" . $idea->getId();
+            $message = "К вашей записи оставили Официальный ответ: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
+            $this->sendToMail($mailer, $message, "Официальный ответ", $idea->get_User()->getEmail());
         }
 
         return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
@@ -530,45 +573,34 @@ class IdeasController extends AbstractController
     }
 
     /**
-     * @Route("/api/admin/ideas/setOfficialComment/")
+     * @Route("/api/user/ideas/checkAllComments/")
      * @param Request $request
-     * @param MailerInterface $mailer
      * @return Response
      */
-    public function setOfficialComment(Request $request, MailerInterface $mailer): Response
+    public function checkAllComments(Request $request): Response
     {
-        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
         /** @var User $user */
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
-        if (!empty($data['idea_id']) && !empty($data['content']) && !empty($data['close'])) {
+        if (!empty($data["idea_id"])) {
             $idea_id = $data['idea_id'];
-            $content = $data['content'];
-            $closed = (bool)$data['close'];
         } else {
-            return $this->json(['state' => 'error', 'message' => "Передайте idea_id, content и close"]);
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
         }
         $idea = $this->ideasRepository->find($idea_id);
         if (empty($idea)) {
             return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
         }
-
-        $newComment = new Comments();
-        $newComment->setIdea($idea)
-            ->setUser($user)
-            ->setContent($content);
-        $this->commentsRepository->save($newComment);
-
-        $idea->setAllowComments(false)
-            ->setOfficialComment($newComment);
-
         if($user->getId() !== $idea->get_User()->getId()){
-            $urlIdea = $baseURL . "/idea/" . $idea->getId();
-            $message = "К вашей записи оставили Официальный ответ: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-            $this->sendToMail($mailer, $message, "Официальный ответ", $idea->get_User()->getEmail());
+            return $this->json(['state' => 'error', 'message' => "Вы не можете убрать уведомления о комментариях не со своей идеи"]);
         }
-
-        return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
+        $comments = $idea->get_Comments();
+        /** @var Comments $comment */
+        foreach ($comments as &$comment){
+            $comment->setIsChecked(true);
+            $this->commentsRepository->save($comment);
+        }
+        return $this->json(['state' => 'success', 'idea' => $idea->get_Info()]);
     }
 
     /**
