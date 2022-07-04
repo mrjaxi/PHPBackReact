@@ -20,26 +20,28 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
     const [loading, setLoading] = useState(false);
 
     const sendComment = (text) => {
-        setLoading(true)
-        axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text})
-            .then( response => {
-                global.handleResponse(response,
-                    function () {
-                        form.resetFields()
-                        let data = [...rawCommentsData];
-                        data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
-                        setCommentsData(data);
-                        setRawCommentsData(data);
-                        setComments(data)
-                        setShowComments(false)
-                    },
-                    function () {
-                        global.openNotification("Ошибка", response.data?.message, "error")
-                    },
+        if (text.trim() !== ""){
+            setLoading(true)
+            axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text})
+                .then( response => {
+                        global.handleResponse(response,
+                            function () {
+                                form.resetFields()
+                                let data = [...rawCommentsData];
+                                data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
+                                setCommentsData(data);
+                                setRawCommentsData(data);
+                                setComments(data)
+                                setShowComments(false)
+                            },
+                            function () {
+                                global.openNotification("Ошибка", response.data?.message, "error")
+                            },
+                        );
+                        setLoading(false);
+                    }
                 )
-                setLoading(false);
-            }
-        )
+        }
     };
 
     return (
@@ -78,10 +80,10 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                                                 >
                                                     <Link to={global.lang + `/profile/${comment.user.id}`}>
                                                         <span style={{color: "black"}}>
-                                                            {comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")}
+                                                            {(comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")).trim()}
                                                             {
                                                                 ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles.includes(el)) &&
-                                                                <img style={{marginBottom: 3}} src={"/i/official.svg"}
+                                                                <img style={{marginBottom: 3, marginLeft: 5}} src={"/i/official.svg"}
                                                                      width={15} height={15}/>
                                                             }
                                                         </span>
