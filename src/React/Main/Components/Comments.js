@@ -1,5 +1,5 @@
 import React, {useLayoutEffect, useState} from "react";
-import {Avatar, Button, Form, Input, Skeleton, Typography} from "antd";
+import {Avatar, Button, Checkbox, Form, Input, Skeleton, Typography} from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import {UserOutlined} from "@ant-design/icons";
@@ -161,6 +161,14 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                                     />
                             }
                         </Form.Item>
+                        {
+                            ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => global?.user?.roles?.includes(el)) &&
+                            <Form.Item
+                                name={"close"}
+                            >
+                                <Checkbox style={{ color: '#1D1D1F', fontSize: 20, display: 'flex', alignItems: 'center' }}>Опубликовать и закрыть комментарии</Checkbox>
+                            </Form.Item>
+                        }
                         <Form.Item>
                             {
                                 global.layout !== "guest" ?
