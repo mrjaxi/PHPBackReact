@@ -446,6 +446,9 @@ class IdeasController extends AbstractController
         if (!$idea->getAllowComments()) {
             return $this->json(['state' => 'error', 'message' => "Под этой идеей нельзя оставлять комментарии"]);
         }
+        /** @var Comments $lastComment
+         */
+        $lastComment = $idea->get_Comments()->last();
 
         $newComment = new Comments();
         $newComment->setIdea($idea)
@@ -453,11 +456,12 @@ class IdeasController extends AbstractController
             ->setContent($content);
         $this->commentsRepository->save($newComment);
 
-//        if($user->getId() !== $idea->get_User()->getId()){
-//            $urlIdea = $baseURL . "/idea/" . $idea->getId();
-//            $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-//            $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
-//        }
+        if($user->getId() !== $idea->get_User()->getId()){
+//            if($lastComment->getDate())
+            $urlIdea = $baseURL . "/idea/" . $idea->getId();
+            $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
+            $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+        }
 
         return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
     }
@@ -489,9 +493,9 @@ class IdeasController extends AbstractController
         if ($user->getId() == $comment->get_User()->getId()) {
             $comment->setContent($content);
             $this->commentsRepository->save($comment);
-            return $this->json(['state' => 'success']);
+            return $this->json(['state' => 'success', 'comment' => $comment->get_Info()]);
         } else {
-            return $this->json(['state' => 'error', 'message' => "Вы не можете удалить этот комментарий"]);
+            return $this->json(['state' => 'error', 'message' => "Вы не можете изменить этот комментарий"]);
         }
     }
 
@@ -518,10 +522,52 @@ class IdeasController extends AbstractController
         if (in_array("ROLE_ADMIN", $user->getRoles())
             or $user->getId() == $comment->get_User()->getId()) {
             $this->commentsRepository->remove($comment);
-            return $this->json(['state' => 'success']);
+            return $this->json(['state' => 'success', 'comment' => $comment->get_Info()]);
         } else {
             return $this->json(['state' => 'error', 'message' => "Вы не можете удалить этот комментарий"]);
         }
+    }
+
+    /**
+     * @Route("/api/admin/ideas/setOfficialComment/")
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @return Response
+     */
+    public function setOfficialComment(Request $request, MailerInterface $mailer): Response
+    {
+        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data['idea_id']) && !empty($data['content']) && !empty($data['close'])) {
+            $idea_id = $data['idea_id'];
+            $content = $data['content'];
+            $closed = (bool)$data['close'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id, content и close"]);
+        }
+        $idea = $this->ideasRepository->find($idea_id);
+        if (empty($idea)) {
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+        }
+
+        $newComment = new Comments();
+        $newComment->setIdea($idea)
+            ->setUser($user)
+            ->setContent($content);
+        $this->commentsRepository->save($newComment);
+
+        $idea->setAllowComments(false)
+            ->setOfficialComment($newComment);
+
+        if($user->getId() !== $idea->get_User()->getId()){
+            $urlIdea = $baseURL . "/idea/" . $idea->getId();
+            $message = "К вашей записи оставили Официальный ответ: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
+            $this->sendToMail($mailer, $message, "Официальный ответ", $idea->get_User()->getEmail());
+        }
+
+        return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
     }
 
     /**
@@ -762,6 +808,10 @@ class IdeasController extends AbstractController
                 $type = $this->getTypeOrCreate((int)$idea["typeid"]);
                 $dateTimeArr = explode(" ", $idea['date']);
                 $dateArr = explode("/", $dateTimeArr[0]);
+                $timeArr = explode(":", $dateTimeArr[1]);
+                if(!empty($idea['photo'])){
+                    $idea['photo'] = substr_replace($idea['photo'] ,"", -1);
+                }
                 $Idea = new Ideas();
                 $Idea->setTitle($idea['title'])
                     ->setContent(str_replace("\n", '', $idea['content']))
@@ -771,7 +821,7 @@ class IdeasController extends AbstractController
                     ->setStatus($status)
                     ->setPhoto($idea['photo'] ? "https://tip.atmaguru.online/" . $idea['photo'] : null)
                     ->setHref($idea['href'])
-                    ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]));
+                    ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0])->setTime((int)$timeArr[0], (int)$timeArr[1]));
                 if($status->getName() === "completed" || $status->getName() === "declined"){
                     $Idea->setAllowComments(false);
                 }
@@ -784,13 +834,15 @@ class IdeasController extends AbstractController
         foreach ($comments as $comment) {
             $dateTimeArr = explode(" ", $comment['date']);
             $dateArr = explode("/", $dateTimeArr[0]);
+            $timeArr = explode(":", $dateTimeArr[1]);
             $Comment = new Comments();
             $Comment->setContent($comment["content"])
-                ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0]))
+                ->setDate((new DateTime())->setDate(2022, (int)$dateArr[1], (int)$dateArr[0])->setTime((int)$timeArr[0], (int)$timeArr[1]))
                 ->setUser($usersArr[$comment["userid"]])
-                ->setIdea($ideasArr[$comment["ideaid"]]);
+                ->setIdea($ideasArr[$comment["ideaid"]])
+                ->setIsChecked(true);
             $this->commentsRepository->save($Comment);
-//                dd($Comment);
+//            dd($Comment);
             $commentsArr[$comment["id"]] = $Comment;
         }
         $votesArr = array();

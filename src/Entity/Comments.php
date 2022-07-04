@@ -52,12 +52,18 @@ class Comments
      */
     private $idea;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default" : false})
+     */
+    private $is_checked = false;
+
     public function get_Info($idea=false): ?array
     {
         $info = [
             "id" => $this->id,
             "content" => $this->content,
             "date" => $this->date->format('Y-m-d H:i:s'),
+            "is_checked" => $this->is_checked,
             "user" => $this->get_UserInfo(),
         ];
         if($idea){
@@ -125,6 +131,18 @@ class Comments
     public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getIsChecked(): ?bool
+    {
+        return $this->is_checked;
+    }
+
+    public function setIsChecked(bool $is_checked): self
+    {
+        $this->is_checked = $is_checked;
 
         return $this;
     }

@@ -42,7 +42,7 @@ const ShowIdea = (props) => {
             let data = [];
             global.handleResponse(response,
                 function () {
-                    data = global.parseToIdeaItems(response.data?.idea)
+                    data = global.parseToIdeaItems(response.data?.idea, data, true)
                 },
                 function () {
                     global.openNotification("Ошибка", response.data?.message, "error")

@@ -81,6 +81,9 @@ api_delete_comment:
   controller: App\Controller\IdeasController::deleteComment
 
 # Роуты админа
+api_set_official_comment:
+  path: /api/admin/ideas/setOfficialComment/
+  controller: App\Controller\IdeasController::setOfficialComment
 api_set_status:
   path: /api/admin/ideas/setStatus/
   controller: App\Controller\IdeasController::setStatus

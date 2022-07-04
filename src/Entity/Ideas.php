@@ -88,6 +88,12 @@ class Ideas
     private $type;
 
     /**
+     * @ORM\OneToOne(targetEntity=Comments::class, inversedBy="ideas", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $official_comment;
+
+    /**
      * @var ArrayCollection<int, Comments>
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="idea")
      */
@@ -312,7 +318,7 @@ class Ideas
     /**
      * @return ArrayCollection
      */
-    public function get_Comments(): ArrayCollection
+    public function get_Comments()
     {
         return $this->comments;
     }
@@ -391,6 +397,18 @@ class Ideas
                 $vote->setIdea(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOfficialComment(): ?Comments
+    {
+        return $this->official_comment;
+    }
+
+    public function setOfficialComment(?Comments $official_comment): self
+    {
+        $this->official_comment = $official_comment;
 
         return $this;
     }

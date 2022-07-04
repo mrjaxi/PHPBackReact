@@ -135,7 +135,7 @@ const AddIdeaPage = () => {
     const beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
-            global.openNotification("Предупреждение", "Поддерживает только изображения» в формате JPG / PNG", "warn");
+            global.openNotification("Предупреждение", "Поддерживаются только изображения в формате JPG / PNG", "warn");
             return false
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
