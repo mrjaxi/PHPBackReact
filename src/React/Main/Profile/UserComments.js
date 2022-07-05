@@ -13,6 +13,9 @@ import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 const UserComments = ({ user, setCount }) => {
 
     const [statuses, setStatuses] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [types, setTypes] = useState([]);
+
     const [ideas, setIdeas] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -74,6 +77,8 @@ const UserComments = ({ user, setCount }) => {
     const updateStatuses = () => {
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             setStatuses(response.data?.statuses);
+            setCategories(response.data?.categories);
+            setTypes(response.data?.types)
         })
     };
 

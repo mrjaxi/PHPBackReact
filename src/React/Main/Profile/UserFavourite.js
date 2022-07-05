@@ -7,7 +7,11 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
 const UserFavourite = ({ user, setCount }) => {
+
     const [statuses, setStatuses] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [types, setTypes] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const [ideas, setIdeas] = useState([]);
 
@@ -72,6 +76,8 @@ const UserFavourite = ({ user, setCount }) => {
     const updateStatuses = () => {
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             setStatuses(response.data?.statuses);
+            setCategories(response.data?.categories);
+            setTypes(response.data?.types)
         })
     };
 

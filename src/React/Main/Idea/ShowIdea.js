@@ -16,7 +16,11 @@ const ShowIdea = (props) => {
     const [ideasInfinite, setIdeasInfinite] = useState([]);
 
     const [loading, setLoading] = useState(true);
+
     const [statuses, setStatuses] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [types, setTypes] = useState([]);
+
     const [page, setPage] = useState(0);
     const [loadingInfinity, setLoadingInfinity] = useState(true);
     const [stopInfinity, setStopInfinity] = useState(false);
@@ -98,6 +102,8 @@ const ShowIdea = (props) => {
     const updateStatuses = () => {
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             setStatuses(response.data?.statuses);
+            setCategories(response.data?.categories);
+            setTypes(response.data?.types)
         })
     };
 
@@ -127,7 +133,7 @@ const ShowIdea = (props) => {
                                         <>
                                             {
                                                 ideas[0] ? <IdeaItem item={ideas[0]} index={ideas[0].idea_id} setItem={setIdea}
-                                                                 statuses={statuses}/> : <EmptyIdeas text={"Такой записи не существует..."}/>
+                                                                 statuses={statuses} categories={categories} types={types}/> : <EmptyIdeas text={"Такой записи не существует..."}/>
                                             }
                                             { ideasInfinite.length > 0 ?
                                                 <>
