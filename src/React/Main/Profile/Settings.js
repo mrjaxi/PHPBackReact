@@ -107,14 +107,14 @@ const Settings = () => {
                             <Input size={"large"}  style={{ width: 550, padding: 12, marginTop: 15 }} placeholder={"Имя"} />
                         </Form.Item>
                         <Form.Item
-                            name={"last_name"}
-                        >
-                            <Input size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Отчество"} />
-                        </Form.Item>
-                        <Form.Item
                             name={"middle_name"}
                         >
                             <Input size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Фамилия"} />
+                        </Form.Item>
+                        <Form.Item
+                            name={"last_name"}
+                        >
+                            <Input size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Отчество"} />
                         </Form.Item>
                         <Form.Item
                             name={"email"}
