@@ -374,7 +374,7 @@ const IdeaItem = ({ item, index, setItem, statuses,
                         {
                             idea.showComments &&
                             <Comments allowComments={idea.allowComments} idea={idea} index={index}
-                                      comments={idea.comments} setComments={setIdeaComments}/>
+                                      comments={idea.comments} setIdea={setIdea} setComments={setIdeaComments}/>
 
                         }
                     </div>

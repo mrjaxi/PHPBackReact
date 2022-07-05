@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {Avatar, Button, Checkbox, Form, Input, Skeleton, Typography} from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 const {Title} = Typography;
 const {TextArea} = Input;
 
-const Comments = ({comments, setComments, idea, index, allowComments, flag}) => {
+const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) => {
 
     const [form] = Form.useForm();
     const [showComments, setShowComments] = useState(true);
@@ -24,13 +24,39 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
     const [loading, setLoading] = useState(false);
 
     const sendComment = (text) => {
-        // Коммент закрыт или нет отсылай куда хочешь
-        // text.close = checked;
+        setLoading(true);
+        if (text.trim() !== "") {
+            if (checked) {
+                axios.post(ApiRoutes.API_NEW_OFFICIAL_COMMENT, {
+                    idea_id: idea?.idea_id,
+                    content: text
+                }).then(response => {
+                    if (response.data.state === "success") {
+                        global.handleResponse(response,
+                            function () {
+                                form.resetFields()
+                                let data = [...rawCommentsData];
+                                data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
+                                setCommentsData(data);
+                                setRawCommentsData(data);
+                                setComments(data)
+                                setShowComments(false)
 
-        if (text.trim() !== ""){
-            setLoading(true);
-            axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text.trim()})
-                .then( response => {
+
+                                let officialAnswer = {...idea};
+                                officialAnswer["officialComment"] = response.data.comment
+                                setIdea(officialAnswer)
+                            },
+                            function () {
+                                global.openNotification("Ошибка", response.data?.message, "error")
+                            },
+                        );
+                    }
+                    setLoading(false)
+                })
+            } else {
+                axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text.trim()})
+                    .then(response => {
                         global.handleResponse(response,
                             function () {
                                 form.resetFields()
@@ -48,6 +74,7 @@ const Comments = ({comments, setComments, idea, index, allowComments, flag}) => 
                         setLoading(false);
                     }
                 )
+            }
         }
     };
 

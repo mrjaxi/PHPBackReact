@@ -32,10 +32,6 @@ const OfficialComment = ({commentData}) => {
         }
     };
 
-    useLayoutEffect(() => {
-        console.log(comment)
-    }, []);
-
     return (
         <div className={"of-comment"}>
             <div
@@ -126,17 +122,19 @@ const OfficialComment = ({commentData}) => {
                                                             fontSize: 15,
                                                             fontWeight: 400,
                                                             margin: 0,
-                                                            padding: 0
+                                                            padding: 0,
+                                                            height: '100%'
                                                         }}>Сохранить</Button>
                                                 <span> · </span>
-                                                <a onClick={() => setEditableId(false)}
+                                                <Button type="link" onClick={() => setEditableId(false)}
                                                    style={{
                                                        color: '#AAB2BD',
                                                        fontSize: 15,
                                                        fontWeight: 400,
                                                        margin: 0,
-                                                       padding: 0
-                                                   }}>Отмена</a>
+                                                       padding: 0,
+                                                       height: '100%'
+                                                   }}>Отмена</Button>
                                             </>
                                     }
                                 </>
