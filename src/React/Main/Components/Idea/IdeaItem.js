@@ -175,6 +175,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
     const changeCategory = (categoryId) => {
         let data = {...idea};
 
+        data.categoryId = categoryId;
         data.category = categories.filter(item => item.id === categoryId)[0].name;
         setIdea(data)
     };
@@ -182,7 +183,8 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
     const changeTypes = (typeId) => {
         let data = {...idea};
 
-        data.type = categories.filter(item => item.id === typeId)[0].name;
+        data.typeId = typeId;
+        data.type = types.filter(item => item.id === typeId)[0].name;
         setIdea(data)
     };
 
@@ -230,8 +232,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                         onChange={(value) => changeTypes(value)}
                                         options={types.map((item) => {
                                             return {label: item.name, value: item.id}
-                                        })
-                                        }/>}
+                                        })}/>}
                             >
                                 <p style={{
                                     marginLeft: 0,
