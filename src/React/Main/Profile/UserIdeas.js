@@ -83,7 +83,7 @@ const UserIdeas = ({ user, setCount }) => {
                     list={ideas}
                     renderItem={(idea, index) => {
                         return (
-                            <IdeaItem item={idea} index={index} setItem={setIdea}
+                            <IdeaItem item={idea} categories={categories} types={types} index={index} setItem={setIdea}
                                       statuses={statuses}/>
                         )
                     }}

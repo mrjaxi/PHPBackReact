@@ -90,7 +90,7 @@ const UserComments = ({ user, setCount }) => {
                     renderItem={(idea, index) => {
                         return (
                             <IdeaItem item={idea} index={index} setItem={setIdea} statuses={statuses}
-                                      showContent={false} showCommentsCount={false} showLikes={false}/>
+                                      showContent={false} categories={categories} types={types} showCommentsCount={false} showLikes={false}/>
                         )
                     }}
                     renderWhenEmpty={() =>
