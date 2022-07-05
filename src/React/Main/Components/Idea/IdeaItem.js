@@ -172,17 +172,17 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
             })
     };
 
-    const changeCategory = (categoryName) => {
+    const changeCategory = (categoryId) => {
         let data = {...idea};
 
-        data.category = categoryName;
+        data.category = categories.filter(item => item.id === categoryId)[0].name;
         setIdea(data)
     };
 
-    const changeTypes = (typeName) => {
+    const changeTypes = (typeId) => {
         let data = {...idea};
 
-        data.type = typeName;
+        data.type = categories.filter(item => item.id === typeId)[0].name;
         setIdea(data)
     };
 
@@ -195,10 +195,10 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                             <Popover
                                 content={
                                     <Segmented
-                                        defaultValue={idea?.category}
+                                        defaultValue={idea?.categoryId}
                                         onChange={(value) => changeCategory(value)}
                                         options={categories.map((item) => {
-                                            return {label: item.name, value: item.name}
+                                            return {label: item.name, value: item.id}
                                         })} />
                                 }>
                                 <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
@@ -226,10 +226,10 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                             <Popover
                                 content={
                                     <Segmented
-                                        defaultValue={idea?.type}
+                                        defaultValue={idea?.typeId}
                                         onChange={(value) => changeTypes(value)}
                                         options={types.map((item) => {
-                                            return {label: item.name, value: item.name}
+                                            return {label: item.name, value: item.id}
                                         })
                                         }/>}
                             >
