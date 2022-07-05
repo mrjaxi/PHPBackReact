@@ -17,7 +17,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
     const [rawCommentsData, setRawCommentsData] = useState(comments);
     const [visible, setVisible] = useState(false);
     const [editableId, setEditableId] = useState(false);
-
+    const [visible1, setVisible1] = useState(false);
     const [checked, setChecked] = useState(false);
 
     const [loadingEdit, setLoadingEdit] = useState(false);

@@ -185,7 +185,6 @@ class App extends React.Component {
                         path={'/:locale(ru|en)?' + path}
                         key={key}
                         render={props => {
-                            //Формируется нужный массив для breadcrumbs
                             props.crumbs = routes
                                 .filter(({path}) => props.match.path.includes(path))
                                 .map(({path, ...rest}) => ({

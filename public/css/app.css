@@ -439,12 +439,14 @@ button:focus {
   left: -60px;
 }
 .f-cards-hashtag {
-  height: 30px;
   margin-left: 40px;
-  margin-right: auto;
   font-size: 17px;
   color: #AAB2BD;
   transition: 0.2s;
+  margin-right: 20px;
+  border-radius: 32px;
+  padding: 12px 17px 13px;
+  height: 48px;
 }
 .f-cards-hashtag-hover:hover {
   color: #3D72ED;

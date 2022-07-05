@@ -261,6 +261,7 @@ const MainPage = (props) => {
                                                     index={index + 1}
                                                     setItem={setIdea}
                                                     types={types}
+                                                    categories={categories}
                                                     statuses={statuses}
                                                     includedCategory={includedCategories}
                                                     selectType={selectType}

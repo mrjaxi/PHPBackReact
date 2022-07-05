@@ -1,14 +1,10 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import {Col, Select} from "antd";
-import Comments from "../Components/Comments";
-const { Option } = Select
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import FlatList from "flatlist-react";
 import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
-import UserIdeas from "./UserIdeas";
 
 const UserFavourite = ({ user, setCount }) => {
     const [statuses, setStatuses] = useState([]);

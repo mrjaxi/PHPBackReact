@@ -2,7 +2,7 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../Comments";
-import {Avatar, Image, Select, Tooltip, Button} from "antd";
+import {Avatar, Image, Select, Tooltip, Button, Popover, Segmented} from "antd";
 import {Link} from "react-router-dom";
 import Icon, {UserOutlined} from "@ant-design/icons";
 import Linkify from 'react-linkify';
@@ -44,7 +44,7 @@ global.parseToIdeaItems = (ideas, data=[], showComments=false, allowComments=nul
     return newData;
 }
 
-const IdeaItem = ({ item, index, setItem, statuses,
+const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                       selectType = () => false, selectCategory = () => false,
                       includedTypes = [], types = [], includedCategory = [],
                       showContent = true, showCommentsCount = true, showLikes = true }) => {
@@ -172,32 +172,85 @@ const IdeaItem = ({ item, index, setItem, statuses,
             })
     };
 
+    const changeCategory = (categoryName) => {
+        let data = {...idea};
+
+        data.category = categoryName;
+        setIdea(data)
+    };
+
+    const changeTypes = (typeName) => {
+        let data = {...idea};
+
+        data.type = typeName;
+        setIdea(data)
+    };
+
     return (
         <>
             <div className={"f-cards"} key={index} id={index}>
                 <div className={"f-text-tags-wrap"}>
-                    <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
-                         style={{
-                             marginRight: 20,
-                             borderRadius: 32,
-                             paddingLeft: 17,
-                             paddingRight: 17,
-                             paddingTop: 12,
-                             paddingBottom: 13,
-                             height: 48,
-                             backgroundColor: !includedCategory.includes(idea?.categoryId) ? '#FFFFFF48' : '#FFFFFF',
-                             color: '#1D1D1F'
-                         }}
-                         onClick={() => {
-                             selectCategory(idea.categoryId)
-                         }}>{idea?.category}</div>
-                    <p style={{
-                        borderRadius: 32, paddingLeft: 17, paddingRight: 17, paddingTop: 12, paddingBottom: 13, height: 48,
-                        marginLeft: 0, color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1]?.color) && types[idea.typeId - 1]?.color,
-                    }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
-                       onClick={() => {
-                           selectType(idea.typeId)
-                       }}>#{idea?.type}</p>
+                    {
+                        categories.length !== 0 && global.layout === "admin" ?
+                            <Popover
+                                content={
+                                    <Segmented
+                                        defaultValue={idea?.category}
+                                        onChange={(value) => changeCategory(value)}
+                                        options={categories.map((item) => {
+                                            return {label: item.name, value: item.name}
+                                        })} />
+                                }>
+                                <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                                     style={{
+                                         backgroundColor: !includedCategory.includes(idea?.categoryId) ? '#FFFFFF48' : '#FFFFFF',
+                                         color: '#1D1D1F'
+                                     }}
+                                     onClick={() => {
+                                         selectCategory(idea.categoryId)
+                                     }}>{idea?.category}
+                                </div>
+                            </Popover> :
+                            <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                                 style={{
+                                     backgroundColor: !includedCategory.includes(idea?.categoryId) ? '#FFFFFF48' : '#FFFFFF',
+                                     color: '#1D1D1F'
+                                 }}
+                                 onClick={() => {
+                                     selectCategory(idea.categoryId)
+                                 }}>{idea?.category}
+                            </div>
+                    }
+                    {
+                        types.length !== 0 && global.layout === "admin" ?
+                            <Popover
+                                content={
+                                    <Segmented
+                                        defaultValue={idea?.type}
+                                        onChange={(value) => changeTypes(value)}
+                                        options={types.map((item) => {
+                                            return {label: item.name, value: item.name}
+                                        })
+                                        }/>}
+                            >
+                                <p style={{
+                                    marginLeft: 0,
+                                    color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1]?.color) && types[idea.typeId - 1]?.color,
+                                }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                                   onClick={() => {
+                                       selectType(idea.typeId)
+                                   }}>#{idea?.type}
+                                </p>
+                            </Popover> :
+                            <p style={{
+                                marginLeft: 0,
+                                color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1]?.color) && types[idea.typeId - 1]?.color,
+                            }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
+                               onClick={() => {
+                                   selectType(idea.typeId)
+                               }}>#{idea?.type}
+                            </p>
+                    }
                 </div>
                 <div className={"f-cards-card-wrap"} key={index}>
                     {
