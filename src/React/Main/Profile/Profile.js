@@ -15,6 +15,7 @@ const Profile = () => {
 
     const params = useParams();
     const history = useHistory();
+    const [notifications, setNotifications] = useState(global.user.notifications);
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [selectedHeaderItem, setSelectedHeaderItem] = useState(0);
     const [roles, setRoles] = useState([])
@@ -67,6 +68,11 @@ const Profile = () => {
         }
     }, [user])
 
+    function changeNotifications(bool) {
+        setNotifications(bool)
+        global.user.notifications = bool;
+    }
+
     function getUser() {
         axios.get(ApiRoutes.API_GET_USER_DATA.format(params.id)).then(response => {
             global.handleResponse(response,
@@ -118,7 +124,7 @@ const Profile = () => {
     return (
         <>
             <Col className={"f-main"} style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
-                <Header/>
+                { (notifications===false||notifications===true) && <Header/> }
                 <div style={{ display: "flex", flexDirection: "column"}}>
                     <div className={"max_width"}>
                         <div style={{
@@ -189,11 +195,11 @@ const Profile = () => {
                                 </div>
                             }
                             <div style={{ display: 'flex', marginLeft: "30px", }}>
-                                { global.user.notifications &&
-                                    <div style={{ width: 10, height: 10, borderRadius: 100, marginTop: 8, border: '2px solid #E6E9ED', backgroundColor: '#3D72ED' }}/>
+                                { notifications &&
+                                    <div style={{ width: 6, height: 6, borderRadius: 100, marginTop: 10, backgroundColor: '#3D72ED' }}/>
                                 }
                                 <a onClick={() => setSelectedHeaderItem(0)} className={"f-profile-header"}
-                                   style={{ color: selectedHeaderItem === 0 && "#1D1D1F", marginLeft: global.user.notifications ? 5 : 22 }}>
+                                   style={{ color: selectedHeaderItem === 0 && "#1D1D1F", marginLeft: notifications ? 5 : 22 }}>
                                     Публикации <a style={{color:"#AAB2BD"}}>{ ideasCount >= 0 ? ideasCount : 0 }</a>
                                     { selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/> }
                                 </a>
@@ -221,7 +227,7 @@ const Profile = () => {
                             {
                                 !user || loadingProfile || !roles[0] ? <LoadingIdeas type={true}/>
                                     : selectedHeaderItem === 0 ?
-                                        <UserIdeas user={user} user_id={params.id} setCount={setIdeasCount}/> :
+                                        <UserIdeas user={user} user_id={params.id} setCount={setIdeasCount} setNotifications={changeNotifications}/> :
                                         selectedHeaderItem === 1 ?
                                             <UserComments user={user} user_id={params.id} setCount={setCommentsCount}/> :
                                             selectedHeaderItem === 2 &&

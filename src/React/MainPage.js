@@ -15,19 +15,18 @@ import InfiniteScroll from "react-infinite-scroll-component";
 global.handleResponse = function( response, success=()=>{}, error=()=>{}, trouble=()=>{}, defaultFunc=()=>{} ) {
     switch (response.data?.state) {
         case "success":
-            // console.log("SUCCESS HANDLE")
             success()
             break;
         case "error":
-            // console.log("ERROR HANDLE")
             error()
             break;
         case "trouble":
-            // console.log("TROUBLE HANDLE")
             trouble()
             break;
+        case "unauthorized":
+            global.openNotification("Войдите", "Для этого нужно авторизоваться", "error")
+            break;
         default:
-            // console.log("DEFAULT HANDLE")
             defaultFunc()
             global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
             break;

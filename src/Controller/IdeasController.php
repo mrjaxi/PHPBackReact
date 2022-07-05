@@ -497,16 +497,19 @@ class IdeasController extends AbstractController
         if (!$idea->getAllowComments()) {
             return $this->json(['state' => 'error', 'message' => "Под этой идеей нельзя оставлять комментарии"]);
         }
-        /** @var Comments $lastComment */
-        $lastComment = $idea->get_Comments()->last();
 
         $newComment = new Comments();
         $newComment->setIdea($idea)
             ->setUser($user)
             ->setContent($content);
+        if($idea->get_User()->getId() === $user->getId()){
+            $newComment->setIsChecked(true);
+        }
         $this->commentsRepository->save($newComment);
 
         if($user->getId() !== $idea->get_User()->getId()){
+            /** @var Comments $lastComment */
+            $lastComment = $idea->get_Comments()->last();
             if(empty($lastComment)){
                 $urlIdea = $baseURL . "/idea/" . $idea->getId();
                 $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
@@ -591,7 +594,8 @@ class IdeasController extends AbstractController
         }
         // Изменить если автор комментария
         if ($user->getId() == $comment->get_User()->getId()) {
-            $comment->setContent($content);
+            $comment->setContent($content)
+                ->updatedTimestamps();
             $this->commentsRepository->save($comment);
             return $this->json(['state' => 'success', 'comment' => $comment->get_Info()]);
         } else {

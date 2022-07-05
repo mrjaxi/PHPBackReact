@@ -11,6 +11,11 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                     setIncludedCategories = () => false }) => {
     const [visibleSearch, setVisibleSearch] = useState(false)
     const [visibleLogin, setVisibleLogin] = useState();
+    const [user, setUser] = useState(global.user?.notifications);
+
+    useEffect(() => {
+        setUser(global.user)
+    }, [global.user])
 
     const logout = async () => {
          await axios.post("/ru/logout");
@@ -56,10 +61,10 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}>
-                                        { global.user.notifications &&
+                                        { user?.notifications &&
                                             <div style={{ width: 12, height: 12, borderRadius: 100, border: '2px solid #E6E9ED', position: 'absolute', zIndex: 2, top: 10, right: 25, backgroundColor: '#3D72ED' }}/>
                                         }
-                                        <ProfileAvatar size={48} image={global.user.image}/>
+                                        <ProfileAvatar size={48} image={user?.image}/>
                                         <img src={"/i/downOutlined.svg"} style={{
                                             marginLeft: 7.5
                                         }}/>
@@ -74,17 +79,16 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                                         margin: "0px 20px 14.5px 30px",
                                         zIndex: 10,
                                         borderBottom: "1px solid rgb(230, 233, 237)"
-                                    }} to={global.lang + `/profile/${global.user.id}`}>
+                                    }} to={global.lang + `/profile/${user?.id}`}>
                                         <span style={{
                                             textOverflow: "ellipsis",
                                             overflow: "hidden",
                                             color: "black",
                                             fontSize: 17,
                                             marginRight: 10,
-                                        }}>{ global.user?.first_name
-                                        }</span>
+                                        }}>{user?.first_name}</span>
                                         <div style={{ display: "flex", alignItems: "center" }}>
-                                            <ProfileAvatar size={48} image={global.user.image}/>
+                                            <ProfileAvatar size={48} image={user?.image}/>
                                             <img src={"/i/upOutlined.svg"} style={{
                                                 marginLeft: 7.5
                                             }}/>

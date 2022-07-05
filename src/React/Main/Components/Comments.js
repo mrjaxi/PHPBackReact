@@ -102,7 +102,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
     return (
         <div className={"f-comments"}>
             <Login visible={visible} setVisible={setVisible}/>
-            <span className={"f-comments-tip-text"}>Комментарии</span>
+            <span className={"f-comments-tip-text"} style={{paddingLeft: 40}}>Комментарии</span>
             <div className={"f-comments-scroll"}>
                 {
                     flag ? <></> :
@@ -118,7 +118,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                     <div
                                         key={index}
                                         className={"f-cards-avatar f-cards-avatar-bottom-border"}
-                                        style={{paddingTop: 40, display: "block",}}
+                                        style={{ marginBottom: 0, padding: "40px 50px 20px 40px", display: "block", backgroundColor: !comment?.is_checked ? "#42C82C50" : "#ffffff00"}}
                                     >
                                         <div className={"f-cards-row-wrap"}>
                                             <Link to={global.lang + `/profile/${comment.user.id}`}>
@@ -218,7 +218,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                     </div>
                                     {
                                         (rawCommentsData.length > 3 && index === commentsData.length - 1) &&
-                                        <div className={"f-comments-under-text"}>
+                                        <div className={"f-comments-under-text"} style={{ paddingLeft: 40, paddingRight: 50 }}>
                                             <a
                                                 className={"f-comments-text-button"}
                                                 onClick={() => {
@@ -237,23 +237,33 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
             </div>
             {
                 allowComments &&
-                <div className={"f-write-comments"} key={2}>
-                    <Title>Написать</Title>
-                    <Form form={form}
-                          onFinish={(values) => sendComment(values.comment)}
-                    >
-                        <Form.Item
-                            name={"comment"}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Напишите комментарий',
-                                },
-                            ]}
+                <div style={{ paddingLeft: 40, paddingRight: 50 }}>
+                    <div className={"f-write-comments"} key={2}>
+                        <Title>Написать</Title>
+                        <Form form={form}
+                              onFinish={(values) => sendComment(values.comment)}
                         >
-                            {
-                                global.layout === "guest" ?
-                                    <>
+                            <Form.Item
+                                name={"comment"}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Напишите комментарий',
+                                    },
+                                ]}
+                            >
+                                {
+                                    global.layout === "guest" ?
+                                        <>
+                                            <TextArea name={"text-area"} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
+                                                      autoSize={{minRows: 5}}
+                                                      disabled={global.layout === "guest"}
+                                                      className={"f-write-comments-input"}
+                                                      placeholder={global.layout !== "guest" ?
+                                                          "Напишите что-нибудь..." : ""}
+                                            />
+                                            <div className={'disable'}><a style={{ color: '#3D72ED' }} onClick={() => setVisible(!visible)}>Войдите</a>, чтобы оставлять комментарии, публиковать и оценивать идеи</div>
+                                        </> :
                                         <TextArea name={"text-area"} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
                                                   autoSize={{minRows: 5}}
                                                   disabled={global.layout === "guest"}
@@ -261,62 +271,54 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                                   placeholder={global.layout !== "guest" ?
                                                       "Напишите что-нибудь..." : ""}
                                         />
-                                        <div className={'disable'}><a style={{ color: '#3D72ED' }} onClick={() => setVisible(!visible)}>Войдите</a>, чтобы оставлять комментарии, публиковать и оценивать идеи</div>
-                                    </> :
-                                    <TextArea name={"text-area"} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
-                                              autoSize={{minRows: 5}}
-                                              disabled={global.layout === "guest"}
-                                              className={"f-write-comments-input"}
-                                              placeholder={global.layout !== "guest" ?
-                                                  "Напишите что-нибудь..." : ""}
-                                    />
-                            }
-                        </Form.Item>
-                        {
-                            ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => global?.user?.roles?.includes(el)) &&
-                            <Form.Item
-                                name={"close"}
-                            >
-                                <Checkbox onClick={() => setChecked(!checked)} style={{ color: '#1D1D1F', fontSize: 20, display: 'flex', alignItems: 'center' }}>Опубликовать и закрыть комментарии</Checkbox>
+                                }
                             </Form.Item>
-                        }
-                        <Form.Item>
                             {
-                                global.layout !== "guest" ?
-                                    <Button
-                                        style={{
-                                            paddingRight: 27,
-                                            paddingLeft: 27,
-                                            boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
-                                            borderRadius: 64,
-                                            fontSize: 20,
-                                            height: 60,
-                                        }}
-                                        type="primary"
-                                        htmlType="submit"
-                                        shape="round"
-                                        loading={loading}
-                                    >
-                                        Отправить
-                                    </Button>
-                                    : <Button
-                                        style={{
-                                            paddingRight: 32,
-                                            paddingLeft: 32,
-                                            backgroundColor: '#E6E9ED',
-                                            border: 'none',
-                                            borderRadius: 64,
-                                            fontSize: 20,
-                                            height: 60,
-                                        }}
-                                        disabled={true}
-                                        shape="round"
-                                    >
-                                        Отправить
-                                    </Button>
+                                ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => global?.user?.roles?.includes(el)) &&
+                                <Form.Item
+                                    name={"close"}
+                                >
+                                    <Checkbox onClick={() => setChecked(!checked)} style={{ color: '#1D1D1F', fontSize: 20, display: 'flex', alignItems: 'center' }}>Опубликовать и закрыть комментарии</Checkbox>
+                                </Form.Item>
                             }
-                        </Form.Item>
-                    </Form>
+                            <Form.Item>
+                                {
+                                    global.layout !== "guest" ?
+                                        <Button
+                                            style={{
+                                                paddingRight: 27,
+                                                paddingLeft: 27,
+                                                boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                                borderRadius: 64,
+                                                fontSize: 20,
+                                                height: 60,
+                                            }}
+                                            type="primary"
+                                            htmlType="submit"
+                                            shape="round"
+                                            loading={loading}
+                                        >
+                                            Отправить
+                                        </Button>
+                                        : <Button
+                                            style={{
+                                                paddingRight: 32,
+                                                paddingLeft: 32,
+                                                backgroundColor: '#E6E9ED',
+                                                border: 'none',
+                                                borderRadius: 64,
+                                                fontSize: 20,
+                                                height: 60,
+                                            }}
+                                            disabled={true}
+                                            shape="round"
+                                        >
+                                            Отправить
+                                        </Button>
+                                }
+                            </Form.Item>
+                        </Form>
+                    </div>
                 </div>
             }
         </div>

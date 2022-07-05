@@ -85,9 +85,7 @@ class Comments
             $this->setDate(new DateTime('now'));
         }
     }
-    /**
-     * @ORM\PreUpdate
-     */
+
     public function updatedTimestamps(): void
     {
         $this->setUpdatedAt(new DateTime('now'));

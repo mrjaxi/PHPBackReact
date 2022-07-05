@@ -6,7 +6,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserIdeas = ({ user, setCount }) => {
+const UserIdeas = ({ user, setCount, setNotifications }) => {
 
     const [statuses, setStatuses] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -21,8 +21,22 @@ const UserIdeas = ({ user, setCount }) => {
     }, []);
 
     useEffect(() => {
-        if(ideas.length >= 0 && !loading)
+        console.log("ideas updated")
+        if(ideas.length >= 0 && !loading){
             setCount(ideas.length)
+        }
+
+        if(ideas.length > 0){
+            let notifications = false
+            ideas.forEach((idea) => {
+                if(idea?.notification === true){
+                    console.log("idea?.notification = true!",idea)
+                    notifications = true;
+                }
+            })
+            console.log("global.user.notifications = ",notifications)
+            setNotifications(notifications)
+        }
     }, [ideas])
 
     useEffect(() => {

@@ -39,6 +39,7 @@ global.parseToIdeaItems = (ideas, data=[], showComments=false, allowComments=nul
             allowComments: allowComments===null ? idea.allowComments : allowComments,
             date: idea?.date,
             dateString: global.getDateString(new Date(idea?.date), false,false),
+            notification: idea?.notification
         })
     });
     return newData;
@@ -52,8 +53,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
     const [idea, setIdea] = useState(item);
     const [date, setDate] = useState("");
     const [visible, setVisible] = useState(false);
-
-    let editable = false;
+    const [editable, setEditable] = useState(false);
 
     useLayoutEffect(() => {
         let newIdea = {...item};
@@ -65,9 +65,10 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
 
     useEffect(() => {
         if(editable){
+            console.log("idea changed")
             setItem(idea, index)
         } else {
-            editable = true
+            setEditable(true)
         }
     }, [idea]);
 
@@ -142,16 +143,28 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
 
     const showComments = () => {
         let newIdea = {...idea};
-        const flag = newIdea.showComments;
-        newIdea.showComments = !flag;
-        setIdea(newIdea)
+        newIdea.showComments = !newIdea.showComments;
+        if(idea?.notification){
+            axios.post(ApiRoutes.API_CHECK_ALL_COMMENTS, { idea_id: idea.idea_id })
+                .then(response => {
+                    global.handleResponse(response,
+                        function () {
+                            newIdea.notification = false
+                            setIdea(newIdea)
+                            console.log("все комменты чекнулись:", newIdea)
+                        },
+                    )
+                })
+        } else {
+            setIdea(newIdea)
+        }
     };
 
     const changeStatus = (idea_id, id, name) => {
         axios.post(ApiRoutes.API_SET_STATUS, {idea_id: idea_id, status_id: id})
             .then(response => {
-                switch (response.data?.state) {
-                    case "success":
+                global.handleResponse(response,
+                    function () {
                         global.openNotification("Успешно", "Статус идеи изменен", "success")
                         let newIdea = {...idea};
                         newIdea.status = id;
@@ -161,14 +174,11 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                             newIdea.allowComments = true;
                         }
                         setIdea(newIdea)
-                        break;
-                    case "error":
+                    },
+                    function () {
                         global.openNotification("Ошибка", response.data?.message, "error")
-                        break;
-                    default:
-                        global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
-                        break;
-                }
+                    },
+                )
             })
     };
 
@@ -304,17 +314,18 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                             </div>
                         </div>
                     }
-                    <div className={"f-cards-inner"} style={{ marginTop: idea?.photo !== null ? -40 : 0, paddingBottom: (idea.officialComment && !idea.showComments) && 60 }}>
-                        <div className={"f-cards-avatar"}>
-                            <Link to={global.lang + `/profile/${idea.user.id}`}>
-                                <div className={"f-cards-row-wrap"}>
-                                    <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
-                                            src={idea.userImage
-                                                ? <img src={idea.userImage}/>
-                                                : <UserOutlined/>
-                                            }/>
-                                    <div className={"f-cards-wrap-text-style"}>
-                                        <div>
+                    <div className={"f-cards-inner"} style={{ padding:"35px 0 10px 0  " , marginTop: idea?.photo !== null ? -40 : 0, paddingBottom: (idea.officialComment && !idea.showComments) && 60 }}>
+                        <div style={{ paddingLeft: 40, paddingRight: 50 }}>
+                            <div className={"f-cards-avatar"}>
+                                <Link to={global.lang + `/profile/${idea.user.id}`}>
+                                    <div className={"f-cards-row-wrap"}>
+                                        <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                                src={idea.userImage
+                                                    ? <img src={idea.userImage}/>
+                                                    : <UserOutlined/>
+                                                }/>
+                                        <div className={"f-cards-wrap-text-style"}>
+                                            <div>
                                             <span className={"f-cards-text"}>{idea.username}
                                                 {
                                                     ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => idea?.roles.includes(el)) &&
@@ -323,49 +334,49 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                                          height={15}/>
                                                 }
                                             </span>
-                                        </div>
-                                        <span className={"f-cards-text-bottom"}>{idea.role}
-                                            <span> · </span>
-                                            {date}
+                                            </div>
+                                            <span className={"f-cards-text-bottom"}>{idea.role}
+                                                <span> · </span>
+                                                {date}
                                         </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                            {
-                                global.layout === "admin" ?
-                                    <Select
-                                        size={'large'}
-                                        onSelect={(id, data) => {
-                                            changeStatus(idea.idea_id, id, data)
-                                        }}
-                                        style={{ height: '100%' }}
-                                        defaultValue={idea.status.id}
-                                    >
-                                        {
-                                            statuses.map(status => (
-                                                <Option data={status.name}
-                                                        value={status.id}>{status.translate}</Option>
-                                            ))
-                                        }
-                                    </Select> :
-                                    <div>
-                                        <p className={"f-cards-type-viewed"} style={{
-                                            // marginTop: "1em",
-                                            color: idea.status?.color ? idea.status?.color : "#000000",
-                                            backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",
-                                        }}
-                                        >{idea.status.translate}</p>
-                                    </div>
-                            }
-                        </div>
-                        <div className={"f-cards-div-wrap-text"} style={{ marginBottom: showContent ? 20 : 0 }}>
-                            <Link to={global.lang + "/idea/" + idea.idea_id + "/"}>
+                                </Link>
+                                {
+                                    global.layout === "admin" ?
+                                        <Select
+                                            size={'large'}
+                                            onSelect={(id, data) => {
+                                                changeStatus(idea.idea_id, id, data)
+                                            }}
+                                            style={{height: '100%'}}
+                                            defaultValue={idea.status.id}
+                                        >
+                                            {
+                                                statuses.map(status => (
+                                                    <Option data={status.name}
+                                                            value={status.id}>{status.translate}</Option>
+                                                ))
+                                            }
+                                        </Select> :
+                                        <div>
+                                            <p className={"f-cards-type-viewed"} style={{
+                                                // marginTop: "1em",
+                                                color: idea.status?.color ? idea.status?.color : "#000000",
+                                                backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",
+                                            }}
+                                            >{idea.status.translate}</p>
+                                        </div>
+                                }
+                            </div>
+                            <div className={"f-cards-div-wrap-text"} style={{marginBottom: showContent ? 20 : 0}}>
+                                <Link to={global.lang + "/idea/" + idea.idea_id + "/"}>
                                 <span className={"f-cards-content-text"}>
                                     {idea.title}
                                 </span>
-                            </Link>
-                        </div>
-                        { showContent &&
+                                </Link>
+                            </div>
+                            {showContent &&
                             <div className={"f-cards-div-wrap-text"}>
                                 <span className={"f-cards-content-description"}>
                                     <Linkify>
@@ -382,9 +393,18 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                     </Linkify>
                                 </span>
                             </div>
-                        }
-                        <div className={"f-cards-under-block"}>
-                            { showCommentsCount &&
+                            }
+                            <div className={"f-cards-under-block"}>
+                                {(idea.notification === true) &&
+                                <div style={{
+                                    width: 6,
+                                    height: 6,
+                                    marginRight: 5,
+                                    borderRadius: 100,
+                                    backgroundColor: '#3D72ED'
+                                }}/>
+                                }
+                                {showCommentsCount &&
                                 <div>
                                     <a onClick={() => {
                                         showComments()
@@ -392,58 +412,74 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                         {global.numWord(idea.comments.length, ["комментарий", "комментария", "комментариев"])}
                                     </a>
                                 </div>
-                            }
-                            <div>
-                                { showLikes ?
-                                    global.layout === 'guest' ?
-                                    <Tooltip color={"black"} title="Авторизуйтесь, чтобы оценить">
-                                        <button className={"f-cards-under-block-like"}
-                                                disabled={true}
-                                                type={"button"}
-                                                style={{
-                                                    backgroundColor: 'white',
+                                }
+                                <div>
+                                    {showLikes ?
+                                        global.layout === 'guest' ?
+                                            <Tooltip color={"black"} title="Авторизуйтесь, чтобы оценить">
+                                                <button className={"f-cards-under-block-like"}
+                                                        disabled={true}
+                                                        type={"button"}
+                                                        style={{
+                                                            backgroundColor: 'white',
+                                                            cursor: 'not-allowed',
+                                                            border: 'none',
+                                                        }}
+                                                >
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <Icon component={Like} style={{fontSize: 23}}/>
+                                                        <span
+                                                            style={{color: idea.currentUserIsVote === true ? "#FFF" : ""}}
+                                                            className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                                    </div>
+                                                </button>
+                                            </Tooltip> : idea.allowComments === false ?
+                                            <Tooltip color={"black"} title="Голосование за эту идею закрыто">
+                                                <div className={"f-cards-under-block-like"} style={{
+                                                    backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "",
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
                                                     cursor: 'not-allowed',
-                                                    border: 'none',
-                                                }}
-                                        >
-                                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                <Icon component={Like} style={{ fontSize: 23 }} />
-                                                <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
-                                            </div>
-                                        </button>
-                                    </Tooltip> : idea.allowComments === false ?
-                                        <Tooltip color={"black"} title="Голосование за эту идею закрыто">
-                                            <div className={"f-cards-under-block-like"} style={{
+                                                }}>
+                                                    <Icon component={Like} style={{fontSize: 23}}/>
+                                                    <span
+                                                        style={{color: idea.currentUserIsVote === true ? "#FFF" : ""}}
+                                                        className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                                </div>
+                                            </Tooltip> :
+                                            <button type={"button"} style={{
                                                 backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "",
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                cursor: 'not-allowed',
-                                            }}>
-                                                <Icon component={Like} style={{fontSize: 23}}/>
-                                                <span
-                                                    style={{color: idea.currentUserIsVote === true ? "#FFF" : ""}}
-                                                    className={"f-cards-under-block-like-text"}>{idea.like}</span>
-                                            </div>
-                                        </Tooltip> :
-                                            <button type={"button"} style={{backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "", border: 'none', cursor: 'pointer'}}
-                                               className={"f-cards-under-block-like"}
-                                               onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
-                                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                    <Icon component={Like} style={{ fontSize: 23 }} />
-                                                    <span style={{ color: idea.currentUserIsVote === true ? "#FFF" : "" }} className={"f-cards-under-block-like-text"}>{idea.like}</span>
+                                                border: 'none',
+                                                cursor: 'pointer'
+                                            }}
+                                                    className={"f-cards-under-block-like"}
+                                                    onClick={() => newVote(idea.idea_id, idea.currentUserIsVote)}>
+                                                <div style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <Icon component={Like} style={{fontSize: 23}}/>
+                                                    <span style={{color: idea.currentUserIsVote === true ? "#FFF" : ""}}
+                                                          className={"f-cards-under-block-like-text"}>{idea.like}</span>
                                                 </div>
                                             </button>
-                                    : <></>
-                                }
+                                        : <></>
+                                    }
+                                </div>
+                                {/*<div>*/}
+                                {/*    <a className={"f-cards-under-block-like"} href={"#"}>*/}
+                                {/*        <i className="em em--1"*/}
+                                {/*           aria-label="THUMBS DOWN SIGN"></i>*/}
+                                {/*        <span className={"f-cards-under-block-like-text"}>Не нравится</span>*/}
+                                {/*    </a>*/}
+                                {/*</div>*/}
                             </div>
-                            {/*<div>*/}
-                            {/*    <a className={"f-cards-under-block-like"} href={"#"}>*/}
-                            {/*        <i className="em em--1"*/}
-                            {/*           aria-label="THUMBS DOWN SIGN"></i>*/}
-                            {/*        <span className={"f-cards-under-block-like-text"}>Не нравится</span>*/}
-                            {/*    </a>*/}
-                            {/*</div>*/}
                         </div>
                         {
                             idea.showComments &&
