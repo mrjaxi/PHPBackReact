@@ -173,19 +173,39 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
     };
 
     const changeCategory = (categoryId) => {
-        let data = {...idea};
-
-        data.categoryId = categoryId;
-        data.category = categories.filter(item => item.id === categoryId)[0].name;
-        setIdea(data)
+        axios.post(ApiRoutes.API_SET_CATEGORY, {idea_id: idea.idea_id, category_id: categoryId})
+            .then(response => {
+                global.handleResponse(response,
+                    function () {
+                        let data = {...idea};
+                        data.categoryId = categoryId;
+                        data.category = categories.filter(item => item.id === categoryId)[0].name;
+                        setIdea(data)
+                        global.openNotification("Успешно", "Категория идеи успешно изменена", "success")
+                    },
+                    function () {
+                        global.openNotification("Ошибка", response.data?.message, "error")
+                    },
+                )
+            })
     };
 
-    const changeTypes = (typeId) => {
-        let data = {...idea};
-
-        data.typeId = typeId;
-        data.type = types.filter(item => item.id === typeId)[0].name;
-        setIdea(data)
+    const changeType = (typeId) => {
+        axios.post(ApiRoutes.API_SET_TYPE, {idea_id: idea.idea_id, type_id: typeId})
+            .then(response => {
+                global.handleResponse(response,
+                    function () {
+                        let data = {...idea};
+                        data.typeId = typeId;
+                        data.type = types.filter(item => item.id === typeId)[0].name;
+                        setIdea(data)
+                        global.openNotification("Успешно", "Тип идеи успешно изменён", "success")
+                    },
+                    function () {
+                        global.openNotification("Ошибка", response.data?.message, "error")
+                    },
+                )
+            })
     };
 
     return (
@@ -197,7 +217,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                             <Popover
                                 content={
                                     <Segmented
-                                        defaultValue={idea?.categoryId}
+                                        value={idea?.categoryId}
                                         onChange={(value) => changeCategory(value)}
                                         options={categories.map((item) => {
                                             return {label: item.name, value: item.id}
@@ -228,8 +248,8 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                             <Popover
                                 content={
                                     <Segmented
-                                        defaultValue={idea?.typeId}
-                                        onChange={(value) => changeTypes(value)}
+                                        value={idea?.typeId}
+                                        onChange={(value) => changeType(value)}
                                         options={types.map((item) => {
                                             return {label: item.name, value: item.id}
                                         })}/>}

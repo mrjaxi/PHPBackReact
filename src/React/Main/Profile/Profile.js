@@ -189,20 +189,23 @@ const Profile = () => {
                                 </div>
                             }
                             <div style={{ display: 'flex', marginLeft: "30px", }}>
+                                { global.user.notifications &&
+                                    <div style={{ width: 10, height: 10, borderRadius: 100, marginTop: 8, border: '2px solid #E6E9ED', backgroundColor: '#3D72ED' }}/>
+                                }
                                 <a onClick={() => setSelectedHeaderItem(0)} className={"f-profile-header"}
-                                   style={{color: selectedHeaderItem === 0 && "#1D1D1F"}}>
-                                    Публикации <a style={{color:"#AAB2BD"}}>{ideasCount >= 0 ? ideasCount : 0}</a>
-                                    {selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/>}
+                                   style={{ color: selectedHeaderItem === 0 && "#1D1D1F", marginLeft: global.user.notifications ? 5 : 22 }}>
+                                    Публикации <a style={{color:"#AAB2BD"}}>{ ideasCount >= 0 ? ideasCount : 0 }</a>
+                                    { selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/> }
                                 </a>
                                 <a onClick={() => setSelectedHeaderItem(1)} className={"f-profile-header"}
                                    style={{color: selectedHeaderItem === 1 && "#1D1D1F"}}>
-                                    Комментарии <a style={{color:"#AAB2BD"}}>{commentsCount >= 0 ? commentsCount : 0}</a>
-                                    {selectedHeaderItem === 1 && <div className={"f-bottom-selected"}/>}
+                                    Комментарии <a style={{color:"#AAB2BD"}}>{ commentsCount >= 0 ? commentsCount : 0 }</a>
+                                    { selectedHeaderItem === 1 && <div className={"f-bottom-selected"}/> }
                                 </a>
                                 <a onClick={() => setSelectedHeaderItem(2)} className={"f-profile-header"}
                                    style={{color: selectedHeaderItem === 2 && "#1D1D1F"}}>
-                                    Понравилось <a style={{color:"#AAB2BD"}}>{likesCount >= 0 ? likesCount : 0}</a>
-                                    {selectedHeaderItem === 2 && <div className={"f-bottom-selected"}/>}
+                                    Понравилось <a style={{color:"#AAB2BD"}}>{ likesCount >= 0 ? likesCount : 0 }</a>
+                                    { selectedHeaderItem === 2 && <div className={"f-bottom-selected"}/> }
                                 </a>
                             </div>
                         </div>

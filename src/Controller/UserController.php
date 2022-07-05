@@ -425,19 +425,13 @@ class UserController extends AbstractController
             $ideasArr[$i] = $idea->get_Info();
             $ideasArr[$i]["comments"] = $idea->get_CommentsArray();
 
-//            $commentsNotifications = false;
-//            // Проверка на то, есть ли в этой идее непрочитанные комменты
-//            $comments = $idea->get_Comments();
-//            /** @var Comments $comment*/
-//            foreach ($comments as &$comment){
-//                if(!$comment->getIsChecked()){
-//                    $commentsNotifications = true;
-//                    break;
-//                }
-//            }
-//            if($commentsNotifications === true){
-//                break;
-//            }
+            $ideasArr[$i]["notification"] = false;
+            foreach ($ideasArr[$i]["comments"] as &$comment){
+                if(!$comment["is_checked"]){
+                    $ideasArr[$i]["notification"] = true;
+                    break;
+                }
+            }
 
             if (empty($user)) {
                 $ideasArr[$i]["currentUserIsVote"] = "unauthorized";

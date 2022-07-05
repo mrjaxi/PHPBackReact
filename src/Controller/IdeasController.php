@@ -417,6 +417,62 @@ class IdeasController extends AbstractController
     }
 
     /**
+     * @Route("/api/admin/ideas/setCategory/")
+     * @param Request $request
+     * @return Response
+     */
+    public function setCategory(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data['idea_id']) && !empty($data['category_id'])) {
+            $idea_id = $data['idea_id'];
+            $category_id = $data['category_id'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id и category_id"]);
+        }
+        $idea = $this->ideasRepository->find($idea_id);
+        $category = $this->categoriesRepository->find($category_id);
+        if (empty($idea)) {
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+        }
+        if (empty($category)) {
+            return $this->json(['state' => 'error', 'message' => "Такой категории не существует"]);
+        }
+        $idea->setCategory($category);
+        $this->ideasRepository->save($idea);
+
+        return $this->json(['state' => 'success', 'idea' => $idea->get_Info()]);
+    }
+
+    /**
+     * @Route("/api/admin/ideas/setType/")
+     * @param Request $request
+     * @return Response
+     */
+    public function setType(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data['idea_id']) && !empty($data['type_id'])) {
+            $idea_id = $data['idea_id'];
+            $type_id = $data['type_id'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id и type_id"]);
+        }
+        $idea = $this->ideasRepository->find($idea_id);
+        $type = $this->typesRepository->find($type_id);
+        if (empty($idea)) {
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+        }
+        if (empty($type)) {
+            return $this->json(['state' => 'error', 'message' => "Такого типа не существует"]);
+        }
+        $idea->setType($type);
+        $this->ideasRepository->save($idea);
+
+        return $this->json(['state' => 'success', 'idea' => $idea->get_Info()]);
+    }
+
+    /**
      * @Route("/api/user/ideas/newComment/")
      * @param Request $request
      * @param MailerInterface $mailer

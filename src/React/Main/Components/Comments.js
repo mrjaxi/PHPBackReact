@@ -31,27 +31,27 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                     idea_id: idea?.idea_id,
                     content: text
                 }).then(response => {
-                    if (response.data.state === "success") {
-                        global.handleResponse(response,
-                            function () {
-                                form.resetFields()
-                                let data = [...rawCommentsData];
-                                data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
-                                setCommentsData(data);
-                                setRawCommentsData(data);
-                                setComments(data)
-                                setShowComments(false)
+                    global.handleResponse(response,
+                        function () {
+                            form.resetFields()
+                            let data = [...rawCommentsData];
+                            data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
+                            setCommentsData(data);
+                            setRawCommentsData(data);
+                            // setComments(data)
+                            setShowComments(false)
 
 
-                                let officialAnswer = {...idea};
-                                officialAnswer["officialComment"] = response.data.comment
-                                setIdea(officialAnswer)
-                            },
-                            function () {
-                                global.openNotification("Ошибка", response.data?.message, "error")
-                            },
-                        );
-                    }
+                            let newIdea = {...idea}
+                            newIdea.officialComment = response.data.comment
+                            newIdea.allowComments = false
+                            newIdea.comments = data
+                            setIdea(newIdea)
+                        },
+                        function () {
+                            global.openNotification("Ошибка", response.data?.message, "error")
+                        },
+                    );
                     setLoading(false)
                 })
             } else {
