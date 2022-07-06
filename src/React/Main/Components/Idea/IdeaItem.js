@@ -2,16 +2,18 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../Comments";
-import {Avatar, Image, Select, Tooltip, Button, Popover, Segmented} from "antd";
+import {Avatar, Image, Select, Tooltip, Button, Popover, Segmented, Form, Input} from "antd";
 import {Link} from "react-router-dom";
-import Icon, {UserOutlined} from "@ant-design/icons";
+import Icon, {UserOutlined, EditOutlined, SaveOutlined} from "@ant-design/icons";
 import Linkify from 'react-linkify';
+
 const {Option} = Select;
+const {TextArea} = Input;
 
 import Like from '/public/i/like.svg'
 import OfficialComment from "../OfficialComment";
 
-global.parseToIdeaItems = (ideas, data=[], showComments=false, allowComments=null) => {
+global.parseToIdeaItems = (ideas, data = [], showComments = false, allowComments = null) => {
     let newData = [...data]
     ideas?.map(idea => {
         newData.push({
@@ -36,35 +38,42 @@ global.parseToIdeaItems = (ideas, data=[], showComments=false, allowComments=nul
             type: idea.type.name,
             typeId: idea.type.id,
             currentUserIsVote: idea.currentUserIsVote,
-            allowComments: allowComments===null ? idea.allowComments : allowComments,
+            allowComments: allowComments === null ? idea.allowComments : allowComments,
             date: idea?.date,
-            dateString: global.getDateString(new Date(idea?.date), false,false),
+            dateString: global.getDateString(new Date(idea?.date), false, false),
             notification: idea?.notification && (idea?.user.id === global.user.id) ? idea?.notification : false
         })
     });
     return newData;
 }
 
-const IdeaItem = ({ item, index, setItem, statuses, categories = [],
+const IdeaItem = ({
+                      item, index, setItem, statuses, categories = [],
                       selectType = () => false, selectCategory = () => false,
                       includedTypes = [], types = [], includedCategory = [],
-                      showContent = true, showCommentsCount = true, showLikes = true }) => {
+                      showContent = true, showCommentsCount = true, showLikes = true
+                  }) => {
 
     const [idea, setIdea] = useState(item);
     const [date, setDate] = useState("");
     const [visible, setVisible] = useState(false);
     const [editable, setEditable] = useState(false);
 
+    const [showEditButton, setShowEditButton] = useState(false);
+    const [showEditFields, setShowEditFields] = useState(false)
+
+    const [loadingEditChanges, setLoadingEditChanges] = useState(false)
+
     useLayoutEffect(() => {
         let newIdea = {...item};
-        setDate(global.getDateString(new Date(item?.date), false,false));
+        setDate(global.getDateString(new Date(item?.date), false, false));
         newIdea.comments.map(comment => {
             comment.dateString = global.getDateString(new Date(comment?.date))
         })
     }, []);
 
     useEffect(() => {
-        if(editable){
+        if (editable) {
             console.log("idea changed")
             setItem(idea, index)
         } else {
@@ -144,8 +153,8 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
     const showComments = () => {
         let newIdea = {...idea};
         newIdea.showComments = !newIdea.showComments;
-        if(idea?.notification && idea?.user.id === global.user.id){
-            axios.post(ApiRoutes.API_CHECK_ALL_COMMENTS, { idea_id: idea.idea_id })
+        if (idea?.notification && idea?.user.id === global.user.id) {
+            axios.post(ApiRoutes.API_CHECK_ALL_COMMENTS, {idea_id: idea.idea_id})
                 .then(response => {
                     global.handleResponse(response,
                         function () {
@@ -221,7 +230,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
     const onDeleteComment = (id, official) => {
         axios.post(ApiRoutes.API_DELETE_COMMENT, {comment_id: id}).then(response => {
             if (response.data.state === "success") {
-                if (official){
+                if (official) {
                     let newIdea = {...idea};
                     delete newIdea.officialComment;
                     newIdea.comments = newIdea.comments.filter(item => item.id !== id);
@@ -239,6 +248,25 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
         })
     };
 
+    const sendEditedIdea = (value) => {
+        setLoadingEditChanges(true);
+        axios.post(ApiRoutes.API_CHANGE_IDEA, {idea_id: idea.idea_id, title: value.title, content: value.text}).then(response => {
+            if (response.data.state === "success") {
+                let data = {...idea};
+
+                data.title = value.title;
+                data.text = value.text;
+                setIdea(data);
+
+                setShowEditFields(false);
+                setLoadingEditChanges(false)
+                global.openNotification("Успешно", "Идея отредактирована", "success")
+            } else {
+                global.openNotification("Ошибка", "Идею невозможно отредактировать", "error")
+            }
+        })
+    };
+
     return (
         <>
             <div className={"f-cards"} key={index} id={index}>
@@ -252,7 +280,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                         onChange={(value) => changeCategory(value)}
                                         options={categories.map((item) => {
                                             return {label: item.name, value: item.id}
-                                        })} />
+                                        })}/>
                                 }>
                                 <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                                      style={{
@@ -310,10 +338,10 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                         <div className={"f-cards-image-type"}
                              onClick={() => setVisible(true)}
                              style={{backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")', cursor: 'pointer'}}>
-                            { idea?.photo.split(";").length > 1 &&
-                                <div className={"f-image-count"}>
-                                    <span style={{fontSize: 18}}>1/{idea?.photo.split(";").length}</span>
-                                </div>
+                            {idea?.photo.split(";").length > 1 &&
+                            <div className={"f-image-count"}>
+                                <span style={{fontSize: 18}}>1/{idea?.photo.split(";").length}</span>
+                            </div>
                             }
                             <div
                                 style={{
@@ -328,15 +356,19 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                 >
                                     {
                                         idea?.photo.split(";").map((item, index) => (
-                                            <Image key={index} src={item} />
+                                            <Image key={index} src={item}/>
                                         ))
                                     }
                                 </Image.PreviewGroup>
                             </div>
                         </div>
                     }
-                    <div className={"f-cards-inner"} style={{ padding:"35px 0 10px 0  " , marginTop: idea?.photo !== null ? -40 : 0, paddingBottom: (idea.officialComment && !idea.showComments) && 60 }}>
-                        <div style={{ paddingLeft: 40, paddingRight: 50 }}>
+                    <div className={"f-cards-inner"} style={{
+                        padding: "35px 0 10px 0  ",
+                        marginTop: idea?.photo !== null ? -40 : 0,
+                        paddingBottom: (idea.officialComment && !idea.showComments) && 60
+                    }}>
+                        <div style={{paddingLeft: 40, paddingRight: 50}}>
                             <div className={"f-cards-avatar"}>
                                 <Link to={global.lang + `/profile/${idea.user.id}`}>
                                     <div className={"f-cards-row-wrap"}>
@@ -347,14 +379,14 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                                 }/>
                                         <div className={"f-cards-wrap-text-style"}>
                                             <div>
-                                            <span className={"f-cards-text"}>{idea.username}
-                                                {
-                                                    ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => idea?.roles.includes(el)) &&
-                                                    <img style={{marginBottom: 3, marginLeft: 5}}
-                                                         src={"/i/official.svg"} width={15}
-                                                         height={15}/>
-                                                }
-                                            </span>
+                                                <span className={"f-cards-text"}>{idea.username}
+                                                    {
+                                                        ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => idea?.roles.includes(el)) &&
+                                                        <img style={{marginBottom: 3, marginLeft: 5}}
+                                                             src={"/i/official.svg"} width={15}
+                                                             height={15}/>
+                                                    }
+                                                </span>
                                             </div>
                                             <span className={"f-cards-text-bottom"}>{idea.role}
                                                 <span> · </span>
@@ -390,51 +422,93 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                         </div>
                                 }
                             </div>
-                            <div className={"f-cards-div-wrap-text"} style={{marginBottom: showContent ? 20 : 0}}>
-                                <Link to={global.lang + "/idea/" + idea.idea_id + "/"}>
-                                <span className={"f-cards-content-text"}>
-                                    {idea.title}
-                                </span>
-                                </Link>
-                            </div>
-                            {showContent &&
-                            <div className={"f-cards-div-wrap-text"}>
-                                <span className={"f-cards-content-description"}>
-                                    <Linkify>
+                            <Form
+                                id={"edit-idea-id"}
+                                name={"edit-comment"}
+                                initialValues={idea}
+                                onFinish={(value) => sendEditedIdea(value)}
+                            >
+                                <div onMouseOver={() => setShowEditButton(true)}
+                                     onMouseOut={() => setShowEditButton(false)} className={"f-cards-div-wrap-text"}
+                                     style={{marginBottom: showContent ? 20 : 0}}>
                                     {
-                                        idea.text.split(" ").length <= 40 ?
-                                            <span>{idea.text}</span> :
-                                            idea.text.split(" ").length > 40 && !idea.showFullText ?
-                                                <span>{idea.text.split(" ").filter((idea, index) => index < 40).join(" ")}... <a
-                                                    onClick={() => showText(idea.showFullText)}>Еще</a>
-                                                </span> :
-                                                <span>{idea.text} <a style={{zIndex: 3}}
-                                                                     onClick={() => showText(idea.showFullText)}>Скрыть</a></span>
+                                        showEditFields && idea.user.id === global.user.id ?
+                                            <div style={{width: '100%'}}>
+                                                <Form.Item
+                                                    name={"title"}
+                                                    rules={[{required: true, message: "Заполните поле"}]}
+                                                >
+                                                    <Input style={{marginTop: 24, width: '100%', fontSize: 32}}/>
+                                                </Form.Item>
+                                            </div>
+                                            :
+                                            <Link to={global.lang + "/idea/" + idea.idea_id + "/"}>
+                                                <span className={"f-cards-content-text"}>
+                                                    {idea.title}
+                                                </span>
+                                            </Link>
                                     }
-                                    </Linkify>
-                                </span>
-                            </div>
-                            }
-                            <div className={"f-cards-under-block"}>
-                                {(idea.notification === true) &&
-                                <div style={{
-                                    width: 6,
-                                    height: 6,
-                                    marginRight: 5,
-                                    borderRadius: 100,
-                                    backgroundColor: '#3D72ED'
-                                }}/>
-                                }
-                                {showCommentsCount &&
-                                <div>
-                                    <a onClick={() => {
-                                        showComments()
-                                    }} className={"f-cards-under-block-comment"}>
-                                        {global.numWord(idea.comments.length, ["комментарий", "комментария", "комментариев"])}
-                                    </a>
+                                    {
+                                        (showEditButton && !showEditFields && idea.user.id === global.user.id) &&
+                                        <span onClick={() => {
+                                            setShowEditFields(!showEditFields),
+                                                setShowEditButton(!showEditButton)
+                                        }}>
+                                                <EditOutlined style={{fontSize: 26, marginLeft: 10,}}/>
+                                            </span>
+                                    }
                                 </div>
-                                }
-                                <div>
+                                {showContent &&
+                                <div className={"f-cards-div-wrap-text"}>
+                                    {
+                                        showEditFields && idea.user.id === global.user.id ?
+                                            <div style={{width: '100%'}}>
+                                                <Form.Item
+                                                    name={"text"}
+                                                    rules={[{required: true, message: "Заполните поле"}]}
+                                                >
+                                                    <TextArea autoSize={{minRows: 3}}
+                                                              style={{width: '100%', fontSize: 17}}/>
+                                                </Form.Item>
+                                            </div>
+                                            :
+                                            <span className={"f-cards-content-description"}>
+                                                <Linkify>
+                                                    {
+                                                        idea.text.split(" ").length <= 40 ?
+                                                            <span>{idea.text}</span> :
+                                                            idea.text.split(" ").length > 40 && !idea.showFullText ?
+                                                                <span>{idea.text.split(" ").filter((idea, index) => index < 40).join(" ")}... <a
+                                                                    onClick={() => showText(idea.showFullText)}>Еще</a>
+                                                    </span> :
+                                                                <span>{idea.text} <a style={{zIndex: 3}}
+                                                                                     onClick={() => showText(idea.showFullText)}>Скрыть</a></span>
+                                                    }
+                                                </Linkify>
+                                            </span>
+                                    }
+                                </div>}
+                            </Form>
+                            <div className={"f-cards-under-block"}>
+                                <div style={{display: "flex", flexDirection: 'row', alignItems: 'center'}}>
+                                    {(idea.notification === true) &&
+                                    <div style={{
+                                        width: 6,
+                                        height: 6,
+                                        marginRight: 5,
+                                        borderRadius: 100,
+                                        backgroundColor: '#3D72ED'
+                                    }}/>
+                                    }
+                                    {showCommentsCount &&
+                                    <div>
+                                        <a onClick={() => {
+                                            showComments()
+                                        }} className={"f-cards-under-block-comment"}>
+                                            {global.numWord(idea.comments.length, ["комментарий", "комментария", "комментариев"])}
+                                        </a>
+                                    </div>
+                                    }
                                     {showLikes ?
                                         global.layout === 'guest' ?
                                             <Tooltip color={"black"} title="Авторизуйтесь, чтобы оценить">
@@ -500,11 +574,43 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                                 {/*        <span className={"f-cards-under-block-like-text"}>Не нравится</span>*/}
                                 {/*    </a>*/}
                                 {/*</div>*/}
+                                {
+                                    showEditFields && idea.user.id === global.user.id &&
+                                    <div>
+                                        <Button style={{
+                                            paddingTop: 15,
+                                            paddingBottom: 15,
+                                            paddingRight: 20,
+                                            paddingLeft: 20,
+                                            borderRadius: 84,
+                                            fontSize: 17,
+                                            height: 60,
+                                        }} form={"edit-idea-id"} loading={loadingEditChanges} type={"primary"}
+                                                htmlType={"submit"}>Сохранить</Button>
+                                        <Button onClick={() => {
+                                            setShowEditFields(false)
+                                        }} style={{
+                                            marginLeft: 10,
+                                            paddingTop: 15,
+                                            paddingBottom: 15,
+                                            paddingRight: 20,
+                                            paddingLeft: 20,
+                                            boxShadow: 'none',
+                                            color: '#1D1D1D',
+                                            borderRadius: 84,
+                                            backgroundColor: 'white',
+                                            border: "none",
+                                            fontSize: 17,
+                                            height: 60,
+                                        }} type={"button"}>Отмена</Button>
+                                    </div>
+                                }
                             </div>
                         </div>
                         {
                             idea.showComments &&
-                            <Comments onDeleteComment={onDeleteComment} allowComments={idea.allowComments} idea={idea} index={index}
+                            <Comments onDeleteComment={onDeleteComment} allowComments={idea.allowComments} idea={idea}
+                                      index={index}
                                       comments={idea.comments} setIdea={setIdea} setComments={setIdeaComments}/>
 
                         }

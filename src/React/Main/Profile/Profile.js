@@ -9,6 +9,7 @@ import {UserOutlined} from "@ant-design/icons";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
+
 const {Option} = Select;
 
 const Profile = () => {
@@ -62,7 +63,7 @@ const Profile = () => {
     }, [history.location.pathname])
 
     useEffect(() => {
-        if(user?.email) {
+        if (user?.email) {
             setLoadingProfile(false)
             setRoles(user?.roles)
         }
@@ -99,7 +100,7 @@ const Profile = () => {
     }
 
     function changeRole(value, name) {
-        if(user.roles.includes(value)){
+        if (user.roles.includes(value)) {
             return global.openNotification("Предупреждение", `Пользователь уже ${name}`, "warn")
         }
         axios.post(ApiRoutes.API_SET_ROLE, {user_id: user.id, new_role: value})
@@ -124,8 +125,8 @@ const Profile = () => {
     return (
         <>
             <Col className={"f-main"} style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
-                { (notifications===false||notifications===true) && <Header/> }
-                <div style={{ display: "flex", flexDirection: "column"}}>
+                {(notifications === false || notifications === true) && <Header/>}
+                <div style={{display: "flex", flexDirection: "column"}}>
                     <div className={"max_width"}>
                         <div style={{
                             display: 'flex',
@@ -135,7 +136,7 @@ const Profile = () => {
                             width: '50vw',
                             paddingTop: 135,
                         }}>
-                            { loadingProfile && roles !== [] ?
+                            {loadingProfile && roles !== [] ?
                                 <div className={"f-cards"}>
                                     <div className={"f-cards-card-wrap"}>
                                         <div className={"f-cards-inner"}>
@@ -161,11 +162,11 @@ const Profile = () => {
                                                     <div className={"f-cards-wrap-text-style"}>
                                                         <div>
                                                         <span className={"f-cards-text"}>
-                                                            { user.fio }
-                                                            { roles && ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => roles?.includes(el)) &&
-                                                                <img style={{marginBottom: 3, marginLeft: 5}}
-                                                                     src={"/i/official.svg"} width={15}
-                                                                     height={15}/>
+                                                            {user.fio}
+                                                            {roles && ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => roles?.includes(el)) &&
+                                                            <img style={{marginBottom: 3, marginLeft: 5}}
+                                                                 src={"/i/official.svg"} width={15}
+                                                                 height={15}/>
                                                             }
                                                         </span>
                                                         </div>
@@ -184,9 +185,12 @@ const Profile = () => {
                                                             style={{height: '100%'}}
                                                             // defaultValue={roles[0]}
                                                         >
-                                                            <Option data={"Генератор идей"} value={"ROLE_USER"}>Генератор идей</Option>
-                                                            <Option data={"Администратор"} value={"ROLE_ADMIN"}>Администратор</Option>
-                                                            <Option data={"Разработчик"} value={"ROLE_DEVELOPER"}>Разработчик</Option>
+                                                            <Option data={"Генератор идей"} value={"ROLE_USER"}>Генератор
+                                                                идей</Option>
+                                                            <Option data={"Администратор"}
+                                                                    value={"ROLE_ADMIN"}>Администратор</Option>
+                                                            <Option data={"Разработчик"}
+                                                                    value={"ROLE_DEVELOPER"}>Разработчик</Option>
                                                         </Select>
                                                         : <></>
                                                 }
@@ -201,28 +205,38 @@ const Profile = () => {
                                 width: "100%",
                                 maxWidth: 1000,
                             }}>
-                                { notifications &&
-                                    <div style={{ width: 6, height: 6, borderRadius: 100, marginTop: 10, backgroundColor: '#3D72ED' }}/>
+                                {notifications &&
+                                <div style={{
+                                    width: 6,
+                                    height: 6,
+                                    borderRadius: 100,
+                                    marginTop: 10,
+                                    backgroundColor: '#3D72ED'
+                                }}/>
                                 }
                                 <a onClick={() => setSelectedHeaderItem(0)} className={"f-profile-header"}
-                                   style={{ color: selectedHeaderItem === 0 && "#1D1D1F", marginLeft: notifications ? 5 : 22 }}>
-                                    Публикации <a style={{color:"#AAB2BD"}}>{ ideasCount >= 0 ? ideasCount : 0 }</a>
-                                    { selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/> }
+                                   style={{
+                                       color: selectedHeaderItem === 0 && "#1D1D1F",
+                                       marginLeft: notifications ? 5 : 22
+                                   }}>
+                                    Публикации <a style={{color: "#AAB2BD"}}>{ideasCount >= 0 ? ideasCount : 0}</a>
+                                    {selectedHeaderItem === 0 && <div className={"f-bottom-selected"}/>}
                                 </a>
                                 <a onClick={() => setSelectedHeaderItem(1)} className={"f-profile-header"}
                                    style={{color: selectedHeaderItem === 1 && "#1D1D1F"}}>
-                                    Комментарии <a style={{color:"#AAB2BD"}}>{ commentsCount >= 0 ? commentsCount : 0 }</a>
-                                    { selectedHeaderItem === 1 && <div className={"f-bottom-selected"}/> }
+                                    Комментарии <a
+                                    style={{color: "#AAB2BD"}}>{commentsCount >= 0 ? commentsCount : 0}</a>
+                                    {selectedHeaderItem === 1 && <div className={"f-bottom-selected"}/>}
                                 </a>
                                 <a onClick={() => setSelectedHeaderItem(2)} className={"f-profile-header"}
                                    style={{color: selectedHeaderItem === 2 && "#1D1D1F"}}>
-                                    Понравилось <a style={{color:"#AAB2BD"}}>{ likesCount >= 0 ? likesCount : 0 }</a>
-                                    { selectedHeaderItem === 2 && <div className={"f-bottom-selected"}/> }
+                                    Понравилось <a style={{color: "#AAB2BD"}}>{likesCount >= 0 ? likesCount : 0}</a>
+                                    {selectedHeaderItem === 2 && <div className={"f-bottom-selected"}/>}
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div className={"max_width"} style={{marginTop:50}}>
+                    <div className={"max_width"} style={{marginTop: 50}}>
                         <div style={{
                             display: "flex",
                             justifyContent: 'center',
@@ -233,11 +247,12 @@ const Profile = () => {
                             {
                                 !user || loadingProfile || !roles[0] ? <LoadingIdeas type={true}/>
                                     : selectedHeaderItem === 0 ?
-                                        <UserIdeas user={user} user_id={params.id} setCount={setIdeasCount} setNotifications={changeNotifications}/> :
-                                        selectedHeaderItem === 1 ?
-                                            <UserComments user={user} user_id={params.id} setCount={setCommentsCount}/> :
-                                            selectedHeaderItem === 2 &&
-                                            <UserFavourite user={user} user_id={params.id} setCount={setLikesCount}/>
+                                    <UserIdeas user={user} user_id={params.id} setCount={setIdeasCount}
+                                               setNotifications={changeNotifications}/> :
+                                    selectedHeaderItem === 1 ?
+                                        <UserComments user={user} user_id={params.id} setCount={setCommentsCount}/> :
+                                        selectedHeaderItem === 2 &&
+                                        <UserFavourite user={user} user_id={params.id} setCount={setLikesCount}/>
                             }
                         </div>
                     </div>
