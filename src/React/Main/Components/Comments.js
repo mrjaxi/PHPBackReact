@@ -81,41 +81,56 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
         setLoadingEdit(true)
         if (newValue.trim() !== ""){
             axios.post(ApiRoutes.API_CHANGE_COMMENT, {comment_id: commentID, content: newValue}).then(response => {
-                if (response.data.state === "success"){
-                    let data = [...rawCommentsData];
-                    data[index].content = newValue;
-                    data[index].updated = true;
-                    setCommentsData(data);
-                    setRawCommentsData(data);
-                    setComments(data);
-                    setEditableId(false);
-                    setLoadingEdit(false);
-                    global.openNotification("Успешно", "Комментарий отредактирован", "success")
-                } else {
-                    global.openNotification("Ошибка", "Невозможно редактировать комментарий", "error")
-                }
+                global.handleResponse(response,
+                    function () {
+                        let newIdea = {...idea}
+                        let newComments = [...rawCommentsData];
+                        newComments[index].content = newValue;
+                        newComments[index].updated = true;
+                        if(newIdea.officialComment.id === newComments[index].id) {
+                            newIdea.officialComment = newComments[index]
+                        }
+                        newIdea.comments = newComments
+                        setIdea(newIdea)
+
+                        setCommentsData(newComments);
+                        setRawCommentsData(newComments);
+                        setEditableId(false);
+                        setLoadingEdit(false);
+                        global.openNotification("Успешно", "Комментарий отредактирован", "success")
+                    },
+                    function () {
+                        global.openNotification("Ошибка", "Невозможно редактировать комментарий", "error")
+                    },
+                )
             })
         }
     };
 
-    const onDeleteComment = (id, official) => {
+    const onDeleteComment = (id) => {
         axios.post(ApiRoutes.API_DELETE_COMMENT, {comment_id: id}).then(response => {
-            if (response.data.state === "success") {
-                if (official){
-                    let newIdea = {...idea};
-                    delete newIdea.officialComment;
-                    newIdea.comments = newIdea.comments.filter(item => item.id !== id);
-                    setIdea(newIdea);
-                } else {
-                    let dataType = {...idea};
-                    dataType.comments = dataType.comments.filter(item => item.id !== id);
-                    console.log(dataType, id)
-                    setIdea(dataType);
+            global.handleResponse(response,
+                function () {
+                    if(idea.officialComment.id === id){
+                        let newIdea = {...idea};
+                        newIdea.officialComment = null;
+                        let dataComments = rawCommentsData.filter(item => item.id !== id);
+                        newIdea.comments = dataComments
+                        setCommentsData(dataComments);
+                        setRawCommentsData(dataComments);
+                        setIdea(newIdea);
+                    } else {
+                        let dataComments = rawCommentsData.filter(item => item.id !== id);
+                        setCommentsData(dataComments);
+                        setRawCommentsData(dataComments);
+                        setComments(dataComments);
+                    }
+                    global.openNotification("Успешно", "Комментарий удален", "success")
+                },
+                function () {
+                    global.openNotification("Ошибка", "Комментарий не удален", "error")
                 }
-                global.openNotification("Успешно", "Комментарий удален", "success")
-            } else {
-                global.openNotification("Ошибка", "Комментарий не удален", "error")
-            }
+            )
         })
     };
 
@@ -219,7 +234,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                                                         <span> · </span>
                                                                         <Popconfirm
                                                                             title="Удалить комментарий?"
-                                                                            onConfirm={() => onDeleteComment(comment.id, false)}
+                                                                            onConfirm={() => onDeleteComment(comment.id)}
                                                                             okText="Да"
                                                                             cancelText="Нет"
                                                                         >

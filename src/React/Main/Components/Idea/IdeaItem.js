@@ -220,22 +220,24 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
 
     const onDeleteComment = (id, official) => {
         axios.post(ApiRoutes.API_DELETE_COMMENT, {comment_id: id}).then(response => {
-            if (response.data.state === "success") {
-                if (official){
-                    let newIdea = {...idea};
-                    delete newIdea.officialComment;
-                    newIdea.comments = newIdea.comments.filter(item => item.id !== id);
-                    setIdea(newIdea);
-                } else {
-                    let dataType = {...idea};
-                    dataType.comments = dataType.comments.filter(item => item.id !== id);
-                    console.log(dataType, id)
-                    setIdea(dataType);
-                }
-                global.openNotification("Успешно", "Комментарий удален", "success")
-            } else {
-                global.openNotification("Ошибка", "Комментарий не удален", "error")
-            }
+            global.handleResponse(response,
+                function () {
+                    if (official){
+                        let newIdea = {...idea};
+                        newIdea.officialComment = null;
+                        newIdea.comments = newIdea.comments.filter(item => item.id !== id);
+                        setIdea(newIdea);
+                    } else {
+                        let newIdea = {...idea};
+                        newIdea.comments = newIdea.comments.filter(item => item.id !== id);
+                        setIdea(newIdea);
+                    }
+                    global.openNotification("Успешно", "Комментарий удален", "success")
+                },
+                function () {
+                    global.openNotification("Ошибка", "Не удаётся удалить комментарий", "error")
+                },
+            )
         })
     };
 
@@ -511,7 +513,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                     </div>
                     {
                         (idea.officialComment && !idea.showComments) &&
-                        <OfficialComment onDeleteComment={onDeleteComment} commentData={idea.officialComment}/>
+                        <OfficialComment onDeleteComment={onDeleteComment} commentData={idea.officialComment} idea={idea} setIdea={setIdea}/>
                     }
                 </div>
             </div>
