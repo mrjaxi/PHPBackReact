@@ -17,7 +17,6 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
     const [rawCommentsData, setRawCommentsData] = useState(comments);
     const [visible, setVisible] = useState(false);
     const [editableId, setEditableId] = useState(false);
-    const [visible1, setVisible1] = useState(false);
     const [checked, setChecked] = useState(false);
 
     const [loadingEdit, setLoadingEdit] = useState(false);
@@ -88,9 +87,9 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                     data[index].updated = true;
                     setCommentsData(data);
                     setRawCommentsData(data);
-                    setComments(data)
+                    setComments(data);
                     setEditableId(false);
-                    setLoadingEdit(false)
+                    setLoadingEdit(false);
                     global.openNotification("Успешно", "Комментарий отредактирован", "success")
                 } else {
                     global.openNotification("Ошибка", "Невозможно редактировать комментарий", "error")
@@ -242,14 +241,14 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                                                                     padding: 0
                                                                                 }}>Сохранить</Button>
                                                                         <span> · </span>
-                                                                        <Button loading={false} type="link" onClick={() => setEditableId(false)}
+                                                                        <a onClick={() => setEditableId(false)}
                                                                            style={{
                                                                                color: '#AAB2BD',
                                                                                fontSize: 15,
                                                                                fontWeight: 400,
                                                                                margin: 0,
                                                                                padding: 0
-                                                                           }}>Отмена</Button>
+                                                                           }}>Отмена</a>
                                                                     </>
                                                             }
                                                         </>
@@ -260,7 +259,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                     </div>
                                     {
                                         (rawCommentsData.length > 3 && index === commentsData.length - 1) &&
-                                        <div className={"f-comments-under-text"} style={{ paddingLeft: 40, paddingRight: 50 }}>
+                                        <div className={"f-comments-under-text"}>
                                             <a
                                                 className={"f-comments-text-button"}
                                                 onClick={() => {
@@ -279,33 +278,23 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
             </div>
             {
                 allowComments &&
-                <div style={{ paddingLeft: 40, paddingRight: 50 }}>
-                    <div className={"f-write-comments"} key={2}>
-                        <Title>Написать</Title>
-                        <Form form={form}
-                              onFinish={(values) => sendComment(values.comment)}
-                        >
-                            <Form.Item
-                                name={"comment"}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Напишите комментарий',
-                                    },
-                                ]}
-                            >
+                <div className={"f-write-comments"} key={2}>
+                    <Title>Написать</Title>
+                    <Form form={form}
+                          onFinish={(values) => sendComment(values.comment)}
+                    >
+                        <Form.Item
+                            name={"comment"}
+                            rules={[
                                 {
-                                    global.layout === "guest" ?
-                                        <>
-                                            <TextArea name={"text-area"} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
-                                                      autoSize={{minRows: 5}}
-                                                      disabled={global.layout === "guest"}
-                                                      className={"f-write-comments-input"}
-                                                      placeholder={global.layout !== "guest" ?
-                                                          "Напишите что-нибудь..." : ""}
-                                            />
-                                            <div className={'disable'}><a style={{ color: '#3D72ED' }} onClick={() => setVisible(!visible)}>Войдите</a>, чтобы оставлять комментарии, публиковать и оценивать идеи</div>
-                                        </> :
+                                    required: true,
+                                    message: 'Напишите комментарий',
+                                },
+                            ]}
+                        >
+                            {
+                                global.layout === "guest" ?
+                                    <>
                                         <TextArea name={"text-area"} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
                                                   autoSize={{minRows: 5}}
                                                   disabled={global.layout === "guest"}
@@ -313,54 +302,62 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                                   placeholder={global.layout !== "guest" ?
                                                       "Напишите что-нибудь..." : ""}
                                         />
-                                }
-                            </Form.Item>
-                            {
-                                ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => global?.user?.roles?.includes(el)) &&
-                                <Form.Item
-                                    name={"close"}
-                                >
-                                    <Checkbox onClick={() => setChecked(!checked)} style={{ color: '#1D1D1F', fontSize: 20, display: 'flex', alignItems: 'center' }}>Опубликовать и закрыть комментарии</Checkbox>
-                                </Form.Item>
+                                        <div className={'disable'}><a style={{ color: '#3D72ED' }} onClick={() => setVisible(!visible)}>Войдите</a>, чтобы оставлять комментарии, публиковать и оценивать идеи</div>
+                                    </> :
+                                    <TextArea name={"text-area"} style={{backgroundColor: global.layout !== "guest" ? '#FFFFFF' : '#E6E9ED'}}
+                                              autoSize={{minRows: 5}}
+                                              disabled={global.layout === "guest"}
+                                              className={"f-write-comments-input"}
+                                              placeholder={global.layout !== "guest" ?
+                                                  "Напишите что-нибудь..." : ""}
+                                    />
                             }
-                            <Form.Item>
-                                {
-                                    global.layout !== "guest" ?
-                                        <Button
-                                            style={{
-                                                paddingRight: 27,
-                                                paddingLeft: 27,
-                                                boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
-                                                borderRadius: 64,
-                                                fontSize: 20,
-                                                height: 60,
-                                            }}
-                                            type="primary"
-                                            htmlType="submit"
-                                            shape="round"
-                                            loading={loading}
-                                        >
-                                            Отправить
-                                        </Button>
-                                        : <Button
-                                            style={{
-                                                paddingRight: 32,
-                                                paddingLeft: 32,
-                                                backgroundColor: '#E6E9ED',
-                                                border: 'none',
-                                                borderRadius: 64,
-                                                fontSize: 20,
-                                                height: 60,
-                                            }}
-                                            disabled={true}
-                                            shape="round"
-                                        >
-                                            Отправить
-                                        </Button>
-                                }
+                        </Form.Item>
+                        {
+                            ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => global?.user?.roles?.includes(el)) &&
+                            <Form.Item
+                                name={"close"}
+                            >
+                                <Checkbox onClick={() => setChecked(!checked)} style={{ color: '#1D1D1F', fontSize: 20, display: 'flex', alignItems: 'center' }}>Опубликовать и закрыть комментарии</Checkbox>
                             </Form.Item>
-                        </Form>
-                    </div>
+                        }
+                        <Form.Item>
+                            {
+                                global.layout !== "guest" ?
+                                    <Button
+                                        style={{
+                                            paddingRight: 27,
+                                            paddingLeft: 27,
+                                            boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                            borderRadius: 64,
+                                            fontSize: 20,
+                                            height: 60,
+                                        }}
+                                        type="primary"
+                                        htmlType="submit"
+                                        shape="round"
+                                        loading={loading}
+                                    >
+                                        Отправить
+                                    </Button>
+                                    : <Button
+                                        style={{
+                                            paddingRight: 32,
+                                            paddingLeft: 32,
+                                            backgroundColor: '#E6E9ED',
+                                            border: 'none',
+                                            borderRadius: 64,
+                                            fontSize: 20,
+                                            height: 60,
+                                        }}
+                                        disabled={true}
+                                        shape="round"
+                                    >
+                                        Отправить
+                                    </Button>
+                            }
+                        </Form.Item>
+                    </Form>
                 </div>
             }
         </div>
