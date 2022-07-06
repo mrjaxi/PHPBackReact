@@ -208,7 +208,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                         let data = {...idea};
                         data.typeId = typeId;
                         data.type = types.filter(item => item.id === typeId)[0].name;
-                        setIdea(data)
+                        setIdea(data);
                         global.openNotification("Успешно", "Тип идеи успешно изменён", "success")
                     },
                     function () {
@@ -216,6 +216,27 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                     },
                 )
             })
+    };
+
+    const onDeleteComment = (id, official) => {
+        axios.post(ApiRoutes.API_DELETE_COMMENT, {comment_id: id}).then(response => {
+            if (response.data.state === "success") {
+                if (official){
+                    let newIdea = {...idea};
+                    delete newIdea.officialComment;
+                    newIdea.comments = newIdea.comments.filter(item => item.id !== id);
+                    setIdea(newIdea);
+                } else {
+                    let dataType = {...idea};
+                    dataType.comments = dataType.comments.filter(item => item.id !== id);
+                    console.log(dataType, id)
+                    setIdea(dataType);
+                }
+                global.openNotification("Успешно", "Комментарий удален", "success")
+            } else {
+                global.openNotification("Ошибка", "Комментарий не удален", "error")
+            }
+        })
     };
 
     return (
@@ -483,14 +504,14 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
                         </div>
                         {
                             idea.showComments &&
-                            <Comments allowComments={idea.allowComments} idea={idea} index={index}
+                            <Comments onDeleteComment={onDeleteComment} allowComments={idea.allowComments} idea={idea} index={index}
                                       comments={idea.comments} setIdea={setIdea} setComments={setIdeaComments}/>
 
                         }
                     </div>
                     {
                         (idea.officialComment && !idea.showComments) &&
-                        <OfficialComment commentData={idea.officialComment}/>
+                        <OfficialComment onDeleteComment={onDeleteComment} commentData={idea.officialComment}/>
                     }
                 </div>
             </div>

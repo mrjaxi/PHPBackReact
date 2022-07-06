@@ -1,19 +1,19 @@
 import React, {useLayoutEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {Avatar, Button, Form, Input} from "antd";
+import {Avatar, Button, Form, Input, Popconfirm} from "antd";
 import {UserOutlined} from "@ant-design/icons";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 const {TextArea} = Input;
 
-const OfficialComment = ({commentData}) => {
+const OfficialComment = ({commentData, onDeleteComment}) => {
 
     const [editableId, setEditableId] = useState(false);
     const [loadingEdit, setLoadingEdit] = useState(false);
 
     const [comment, setRawCommentsData] = useState(commentData);
 
-    const editComment = (commentID, newValue) => {
+    const editComment = (commentID, index, newValue) => {
         setLoadingEdit(true)
         if (newValue.trim() !== ""){
             axios.post(ApiRoutes.API_CHANGE_COMMENT, {comment_id: commentID, content: newValue}).then(response => {
@@ -107,14 +107,30 @@ const OfficialComment = ({commentData}) => {
                                     <span> · </span>
                                     {
                                         editableId !== comment.id ?
-                                            <a onClick={() => setEditableId(comment.id)}
-                                               style={{
-                                                   color: editableId !== comment.id && '#AAB2BD',
-                                                   fontSize: 15,
-                                                   fontWeight: 400
-                                               }}>
-                                                Редактировать
-                                            </a> :
+                                            <>
+                                                <a onClick={() => setEditableId(comment.id)}
+                                                   style={{
+                                                       color: editableId !== comment.id && '#AAB2BD',
+                                                       fontSize: 15,
+                                                       fontWeight: 400
+                                                   }}>
+                                                    Редактировать
+                                                </a>
+                                                <span> · </span>
+                                                <Popconfirm
+                                                    title="Удалить комментарий?"
+                                                    onConfirm={() => onDeleteComment(comment.id, true)}
+                                                    okText="Да"
+                                                    cancelText="Нет"
+                                                >
+                                                    <a className={"of-comment-delete"} style={{
+                                                        fontSize: 15,
+                                                        fontWeight: 400,
+                                                        margin: 0,
+                                                        padding: 0
+                                                    }}>Удалить</a>
+                                                </Popconfirm>
+                                            </>:
                                             <>
                                                 <Button loading={loadingEdit} form={"edit-id"}
                                                         htmlType="submit" type="link"

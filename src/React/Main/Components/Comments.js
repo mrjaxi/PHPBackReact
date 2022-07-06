@@ -1,5 +1,5 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import {Avatar, Button, Checkbox, Form, Input, Skeleton, Typography} from "antd";
+import {Avatar, Button, Checkbox, Form, Input, Popconfirm, Skeleton, Typography} from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import {UserOutlined} from "@ant-design/icons";
@@ -38,7 +38,6 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                             data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
                             setCommentsData(data);
                             setRawCommentsData(data);
-                            // setComments(data)
                             setShowComments(false)
 
 
@@ -100,6 +99,27 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
         }
     };
 
+    const onDeleteComment = (id, official) => {
+        axios.post(ApiRoutes.API_DELETE_COMMENT, {comment_id: id}).then(response => {
+            if (response.data.state === "success") {
+                if (official){
+                    let newIdea = {...idea};
+                    delete newIdea.officialComment;
+                    newIdea.comments = newIdea.comments.filter(item => item.id !== id);
+                    setIdea(newIdea);
+                } else {
+                    let dataType = {...idea};
+                    dataType.comments = dataType.comments.filter(item => item.id !== id);
+                    console.log(dataType, id)
+                    setIdea(dataType);
+                }
+                global.openNotification("Успешно", "Комментарий удален", "success")
+            } else {
+                global.openNotification("Ошибка", "Комментарий не удален", "error")
+            }
+        })
+    };
+
     return (
         <div className={"f-comments"}>
             <Login visible={visible} setVisible={setVisible}/>
@@ -129,10 +149,10 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                         <div className={"f-cards-row-wrap"}>
                                             <Link to={global.lang + `/profile/${comment.user.id}`}>
                                                 <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
-                                                        src={comment.user.image
-                                                            ? <img src={comment.user.image}/>
-                                                            : <UserOutlined/>
-                                                        }/>
+                                                    src={comment.user.image
+                                                        ? <img src={comment.user.image}/>
+                                                        : <UserOutlined/>
+                                                    }/>
                                             </Link>
                                             <div className={"f-cards-wrap-text"}>
                                                 <span
@@ -188,14 +208,30 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                                             <span> · </span>
                                                             {
                                                                 editableId !== comment.id ?
-                                                                    <a onClick={() => setEditableId(comment.id)}
-                                                                       style={{
-                                                                           color: editableId !== comment.id && '#AAB2BD',
-                                                                           fontSize: 15,
-                                                                           fontWeight: 400
-                                                                       }}>
-                                                                        Редактировать
-                                                                    </a> :
+                                                                    <>
+                                                                        <a onClick={() => setEditableId(comment.id)}
+                                                                           style={{
+                                                                               color: editableId !== comment.id && '#AAB2BD',
+                                                                               fontSize: 15,
+                                                                               fontWeight: 400
+                                                                           }}>
+                                                                            Редактировать
+                                                                        </a>
+                                                                        <span> · </span>
+                                                                        <Popconfirm
+                                                                            title="Удалить комментарий?"
+                                                                            onConfirm={() => onDeleteComment(comment.id, false)}
+                                                                            okText="Да"
+                                                                            cancelText="Нет"
+                                                                        >
+                                                                            <a className={"of-comment-delete"} style={{
+                                                                                fontSize: 15,
+                                                                                fontWeight: 400,
+                                                                                margin: 0,
+                                                                                padding: 0
+                                                                            }}>Удалить</a>
+                                                                        </Popconfirm>
+                                                                    </>:
                                                                     <>
                                                                         <Button loading={loadingEdit} form={"edit-id"}
                                                                                 htmlType="submit" type="link"
@@ -206,14 +242,14 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                                                                     padding: 0
                                                                                 }}>Сохранить</Button>
                                                                         <span> · </span>
-                                                                        <a onClick={() => setEditableId(false)}
+                                                                        <Button loading={false} type="link" onClick={() => setEditableId(false)}
                                                                            style={{
                                                                                color: '#AAB2BD',
                                                                                fontSize: 15,
                                                                                fontWeight: 400,
                                                                                margin: 0,
                                                                                padding: 0
-                                                                           }}>Отмена</a>
+                                                                           }}>Отмена</Button>
                                                                     </>
                                                             }
                                                         </>
