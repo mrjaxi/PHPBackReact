@@ -30,11 +30,9 @@ const UserIdeas = ({ user, setCount, setNotifications }) => {
             let notifications = false
             ideas.forEach((idea) => {
                 if(idea?.notification === true){
-                    console.log("idea?.notification = true!",idea)
                     notifications = true;
                 }
             })
-            console.log("global.user.notifications = ",notifications)
             setNotifications(notifications)
         }
     }, [ideas])

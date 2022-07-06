@@ -149,7 +149,6 @@ button:focus {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-  width: 80%;
   -ms-overflow-style: none;
   scrollbar-width: none;
   height: 100%;
@@ -211,6 +210,7 @@ button:focus {
   width: 100%;
   background-color: #E6E9ED;
   background-image: url("/i/background-thunder.svg");
+  background-position-x: center;
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
@@ -538,7 +538,6 @@ button:focus {
   display: flex;
   flex-direction: column;
   margin-left: 10px;
-  width: 90%;
 }
 .f-cards-wrap-text-style {
   display: flex;

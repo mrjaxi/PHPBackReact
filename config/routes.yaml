@@ -82,6 +82,9 @@ api_user_setProfile:
 api_delete_comment:
   path: /api/user/delete/comment/
   controller: App\Controller\IdeasController::deleteComment
+api_change_idea:
+  path: /api/user/idea/changeIdea/
+  controller: App\Controller\IdeasController::changeIdea
 
 # Роуты админа
 api_set_official_comment:

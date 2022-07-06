@@ -9,6 +9,7 @@ const ApiRoutes = {
     API_GET_CATEGORIES: "/api/web/ideas/getCategories/",
     API_GET_IDEAS: "/api/web/ideas/getIdeas/",
     API_NEW_IDEA: "/api/user/ideas/new/",
+    API_CHANGE_IDEA: "/api/user/idea/changeIdea/",
     API_SET_CATEGORY: "/api/admin/ideas/setCategory/",
     API_SET_TYPE: "/api/admin/ideas/setType/",
     API_SET_STATUS: "/api/admin/ideas/setStatus/",

@@ -18,9 +18,9 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
     }, [global.user])
 
     const logout = async () => {
-         await axios.post("/ru/logout");
-         global._history.replace(global.lang + "/")
-         window.location.reload(true)
+        await axios.post("/ru/logout");
+        window.location.reload(true)
+        global._history.replace(global.lang + "/")
     };
 
     return (

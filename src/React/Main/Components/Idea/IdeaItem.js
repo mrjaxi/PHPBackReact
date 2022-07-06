@@ -39,7 +39,7 @@ global.parseToIdeaItems = (ideas, data=[], showComments=false, allowComments=nul
             allowComments: allowComments===null ? idea.allowComments : allowComments,
             date: idea?.date,
             dateString: global.getDateString(new Date(idea?.date), false,false),
-            notification: idea?.notification
+            notification: idea?.notification && (idea?.user.id === global.user.id) ? idea?.notification : false
         })
     });
     return newData;
@@ -144,7 +144,7 @@ const IdeaItem = ({ item, index, setItem, statuses, categories = [],
     const showComments = () => {
         let newIdea = {...idea};
         newIdea.showComments = !newIdea.showComments;
-        if(idea?.notification){
+        if(idea?.notification && idea?.user.id === global.user.id){
             axios.post(ApiRoutes.API_CHECK_ALL_COMMENTS, { idea_id: idea.idea_id })
                 .then(response => {
                     global.handleResponse(response,

@@ -342,6 +342,39 @@ class IdeasController extends AbstractController
     }
 
     /**
+     * @Route("/api/user/idea/changeIdea/")
+     * @param Request $request
+     * @return Response
+     */
+    public function changeIdea(Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data['idea_id']) && !empty($data['title']) && !empty($data['content'])) {
+            $idea_id = $data['idea_id'];
+            $title = $data['title'];
+            $content = $data['content'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id, title и content"]);
+        }
+        $idea = $this->ideasRepository->find($idea_id);
+        if (empty($idea)) {
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+        }
+        // Удалять если админ или автор комментария
+        if (in_array("ROLE_ADMIN", $user->getRoles())
+            or $user->getId() == $idea->get_User()->getId()) {
+            $idea->setTitle($title)
+                ->setContent($content);
+            $this->ideasRepository->save($idea);
+            return $this->json(['state' => 'success', 'idea' => $this->decorateIdeas(array($idea))]);
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Вы не можете изменить эту идею"]);
+        }
+    }
+
+    /**
      * @Route("/api/web/ideas/search/")
      * @param Request $request
      * @return Response

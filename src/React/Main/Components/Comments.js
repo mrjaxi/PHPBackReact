@@ -46,6 +46,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                             newIdea.officialComment = response.data.comment
                             newIdea.allowComments = false
                             newIdea.comments = data
+                            newIdea.showComments = false
                             setIdea(newIdea)
                         },
                         function () {
@@ -107,10 +108,10 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                 {
                     flag ? <></> :
                     commentsData.length === 0 ? (
-                            <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{marginTop: 20}}>
-                            <span className={"f-cards-content-description"}>{
-                                allowComments ? "Вы можете оставить первый комментарий" : "Комментариев нет"
-                            }</span>
+                            <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{marginTop: 20, paddingLeft: 40, paddingRight: 50}}>
+                                <span className={"f-cards-content-description"}>{
+                                    allowComments ? "Вы можете оставить первый комментарий" : "Комментариев нет"
+                                }</span>
                             </div>
                         ) :
                             commentsData.map((comment, index) => (
@@ -118,7 +119,12 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                     <div
                                         key={index}
                                         className={"f-cards-avatar f-cards-avatar-bottom-border"}
-                                        style={{ marginBottom: 0, padding: "40px 50px 20px 40px", display: "block", backgroundColor: !comment?.is_checked ? "#42C82C50" : "#ffffff00"}}
+                                        style={{
+                                            display: "block",
+                                            marginBottom: 0,
+                                            padding: "40px 50px 20px 40px",
+                                            backgroundColor: (!comment?.is_checked && idea?.user.id === global.user.id) ? "#42C82C50" : "#ffffff00"
+                                        }}
                                     >
                                         <div className={"f-cards-row-wrap"}>
                                             <Link to={global.lang + `/profile/${comment.user.id}`}>

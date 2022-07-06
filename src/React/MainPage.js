@@ -241,10 +241,21 @@ const MainPage = (props) => {
                                 marginBottom: "180px",
                             }}
                         >
-                            { loadingCategory || loading ? <LoadingIdeas type={true}/> :
-                                ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
+                            { loadingCategory || loading ?
+                                <div style={{display: "flex", alignItems: "center", flexDirection: "column",}}>
+                                    <LoadingIdeas type={true}/>
+                                </div>
+                                : ideas.length === 0 ?
+                                    <div style={{display: "flex", alignItems: "center", flexDirection: "column",}}>
+                                        <EmptyIdeas text={"Пока нет записей..."}/>
+                                    </div>
                                     : <InfiniteScroll
-                                        style={{overflow: 'hidden'}}
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            flexDirection: "column",
+                                            overflow: 'hidden'
+                                        }}
                                         next={() => {
                                             setPage(page + 1)
                                         }}
@@ -257,7 +268,7 @@ const MainPage = (props) => {
                                                 <IdeaItem
                                                     key={index}
                                                     item={idea}
-                                                    index={index + 1}
+                                                    index={index}
                                                     setItem={setIdea}
                                                     types={types}
                                                     categories={categories}

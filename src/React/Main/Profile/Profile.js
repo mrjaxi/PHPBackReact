@@ -15,7 +15,7 @@ const Profile = () => {
 
     const params = useParams();
     const history = useHistory();
-    const [notifications, setNotifications] = useState(global.user.notifications);
+    const [notifications, setNotifications] = useState(global.user?.notifications);
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [selectedHeaderItem, setSelectedHeaderItem] = useState(0);
     const [roles, setRoles] = useState([])
@@ -131,6 +131,7 @@ const Profile = () => {
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: "center",
+                            alignItems: "center",
                             width: '50vw',
                             paddingTop: 135,
                         }}>
@@ -194,7 +195,12 @@ const Profile = () => {
                                     </div>
                                 </div>
                             }
-                            <div style={{ display: 'flex', marginLeft: "30px", }}>
+                            <div style={{
+                                display: 'flex',
+                                paddingLeft: "40px",
+                                width: "100%",
+                                maxWidth: 1000,
+                            }}>
                                 { notifications &&
                                     <div style={{ width: 6, height: 6, borderRadius: 100, marginTop: 10, backgroundColor: '#3D72ED' }}/>
                                 }
