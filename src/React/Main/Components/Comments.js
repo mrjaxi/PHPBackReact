@@ -259,7 +259,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                     </div>
                                     {
                                         (rawCommentsData.length > 3 && index === commentsData.length - 1) &&
-                                        <div className={"f-comments-under-text"}>
+                                        <div className={"f-comments-under-text"} style={{paddingLeft: 40, paddingRight: 50}}>
                                             <a
                                                 className={"f-comments-text-button"}
                                                 onClick={() => {
@@ -278,7 +278,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
             </div>
             {
                 allowComments &&
-                <div className={"f-write-comments"} key={2}>
+                <div className={"f-write-comments"} key={2} style={{paddingLeft: 40, paddingRight: 50}}>
                     <Title>Написать</Title>
                     <Form form={form}
                           onFinish={(values) => sendComment(values.comment)}
