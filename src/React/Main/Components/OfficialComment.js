@@ -6,28 +6,40 @@ import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 const {TextArea} = Input;
 
-const OfficialComment = ({commentData, onDeleteComment}) => {
+const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
 
     const [editableId, setEditableId] = useState(false);
     const [loadingEdit, setLoadingEdit] = useState(false);
 
-    const [comment, setRawCommentsData] = useState(commentData);
+    const [comment, setComment] = useState(commentData);
 
-    const editComment = (commentID, index, newValue) => {
+    const editComment = (commentID, newValue) => {
         setLoadingEdit(true)
         if (newValue.trim() !== ""){
             axios.post(ApiRoutes.API_CHANGE_COMMENT, {comment_id: commentID, content: newValue}).then(response => {
-                if (response.data.state === "success"){
-                    let data = comment;
-                    data.content = newValue;
-                    data.updated = true;
-                    setRawCommentsData(data);
-                    setEditableId(false);
-                    setLoadingEdit(false)
-                    global.openNotification("Успешно", "Комментарий отредактирован", "success")
-                } else {
-                    global.openNotification("Ошибка", "Невозможно редактировать комментарий", "error")
-                }
+                global.handleResponse(response,
+                    function () {
+                        let newIdea = {...idea}
+                        let newComment = {...comment};
+                        newComment.content = newValue;
+                        newComment.updated = true;
+                        newIdea.officialComment = newComment
+                        newIdea.comments.map((comment, index) => {
+                            if(comment.id === newComment.id){
+                                comment.content = newValue;
+                                comment.updated = true;
+                            }
+                        })
+                        setComment(newComment);
+                        setIdea(newIdea);
+                        setEditableId(false);
+                        setLoadingEdit(false)
+                        global.openNotification("Успешно", "Комментарий отредактирован", "success")
+                    },
+                    function () {
+                        global.openNotification("Ошибка", "Невозможно редактировать комментарий", "error")
+                    },
+                )
             })
         }
     };
