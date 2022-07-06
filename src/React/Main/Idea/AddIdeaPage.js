@@ -29,7 +29,7 @@ const AddIdeaPage = () => {
         }
         let prevSearchItems = [];
 
-        // if (text.length < 10) {
+        if (text.length >= 5) {
             axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {
                 withCredentials: true,
                 cancelToken: new cancelTokenSource(function executor(c) {
@@ -62,7 +62,7 @@ const AddIdeaPage = () => {
                 )
                 setSearchItems(prevSearchItems);
             })
-        // }
+        }
     };
 
     const onChange = ({ fileList: newFileList }) => {
@@ -184,6 +184,12 @@ const AddIdeaPage = () => {
                 <Form
                     name={"addIdea"}
                     onFinish={(values) => onSend(values)}
+                    style={{
+                        width: "100%",
+                        minWidth: 300,
+                        maxWidth: 600,
+                        margin: "0 150px"
+                    }}
                 >
                     <Title style={{marginBottom: 48}}>Есть идея?</Title>
                     <Form.Item
@@ -197,7 +203,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Input onChange={(e) => onSearch(e.currentTarget.value)} size={"large"} style={{fontSize: 17, width: '480px',}} placeholder={"Заголовок"} />
+                        <Input onChange={(e) => onSearch(e.currentTarget.value)} size={"large"} style={{fontSize: 17, width: '100%',}} placeholder={"Заголовок"} />
                     </Form.Item>
                     <Form.Item
                         name={"category"}
@@ -208,7 +214,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Select size={"large"} style={{fontSize: 17, width: '480px',}} placeholder={"Выберите категорию"}>
+                        <Select size={"large"} style={{fontSize: 17, width: '100%'}} placeholder={"Выберите категорию"}>
                             {
                                 category.map(categories => {
                                     return <Option value={categories.id}>{categories.value}</Option>
@@ -225,7 +231,7 @@ const AddIdeaPage = () => {
                             },
                         ]}
                     >
-                        <Select size={"large"} style={{fontSize: 17, width: '480px'}} placeholder={"Выберите тип"}>
+                        <Select size={"large"} style={{fontSize: 17, width: '100%'}} placeholder={"Выберите тип"}>
                             {
                                 types.map(types => {
                                     return <Option value={types.id}>{types.value}</Option>
@@ -285,32 +291,37 @@ const AddIdeaPage = () => {
                         </Upload>
                     </Form.Item>
                     <Form.Item>
-                        <Button
-                            style={{
-                                paddingRight: 27,
-                                paddingLeft: 27,
-                                boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
-                                borderRadius: 64,
-                                fontSize: 20,
-                                height: 60,
-                            }}
-                            loading={loading}
-                            type="primary"
-                            htmlType="submit"
-                            shape="round">Отправить</Button>
-                        <Button
-                            style={{
-                                    marginLeft: 10,
+                        <div style={{
+                            display: "flex",
+                            flexWrap: "nowrap"
+                        }}>
+                            <Button
+                                style={{
                                     paddingRight: 27,
                                     paddingLeft: 27,
-                                    boxShadow: 'none',
-                                    color: '#CCD1D9',
-                                    backgroundColor: 'white',
-                                    border: "none",
+                                    boxShadow: '0px 16px 32px 4px rgba(61, 114, 237, 0.24)',
+                                    borderRadius: 64,
                                     fontSize: 20,
                                     height: 60,
-                            }}
-                            shape="round"><NavLink to={""}>Закрыть</NavLink></Button>
+                                }}
+                                loading={loading}
+                                type="primary"
+                                htmlType="submit"
+                                shape="round">Отправить</Button>
+                            <Button
+                                style={{
+                                        marginLeft: 10,
+                                        paddingRight: 27,
+                                        paddingLeft: 27,
+                                        boxShadow: 'none',
+                                        color: '#CCD1D9',
+                                        backgroundColor: 'white',
+                                        border: "none",
+                                        fontSize: 20,
+                                        height: 60,
+                                }}
+                                shape="round"><NavLink to={""}>Закрыть</NavLink></Button>
+                        </div>
                     </Form.Item>
                 </Form>
             </div>

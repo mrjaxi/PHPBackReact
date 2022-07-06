@@ -1,6 +1,6 @@
 .i {
     &-idea-wrap {
-        width: 480px;
+        width: 100%;
     }
 
     &-idea-card {
@@ -11,6 +11,10 @@
         &:first-child {
             margin-top: 38px;
         }
+    }
+
+    &-idea-form {
+        min-width: 300px;
     }
 
     &-idea-bottom {

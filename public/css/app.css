@@ -672,7 +672,7 @@ button:focus {
 .f-login {
   box-sizing: border-box;
   margin: 0;
-  min-height: 90vh;
+  min-height: 100vh;
   width: 100%;
   background-color: white;
   display: flex;
@@ -684,7 +684,7 @@ button:focus {
   height: 50px;
 }
 .i-idea-wrap {
-  width: 480px;
+  width: 100%;
 }
 .i-idea-card {
   width: 100%;
@@ -693,6 +693,9 @@ button:focus {
 }
 .i-idea-card:first-child {
   margin-top: 38px;
+}
+.i-idea-form {
+  min-width: 300px;
 }
 .i-idea-bottom {
   width: 100%;
