@@ -463,7 +463,9 @@ button:focus {
 }
 .f-cards-content-text {
   font-size: 32px;
+  width: 90%;
   color: #1D1D1D;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 .f-cards-div-wrap-text {

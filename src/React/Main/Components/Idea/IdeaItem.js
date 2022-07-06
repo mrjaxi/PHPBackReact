@@ -252,6 +252,7 @@ const IdeaItem = ({
 
     const sendEditedIdea = (value) => {
         setLoadingEditChanges(true);
+        console.log(value)
         axios.post(ApiRoutes.API_CHANGE_IDEA, {idea_id: idea.idea_id, title: value.title, content: value.text}).then(response => {
             if (response.data.state === "success") {
                 let data = {...idea};
@@ -434,7 +435,7 @@ const IdeaItem = ({
                                      onMouseOut={() => setShowEditButton(false)} className={"f-cards-div-wrap-text"}
                                      style={{marginBottom: showContent ? 20 : 0}}>
                                     {
-                                        showEditFields && idea.user.id === global.user.id ?
+                                        showEditFields && (idea.user.id === global.user.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))  ?
                                             <div style={{width: '100%'}}>
                                                 <Form.Item
                                                     name={"title"}
@@ -444,14 +445,14 @@ const IdeaItem = ({
                                                 </Form.Item>
                                             </div>
                                             :
-                                            <Link to={global.lang + "/idea/" + idea.idea_id + "/"}>
+                                            <Link style={{ width: '100%' }} to={global.lang + "/idea/" + idea.idea_id + "/"}>
                                                 <span className={"f-cards-content-text"}>
                                                     {idea.title}
                                                 </span>
                                             </Link>
                                     }
                                     {
-                                        (showEditButton && !showEditFields && idea.user.id === global.user.id) &&
+                                        (showEditButton && !showEditFields && (idea.user.id === global.user.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) &&
                                         <span onClick={() => {
                                             setShowEditFields(!showEditFields),
                                                 setShowEditButton(!showEditButton)
@@ -463,7 +464,7 @@ const IdeaItem = ({
                                 {showContent &&
                                 <div className={"f-cards-div-wrap-text"}>
                                     {
-                                        showEditFields && idea.user.id === global.user.id ?
+                                        (showEditFields && (idea.user.id === global.user.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) ?
                                             <div style={{width: '100%'}}>
                                                 <Form.Item
                                                     name={"text"}
@@ -577,7 +578,7 @@ const IdeaItem = ({
                                 {/*    </a>*/}
                                 {/*</div>*/}
                                 {
-                                    showEditFields && idea.user.id === global.user.id &&
+                                    showEditFields && (idea.user.id === global.user.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el))) &&
                                     <div>
                                         <Button style={{
                                             paddingTop: 15,
