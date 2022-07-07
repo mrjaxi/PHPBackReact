@@ -546,13 +546,13 @@ class IdeasController extends AbstractController
             if(empty($lastComment)){
                 $urlIdea = $baseURL . "/idea/" . $idea->getId();
                 $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-                $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+//                $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
             } else {
                 $lastCommentDate = (clone $lastComment->getDate())->add(new DateInterval("P1D"));
                 if($lastCommentDate < new DateTime()){
                     $urlIdea = $baseURL . "/idea/" . $idea->getId();
                     $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-                    $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+//                    $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
                 }
             }
         }
@@ -599,7 +599,7 @@ class IdeasController extends AbstractController
         if($user->getId() !== $idea->get_User()->getId()){
             $urlIdea = $baseURL . "/idea/" . $idea->getId();
             $message = "К вашей записи оставили Официальный ответ: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-            $this->sendToMail($mailer, $message, "Официальный ответ", $idea->get_User()->getEmail());
+//            $this->sendToMail($mailer, $message, "Официальный ответ", $idea->get_User()->getEmail());
         }
 
         return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
