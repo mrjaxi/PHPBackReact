@@ -626,7 +626,8 @@ class IdeasController extends AbstractController
             return $this->json(['state' => 'error', 'message' => "Такого комментария не существует"]);
         }
         // Изменить если автор комментария
-        if ($user->getId() == $comment->get_User()->getId()) {
+        if (in_array("ROLE_ADMIN", $user->getRoles())
+            or $user->getId() == $comment->get_User()->getId()) {
             $comment->setContent($content)
                 ->updatedTimestamps();
             $this->commentsRepository->save($comment);

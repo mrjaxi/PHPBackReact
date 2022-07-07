@@ -41,7 +41,7 @@ global.parseToIdeaItems = (ideas, data = [], showComments = false, allowComments
             allowComments: allowComments === null ? idea.allowComments : allowComments,
             date: idea?.date,
             dateString: global.getDateString(new Date(idea?.date), false, false),
-            notification: idea?.notification && (idea?.user.id === global.user.id) ? idea?.notification : false
+            notification: idea?.notification && (idea?.user.id === global.user?.id) ? idea?.notification : false
         })
     });
     return newData;
@@ -54,6 +54,7 @@ const IdeaItem = ({
                       showContent = true, showCommentsCount = true, showLikes = true
                   }) => {
 
+    const [form] = Form.useForm();
     const [idea, setIdea] = useState(item);
     const [date, setDate] = useState("");
     const [visible, setVisible] = useState(false);
@@ -153,7 +154,7 @@ const IdeaItem = ({
     const showComments = () => {
         let newIdea = {...idea};
         newIdea.showComments = !newIdea.showComments;
-        if (idea?.notification && idea?.user.id === global.user.id) {
+        if (idea?.notification && idea?.user.id === global.user?.id) {
             axios.post(ApiRoutes.API_CHECK_ALL_COMMENTS, {idea_id: idea.idea_id})
                 .then(response => {
                     global.handleResponse(response,
@@ -244,7 +245,7 @@ const IdeaItem = ({
                     global.openNotification("Успешно", "Комментарий удален", "success")
                 },
                 function () {
-                    global.openNotification("Ошибка", "Не удаётся удалить комментарий", "error")
+                    global.openNotification("Ошибка", response.data?.message, "error")
                 },
             )
         })
@@ -252,28 +253,37 @@ const IdeaItem = ({
 
     const sendEditedIdea = (value) => {
         setLoadingEditChanges(true);
-        console.log(value)
         axios.post(ApiRoutes.API_CHANGE_IDEA, {idea_id: idea.idea_id, title: value.title, content: value.text}).then(response => {
-            if (response.data.state === "success") {
-                let data = {...idea};
+            global.handleResponse(response,
+                function () {
+                    let data = {...idea};
 
-                data.title = value.title;
-                data.text = value.text;
-                setIdea(data);
+                    data.title = value.title;
+                    data.text = value.text;
+                    setIdea(data);
 
-                setShowEditFields(false);
-                setLoadingEditChanges(false)
-                global.openNotification("Успешно", "Идея отредактирована", "success")
-            } else {
-                global.openNotification("Ошибка", "Идею невозможно отредактировать", "error")
-            }
+                    setShowEditFields(false);
+                    form.resetFields()
+                    global.openNotification("Успешно", "Идея отредактирована", "success")
+                },
+                function () {
+                    global.openNotification("Ошибка", response.data?.message, "error")
+                },
+            )
+            setLoadingEditChanges(false)
         })
     };
 
     return (
         <>
             <div className={"f-cards"} key={index} id={index}>
-                <div className={"f-text-tags-wrap"}>
+                <div className={"f-text-tags-wrap"}
+                     onMouseOver={() => {
+                         if(showEditButton){
+                             console.log("OVER TAGS")
+                             setShowEditButton(false)
+                         }
+                     }}>
                     {
                         categories.length !== 0 && global.layout === "admin" ?
                             <Popover
@@ -313,12 +323,21 @@ const IdeaItem = ({
                                         value={idea?.typeId}
                                         onChange={(value) => changeType(value)}
                                         options={types.map((item) => {
-                                            return {label: item.name, value: item.id}
+                                            return {
+                                                // label: item.name,
+                                                label: (
+                                                    <p style={{
+                                                        margin: 0,
+                                                        padding: 0,
+                                                        color: item?.color,
+                                                    }}>#{item.name}</p>
+                                                ),
+                                                value: item.id }
                                         })}/>}
                             >
                                 <p style={{
                                     marginLeft: 0,
-                                    color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1]?.color) && types[idea.typeId - 1]?.color,
+                                    color: (includedTypes.includes(idea.typeId) && types.filter((type) => type.id === idea.typeId)) && types.filter((type) => type.id === idea.typeId)[0]?.color,
                                 }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                                    onClick={() => {
                                        selectType(idea.typeId)
@@ -327,7 +346,7 @@ const IdeaItem = ({
                             </Popover> :
                             <p style={{
                                 marginLeft: 0,
-                                color: (includedTypes.includes(idea.typeId) && types[idea.typeId - 1]?.color) && types[idea.typeId - 1]?.color,
+                                color: (includedTypes.includes(idea.typeId) && types.filter((type) => type.id === idea.typeId)) && types.filter((type) => type.id === idea.typeId)[0]?.color,
                             }} className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                                onClick={() => {
                                    selectType(idea.typeId)
@@ -369,10 +388,16 @@ const IdeaItem = ({
                     <div className={"f-cards-inner"} style={{
                         padding: "35px 0 10px 0  ",
                         marginTop: idea?.photo !== null ? -40 : 0,
-                        paddingBottom: (idea.officialComment && !idea.showComments) && 60
+                        paddingBottom: (idea?.officialComment && !idea.showComments) && 60
                     }}>
                         <div style={{paddingLeft: 40, paddingRight: 50}}>
-                            <div className={"f-cards-avatar"}>
+                            <div className={"f-cards-avatar"}
+                                 onMouseOver={() => {
+                                     if(showEditButton){
+                                         console.log("OVER PROFILE")
+                                         setShowEditButton(false)
+                                     }
+                                 }}>
                                 <Link to={global.lang + `/profile/${idea.user.id}`}>
                                     <div className={"f-cards-row-wrap"}>
                                         <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
@@ -417,7 +442,6 @@ const IdeaItem = ({
                                         </Select> :
                                         <div>
                                             <p className={"f-cards-type-viewed"} style={{
-                                                // marginTop: "1em",
                                                 color: idea.status?.color ? idea.status?.color : "#000000",
                                                 backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",
                                             }}
@@ -426,16 +450,15 @@ const IdeaItem = ({
                                 }
                             </div>
                             <Form
-                                id={"edit-idea-id"}
+                                form={form}
+                                id={"edit-idea-"+index}
                                 name={"edit-comment"}
                                 initialValues={idea}
                                 onFinish={(value) => sendEditedIdea(value)}
                             >
-                                <div onMouseOver={() => setShowEditButton(true)}
-                                     onMouseOut={() => setShowEditButton(false)} className={"f-cards-div-wrap-text"}
-                                     style={{marginBottom: showContent ? 20 : 0}}>
-                                    {
-                                        showEditFields && (idea.user.id === global.user.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))  ?
+                                <div className={"f-cards-div-wrap-text"}
+                                     style={{marginBottom: showContent ? 20 : 0, }}>
+                                    { showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))  ?
                                             <div style={{width: '100%'}}>
                                                 <Form.Item
                                                     name={"title"}
@@ -445,26 +468,47 @@ const IdeaItem = ({
                                                 </Form.Item>
                                             </div>
                                             :
-                                            <Link style={{ width: '100%' }} to={global.lang + "/idea/" + idea.idea_id + "/"}>
-                                                <span className={"f-cards-content-text"}>
-                                                    {idea.title}
-                                                </span>
-                                            </Link>
-                                    }
-                                    {
-                                        (showEditButton && !showEditFields && (idea.user.id === global.user.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) &&
-                                        <span onClick={() => {
-                                            setShowEditFields(!showEditFields),
-                                                setShowEditButton(!showEditButton)
-                                        }}>
-                                                <EditOutlined style={{fontSize: 26, marginLeft: 10,}}/>
-                                            </span>
+                                            <a onMouseOver={() => {
+                                                    if(!showEditButton){
+                                                        console.log("OVER")
+                                                        setShowEditButton(true)
+                                                    }
+                                                }}>
+                                                { (showEditButton && !showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) ?
+                                                        <>
+                                                            <span className={"f-cards-content-text"}
+                                                                  onClick={() => {
+                                                                      global._history.push(global.lang + "/idea/" + idea.idea_id + "/")
+                                                                  }}>
+                                                                {idea.title}
+                                                            </span>
+                                                            <span style={{zIndex: 100, fontSize: 32}} onClick={() => {
+                                                                setShowEditFields(!showEditFields)
+                                                                setShowEditButton(false)
+                                                            }}>
+                                                                <EditOutlined style={{fontSize: 26, marginLeft: 10}}/>
+                                                            </span>
+                                                        </>
+                                                        :
+                                                        <span  className={"f-cards-content-text"}
+                                                            onClick={() => {
+                                                                global._history.push(global.lang + "/idea/" + idea.idea_id + "/")
+                                                            }}
+                                                        >{idea.title}</span>
+                                                }
+                                            </a>
                                     }
                                 </div>
                                 {showContent &&
-                                <div className={"f-cards-div-wrap-text"}>
+                                <div className={"f-cards-div-wrap-text"}
+                                     onMouseOver={() => {
+                                         if(showEditButton){
+                                             console.log("OVER CONTENT")
+                                             setShowEditButton(false)
+                                         }
+                                     }}>
                                     {
-                                        (showEditFields && (idea.user.id === global.user.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) ?
+                                        (showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) ?
                                             <div style={{width: '100%'}}>
                                                 <Form.Item
                                                     name={"text"}
@@ -483,16 +527,24 @@ const IdeaItem = ({
                                                             idea.text.split(" ").length > 40 && !idea.showFullText ?
                                                                 <span>{idea.text.split(" ").filter((idea, index) => index < 40).join(" ")}... <a
                                                                     onClick={() => showText(idea.showFullText)}>Еще</a>
-                                                    </span> :
-                                                                <span>{idea.text} <a style={{zIndex: 3}}
-                                                                                     onClick={() => showText(idea.showFullText)}>Скрыть</a></span>
+                                                                </span>
+                                                                : <span>
+                                                                    {idea.text}
+                                                                    <a style={{zIndex: 3}} onClick={() => showText(idea.showFullText)}>Скрыть</a>
+                                                                </span>
                                                     }
                                                 </Linkify>
                                             </span>
                                     }
                                 </div>}
                             </Form>
-                            <div className={"f-cards-under-block"}>
+                            <div className={"f-cards-under-block"}
+                                 onMouseOver={() => {
+                                     if(showEditButton){
+                                         console.log("OVER UNDER")
+                                         setShowEditButton(false)
+                                     }
+                                 }}>
                                 <div style={{display: "flex", flexDirection: 'row', alignItems: 'center'}}>
                                     {(idea.notification === true) &&
                                     <div style={{
@@ -578,7 +630,7 @@ const IdeaItem = ({
                                 {/*    </a>*/}
                                 {/*</div>*/}
                                 {
-                                    showEditFields && (idea.user.id === global.user.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el))) &&
+                                    showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el))) &&
                                     <div>
                                         <Button style={{
                                             paddingTop: 15,
@@ -588,7 +640,7 @@ const IdeaItem = ({
                                             borderRadius: 84,
                                             fontSize: 17,
                                             height: 60,
-                                        }} form={"edit-idea-id"} loading={loadingEditChanges} type={"primary"}
+                                        }} form={"edit-idea-"+index} loading={loadingEditChanges} type={"primary"}
                                                 htmlType={"submit"}>Сохранить</Button>
                                         <Button onClick={() => {
                                             setShowEditFields(false)

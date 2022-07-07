@@ -87,7 +87,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                         let newComments = [...rawCommentsData];
                         newComments[index].content = newValue;
                         newComments[index].updated = true;
-                        if(newIdea.officialComment.id === newComments[index].id) {
+                        if(newIdea?.officialComment?.id === newComments[index]?.id) {
                             newIdea.officialComment = newComments[index]
                         }
                         newIdea.comments = newComments
@@ -96,13 +96,13 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                         setCommentsData(newComments);
                         setRawCommentsData(newComments);
                         setEditableId(false);
-                        setLoadingEdit(false);
                         global.openNotification("Успешно", "Комментарий отредактирован", "success")
                     },
                     function () {
-                        global.openNotification("Ошибка", "Невозможно редактировать комментарий", "error")
+                        global.openNotification("Ошибка", response.data?.message, "error")
                     },
                 )
+                setLoadingEdit(false);
             })
         }
     };
@@ -111,7 +111,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
         axios.post(ApiRoutes.API_DELETE_COMMENT, {comment_id: id}).then(response => {
             global.handleResponse(response,
                 function () {
-                    if(idea.officialComment.id === id){
+                    if(idea.officialComment?.id === id){
                         let newIdea = {...idea};
                         newIdea.officialComment = null;
                         let dataComments = rawCommentsData.filter(item => item.id !== id);
@@ -128,7 +128,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                     global.openNotification("Успешно", "Комментарий удален", "success")
                 },
                 function () {
-                    global.openNotification("Ошибка", "Комментарий не удален", "error")
+                    global.openNotification("Ошибка", response.data?.message, "error")
                 }
             )
         })
@@ -217,7 +217,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                                         }
                                                     </span>
                                                     {
-                                                        comment.user.id === global.user.id &&
+                                                        (comment.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el))) &&
                                                         <>
                                                             <span> · </span>
                                                             {

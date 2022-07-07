@@ -69,49 +69,6 @@ const Search = ({ visible, setVisible, includedTypes,
         setLoading(false);
     };
 
-    const select = (categoryId, typesId) => {
-        let params = {
-            order: "id",
-            type: "desc",
-            page: "1",
-        };
-
-        if(categoryId){
-            setIncludedCategories(categoryId)
-
-            let prevIncludedCategory = [...includedCategory];
-            if (prevIncludedCategory.indexOf(categoryId) >= 0) {
-                prevIncludedCategory = prevIncludedCategory.filter(item => item !== categoryId)
-            } else {
-                prevIncludedCategory.push(categoryId);
-            }
-            setIncludedCategories(prevIncludedCategory);
-            params["categories"] = JSON.stringify(prevIncludedCategory);
-        }
-        if(typesId){
-            let prevIncludesTypes = [...includedTypes];
-            if (prevIncludesTypes.indexOf(typesId) >= 0){
-                prevIncludesTypes = prevIncludesTypes.filter(item => item !== typesId)
-            } else {
-                prevIncludesTypes.push(typesId);
-            }
-            setIncludedTypes(prevIncludesTypes);
-
-            params["types"] = JSON.stringify(prevIncludesTypes)
-        }
-
-        let serializedParams = "";
-        for (let key in params) {
-            if(serializedParams === ""){
-                serializedParams += `${key}=${params[key]}`
-            } else {
-                serializedParams += `&${key}=${params[key]}`
-            }
-        }
-        global._history.push(`${global.lang}/?${serializedParams}`);
-        setVisible(!visible)
-    };
-
     return (
         <Modal
             title={
@@ -142,7 +99,6 @@ const Search = ({ visible, setVisible, includedTypes,
             style={{
                 top: 30,
                 verticalAlign: "top",
-                // paddingTop: searchItems.length === 0 ? 0 : 30,
                 padding: "0 100px 70px",
             }}
             footer={null}
@@ -186,8 +142,8 @@ const Search = ({ visible, setVisible, includedTypes,
                                     <div className={"f-cards"}>
                                         <div>
                                             <div className={"f-text-tags-wrap"}>
-                                                <p style={{ marginRight: 30, marginLeft: 0 }} onClick={() => select(item.categoryId, null)} className={"f-cards-hashtag"}>#{item?.category}</p>
-                                                <p style={{ marginLeft: 0 }} onClick={() => select(null, item.typeId)} className={"f-cards-hashtag"}>#{item?.type}</p>
+                                                <p style={{ marginRight: 30, marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.category}</p>
+                                                <p style={{ marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.type}</p>
                                             </div>
                                             <div className={"f-cards-card-wrap"}>
                                                 <div className={"f-cards-inner"}>

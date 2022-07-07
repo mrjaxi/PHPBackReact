@@ -11,6 +11,8 @@ import LoadingIdeas from "./Main/Components/Idea/LoadingIdeas";
 import EmptyIdeas from "./Main/Components/Idea/EmptyIdeas";
 import Login from "./Main/Auth/Login";
 import InfiniteScroll from "react-infinite-scroll-component";
+const cancelTokenSource = axios.CancelToken;
+let cancel = undefined;
 
 global.handleResponse = function( response, success=()=>{}, error=()=>{}, trouble=()=>{}, defaultFunc=()=>{} ) {
     switch (response.data?.state) {
@@ -123,6 +125,9 @@ const MainPage = (props) => {
     };
 
     const loadData = () => {
+        if (cancel !== undefined) {
+            cancel();
+        }
         let data = [];
         let params = {
             order: urlParams.get("order") ? urlParams.get("order") : "id",
@@ -155,7 +160,7 @@ const MainPage = (props) => {
             }
         }
         global._history.replace(`${global.lang}/?${serializedParams}`);
-        axios.get(ApiRoutes.API_GET_IDEAS + "?" + serializedParams)
+        axios.get(ApiRoutes.API_GET_IDEAS + "?" + serializedParams, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) })
             .then(response => {
                 global.handleResponse(response,
                     function () {

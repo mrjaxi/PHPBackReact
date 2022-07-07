@@ -36,8 +36,8 @@ const Login = ({visible, setVisible}) => {
         if (!timeExpiry) {
             setLoading(true);
             // TODO: Поменять вход
-            axios.post(ApiRoutes.API_LOGIN,   // ApiRoutes.API_SIGN_IN     || ApiRoutes.API_LOGIN
-                global.serialize({username: data?.email, password: data?.password}), // {username: data?.email,}, || global.serialize({username: data?.email, password: data?.password}),
+            axios.post(ApiRoutes.API_SIGN_IN,   // ApiRoutes.API_SIGN_IN     || ApiRoutes.API_LOGIN
+                {username: data?.email,}, // {username: data?.email,}, || global.serialize({username: data?.email, password: data?.password}),
                 {withCredentials: true,})
                 .then(response => {
                     const time = new Date();
@@ -88,12 +88,12 @@ const Login = ({visible, setVisible}) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     padding: "24px 24px 0",
-                    minHeight: "80vh",
+                    minHeight: "90vh",
                 }}
             >
                 {
                     isSent ?
-                        <div style={{ minHeight: '90vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                        <div style={{ minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                             <a onClick={() =>
                             {
                                 setIsSent(false)
@@ -109,7 +109,7 @@ const Login = ({visible, setVisible}) => {
                             />
                         </div>
                          :
-                        <div className={"f-login"}>
+                        <div className={"f-login"} style={{minHeight: "80vh"}}>
                             <a onClick={() => setVisible(!visible)}
                                style={{position: 'absolute', top: 30, right: 30, height: 25, width: 25}}>
                                 <img src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>
@@ -145,19 +145,19 @@ const Login = ({visible, setVisible}) => {
                                     <Input size={"large"} style={{padding: '10px 15px 10px 15px', width: '440px'}}
                                            placeholder={"Электронная почта"}/>
                                 </Form.Item>
-                                <Form.Item
-                                    name={"password"}
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Пожалуйста, введите пароль',
-                                        },
-                                    ]}
-                                >
-                                    <Input.Password size={"large"}
-                                                    style={{padding: '10px 15px 10px 15px', width: '440px'}}
-                                                    placeholder={"Пароль"}/>
-                                </Form.Item>
+                                {/*<Form.Item*/}
+                                {/*    name={"password"}*/}
+                                {/*    rules={[*/}
+                                {/*        {*/}
+                                {/*            required: true,*/}
+                                {/*            message: 'Пожалуйста, введите пароль',*/}
+                                {/*        },*/}
+                                {/*    ]}*/}
+                                {/*>*/}
+                                {/*    <Input.Password size={"large"}*/}
+                                {/*                    style={{padding: '10px 15px 10px 15px', width: '440px'}}*/}
+                                {/*                    placeholder={"Пароль"}/>*/}
+                                {/*</Form.Item>*/}
                                 <Form.Item>
                                     <Button
                                         style={{
