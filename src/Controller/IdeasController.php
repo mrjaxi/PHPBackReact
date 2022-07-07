@@ -110,7 +110,7 @@ class IdeasController extends AbstractController
         $this->ideasRepository->save($idea);
 
         $urlIdea = $baseURL . "/idea/" . $idea->getId();
-        $message = "Добавлена новая идея: {$data['title']}\n\nСсылка: {$urlIdea}";
+        $message = "Добавлена новая запись: {$data['title']}\n\nСсылка: {$urlIdea}";
         if ($this->sendMailToAdmin($mailer, $message, "Новый отзыв")) {
             return $this->json([
                 "state" => "success",
@@ -587,6 +587,9 @@ class IdeasController extends AbstractController
         $newComment->setIdea($idea)
             ->setUser($user)
             ->setContent($content);
+        if($idea->get_User()->getId() === $user->getId()){
+            $newComment->setIsChecked(true);
+        }
         $this->commentsRepository->save($newComment);
 
         $idea->setAllowComments(false)

@@ -452,7 +452,7 @@ const IdeaItem = ({
                             <Form
                                 form={form}
                                 id={"edit-idea-"+index}
-                                name={"edit-comment"}
+                                name={"edit-idea"}
                                 initialValues={idea}
                                 onFinish={(value) => sendEditedIdea(value)}
                             >
@@ -588,7 +588,7 @@ const IdeaItem = ({
                                                     </div>
                                                 </button>
                                             </Tooltip> : idea.allowComments === false ?
-                                            <Tooltip color={"black"} title="Голосование за эту идею закрыто">
+                                            <Tooltip color={"black"} title={"Голосование закрыто"}>
                                                 <div className={"f-cards-under-block-like"} style={{
                                                     backgroundColor: idea.currentUserIsVote === true ? "#3D72ED" : "",
                                                     display: 'flex',

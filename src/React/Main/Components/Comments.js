@@ -201,7 +201,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                                                             name={"content"}
                                                             rules={[{required: true, message: "Заполните поле"}]}
                                                         >
-                                                            <TextArea autoSize={{minRows: 3}} style={{ marginTop: 24 }}/>
+                                                            <TextArea autoSize={{minRows: 3}} style={{ marginTop: 24, fontSize: 17 }}/>
                                                         </Form.Item>
                                                     </Form> :
                                                     <span className={"f-cards-content-description"}>

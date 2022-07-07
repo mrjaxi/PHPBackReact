@@ -118,16 +118,17 @@ const ShowIdea = (props) => {
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: 'center',
-                            alignItems: "center",
+                            alignItems: "flex-start",
                         }}>
                             <div className={"max_width"}>
                                 <div style={{
                                     display: "flex",
                                     justifyContent: 'center',
                                     flexDirection: "column",
-                                    alignItems: "center",
+                                    alignItems: "flex-start",
                                     width: '50vw',
-                                    minHeight: '60vh'
+                                    minHeight: '60vh',
+                                    maxWidth: 1000
                                 }}>
                                     { loading ? <LoadingIdeas/> : (
                                         <>
@@ -138,20 +139,19 @@ const ShowIdea = (props) => {
                                             { ideasInfinite.length > 0 ?
                                                 <>
                                                 <span className={"f-cards-hashtag"} style={{
-                                                    marginTop: 50,
                                                     marginBottom: 33,
                                                     fontWeight: 500,
                                                     color: "#1D1D1D",
                                                     fontSize: 24
                                                 }}>Посмотрите похожие публикации</span>
                                                     <InfiniteScroll
-                                                        style={{overflow: 'hidden',}}
+                                                        style={{overflow: 'hidden', display: "flex", alignItems: "center", flexDirection: "column"}}
                                                         next={() => {
                                                             setPage(page + 1)
                                                         }}
                                                         hasMore={true}
                                                         dataLength={ideasInfinite.length}
-                                                        loader={(loadingInfinity) ? <LoadingIdeas type={true}/> : <></>}
+                                                        loader={(loadingInfinity) ? <div style={{display: "flex", justifyContent: "center"}}><LoadingIdeas type={true}/></div> : <></>}
                                                     >{
                                                         ideasInfinite.map((idea, index) => (
                                                             <IdeaItem item={idea} index={idea.idea_id} setItem={setIdea}

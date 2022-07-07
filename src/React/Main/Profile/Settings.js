@@ -13,6 +13,7 @@ const Settings = () => {
     const [sendLoading, setSendLoading] = useState(false);
     const [loadImage, setLoadImage] = useState(false);
     const [file, setFile] = useState("");
+    const [user, setUser] = useState(global.user)
 
     const onSend = (value) => {
         setSendLoading(true);
@@ -27,6 +28,7 @@ const Settings = () => {
                 function () {
                     if (file) {
                         global.user = response.data?.profile;
+                        setUser(response.data?.profile);
                     }
                     global.openNotification("Успешно", "Данные сохранены", "success")
                 },
@@ -59,14 +61,13 @@ const Settings = () => {
 
     return (
         <Col style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
-            <Header/>
-            <div className={"f-login"} style={{ display: 'flex', flexDirection: 'column', paddingBottom: 95 }}>
-                <div style={{ marginTop: 120 }}>
+            { user?.id === global.user?.id && <Header/>}
+            <div className={"f-login"} style={{ display: 'flex', flexDirection: 'column', paddingBottom: 50 }}>
+                <div style={{ marginTop: 100 }}>
                     <Form
                         onFinish={(value) => onSend(value)}
                         name={"settings"}
                         initialValues={global.user}
-                        style={{ marginTop: 40 }}
                     >
                         <Form.Item
                             name={"image"}

@@ -11,7 +11,7 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                     setIncludedCategories = () => false }) => {
     const [visibleSearch, setVisibleSearch] = useState(false)
     const [visibleLogin, setVisibleLogin] = useState();
-    const [user, setUser] = useState(global.user?.notifications);
+    const [user, setUser] = useState(global.user);
 
     useEffect(() => {
         setUser(global.user)

@@ -62,6 +62,8 @@ const AddIdeaPage = () => {
                 )
                 setSearchItems(prevSearchItems);
             })
+        } else {
+            setSearchItems([])
         }
     };
 
