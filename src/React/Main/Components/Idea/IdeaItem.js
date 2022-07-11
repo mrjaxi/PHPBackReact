@@ -4,9 +4,8 @@ import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../Comments";
 import {Avatar, Image, Select, Tooltip, Button, Popover, Segmented, Form, Input} from "antd";
 import {Link} from "react-router-dom";
-import Icon, {UserOutlined, EditOutlined, SaveOutlined} from "@ant-design/icons";
+import Icon, {UserOutlined, EditOutlined} from "@ant-design/icons";
 import Linkify from 'react-linkify';
-
 const {Option} = Select;
 const {TextArea} = Input;
 
@@ -359,7 +358,7 @@ const IdeaItem = ({
                         idea?.photo !== null &&
                         <div className={"f-cards-image-type"}
                              onClick={() => setVisible(true)}
-                             style={{backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")', cursor: 'pointer'}}>
+                             style={{ backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")', cursor: 'pointer'}}>
                             {idea?.photo.split(";").length > 1 &&
                             <div className={"f-image-count"}>
                                 <span style={{fontSize: 18}}>1/{idea?.photo.split(";").length}</span>

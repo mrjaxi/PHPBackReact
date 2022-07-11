@@ -69,8 +69,6 @@ const MainPage = (props) => {
     const [loadingInfinite, setLoadingInfinite] = useState(true);
     const [loadingCategory, setLoadingCategory] = useState(true);
 
-    const [newIdeaText, setNewIdeaText] = useState("+");
-
     const history = useHistory();
 
     useLayoutEffect(() => {
@@ -231,23 +229,12 @@ const MainPage = (props) => {
                     />
                     {
                         global.layout !== "guest" ?
-                            <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}
-                                onMouseOver={() => {
-                                    setNewIdeaText("Новая идея")
-                                }}
-                                onMouseOut={() => {
-                                    setNewIdeaText("+")
-                                }}>
-                                <p className={"f-new-idea-text"}>{newIdeaText}</p>
+                            <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
+                                <p className={"f-new-idea-text"}>+</p>
+                                <p className={"f-new-idea-item"}>новая идея</p>
                             </NavLink> :
-                            <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}
-                                onMouseOver={() => {
-                                    setNewIdeaText("Авторизоваться")
-                                }}
-                                onMouseOut={() => {
-                                    setNewIdeaText("+")
-                                }}>
-                                <p className={"f-new-idea-text"}>{newIdeaText}</p>
+                            <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}>
+                                <p className={"f-new-idea-text"}>+</p>
                             </a>
                     }
                     <div className={"f-row-type max_width"}>
