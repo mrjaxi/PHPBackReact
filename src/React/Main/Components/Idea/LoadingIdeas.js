@@ -11,7 +11,9 @@ const LoadingIdeas = ({type = false}) => {
             <div className={"f-cards-card-wrap"}>
                 <div className={"f-cards-inner"}>
                     <div className={"f-cards-div-wrap-text"}>
-                            <span className={"f-cards-content-text"}>
+                            <span className={"f-cards-content-text"} style={{
+                                flexDirection: "column"
+                            }}>
                                 <Skeleton active avatar paragraph={{rows: 1}}/>
                                 <Skeleton active/>
                             </span>

@@ -104,16 +104,16 @@ button:focus {
     &-ag {
         background-image: url("/i/atmaguru.svg");
         height: 30px;
-        left: 87px;
-        top: 53px;
+        left: 77px;
+        top: 43px;
         width: 135px;
     }
 
     &-circle {
         background-color: #D9F94B;
         height: 45px;
-        left: 32px;
-        top: 42px;
+        left: 22px;
+        top: 32px;
         width: 45px;
         align-items: center;
         justify-content: center;
@@ -192,8 +192,8 @@ button:focus {
     &-header-content {
         height: 84px;
         width: 100%;
-        align-items: center;
         display: flex;
+        align-items: center;
         justify-content: space-between;
         padding: 38px 45px 0 30px;
         position: fixed;
@@ -201,21 +201,21 @@ button:focus {
     }
 
     &-new-idea {
-        position: sticky;
-        width: 220px;
-        height: 80px;
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
         background-color: #3D72ED;
         box-shadow: 0 16px 32px 4px rgba(61, 114, 237, 0.24);
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 50px;
         border-radius: 64px;
         z-index: 100;
         display: flex;
         align-items: center;
         justify-content: center;
-        top: calc(100vh - 100px);
         &-text {
+            line-height: 20px;
+            min-width: 60px;
+            padding: 20px;
+            text-align: center;
             color: white;
             font-size: 24px;
             margin: 0;
@@ -375,7 +375,6 @@ button:focus {
 
     &-nav {
         display: flex;
-        margin-bottom: 10px;
         position: sticky;
         top: 25px;
         z-index: 3;
@@ -386,7 +385,7 @@ button:focus {
             border-radius: 64px;
             white-space: nowrap;
             background: rgba(255, 255, 255, 0.48);
-            box-shadow: 0 0 16px 0 rgb(0 0 0 / 4%);
+            box-shadow: 0 0 16px 0 rgb(0 0 0 / 7%);
             -webkit-backdrop-filter: blur(56px);
             backdrop-filter: blur(56px);
             color: #1D1D1F;
@@ -457,6 +456,7 @@ button:focus {
         display: flex;
         width: 100%;
         max-width: 1000px;
+        min-width: 550px;
         flex-direction: column;
         margin-bottom: 50px;
         justify-content: center;
@@ -497,13 +497,13 @@ button:focus {
         }
 
         &-hashtag {
-            margin-left: 40px;
+            //margin-left: 40px;
             font-size: 17px;
             color: #AAB2BD;
             transition: 0.2s;
             margin-right: 20px;
             border-radius: 32px;
-            padding: 12px 17px 13px;
+            padding: 12px 47px 13px;
             height: 48px;
 
             &-hover:hover {
@@ -527,7 +527,7 @@ button:focus {
             color: #1D1D1D;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: inherit;
+            //display: inherit; inherit ломает LoadingIdeas не делать его
         }
 
         &-div-wrap-text {
@@ -791,9 +791,9 @@ button:focus {
         }
     }
 }
-
+// Стили для firefox
 @supports (-moz-appearance:none) {
     .f-nav-button {
-        background: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.9);
     }
 }

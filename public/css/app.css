@@ -101,15 +101,15 @@ button:focus {
 .logo-ag {
   background-image: url("/i/atmaguru.svg");
   height: 30px;
-  left: 87px;
-  top: 53px;
+  left: 77px;
+  top: 43px;
   width: 135px;
 }
 .logo-circle {
   background-color: #D9F94B;
   height: 45px;
-  left: 32px;
-  top: 42px;
+  left: 22px;
+  top: 32px;
   width: 45px;
   align-items: center;
   justify-content: center;
@@ -175,30 +175,30 @@ button:focus {
 .f-header-content {
   height: 84px;
   width: 100%;
-  align-items: center;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 38px 45px 0 30px;
   position: fixed;
   z-index: 2;
 }
 .f-new-idea {
-  position: sticky;
-  width: 220px;
-  height: 80px;
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
   background-color: #3D72ED;
   box-shadow: 0 16px 32px 4px rgba(61, 114, 237, 0.24);
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50px;
   border-radius: 64px;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  top: calc(100vh - 100px);
 }
 .f-new-idea-text {
+  line-height: 20px;
+  min-width: 60px;
+  padding: 20px;
+  text-align: center;
   color: white;
   font-size: 24px;
   margin: 0;
@@ -337,7 +337,6 @@ button:focus {
 }
 .f-nav {
   display: flex;
-  margin-bottom: 10px;
   position: sticky;
   top: 25px;
   z-index: 3;
@@ -348,7 +347,7 @@ button:focus {
   border-radius: 64px;
   white-space: nowrap;
   background: rgba(255, 255, 255, 0.48);
-  box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.04);
+  box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.07);
   -webkit-backdrop-filter: blur(56px);
   backdrop-filter: blur(56px);
   color: #1D1D1F;
@@ -409,6 +408,7 @@ button:focus {
   display: flex;
   width: 100%;
   max-width: 1000px;
+  min-width: 550px;
   flex-direction: column;
   margin-bottom: 50px;
   justify-content: center;
@@ -440,13 +440,12 @@ button:focus {
   left: -60px;
 }
 .f-cards-hashtag {
-  margin-left: 40px;
   font-size: 17px;
   color: #AAB2BD;
   transition: 0.2s;
   margin-right: 20px;
   border-radius: 32px;
-  padding: 12px 17px 13px;
+  padding: 12px 47px 13px;
   height: 48px;
 }
 .f-cards-hashtag-hover:hover {
@@ -467,7 +466,6 @@ button:focus {
   color: #1D1D1D;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: inherit;
 }
 .f-cards-div-wrap-text {
   margin-bottom: 20px;
@@ -691,7 +689,7 @@ button:focus {
 
 @supports (-moz-appearance: none) {
   .f-nav-button {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.9);
   }
 }
 .i-idea-wrap {

@@ -69,6 +69,8 @@ const MainPage = (props) => {
     const [loadingInfinite, setLoadingInfinite] = useState(true);
     const [loadingCategory, setLoadingCategory] = useState(true);
 
+    const [newIdeaText, setNewIdeaText] = useState("+");
+
     const history = useHistory();
 
     useLayoutEffect(() => {
@@ -202,7 +204,7 @@ const MainPage = (props) => {
         <>
             <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
             <Col className={"f-main"}>
-                <div key={3}>
+                <div key={3} style={{ minHeight: "100vh"}}>
                     <Header
                         setIncludedTypes={setIncludedTypes}
                         setIncludedCategories={setIncludedCategories}
@@ -229,11 +231,23 @@ const MainPage = (props) => {
                     />
                     {
                         global.layout !== "guest" ?
-                            <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
-                                <p className={"f-new-idea-text"}>Новая идея</p>
+                            <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}
+                                onMouseOver={() => {
+                                    setNewIdeaText("Новая идея")
+                                }}
+                                onMouseOut={() => {
+                                    setNewIdeaText("+")
+                                }}>
+                                <p className={"f-new-idea-text"}>{newIdeaText}</p>
                             </NavLink> :
-                            <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}>
-                                <p className={"f-new-idea-text"}>Новая идея</p>
+                            <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}
+                                onMouseOver={() => {
+                                    setNewIdeaText("Авторизоваться")
+                                }}
+                                onMouseOut={() => {
+                                    setNewIdeaText("+")
+                                }}>
+                                <p className={"f-new-idea-text"}>{newIdeaText}</p>
                             </a>
                     }
                     <div className={"f-row-type max_width"}>
@@ -241,9 +255,9 @@ const MainPage = (props) => {
                             style={{
                                 width: '100%',
                                 flexDirection: "column",
-                                paddingRight: "100px",
-                                paddingLeft: "20%",
-                                marginBottom: "180px",
+                                paddingRight: 100,
+                                paddingLeft: 300,
+                                marginBottom: 200,
                             }}
                         >
                             { loadingCategory || loading ?
@@ -268,6 +282,12 @@ const MainPage = (props) => {
                                         dataLength={ideas.length}
                                         loader={loadingInfinite ? <LoadingIdeas type={true}/> : <></>}
                                     >
+                                        <div style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            flexDirection: "column",
+                                            maxWidth: 1000,
+                                        }}>
                                         {
                                             ideas.map((idea, index) => (
                                                 <IdeaItem
@@ -285,10 +305,11 @@ const MainPage = (props) => {
                                                 />
                                             ))
                                         }
+                                        </div>
                                     </InfiniteScroll>
                             }
                         </div>
-                        <section style={{ width: '20%', justifyContent: 'center', alignItems: "center", }}>
+                        <section style={{ maxWidth: 200 }}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"}>
                                     { statuses?.length > 0 ?
@@ -309,7 +330,7 @@ const MainPage = (props) => {
                                             </a>
                                         ))
                                         : [1,2,3,4,5].map((status) => (
-                                            <Skeleton active paragraph={{ rows: 0 }}>
+                                            <Skeleton style={{width: 200}} active paragraph={{ rows: 0 }}>
                                                 <a className={"f-side-panel-button-section"} style={{width: 260, height: 50}}>
                                                     <span className={"f-side-panel-count-subtext"}/>
                                                 </a>
@@ -329,7 +350,7 @@ const MainPage = (props) => {
                                             >#{type.name}</a>
                                         ))
                                         : [1,2,3,4,5].map((type) => (
-                                            <Skeleton active paragraph={{ rows: 0 }}>
+                                            <Skeleton style={{width: 200}} active paragraph={{ rows: 0 }}>
                                                 <a className={"f-side-panel-button"} style={{width: 260, height: 50}}/>
                                             </Skeleton>
                                         ))

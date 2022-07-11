@@ -7,10 +7,8 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
         <>
             <navigation className={"f-nav-wrap"}>
                 <div className={"f-nav max_width"} style={{
-                    maxWidth: '80%',
-                    padding: 0,
+                    display: "inline-flex",
                     marginLeft: 80,
-                    paddingLeft: 17
                     }}>
                         <div id={"start"}></div>
                     { categories?.length > 0 ?
