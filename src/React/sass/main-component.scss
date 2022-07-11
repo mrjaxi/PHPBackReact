@@ -527,6 +527,7 @@ button:focus {
             color: #1D1D1D;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: inherit;
         }
 
         &-div-wrap-text {

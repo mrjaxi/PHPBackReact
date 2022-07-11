@@ -467,6 +467,7 @@ button:focus {
   color: #1D1D1D;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: inherit;
 }
 .f-cards-div-wrap-text {
   margin-bottom: 20px;

@@ -4796,7 +4796,7 @@
     "linkify-it" "^2.0.3"
     "tlds" "^1.199.0"
 
-"react-router-dom@^4.3.0 || ^5.0.0", "react-router-dom@^5.2.0":
+"react-router-dom@^4.3.0 || ^5.0.0", "react-router-dom@^5.2.0", "react-router-dom@>=4":
   "integrity" "sha512-Ov0tGPMBgqmbu5CDmN++tv2HQ9HlWDuWIIqn4b88gjlAN5IHI+4ZUZRcpz9Hl0azFIwihbLDYw1OiHGRo7ZIng=="
   "resolved" "https://registry.npmjs.org/react-router-dom/-/react-router-dom-5.3.3.tgz"
   "version" "5.3.3"
@@ -4808,6 +4808,13 @@
     "react-router" "5.3.3"
     "tiny-invariant" "^1.0.2"
     "tiny-warning" "^1.0.0"
+
+"react-router-hash-link@^2.4.3":
+  "integrity" "sha512-NU7GWc265m92xh/aYD79Vr1W+zAIXDWp3L2YZOYP4rCqPnJ6LI6vh3+rKgkidtYijozHclaEQTAHaAaMWPVI4A=="
+  "resolved" "https://registry.npmjs.org/react-router-hash-link/-/react-router-hash-link-2.4.3.tgz"
+  "version" "2.4.3"
+  dependencies:
+    "prop-types" "^15.7.2"
 
 "react-router-i18n@^1.0.1":
   "integrity" "sha512-jfwmI+y/5qPL1fbP7yFoXOBjsdwPbxqpxKCHBRp2oCmpIbrJ++nW1Rel4ML62FR3eRQAE+K+3BhEaG3NLPgv3w=="

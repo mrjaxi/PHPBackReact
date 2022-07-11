@@ -11,7 +11,8 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
                     padding: 0,
                     marginLeft: 80,
                     paddingLeft: 17
-                }}>
+                    }}>
+                        <div id={"start"}></div>
                     { categories?.length > 0 ?
                         categories.map((category) => (
                             <a className={"f-nav-button " + ((includedCategory.includes(category.id)) && "f-nav-button-active")}

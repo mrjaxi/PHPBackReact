@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Avatar} from "antd";
-import {DownOutlined, UpOutlined, UserOutlined} from "@ant-design/icons";
-import {Link, NavLink} from "react-router-dom";
+import { HashLink as Link } from 'react-router-hash-link';
 import axios from "axios";
 import ProfileAvatar from "../Profile/ProfileAvatar";
 import Search from "./Search";
@@ -28,9 +26,9 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
             <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
             <header className={"f-header-content"}>
                 <div className={'f-header-wrap-logo'}>
-                    <NavLink to={global.lang + "/"}>
+                    <Link to={global.lang + "/#start"}>
                         <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
-                    </NavLink>
+                    </Link>
                 </div>
                 <div style={{ display: "flex", }}>
                     { search &&
@@ -107,7 +105,7 @@ const Header = ({ search=false, includedTypes = () => false, includedCategory = 
                 </div>
             </header>
             <div className={"logo logo-circle"}/>
-            <Link to={global.lang + "/"}>
+            <Link to={global.lang + "/#start"}>
                 <div  style={{ zIndex: 500 }} className={"logo logo-ag"}/>
             </Link>
         </>

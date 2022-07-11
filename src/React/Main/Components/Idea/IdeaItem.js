@@ -432,6 +432,7 @@ const IdeaItem = ({
                                             }}
                                             style={{height: '100%'}}
                                             defaultValue={idea.status.id}
+                                            dropdownMatchSelectWidth={false}
                                         >
                                             {
                                                 statuses.map(status => (
@@ -468,7 +469,7 @@ const IdeaItem = ({
                                                 </Form.Item>
                                             </div>
                                             :
-                                            <a onMouseOver={() => {
+                                            <a style={{ width: '100%' }} onMouseOver={() => {
                                                     if(!showEditButton){
                                                         console.log("OVER")
                                                         setShowEditButton(true)
@@ -490,7 +491,7 @@ const IdeaItem = ({
                                                             </span>
                                                         </>
                                                         :
-                                                        <span  className={"f-cards-content-text"}
+                                                        <span className={"f-cards-content-text"}
                                                             onClick={() => {
                                                                 global._history.push(global.lang + "/idea/" + idea.idea_id + "/")
                                                             }}

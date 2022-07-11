@@ -1,8 +1,9 @@
 import React, { useLayoutEffect, useState } from "react";
 import {Button, Form, Input, Select, Tooltip, Upload} from "antd";
 import { Typography } from 'antd';
-import {Link, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import axios from "axios";
+import { HashLink as Link } from 'react-router-hash-link';
 import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
 const {Option} = Select;
 import ApiRoutes from "../../Routes/ApiRoutes";
@@ -312,17 +313,17 @@ const AddIdeaPage = () => {
                                 shape="round">Отправить</Button>
                             <Button
                                 style={{
-                                        marginLeft: 10,
-                                        paddingRight: 27,
-                                        paddingLeft: 27,
-                                        boxShadow: 'none',
-                                        color: '#CCD1D9',
-                                        backgroundColor: 'white',
-                                        border: "none",
-                                        fontSize: 20,
-                                        height: 60,
+                                    marginLeft: 10,
+                                    paddingRight: 27,
+                                    paddingLeft: 27,
+                                    boxShadow: 'none',
+                                    color: '#CCD1D9',
+                                    backgroundColor: 'white',
+                                    border: "none",
+                                    fontSize: 20,
+                                    height: 60,
                                 }}
-                                shape="round"><NavLink to={""}>Закрыть</NavLink></Button>
+                                shape="round"><Link to={global.lang + "/#start"}>Закрыть</Link></Button>
                         </div>
                     </Form.Item>
                 </Form>
