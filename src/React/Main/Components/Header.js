@@ -26,7 +26,7 @@ const Header = ({ search=true, includedTypes = () => false, includedCategory = (
             <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
             <div className={'f-header-wrap-logo'} style={{
                 position: "fixed",
-                top: 28,
+                top: 38,
                 left: 20,
                 zIndex: 10,
             }}>

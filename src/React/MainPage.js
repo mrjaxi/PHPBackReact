@@ -202,26 +202,28 @@ const MainPage = (props) => {
         <>
             <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
             <Col className={"f-main"}>
+                <Header
+                    setIncludedTypes={setIncludedTypes}
+                    setIncludedCategories={setIncludedCategories}
+                    includedCategory={includedCategories}
+                    includedTypes={includedTypes}
+                    search={true}
+                />
                 <div key={3} style={{ minHeight: "100vh"}}>
-                    <Header
-                        setIncludedTypes={setIncludedTypes}
-                        setIncludedCategories={setIncludedCategories}
-                        includedCategory={includedCategories}
-                        includedTypes={includedTypes}
-                        search={true}
-                    />
-                    <section className={"max_width"} style={{marginTop: "100px"}}>
+                    <section className={"max_width"} style={{marginTop: 150, marginBottom: 130}}>
                         <div className={"f-section"}>
                             <div>
                                 <p className={"f-section-wrap-p-text"} style={{
                                     marginBottom: 0,
-                                    marginLeft: 20,
-                                    marginTop: 20,
-                                    width: '70%'
-                                }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами</p>
+                                    marginTop: "20px",
+                                }}>Мы ценим мнение</p>
+                                <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>клиентов и рады,</p>
+                                <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>когда вы делитесь</p>
+                                <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>им с нами</p>
                             </div>
                         </div>
                     </section>
+                    <div id={"start"}/>
                     <Navigation
                         categories={categories}
                         selectCategory={selectCategory}
@@ -243,7 +245,7 @@ const MainPage = (props) => {
                                 flexDirection: "column",
                                 paddingRight: 100,
                                 paddingLeft: 300,
-                                marginBottom: 200,
+                                marginBottom: 300,
                             }}
                         >
                             { loadingCategory || loading ?
