@@ -202,7 +202,7 @@ button:focus {
 
     &-new-idea {
         position: fixed;
-        width: auto;
+        width: 60px;
         left: 20px;
         bottom: 20px;
         background-color: #3D72ED;
@@ -212,38 +212,32 @@ button:focus {
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: 0.7s;
+        overflow: hidden;
+        transition: .4s;
 
         &:hover {
-            width: 150px;
-        }
-
-        &-item {
-            visibility: hidden;
-            transition: 0.6s;
-            width: 0;
-            font-size: 0;
-
-            &:hover {
-                visibility: visible;
-                min-width: 60px;
-                padding: 20px;
-                text-align: center;
-                color: white;
-                font-size: 24px;
-                margin: 0;
-                width: 150px;
-            }
+            width: 200px;
         }
 
         &-text {
             line-height: 20px;
-            min-width: 60px;
             padding: 20px;
+            height: 60px;
+            white-space: nowrap;
             text-align: center;
             color: white;
             font-size: 24px;
             margin: 0;
+
+            &::after {
+                position: relative;
+                content: "+";
+            }
+            
+            &:hover::after {
+                position: relative;
+                content: "Новая идея";
+            }
         }
     }
 
