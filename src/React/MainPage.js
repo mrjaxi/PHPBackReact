@@ -1,5 +1,5 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import {NavLink, useHistory} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import './sass/main-component.scss'
 import {Col, Skeleton} from "antd";
 import axios from "axios";
@@ -53,9 +53,9 @@ global.handleResponse = function( response, success=()=>{}, error=()=>{}, troubl
 const MainPage = (props) => {
     const urlParams = new URLSearchParams(props.location.search);
 
-    const [types, setTypes] = useState([]);
-    const [statuses, setStatuses] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const [types, setTypes] = useState(global.types);
+    const [statuses, setStatuses] = useState(global.statuses);
+    const [categories, setCategories] = useState(global.categories);
 
     const [includedTypes, setIncludedTypes] = useState(urlParams.get("types") ? Object.values(JSON.parse(urlParams.get("types"))) : []);
     const [includedStatuses, setIncludedStatuses] = useState(urlParams.get("status") ? Object.values(JSON.parse(urlParams.get("status"))) : []);
@@ -68,8 +68,6 @@ const MainPage = (props) => {
     const [loading, setLoading] = useState(true);
     const [loadingInfinite, setLoadingInfinite] = useState(true);
     const [loadingCategory, setLoadingCategory] = useState(true);
-
-    const history = useHistory();
 
     useLayoutEffect(() => {
         getCategory();
@@ -216,10 +214,11 @@ const MainPage = (props) => {
                                 <p className={"f-section-wrap-p-text"} style={{
                                     marginBottom: 0,
                                     marginTop: "20px",
-                                }}>Мы ценим мнение</p>
-                                <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>клиентов и рады,</p>
-                                <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>когда вы делитесь</p>
-                                <p className={"f-section-wrap-p-text"} style={{ marginBottom: 0 }}>им с нами</p>
+                                }}>Мы ценим мнение<br/>
+                                    клиентов и рады,<br/>
+                                    когда вы делитесь<br/>
+                                    им с нами
+                                </p>
                             </div>
                         </div>
                     </section>
@@ -238,24 +237,19 @@ const MainPage = (props) => {
                                 <p className={"f-new-idea-text"}></p>
                             </a>
                     }
-                    <div className={"f-row-type max_width"}>
-                        <div
-                            style={{
-                                width: '100%',
-                                flexDirection: "column",
-                                paddingRight: 100,
-                                paddingLeft: 300,
-                                marginBottom: 300,
-                            }}
-                        >
-                            { loadingCategory || loading ?
-                                <div style={{display: "flex", alignItems: "center", flexDirection: "column",}}>
-                                    <LoadingIdeas type={true}/>
-                                </div>
-                                : ideas.length === 0 ?
-                                    <div style={{display: "flex", alignItems: "center", flexDirection: "column",}}>
-                                        <EmptyIdeas text={"Пока нет записей..."}/>
-                                    </div>
+                    <div className={"max_width"}>
+                        <div style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            width: "calc(100% - 320px)",
+                            position: "relative",
+                            left: 250,
+                            marginTop: 100,
+                            marginBottom: 100,
+                        }}>
+                        <div style={{ width: "100%", maxWidth: 1000, }}>
+                            { loadingCategory || loading ? <LoadingIdeas type={true}/>
+                                : ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
                                     : <InfiniteScroll
                                         style={{
                                             display: "flex",
@@ -297,14 +291,21 @@ const MainPage = (props) => {
                                     </InfiniteScroll>
                             }
                         </div>
-                        <section style={{ maxWidth: 200 }}>
+                        <section style={{
+                            minWidth: 250,
+                            maxWidth: 250,
+                        }}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"}>
                                     { statuses?.length > 0 ?
                                         statuses.map((status) => (
                                             <a key={status.id} className={"f-side-panel-button-section"}
+                                               href={"#start"}
                                                onClick={() => {
                                                    selectStatus(status.id)
+                                                   global._history.push({
+                                                       hash: "#start"
+                                                   })
                                                }}
                                                style={{
                                                    color: includedStatuses.includes(status.id) && "#fff",
@@ -330,8 +331,12 @@ const MainPage = (props) => {
                                     { types?.length > 0 ?
                                         types.map((type) => (
                                             <a key={type.id} className={"f-side-panel-button"}
+                                               href={"#start"}
                                                onClick={() => {
                                                    selectType(type.id)
+                                                   global._history.push({
+                                                       hash: "#start"
+                                                   })
                                                }}
                                                style={{color: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED"),
                                                    borderColor: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED") }}
@@ -346,6 +351,7 @@ const MainPage = (props) => {
                                 </div>
                             </div>
                         </section>
+                        </div>
                     </div>
                 </div>
             </Col>

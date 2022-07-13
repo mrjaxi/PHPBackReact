@@ -101,6 +101,9 @@ axios.defaults.headers.common = {
 
 global.user = {};
 global.layout = false;
+global.categories = [];
+global.types = [];
+global.statuses = [];
 
 class App extends React.Component {
     constructor(props) {
@@ -140,6 +143,12 @@ class App extends React.Component {
                 }
                 this.setState({wait: false})
             });
+
+        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
+            global.categories = response.data?.categories;
+            global.types = response.data?.types;
+            global.statuses = response.data?.statuses;
+        });
         global.getProfile();
     }
 

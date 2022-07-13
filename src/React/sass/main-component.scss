@@ -275,6 +275,7 @@ button:focus {
 
     &-header-wrap-logo-element {
         position: sticky;
+        position: -webkit-sticky; /* Safari */
         top: 25px;
         padding: 6px;
     }
@@ -395,6 +396,7 @@ button:focus {
     &-nav {
         display: flex;
         position: sticky;
+        position: -webkit-sticky; /* Safari */
         top: 25px;
         z-index: 3;
 
@@ -404,7 +406,7 @@ button:focus {
             border-radius: 64px;
             white-space: nowrap;
             background: rgba(255, 255, 255, 0.48);
-            box-shadow: 0 0 16px 0 rgb(0 0 0 / 7%);
+            box-shadow: 0 0 16px 0 rgb(0 0 0 / 5%);
             -webkit-backdrop-filter: blur(56px);
             backdrop-filter: blur(56px);
             color: #1D1D1F;
@@ -412,10 +414,6 @@ button:focus {
             font-weight: 400;
             font-style: normal;
             gap: 32px;
-
-            &-active {
-                background-color: white;
-            }
 
             &:last-child {
                 margin-right: 0;
@@ -571,6 +569,7 @@ button:focus {
         &-row-wrap {
             display: flex;
             flex-direction: row;
+            width: 100%;
         }
 
         &-avatar {
@@ -634,7 +633,7 @@ button:focus {
         &-wrap-text {
             display: flex;
             flex-direction: column;
-            margin-left: 10px;
+            padding-left: 10px;
             width: 90%;
 
             &-style {
@@ -691,7 +690,7 @@ button:focus {
     &-row-type {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: center;
         margin-top: 100px;
     }
 
@@ -703,10 +702,12 @@ button:focus {
     &-side {
         &-block {
             position: sticky;
+            position: -webkit-sticky; /* Safari */
             top: 100px;
         }
 
         &-panel-wrap {
+            float: right;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -798,7 +799,6 @@ button:focus {
     &-login {
         box-sizing: border-box;
         margin: 0;
-        min-height: 100vh;
         width: 100%;
         background-color: white;
         display: flex;
@@ -814,6 +814,6 @@ button:focus {
 // Стили для firefox
 @supports (-moz-appearance:none) {
     .f-nav-button {
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.85);
     }
 }

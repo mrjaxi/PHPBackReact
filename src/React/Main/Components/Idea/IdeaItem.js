@@ -297,7 +297,8 @@ const IdeaItem = ({
                                 <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
                                      style={{
                                          backgroundColor: !includedCategory.includes(idea?.categoryId) ? '#FFFFFF48' : '#FFFFFF',
-                                         color: '#1D1D1F'
+                                         boxShadow: "0 0 16px 0 rgb(0 0 0 / 7%)",
+                                         color: '#1D1D1F',
                                      }}
                                      onClick={() => {
                                          selectCategory(idea.categoryId)
@@ -397,7 +398,7 @@ const IdeaItem = ({
                                          setShowEditButton(false)
                                      }
                                  }}>
-                                <Link to={global.lang + `/profile/${idea.user.id}`}>
+                                <Link to={`${global.lang}/profile/${idea.user.id}`}>
                                     <div className={"f-cards-row-wrap"}>
                                         <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
                                                 src={idea.userImage

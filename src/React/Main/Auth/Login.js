@@ -77,18 +77,16 @@ const Login = ({visible, setVisible}) => {
                 onOk={() => setVisible(false)}
                 onCancel={() => setVisible(false)}
                 destroyOnClose={true}
-                width={"100vw"}
-                style={{
-                    padding: "20px 100px 70px",
-                }}
+                width={"90vw"}
+                height={"90vh"}
                 footer={null}
                 bodyStyle={{
                     width: '100%',
+                    height: "100%",
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     padding: "24px 24px 0",
-                    minHeight: "90vh",
                 }}
             >
                 {

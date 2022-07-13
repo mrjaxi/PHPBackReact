@@ -95,11 +95,12 @@ const Search = ({ visible, setVisible, includedTypes,
             visible={visible}
             onOk={() => setVisible(false)}
             onCancel={() => setVisible(false)}
-            width={"100vw"}
+            width={"90vw"}
             style={{
                 top: 30,
                 verticalAlign: "top",
-                padding: "0 100px 70px",
+                minHeight: "90vh",
+                paddingBottom: 30,
             }}
             footer={null}
             bodyStyle={{
@@ -108,7 +109,7 @@ const Search = ({ visible, setVisible, includedTypes,
                 justifyContent: 'center',
                 alignItems: 'center',
                 padding: "24px 24px 0",
-                minHeight: "80vh",
+                minHeight: "85vh",
             }}
             wrapClassName={"ant-modal-wrap-search"}
         >
@@ -131,7 +132,7 @@ const Search = ({ visible, setVisible, includedTypes,
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            fontSize: 21,
+                            fontSize: 32,
                             fontWeight: 500
                         }}
                         >Введите чтобы найти</div>
@@ -145,7 +146,7 @@ const Search = ({ visible, setVisible, includedTypes,
                                                 <p style={{ marginRight: 30, marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.category}</p>
                                                 <p style={{ marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.type}</p>
                                             </div>
-                                            <div className={"f-cards-card-wrap"}>
+                                            <NavLink className={"f-cards-card-wrap"} to={global.lang + "/idea/" + item.idea_id}>
                                                 <div className={"f-cards-inner"}>
                                                     <div className={"f-cards-avatar"}>
                                                         <div className={"f-cards-row-wrap"}>
@@ -177,23 +178,23 @@ const Search = ({ visible, setVisible, includedTypes,
                                                         </div>
                                                     </div>
                                                     <div className={"f-cards-div-wrap-text"}>
-                                                        <NavLink to={global.lang + "/idea/" + item.idea_id}>
-                                                        <span className={"f-cards-content-text"}>
-                                                            <Highlighter
-                                                                searchWords={searchText.split(" ").filter(item => item.length > 1)}
-                                                                autoEscape={true}
-                                                                highlightStyle={{
-                                                                    padding: 0,
-                                                                    backgroundColor: "#FFFF66",
-                                                                    color: "black"
-                                                                }}
-                                                                textToHighlight={item.title}
-                                                            />
-                                                        </span>
-                                                        </NavLink>
+                                                        {/*<NavLink to={global.lang + "/idea/" + item.idea_id}>*/}
+                                                            <span className={"f-cards-content-text"}>
+                                                                <Highlighter
+                                                                    searchWords={searchText.split(" ").filter(item => item.length > 1)}
+                                                                    autoEscape={true}
+                                                                    highlightStyle={{
+                                                                        padding: 0,
+                                                                        backgroundColor: "#FFFF66",
+                                                                        color: "black"
+                                                                    }}
+                                                                    textToHighlight={item.title}
+                                                                />
+                                                            </span>
+                                                        {/*</NavLink>*/}
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </NavLink>
                                         </div>
                                     </div>
                                 ))

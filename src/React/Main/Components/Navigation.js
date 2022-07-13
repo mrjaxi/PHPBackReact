@@ -11,9 +11,18 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
             }}>
                 { categories?.length > 0 ?
                     categories.map((category) => (
-                        <a className={"f-nav-button " + ((includedCategory.includes(category.id)) && "f-nav-button-active")}
+                        <a className={"f-nav-button"}
+                           style={(includedCategory.includes(category.id)) ? {
+                               backgroundColor: "white",
+                           } : {}}
                            key={category.id}
-                           onClick={() => selectCategory(category.id) }
+                           href={"#start"}
+                           onClick={() => {
+                               selectCategory(category.id)
+                               global._history.push({
+                                   hash: "#start"
+                               })
+                           }}
                         >
                             {category.name}
                         </a>
