@@ -10,6 +10,7 @@ import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import {NavLink} from "react-router-dom";
+import Login from "../Auth/Login";
 
 const {Option} = Select;
 
@@ -21,6 +22,7 @@ const Profile = () => {
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [selectedHeaderItem, setSelectedHeaderItem] = useState(0);
     const [roles, setRoles] = useState([])
+    const [visibleLogin, setVisibleLogin] = useState(false);
     const [user, setUser] = useState({
         id: params.id,
         username: "",
@@ -125,6 +127,7 @@ const Profile = () => {
 
     return (
         <>
+            <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
             <Col className={"f-main"} style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
                 {(notifications === false || notifications === true) && <Header/>}
                 {
