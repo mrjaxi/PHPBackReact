@@ -19,7 +19,7 @@ global.parseToIdeaItems = (ideas, data = [], showComments = false, allowComments
             idea_id: idea.id,
             title: idea.title,
             text: idea.content,
-            showComments: showComments,
+            showComments: idea?.officialComment ? false : showComments,
             showFullText: false,
             roles: idea.user.roles,
             role: idea.user.role_name,
@@ -47,14 +47,15 @@ global.parseToIdeaItems = (ideas, data = [], showComments = false, allowComments
 }
 
 const IdeaItem = ({
-                      item, index, setItem, statuses, categories = [],
+                      item, index, setItem, statuses = global.statuses, categories = global.categories,
                       selectType = () => false, selectCategory = () => false,
-                      includedTypes = [], types = [], includedCategory = [],
+                      includedTypes = [], types = global.types, includedCategory = [],
                       showContent = true, showCommentsCount = true, showLikes = true
                   }) => {
 
     const [form] = Form.useForm();
     const [idea, setIdea] = useState(item);
+    const [ideaStatus, setIdeaStatus] = useState(item.status);
     const [date, setDate] = useState("");
     const [visible, setVisible] = useState(false);
     const [editable, setEditable] = useState(false);
@@ -183,6 +184,7 @@ const IdeaItem = ({
                             newIdea.allowComments = true;
                         }
                         setIdea(newIdea)
+                        setIdeaStatus(response.data.idea[0].status)
                     },
                     function () {
                         global.openNotification("Ошибка", response.data?.message, "error")
@@ -431,7 +433,8 @@ const IdeaItem = ({
                                                 changeStatus(idea.idea_id, id, data)
                                             }}
                                             style={{height: '100%'}}
-                                            defaultValue={idea.status.id}
+                                            value={ideaStatus.id}
+                                            // defaultValue={ideStatus?.id}
                                             dropdownMatchSelectWidth={false}
                                         >
                                             {
@@ -666,7 +669,7 @@ const IdeaItem = ({
                         {
                             idea.showComments &&
                             <Comments onDeleteComment={onDeleteComment} allowComments={idea.allowComments} idea={idea}
-                                      index={index}
+                                      index={index} setStatus={setIdeaStatus}
                                       comments={idea.comments} setIdea={setIdea} setComments={setIdeaComments}/>
 
                         }

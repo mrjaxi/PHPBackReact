@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 const {Title} = Typography;
 const {TextArea} = Input;
 
-const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) => {
+const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, setStatus=()=>{} }) => {
 
     const [form] = Form.useForm();
     const [showComments, setShowComments] = useState(true);
@@ -45,7 +45,9 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag}) =
                             newIdea.allowComments = false
                             newIdea.comments = data
                             newIdea.showComments = false
+                            newIdea.status = response.data?.status
                             setIdea(newIdea)
+                            setStatus(response.data?.status)
                         },
                         function () {
                             global.openNotification("Ошибка", response.data?.message, "error")

@@ -205,7 +205,6 @@ const MainPage = (props) => {
                     setIncludedCategories={setIncludedCategories}
                     includedCategory={includedCategories}
                     includedTypes={includedTypes}
-                    search={true}
                 />
                 <div key={3} style={{ minHeight: "100vh"}}>
                     <section className={"max_width"} style={{marginTop: 150, marginBottom: 130}}>

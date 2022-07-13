@@ -62,7 +62,7 @@ const Settings = () => {
     return (
         <Col style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
             { user?.id === global.user?.id && <Header/>}
-            <div className={"f-login"} style={{ display: 'flex', flexDirection: 'column', paddingBottom: 50 }}>
+            <div className={"f-login"} style={{ display: 'flex', flexDirection: 'column' }}>
                 <div style={{ marginTop: 100 }}>
                     <Form
                         onFinish={(value) => onSend(value)}

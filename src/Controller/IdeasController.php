@@ -546,13 +546,13 @@ class IdeasController extends AbstractController
             if(empty($lastComment)){
                 $urlIdea = $baseURL . "/idea/" . $idea->getId();
                 $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-//                $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+                $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
             } else {
                 $lastCommentDate = (clone $lastComment->getDate())->add(new DateInterval("P1D"));
                 if($lastCommentDate < new DateTime()){
                     $urlIdea = $baseURL . "/idea/" . $idea->getId();
                     $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-//                    $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+                    $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
                 }
             }
         }
@@ -592,17 +592,20 @@ class IdeasController extends AbstractController
         }
         $this->commentsRepository->save($newComment);
 
+        $newStatus = $this->statusRepository->findOneBy(["name" => "completed"]);
+
         $idea->setAllowComments(false)
-            ->setOfficialComment($newComment);
+            ->setOfficialComment($newComment)
+            ->setStatus($newStatus);
         $this->ideasRepository->save($idea);
 
         if($user->getId() !== $idea->get_User()->getId()){
             $urlIdea = $baseURL . "/idea/" . $idea->getId();
             $message = "К вашей записи оставили Официальный ответ: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
-//            $this->sendToMail($mailer, $message, "Официальный ответ", $idea->get_User()->getEmail());
+            $this->sendToMail($mailer, $message, "Официальный ответ", $idea->get_User()->getEmail());
         }
 
-        return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
+        return $this->json(['state' => 'success', 'comment' => $newComment->get_Info(), "status" => $newStatus]);
     }
 
     /**
@@ -801,11 +804,12 @@ class IdeasController extends AbstractController
     /**
      * @Route("/api/admin/ideas/setStatus/")
      * @param Request $request
+     * @param MailerInterface $mailer
      * @return Response
-     * @throws Exception
      */
-    public function setStatus(Request $request): Response
+    public function setStatus(Request $request, MailerInterface $mailer): Response
     {
+        $baseURL = $request->getScheme() . '://' . $request->getHttpHost();
         /** @var User $user */
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
@@ -850,12 +854,17 @@ class IdeasController extends AbstractController
                         "title" => "Feedback. " . $idea->getTitle(),
                         "description" => $idea->getContent()
                     ));
-//                        dd($response);
+//                    dd($response);
                 }
             }
             $idea->setStatus($newStatus);
             $this->ideasRepository->save($idea);
-            return $this->json(['state' => 'success']);
+
+            $urlIdea = $baseURL . "/idea/" . $idea->getId();
+            $message = "Статус вашей записи изменён на '{$newStatus->getTranslate()}', проверьте его на сайте по ссылке:\n\n {$urlIdea}";
+            $this->sendToMail($mailer, $message, "Статус вашей записи изменён", $idea->get_User()->getEmail());
+
+            return $this->json(['state' => 'success', "idea" => $this->decorateIdeas([$idea])]);
         } else {
             return $this->json(['state' => 'error', 'message' => "Вы не можете изменить статус этой идеи"]);
         }
