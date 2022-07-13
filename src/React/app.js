@@ -222,16 +222,25 @@ class App extends React.Component {
     }
 
     render() {
-        return (
-            <Router history={global._history}>
-                <Layout>
-                    {this.state.layout === 'user' && this._layoutUser()}
-                    {this.state.layout === 'admin' && this._layoutAdmin()}
-                    {this.state.layout === 'guest' && this._layoutGuest()}
-                </Layout>
-            </Router>
-        );
-
+        if (this.state.wait){
+            return (
+                <div id="root">
+                    <div className="loader-wrapper">
+                        <div className="loader"></div>
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <Router history={global._history}>
+                    <Layout>
+                        {this.state.layout === 'user' && this._layoutUser()}
+                        {this.state.layout === 'admin' && this._layoutAdmin()}
+                        {this.state.layout === 'guest' && this._layoutGuest()}
+                    </Layout>
+                </Router>
+            );
+        }
     }
 }
 
