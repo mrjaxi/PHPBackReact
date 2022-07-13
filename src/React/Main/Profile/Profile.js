@@ -9,6 +9,7 @@ import {UserOutlined} from "@ant-design/icons";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
+import {NavLink} from "react-router-dom";
 
 const {Option} = Select;
 
@@ -126,6 +127,15 @@ const Profile = () => {
         <>
             <Col className={"f-main"} style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
                 {(notifications === false || notifications === true) && <Header/>}
+                {
+                    global.layout !== "guest" ?
+                        <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
+                            <p className={"f-new-idea-text"}></p>
+                        </NavLink> :
+                        <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}>
+                            <p className={"f-new-idea-text"}></p>
+                        </a>
+                }
                 <div style={{display: "flex", flexDirection: "column"}}>
                     <div className={"max_width"}>
                         <div style={{

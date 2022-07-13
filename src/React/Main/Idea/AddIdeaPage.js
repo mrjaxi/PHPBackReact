@@ -322,8 +322,10 @@ const AddIdeaPage = () => {
                                     border: "none",
                                     fontSize: 20,
                                     height: 60,
+                                }} onClick={() => {
+                                    global._history.goBack()
                                 }}
-                                shape="round"><Link to={global.lang + "/#start"}>Закрыть</Link></Button>
+                                shape="round">Закрыть</Button>
                         </div>
                     </Form.Item>
                 </Form>
