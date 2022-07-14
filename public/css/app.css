@@ -626,7 +626,7 @@ button:focus {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .f-side-panel-count {
   color: #AAB2BD;
@@ -646,7 +646,8 @@ button:focus {
   justify-content: center;
   padding: 5px 20px;
   font-size: 17px;
-  line-height: 35px;
+  line-height: 30px;
+  margin-bottom: 10px;
 }
 .f-side-panel-button-section:hover {
   color: #1D1D1F;
