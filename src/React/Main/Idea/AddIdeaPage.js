@@ -112,23 +112,16 @@ const AddIdeaPage = () => {
     };
 
     const getCategory = () => {
-        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            let categoryData = [];
-            let typesData = [];
-            if (response.data?.categories) {
-                response.data.categories.map(cat => {
-                    categoryData.push({id: cat.id, value: cat.name})
-                })
-            }
-
-            if (response.data?.types) {
-                response.data.types.map(type => {
-                    typesData.push({id: type.id, value: type.name})
-                })
-            }
-            setCategory(categoryData);
-            setTypes(typesData);
+        let categoryData = [];
+        let typesData = [];
+        global.categories.map(cat => {
+            categoryData.push({id: cat.id, value: cat.name})
         })
+        global.types.map(type => {
+            typesData.push({id: type.id, value: type.name})
+        })
+        setCategory(categoryData);
+        setTypes(typesData);
     };
 
     useLayoutEffect(() => {

@@ -17,8 +17,6 @@ const Settings = () => {
 
     const onSend = (value) => {
         setSendLoading(true);
-
-        console.log(value)
         if (file){
             value.image = file
         }
@@ -29,6 +27,7 @@ const Settings = () => {
                     if (file) {
                         global.user = response.data?.profile;
                         setUser(response.data?.profile);
+                        console.log("global.user", global.user)
                     }
                     global.openNotification("Успешно", "Данные сохранены", "success")
                 },
@@ -49,7 +48,7 @@ const Settings = () => {
             const isPNG = (file.type === 'image/png' | file.type === "image/jpeg");
 
             if (!isPNG) {
-                message.error(`${file.name} is not a png or jpg file`);
+                message.error(`${file?.name} is not a png or jpg file`);
             }
 
             return isPNG || Upload.LIST_IGNORE;
@@ -67,7 +66,7 @@ const Settings = () => {
                     <Form
                         onFinish={(value) => onSend(value)}
                         name={"settings"}
-                        initialValues={global.user}
+                        initialValues={user}
                     >
                         <Form.Item
                             name={"image"}
@@ -76,12 +75,12 @@ const Settings = () => {
                             <div className={"t-settings"}>
                                 {
                                     loadImage ? <Spin indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />} /> :
-                                    global.user?.image || file ?
+                                        user?.image || file ?
                                         <Image
                                             width={260}
                                             height={260}
                                             style={{ borderRadius: 200, objectFit: 'cover',}}
-                                            src={file ? file : global.user?.image}
+                                            src={file ? file : user?.image}
                                             placeholder={
                                                 <div style={{ height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center'  }}>
                                                     <Spin indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />} />
@@ -127,7 +126,7 @@ const Settings = () => {
                                     alignItems: 'center',
                                     cursor: 'not-allowed',
                                 }}>
-                                    <Input size={"large"} disabled={true} style={{ width: 550, padding: 12 }} placeholder={global.user.email} />
+                                    <Input size={"large"} disabled={true} style={{ width: 550, padding: 12 }} placeholder={user.email} />
                                 </div>
                             </Tooltip>
                         </Form.Item>

@@ -78,6 +78,9 @@ const Profile = () => {
     }
 
     function getUser() {
+        if(global.user?.id == params.id){
+            setUser(global.user);
+        }
         axios.get(ApiRoutes.API_GET_USER_DATA.format(params.id)).then(response => {
             global.handleResponse(response,
                 function () {
@@ -147,6 +150,7 @@ const Profile = () => {
                             justifyContent: "center",
                             alignItems: "center",
                             width: '50vw',
+                            minWidth: 600,
                             paddingTop: 135,
                         }}>
                             {loadingProfile && roles !== [] ?
@@ -255,7 +259,8 @@ const Profile = () => {
                             justifyContent: 'center',
                             flexDirection: "column",
                             alignItems: "center",
-                            width: '50vw'
+                            width: '50vw',
+                            minWidth: 600,
                         }}>
                             {
                                 !user || loadingProfile || !roles[0] ? <LoadingIdeas type={true}/>

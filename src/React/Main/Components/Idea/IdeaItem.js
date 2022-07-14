@@ -19,7 +19,7 @@ global.parseToIdeaItems = (ideas, data = [], showComments = false, allowComments
             idea_id: idea.id,
             title: idea.title,
             text: idea.content,
-            showComments: idea?.officialComment ? false : showComments,
+            showComments: showComments ? showComments : idea?.officialComment ? false : showComments,
             showFullText: false,
             roles: idea.user.roles,
             role: idea.user.role_name,
@@ -46,17 +46,15 @@ global.parseToIdeaItems = (ideas, data = [], showComments = false, allowComments
     return newData;
 }
 
-const IdeaItem = ({
-                      item, index, setItem, statuses = global.statuses, categories = global.categories,
+const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories = global.categories, types = global.types,
+                      showContent = true, showCommentsCount = true, showLikes = true,
+                      includedTypes = [], includedCategory = [],
                       selectType = () => false, selectCategory = () => false,
-                      includedTypes = [], types = global.types, includedCategory = [],
-                      showContent = true, showCommentsCount = true, showLikes = true
                   }) => {
 
     const [form] = Form.useForm();
     const [idea, setIdea] = useState(item);
     const [ideaStatus, setIdeaStatus] = useState(item.status);
-    const [date, setDate] = useState("");
     const [visible, setVisible] = useState(false);
     const [editable, setEditable] = useState(false);
 
@@ -67,7 +65,6 @@ const IdeaItem = ({
 
     useLayoutEffect(() => {
         let newIdea = {...item};
-        setDate(global.getDateString(new Date(item?.date), false, false));
         newIdea.comments.map(comment => {
             comment.dateString = global.getDateString(new Date(comment?.date))
         })
@@ -420,7 +417,7 @@ const IdeaItem = ({
                                             </div>
                                             <span className={"f-cards-text-bottom"}>{idea.role}
                                                 <span> · </span>
-                                                {date}
+                                                {idea?.dateString}
                                         </span>
                                         </div>
                                     </div>
@@ -433,8 +430,8 @@ const IdeaItem = ({
                                                 changeStatus(idea.idea_id, id, data)
                                             }}
                                             style={{height: '100%'}}
-                                            value={ideaStatus.id}
-                                            // defaultValue={ideStatus?.id}
+                                            value={ideaStatus.translate}
+                                            defaultValue={ideaStatus.translate}
                                             dropdownMatchSelectWidth={false}
                                         >
                                             {
@@ -478,7 +475,7 @@ const IdeaItem = ({
                                                         setShowEditButton(true)
                                                     }
                                                 }}>
-                                                { (showEditButton && !showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) ?
+                                                { (showContent && showEditButton && !showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) ?
                                                         <>
                                                             <span className={"f-cards-content-text"}
                                                                   onClick={() => {

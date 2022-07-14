@@ -16,7 +16,6 @@ const UserIdeas = ({ user, setCount, setNotifications }) => {
     const [loading, setLoading] = useState(true);
 
     useLayoutEffect(() => {
-        updateStatuses();
         getUserIdeas()
     }, []);
 
@@ -79,15 +78,6 @@ const UserIdeas = ({ user, setCount, setNotifications }) => {
         setIdeas(newIdeas)
     }
 
-    const updateStatuses = () => {
-        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            setStatuses(response.data?.statuses);
-            setCategories(response.data?.categories);
-            setTypes(response.data?.types)
-
-        })
-    };
-
     return (
         <>
             {loading ? <LoadingIdeas type={true}/> :
@@ -95,8 +85,7 @@ const UserIdeas = ({ user, setCount, setNotifications }) => {
                     list={ideas}
                     renderItem={(idea, index) => {
                         return (
-                            <IdeaItem item={idea} categories={categories} types={types} index={index} setItem={setIdea}
-                                      statuses={statuses}/>
+                            <IdeaItem item={idea} index={index} setItem={setIdea}/>
                         )
                     }}
                     renderWhenEmpty={() =>

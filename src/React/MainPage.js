@@ -53,9 +53,7 @@ global.handleResponse = function( response, success=()=>{}, error=()=>{}, troubl
 const MainPage = (props) => {
     const urlParams = new URLSearchParams(props.location.search);
 
-    const [types, setTypes] = useState(global.types);
     const [statuses, setStatuses] = useState(global.statuses);
-    const [categories, setCategories] = useState(global.categories);
 
     const [includedTypes, setIncludedTypes] = useState(urlParams.get("types") ? Object.values(JSON.parse(urlParams.get("types"))) : []);
     const [includedStatuses, setIncludedStatuses] = useState(urlParams.get("status") ? Object.values(JSON.parse(urlParams.get("status"))) : []);
@@ -67,11 +65,6 @@ const MainPage = (props) => {
 
     const [loading, setLoading] = useState(true);
     const [loadingInfinite, setLoadingInfinite] = useState(true);
-    const [loadingCategory, setLoadingCategory] = useState(true);
-
-    useLayoutEffect(() => {
-        getCategory();
-    },[]);
 
     useEffect(() => {
         updateStatuses()
@@ -174,15 +167,6 @@ const MainPage = (props) => {
             })
     };
 
-    const getCategory = () => {
-        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            setTypes(response.data?.types);
-            setStatuses(response.data?.statuses);
-            setCategories(response.data?.categories);
-            setLoadingCategory(false);
-        });
-    };
-
     const updateStatuses = () => {
         axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
             setStatuses(response.data.statuses);
@@ -223,7 +207,6 @@ const MainPage = (props) => {
                     </section>
                     <div id={"start"}/>
                     <Navigation
-                        categories={categories}
                         selectCategory={selectCategory}
                         includedCategory={includedCategories}
                     />
@@ -247,7 +230,7 @@ const MainPage = (props) => {
                             marginBottom: 100,
                         }}>
                         <div style={{ width: "100%", maxWidth: 1000, }}>
-                            { loadingCategory || loading ? <LoadingIdeas type={true}/>
+                            { loading ? <LoadingIdeas type={true}/>
                                 : ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
                                     : <InfiniteScroll
                                         style={{
@@ -276,9 +259,6 @@ const MainPage = (props) => {
                                                     item={idea}
                                                     index={index}
                                                     setItem={setIdea}
-                                                    types={types}
-                                                    categories={categories}
-                                                    statuses={statuses}
                                                     includedCategory={includedCategories}
                                                     selectType={selectType}
                                                     selectCategory={selectCategory}
@@ -327,8 +307,8 @@ const MainPage = (props) => {
                                     }
                                 </div>
                                 <div className={"f-side-panel-wrap"}>
-                                    { types?.length > 0 ?
-                                        types.map((type) => (
+                                    { global.types?.length > 0 ?
+                                        global.types.map((type) => (
                                             <a key={type.id} className={"f-side-panel-button"}
                                                href={"#start"}
                                                onClick={() => {

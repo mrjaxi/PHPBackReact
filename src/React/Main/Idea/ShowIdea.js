@@ -10,16 +10,10 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Col } from "antd";
 
 const ShowIdea = (props) => {
-    const urlPrams = new URLSearchParams(props.location.search);
-
     const [ideas, setIdeas] = useState([]);
     const [ideasInfinite, setIdeasInfinite] = useState([]);
 
     const [loading, setLoading] = useState(true);
-
-    const [statuses, setStatuses] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [types, setTypes] = useState([]);
 
     const [page, setPage] = useState(0);
     const [loadingInfinity, setLoadingInfinity] = useState(true);
@@ -29,7 +23,6 @@ const ShowIdea = (props) => {
     const params = useParams();
 
     useLayoutEffect(() => {
-        updateStatuses();
         getIdea();
         setIdeasInfinite([])
         setStopInfinity(false)
@@ -62,7 +55,10 @@ const ShowIdea = (props) => {
 
     const getIdeas = () => {
         if(ideas[0] && page > 0 && !stopInfinity) {
-            let data = [...ideasInfinite];
+            let data = []
+            if(page > 1){
+                data = [...ideasInfinite];
+            }
             let idea_ids = [ideas[0].idea_id];
             setLoadingInfinity(true);
             axios.get(ApiRoutes.API_GET_IDEAS + `?page=${page}&categories=[${ideas[0].categoryId}]&types=[${ideas[0].typeId}]`)
@@ -97,23 +93,23 @@ const ShowIdea = (props) => {
         let newIdeas = [...ideas];
         newIdeas[index] = idea;
         setIdeas(newIdeas)
+        // if(ideasInfinite.length > 0 && (ideasInfinite[0]?.typeId !== idea?.typeId || ideasInfinite[0]?.categoryId !== idea?.categoryId)){
+        //     setStopInfinity(false)
+        //     setPage(1);
+        //     getIdeas();
+        // } else if(ideasInfinite.length === 0){
+        //     setStopInfinity(false)
+        //     setPage(1);
+        //     getIdeas();
+        // }
     };
-
-    const updateStatuses = () => {
-        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            setStatuses(response.data?.statuses);
-            setCategories(response.data?.categories);
-            setTypes(response.data?.types)
-        })
-    };
-
 
     return (
         <>
             <Col className={"f-main"} style={{ minHeight: '100vh' }}>
                 <div>
                     <Header />
-                    <div className={"max_width"} style={{paddingTop: "15vh"}}>
+                    <div className={"max_width"} style={{paddingTop: 100}}>
                         <div style={{
                             display: "flex",
                             flexDirection: "column",
@@ -127,14 +123,14 @@ const ShowIdea = (props) => {
                                     flexDirection: "column",
                                     alignItems: "flex-start",
                                     width: '50vw',
+                                    minWidth: 550,
                                     minHeight: '60vh',
                                     maxWidth: 1000
                                 }}>
                                     { loading ? <LoadingIdeas/> : (
                                         <>
-                                            {
-                                                ideas[0] ? <IdeaItem item={ideas[0]} index={ideas[0].idea_id} setItem={setIdea}
-                                                                 statuses={statuses} categories={categories} types={types}/> : <EmptyIdeas text={"Такой записи не существует..."}/>
+                                            { ideas[0] ? <IdeaItem item={ideas[0]} index={ideas[0].idea_id} setItem={setIdea}/>
+                                                : <EmptyIdeas text={"Такой записи не существует..."}/>
                                             }
                                             { ideasInfinite.length > 0 ?
                                                 <>
@@ -154,8 +150,7 @@ const ShowIdea = (props) => {
                                                         loader={(loadingInfinity) ? <div style={{display: "flex", justifyContent: "center"}}><LoadingIdeas type={true}/></div> : <></>}
                                                     >{
                                                         ideasInfinite.map((idea, index) => (
-                                                            <IdeaItem item={idea} index={idea.idea_id} setItem={setIdea}
-                                                                      statuses={statuses}/>
+                                                            <IdeaItem item={idea} index={idea.idea_id} setItem={setIdea}/>
                                                         ))
                                                     }</InfiniteScroll>
                                                 </>

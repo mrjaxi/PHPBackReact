@@ -12,15 +12,10 @@ import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
 const UserComments = ({ user, setCount }) => {
 
-    const [statuses, setStatuses] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [types, setTypes] = useState([]);
-
     const [ideas, setIdeas] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useLayoutEffect(() => {
-        updateStatuses();
         getUserComments()
     }, []);
 
@@ -74,14 +69,6 @@ const UserComments = ({ user, setCount }) => {
         setIdeas(newIdeas)
     }
 
-    const updateStatuses = () => {
-        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            setStatuses(response.data?.statuses);
-            setCategories(response.data?.categories);
-            setTypes(response.data?.types)
-        })
-    };
-
     return (
         <>
             {loading ? <LoadingIdeas type={true}/> :
@@ -89,8 +76,8 @@ const UserComments = ({ user, setCount }) => {
                     list={ideas}
                     renderItem={(idea, index) => {
                         return (
-                            <IdeaItem item={idea} index={index} setItem={setIdea} statuses={statuses}
-                                      showContent={false} categories={categories} types={types} showCommentsCount={false} showLikes={false}/>
+                            <IdeaItem item={idea} index={index} setItem={setIdea}
+                                      showContent={false} showCommentsCount={false} showLikes={false}/>
                         )
                     }}
                     renderWhenEmpty={() =>

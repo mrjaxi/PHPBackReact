@@ -8,25 +8,15 @@ import { CloseOutlined, UserOutlined } from "@ant-design/icons";
 const cancelTokenSource = axios.CancelToken;
 let cancel;
 
-const Search = ({ visible, setVisible, includedTypes,
-                    includedCategory, setIncludedTypes,
-                    setIncludedCategories}) => {
+const Search = ({ visible, setVisible }) => {
 
     const [searchItems, setSearchItems] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [statuses, setStatus] = useState([]);
     const [searchText, setSearchText] = useState("");
-
-    useLayoutEffect(() => {
-        getCategory()
-    }, []);
 
     const searchIdeas = (text) => {
         if (cancel !== undefined) {
             cancel();
         }
-        setLoading(true);
-
         let prevSearchItems = [];
 
         axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) })
@@ -48,6 +38,7 @@ const Search = ({ visible, setVisible, includedTypes,
                             username: idea.user?.first_name,
                             typeId: idea.type.id,
                             type: idea.type.name,
+                            typeColor: idea.type.color,
                             currentUserIsVote: idea.currentUserIsVote,
                             date: global.getDateString(new Date(idea?.date), false,false)
                         })
@@ -61,21 +52,14 @@ const Search = ({ visible, setVisible, includedTypes,
             })
     };
 
-    const getCategory = () => {
-        setLoading(true);
-        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            setStatus(response.data.statuses);
-        });
-        setLoading(false);
-    };
-
     return (
         <Modal
             title={
                 <>
                     <form>
                         <input autoFocus={true} value={searchText} style={{width: "97%",}} onChange={event => {
-                            searchIdeas(event.target.value), setSearchText(event.target.value)
+                            searchIdeas(event.target.value)
+                            setSearchText(event.target.value)
                         }} className={"f-input-search"} placeholder={"Поиск..."}/>
                         {searchText &&
                         <a style={{color: '#AAB2BD', marginLeft: 5}} onClick={() => {
@@ -143,10 +127,17 @@ const Search = ({ visible, setVisible, includedTypes,
                                     <div className={"f-cards"}>
                                         <div>
                                             <div className={"f-text-tags-wrap"}>
-                                                <p style={{ marginRight: 30, marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.category}</p>
-                                                <p style={{ marginLeft: 0 }} className={"f-cards-hashtag"}>#{item?.type}</p>
+                                                <p className={"f-cards-hashtag"} style={{
+                                                    marginRight: 0,
+                                                    color: "rgb(29, 29, 31)",
+                                                    backgroundColor: "rgba(255, 255, 255, 0.282)",
+                                                    boxShadow: "rgb(0 0 0 / 7%) 0px 0px 16px 0px"
+                                                }}>#{item?.category}</p>
+                                                <p style={{ marginLeft: 0, color: item?.typeColor }} className={"f-cards-hashtag"}>#{item?.type}</p>
                                             </div>
-                                            <NavLink className={"f-cards-card-wrap"} to={global.lang + "/idea/" + item.idea_id}>
+                                            <NavLink className={"f-cards-card-wrap"} to={global.lang + "/idea/" + item.idea_id} onClick={() => {
+                                                setVisible(false)
+                                            }}>
                                                 <div className={"f-cards-inner"}>
                                                     <div className={"f-cards-avatar"}>
                                                         <div className={"f-cards-row-wrap"}>

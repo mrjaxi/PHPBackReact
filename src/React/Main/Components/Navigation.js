@@ -1,7 +1,7 @@
 import React from "react";
 import {Skeleton} from "antd";
 
-const Navigation = ({categories, selectCategory, includedCategory}) => {
+const Navigation = ({ selectCategory, includedCategory }) => {
 
     return (
         <>
@@ -9,8 +9,8 @@ const Navigation = ({categories, selectCategory, includedCategory}) => {
                 display: "inline-flex",
                 marginLeft: 80,
             }}>
-                { categories?.length > 0 ?
-                    categories.map((category) => (
+                { global.categories?.length > 0 ?
+                    global.categories.map((category) => (
                         <a className={"f-nav-button"}
                            style={(includedCategory.includes(category.id)) ? {
                                backgroundColor: "white",

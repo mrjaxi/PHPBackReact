@@ -8,15 +8,10 @@ import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
 const UserFavourite = ({ user, setCount }) => {
 
-    const [statuses, setStatuses] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [types, setTypes] = useState([]);
-
     const [loading, setLoading] = useState(true);
     const [ideas, setIdeas] = useState([]);
 
     useLayoutEffect(() => {
-        updateStatuses();
         getUserFavourites()
     }, []);
 
@@ -73,14 +68,6 @@ const UserFavourite = ({ user, setCount }) => {
         setIdeas(newIdeas)
     };
 
-    const updateStatuses = () => {
-        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            setStatuses(response.data?.statuses);
-            setCategories(response.data?.categories);
-            setTypes(response.data?.types)
-        })
-    };
-
     return (
         <>
             {loading ? <LoadingIdeas type={true}/> :
@@ -88,8 +75,7 @@ const UserFavourite = ({ user, setCount }) => {
                     list={ideas}
                     renderItem={(idea, index) => {
                         return (
-                            <IdeaItem item={idea}  categories={categories} types={types} index={index} setItem={setIdea}
-                                      statuses={statuses}/>
+                            <IdeaItem item={idea} index={index} setItem={setIdea}/>
                         )
                     }}
                     renderWhenEmpty={() =>

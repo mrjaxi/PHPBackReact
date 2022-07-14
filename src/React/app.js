@@ -119,10 +119,15 @@ class App extends React.Component {
     componentDidMount() {
         this.setState({wait: true});
         global.getProfile = () => axios.post(ApiRoutes.API_LOGIN)
-            .then(response => {
-                switch (response.data?.state) {
+            .then(responseProfile => {
+                switch (responseProfile.data?.state) {
                     case "success":
-                        global.user = response.data?.profile;
+                        global.user = responseProfile.data?.profile;
+                        let username = ""
+                        username += global.user?.middle_name ? global.user.middle_name + " " : "";
+                        username += global.user?.first_name ? global.user.first_name + " " : "";
+                        username += global.user?.last_name ? global.user.last_name : "";
+                        global.user.fio = username
                         if (global.user?.is_active === true) {
                             if (global.user.roles.indexOf('ROLE_ADMIN') > -1 || global.user.roles.indexOf('ROLE_DEVELOPER') > -1) {
                                 this.setState({layout: 'admin'});
@@ -141,14 +146,13 @@ class App extends React.Component {
                         global.layout = 'guest';
                         break;
                 }
-                this.setState({wait: false})
+                axios.get(ApiRoutes.API_GET_CATEGORIES).then(responseCategories => {
+                    global.categories = responseCategories.data?.categories;
+                    global.types = responseCategories.data?.types;
+                    global.statuses = responseCategories.data?.statuses;
+                    this.setState({wait: false})
+                });
             });
-
-        axios.get(ApiRoutes.API_GET_CATEGORIES).then(response => {
-            global.categories = response.data?.categories;
-            global.types = response.data?.types;
-            global.statuses = response.data?.statuses;
-        });
         global.getProfile();
     }
 
