@@ -852,7 +852,7 @@ class IdeasController extends AbstractController
                 return $this->json(['state' => 'error', 'message' => "Нельзя поменять статус на такой же как и прежде"]);
             }
             if ($idea->get_Status()->getName() == "new" && $idea->getAllowComments()) {
-                if ($idea->get_Type()->getName() == "Проблема") {
+                if ($idea->get_Type()->getName() == "Ошибка") {
                     $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
                         "title" => "Feedback. " . $idea->getTitle(),
                         "description" => $idea->getContent()
