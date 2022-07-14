@@ -538,24 +538,27 @@ class IdeasController extends AbstractController
         if($idea->get_User()->getId() === $user->getId()){
             $newComment->setIsChecked(true);
         }
-        $this->commentsRepository->save($newComment);
 
         if($user->getId() !== $idea->get_User()->getId()){
             /** @var Comments $lastComment */
             $lastComment = $idea->get_Comments()->last();
+//            dd("last comment", $lastComment);
             if(empty($lastComment)){
                 $urlIdea = $baseURL . "/idea/" . $idea->getId();
                 $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
                 $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+//                dd("ОТправил на почту что новый коммент");
             } else {
                 $lastCommentDate = (clone $lastComment->getDate())->add(new DateInterval("P1D"));
                 if($lastCommentDate < new DateTime()){
                     $urlIdea = $baseURL . "/idea/" . $idea->getId();
                     $message = "К вашей записи оставили комментарий: {$newComment->getContent()}\n\nСсылка: {$urlIdea}";
                     $this->sendToMail($mailer, $message, "Новый комментарий", $idea->get_User()->getEmail());
+//                    dd("ОТправил на почту что новый коммент");
                 }
             }
         }
+        $this->commentsRepository->save($newComment);
 
         return $this->json(['state' => 'success', 'comment' => $newComment->get_Info()]);
     }
