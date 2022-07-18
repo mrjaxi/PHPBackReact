@@ -469,7 +469,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                 </Form.Item>
                                             </div>
                                             :
-                                            <a style={{ width: '100%' }} onMouseOver={() => {
+                                            <a style={{ width: '100%', display: 'inherit' }} onMouseOver={() => {
                                                     if(!showEditButton){
                                                         console.log("OVER")
                                                         setShowEditButton(true)
