@@ -225,15 +225,19 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                                                             {
                                                                 editableId !== comment.id ?
                                                                     <>
-                                                                        <a onClick={() => setEditableId(comment.id)}
-                                                                           style={{
-                                                                               color: editableId !== comment.id && '#AAB2BD',
-                                                                               fontSize: 15,
-                                                                               fontWeight: 400
-                                                                           }}>
-                                                                            Редактировать
-                                                                        </a>
-                                                                        <span> · </span>
+                                                                        { comment.user.id === global.user?.id &&
+                                                                            <>
+                                                                                <a onClick={() => setEditableId(comment.id)}
+                                                                                   style={{
+                                                                                       color: editableId !== comment.id && '#AAB2BD',
+                                                                                       fontSize: 15,
+                                                                                       fontWeight: 400
+                                                                                   }}>
+                                                                                    Редактировать
+                                                                                </a>
+                                                                                <span> · </span>
+                                                                            </>
+                                                                        }
                                                                         <Popconfirm
                                                                             title="Удалить комментарий?"
                                                                             onConfirm={() => onDeleteComment(comment.id)}

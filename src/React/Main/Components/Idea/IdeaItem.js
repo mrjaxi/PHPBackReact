@@ -172,7 +172,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
             .then(response => {
                 global.handleResponse(response,
                     function () {
-                        global.openNotification("Успешно", "Статус идеи изменен", "success")
+                        global.openNotification("Сохранено", "Статус идеи изменен", "success")
                         let newIdea = {...idea};
                         newIdea.status = id;
                         if (name.data === "declined" || name.data === "completed") {
@@ -191,17 +191,21 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
     };
 
     const changeCategory = (categoryId) => {
+        let currentCategoryId = idea.categoryId
+        let data = {...idea};
+        data.categoryId = categoryId;
+        data.category = categories.filter(item => item.id === categoryId)[0].name;
+        setIdea(data)
         axios.post(ApiRoutes.API_SET_CATEGORY, {idea_id: idea.idea_id, category_id: categoryId})
             .then(response => {
                 global.handleResponse(response,
                     function () {
-                        let data = {...idea};
-                        data.categoryId = categoryId;
-                        data.category = categories.filter(item => item.id === categoryId)[0].name;
-                        setIdea(data)
-                        global.openNotification("Успешно", "Категория идеи успешно изменена", "success")
+                        global.openNotification("Сохранено", "Категория идеи успешно изменена", "success")
                     },
                     function () {
+                        data.categoryId = currentCategoryId;
+                        data.category = categories.filter(item => item.id === currentCategoryId)[0].name;
+                        setIdea(data)
                         global.openNotification("Ошибка", response.data?.message, "error")
                     },
                 )
@@ -209,17 +213,21 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
     };
 
     const changeType = (typeId) => {
+        let currentTypeId = idea.typeId
+        let data = {...idea};
+        data.typeId = typeId;
+        data.type = types.filter(item => item.id === typeId)[0].name;
+        setIdea(data);
         axios.post(ApiRoutes.API_SET_TYPE, {idea_id: idea.idea_id, type_id: typeId})
             .then(response => {
                 global.handleResponse(response,
                     function () {
-                        let data = {...idea};
-                        data.typeId = typeId;
-                        data.type = types.filter(item => item.id === typeId)[0].name;
-                        setIdea(data);
-                        global.openNotification("Успешно", "Тип идеи успешно изменён", "success")
+                        global.openNotification("Сохранено", "Тип идеи успешно изменён", "success")
                     },
                     function () {
+                        data.typeId = currentTypeId;
+                        data.type = types.filter(item => item.id === currentTypeId)[0].name;
+                        setIdea(data);
                         global.openNotification("Ошибка", response.data?.message, "error")
                     },
                 )
@@ -397,7 +405,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                          setShowEditButton(false)
                                      }
                                  }}>
-                                <Link to={`${global.lang}/profile/${idea.user.id}`}>
+                                <Link to={`${global.lang}/profile/${idea.user.id}/`}>
                                     <div className={"f-cards-row-wrap"}>
                                         <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
                                                 src={idea.userImage

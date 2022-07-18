@@ -36,7 +36,7 @@ const Login = ({visible, setVisible}) => {
         if (!timeExpiry) {
             setLoading(true);
             // TODO: Поменять вход
-            axios.post(ApiRoutes.API_SIGN_IN,   // ApiRoutes.API_SIGN_IN     || ApiRoutes.API_LOGIN
+            axios.post(ApiRoutes.API_LOGIN,   // ApiRoutes.API_SIGN_IN     || ApiRoutes.API_LOGIN
                 global.serialize({username: data?.email, password: data?.password}), // {username: data?.email,}, || global.serialize({username: data?.email, password: data?.password}),
                 {withCredentials: true,})
                 .then(response => {
@@ -77,8 +77,8 @@ const Login = ({visible, setVisible}) => {
                 onOk={() => setVisible(false)}
                 onCancel={() => setVisible(false)}
                 destroyOnClose={true}
-                width={"50vw"}
-                height={"60vh"}
+                width={"90vw"}
+                height={"90vh"}
                 footer={null}
                 bodyStyle={{
                     width: '100%',
@@ -107,7 +107,7 @@ const Login = ({visible, setVisible}) => {
                             />
                         </div>
                          :
-                        <div className={"f-login"} style={{minHeight: "50vh"}}>
+                        <div className={"f-login"} style={{minHeight: "80vh"}}>
                             <a onClick={() => setVisible(!visible)}
                                style={{position: 'absolute', top: 30, right: 30, height: 25, width: 25}}>
                                 <img src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>
@@ -143,19 +143,19 @@ const Login = ({visible, setVisible}) => {
                                     <Input size={"large"} style={{padding: '10px 15px 10px 15px', width: '440px'}}
                                            placeholder={"Электронная почта"}/>
                                 </Form.Item>
-                                {/*<Form.Item*/}
-                                {/*    name={"password"}*/}
-                                {/*    rules={[*/}
-                                {/*        {*/}
-                                {/*            required: true,*/}
-                                {/*            message: 'Пожалуйста, введите пароль',*/}
-                                {/*        },*/}
-                                {/*    ]}*/}
-                                {/*>*/}
-                                {/*    <Input.Password size={"large"}*/}
-                                {/*                    style={{padding: '10px 15px 10px 15px', width: '440px'}}*/}
-                                {/*                    placeholder={"Пароль"}/>*/}
-                                {/*</Form.Item>*/}
+                                <Form.Item
+                                    name={"password"}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Пожалуйста, введите пароль',
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password size={"large"}
+                                                    style={{padding: '10px 15px 10px 15px', width: '440px'}}
+                                                    placeholder={"Пароль"}/>
+                                </Form.Item>
                                 <Form.Item>
                                     <Button
                                         style={{

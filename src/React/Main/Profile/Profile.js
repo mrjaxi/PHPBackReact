@@ -11,6 +11,7 @@ import ApiRoutes from "../../Routes/ApiRoutes";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import {NavLink} from "react-router-dom";
 import Login from "../Auth/Login";
+import {func} from "prop-types";
 
 const {Option} = Select;
 
@@ -75,6 +76,30 @@ const Profile = () => {
     function changeNotifications(bool) {
         setNotifications(bool)
         global.user.notifications = bool;
+    }
+
+    function setCounts(counts){
+        setIdeasCount(counts?.ideas)
+        setCommentsCount(counts?.comments)
+        setLikesCount(counts?.likes)
+    }
+
+    function updateCounts(){
+        axios.get(ApiRoutes.API_GET_USER_DATA.format(params.id)).then(response => {
+            global.handleResponse(response,
+                function () {
+                    if (response.data?.count) {
+                        setIdeasCount(response.data?.count.ideas)
+                        setCommentsCount(response.data?.count.comments)
+                        setLikesCount(response.data?.count.likes)
+                    }
+                },
+                function () {
+                    global.openNotification("Ошибка", response.data?.message, "error")
+                    global._history.replace("/")
+                },
+            )
+        })
     }
 
     function getUser() {
@@ -270,12 +295,12 @@ const Profile = () => {
                             {
                                 !user || loadingProfile || !roles[0] ? <LoadingIdeas type={true}/>
                                     : selectedHeaderItem === 0 ?
-                                    <UserIdeas user={user} user_id={params.id} setCount={setIdeasCount}
+                                    <UserIdeas user={user} user_id={params.id} setCount={setCounts} updateCounts={updateCounts}
                                                setNotifications={changeNotifications}/> :
                                     selectedHeaderItem === 1 ?
-                                        <UserComments user={user} user_id={params.id} setCount={setCommentsCount}/> :
+                                        <UserComments user={user} user_id={params.id} setCount={setCounts} updateCounts={updateCounts}/> :
                                         selectedHeaderItem === 2 &&
-                                        <UserFavourite user={user} user_id={params.id} setCount={setLikesCount}/>
+                                        <UserFavourite user={user} user_id={params.id} setCount={setCounts} updateCounts={updateCounts}/>
                             }
                         </div>
                     </div>

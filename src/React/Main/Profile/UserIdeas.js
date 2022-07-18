@@ -6,11 +6,7 @@ import IdeaItem from "../Components/Idea/IdeaItem";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserIdeas = ({ user, setCount, setNotifications }) => {
-
-    const [statuses, setStatuses] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [types, setTypes] = useState([]);
+const UserIdeas = ({ user, setCount, setNotifications, updateCounts }) => {
 
     const [ideas, setIdeas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,9 +17,6 @@ const UserIdeas = ({ user, setCount, setNotifications }) => {
 
     useEffect(() => {
         console.log("ideas updated")
-        if(ideas.length >= 0 && !loading){
-            setCount(ideas.length)
-        }
 
         if(ideas.length > 0){
             let notifications = false
@@ -62,6 +55,7 @@ const UserIdeas = ({ user, setCount, setNotifications }) => {
             global.handleResponse(response,
                 function () {
                     data = global.parseToIdeaItems(response.data?.ideas)
+                    setCount(response.data?.count)
                 },
                 function () {
                     global.openNotification("Ошибка", response.data?.message, "error")
@@ -76,6 +70,7 @@ const UserIdeas = ({ user, setCount, setNotifications }) => {
         let newIdeas = [...ideas]
         newIdeas[index] = idea
         setIdeas(newIdeas)
+        updateCounts()
     }
 
     return (

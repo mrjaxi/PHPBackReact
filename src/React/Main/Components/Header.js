@@ -24,7 +24,7 @@ const Header = ({ search=true }) => {
                 left: 20,
                 zIndex: 10,
             }}>
-                <Link to={global.lang + "/#start"}>
+                <Link to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
                     <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
                 </Link>
             </div>
@@ -77,7 +77,7 @@ const Header = ({ search=true }) => {
                                     margin: "0px 20px 14.5px 30px",
                                     zIndex: 10,
                                     borderBottom: "1px solid rgb(230, 233, 237)"
-                                }} to={global.lang + `/profile/${global.user?.id}`}>
+                                }} to={global.lang + `/profile/${global.user?.id}/`}>
                                         <span style={{
                                             textOverflow: "ellipsis",
                                             overflow: "hidden",
@@ -104,8 +104,8 @@ const Header = ({ search=true }) => {
                 }
             </div>
             <div className={"logo logo-circle"}/>
-            <Link to={global.lang + "/#start"}>
-                <div  style={{ zIndex: 500 }} className={"logo logo-ag"}/>
+            <Link to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
+                <div style={{ zIndex: 500 }} className={"logo logo-ag"}/>
             </Link>
         </header>
     )

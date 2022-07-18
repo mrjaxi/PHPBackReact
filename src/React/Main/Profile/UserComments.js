@@ -10,7 +10,7 @@ import Linkify from "react-linkify";
 import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserComments = ({ user, setCount }) => {
+const UserComments = ({ user, setCount, updateCounts }) => {
 
     const [ideas, setIdeas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,16 +18,6 @@ const UserComments = ({ user, setCount }) => {
     useLayoutEffect(() => {
         getUserComments()
     }, []);
-
-    useEffect(() => {
-        if(ideas.length >= 0 && !loading){
-            let commentsCount = 0;
-            ideas.map(idea => {
-                commentsCount += idea?.comments.length
-            })
-            setCount(commentsCount)
-        }
-    }, [ideas])
 
     useEffect(() => {
         if(user) {
@@ -55,7 +45,7 @@ const UserComments = ({ user, setCount }) => {
             global.handleResponse(response,
                 function () {
                     ideasData = global.parseToIdeaItems(response.data?.ideas, ideasData, true, false)
-                    // Код при success ответе
+                    setCount(response.data?.count)
                 },
             )
             setIdeas(ideasData);
@@ -67,6 +57,7 @@ const UserComments = ({ user, setCount }) => {
         let newIdeas = [...ideas]
         newIdeas[index] = idea
         setIdeas(newIdeas)
+        updateCounts()
     }
 
     return (

@@ -379,6 +379,7 @@ class UserController extends AbstractController
                     $decorIdea["comments"] = array_values($decorIdea["comments"]);
                     $ideas[] = $decorIdea;
                 }
+                $ideas = AppController::array_sort($ideas, "id", SORT_DESC);
                 $response["ideas"] = $ideas;
                 break;
             case 3:
@@ -399,17 +400,6 @@ class UserController extends AbstractController
 
         return $this->json($response);
     }
-
-//    private function getCommentsIdeas(?array $comments){
-//        if (empty($comments)) {
-//            return null;
-//        }
-//        $user = $this->getUser();
-//        for ($i = 0; $i < count($comments); $i++) {
-//            $comment = $comments[$i];
-//            $idea =
-//        }
-//    }
 
     private function decorateCollectionIdeas(Collection $ideas): ?array
     {
@@ -467,6 +457,14 @@ class UserController extends AbstractController
             $idea = $ideas[$i];
             $ideas[$i] = $idea->get_Info();
             $ideas[$i]["comments"] = $idea->get_CommentsArray();
+
+            $ideas[$i]["notification"] = false;
+            foreach ($ideas[$i]["comments"] as &$comment){
+                if(!$comment["is_checked"] && !empty($user) && $idea->get_User()->getId() === $user->getId()){
+                    $ideas[$i]["notification"] = true;
+                    break;
+                }
+            }
 
             if (empty($user)) {
                 $ideas[$i]["currentUserIsVote"] = "unauthorized";

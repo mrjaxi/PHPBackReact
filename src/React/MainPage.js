@@ -71,6 +71,14 @@ const MainPage = (props) => {
         loadData()
     },[includedTypes, includedStatuses, includedCategories, page]);
 
+    useEffect(() => {
+        if(urlParams.get("reset")){
+            setIncludedTypes([]);
+            setIncludedStatuses([]);
+            setIncludedCategories([]);
+        }
+    }, [urlParams])
+
     const selectCategory = (categoryId) => {
         if(categoryId) {
             let prevIncludedCategories = [...includedCategories];
@@ -125,7 +133,7 @@ const MainPage = (props) => {
             type: urlParams.get("type") ? urlParams.get("type") : "desc",
             page: page,
         };
-        if (page > 1){
+        if (page > 1) {
             data = [...ideas];
             setLoadingInfinite(true);
         } else {

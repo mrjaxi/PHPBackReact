@@ -6,7 +6,7 @@ import FlatList from "flatlist-react";
 import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
-const UserFavourite = ({ user, setCount }) => {
+const UserFavourite = ({ user, setCount, updateCounts }) => {
 
     const [loading, setLoading] = useState(true);
     const [ideas, setIdeas] = useState([]);
@@ -14,11 +14,6 @@ const UserFavourite = ({ user, setCount }) => {
     useLayoutEffect(() => {
         getUserFavourites()
     }, []);
-
-    useEffect(() => {
-        if(ideas.length >= 0 && !loading)
-            setCount(ideas.length)
-    }, [ideas])
 
     useEffect(() => {
         if(user) {
@@ -52,6 +47,7 @@ const UserFavourite = ({ user, setCount }) => {
                         ideasItems.push(item?.idea);
                     })
                     data = global.parseToIdeaItems(ideasItems)
+                    setCount(response.data?.count)
                 },
                 function () {
                     global.openNotification("Ошибка", response.data?.message, "error")
@@ -66,6 +62,7 @@ const UserFavourite = ({ user, setCount }) => {
         let newIdeas = [...ideas];
         newIdeas[index] = idea;
         setIdeas(newIdeas)
+        updateCounts()
     };
 
     return (

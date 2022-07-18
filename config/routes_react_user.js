@@ -16,9 +16,9 @@ params:
  */
 export default [
     { path: "/", name: "Главная страница", Component: MainPage },
-    { path: "/profile/:id", name: "Профиль", Component: Profile},
+    { path: "/profile/:id/", name: "Профиль", Component: Profile},
     { path: "/idea/add/", name: "Добавить идею", Component: AddIdeaPage },
-    { path: "/idea/:id", name: "Идея", Component: ShowIdea},
-    { path: "/redirect", name: "Редирект", Component: Redirect },
-    { path: "/user/settings/", name: "Настройки пользователя", Component: Settings }
+    { path: "/idea/:id/", name: "Идея", Component: ShowIdea},
+    { path: "/user/settings/", name: "Настройки пользователя", Component: Settings },
+    { path: "/redirect", name: "Редирект", Component: Redirect }
 ];

@@ -19,37 +19,41 @@ const Search = ({ visible, setVisible }) => {
         }
         let prevSearchItems = [];
 
-        axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) })
-            .then(response => {
-                if (response.data?.ideas && response.data.state === "success") {
-                    response.data?.ideas.map(idea => {
-                        prevSearchItems.push({
-                            idea_id: idea.id,
-                            title: idea.title,
-                            text: idea.content,
-                            roles: idea.user.roles,
-                            role: idea.user.role_name,
-                            userImage: idea.user.image,
-                            status: idea.status,
-                            categoryId: idea.category.id,
-                            category: idea.category.name,
-                            like: Number(idea.likes),
-                            user: idea.user,
-                            username: idea.user?.first_name,
-                            typeId: idea.type.id,
-                            type: idea.type.name,
-                            typeColor: idea.type.color,
-                            currentUserIsVote: idea.currentUserIsVote,
-                            date: global.getDateString(new Date(idea?.date), false,false)
-                        })
-                    });
-                } else if (response.data.state === "error") {
-                    prevSearchItems = []
-                } else {
-                    prevSearchItems = null
-                }
-                setSearchItems(prevSearchItems);
-            })
+        if(text && text.length > 2){
+            axios.post(ApiRoutes.API_SEARCH, {title: text, content: ""}, {withCredentials: true, cancelToken: new cancelTokenSource(function executor(c) {cancel = c;}) })
+                .then(response => {
+                    if (response.data?.ideas && response.data.state === "success") {
+                        response.data?.ideas.map(idea => {
+                            prevSearchItems.push({
+                                idea_id: idea.id,
+                                title: idea.title,
+                                text: idea.content,
+                                roles: idea.user.roles,
+                                role: idea.user.role_name,
+                                userImage: idea.user.image,
+                                status: idea.status,
+                                categoryId: idea.category.id,
+                                category: idea.category.name,
+                                like: Number(idea.likes),
+                                user: idea.user,
+                                username: idea.user?.first_name,
+                                typeId: idea.type.id,
+                                type: idea.type.name,
+                                typeColor: idea.type.color,
+                                currentUserIsVote: idea.currentUserIsVote,
+                                date: global.getDateString(new Date(idea?.date), false,false)
+                            })
+                        });
+                    } else if (response.data.state === "error") {
+                        prevSearchItems = []
+                    } else {
+                        prevSearchItems = null
+                    }
+                    setSearchItems(prevSearchItems);
+                })
+        } else {
+            setSearchItems(prevSearchItems);
+        }
     };
 
     return (

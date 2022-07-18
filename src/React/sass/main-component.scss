@@ -481,8 +481,8 @@ button:focus {
         margin-bottom: 50px;
         justify-content: center;
 
-        &:last-child {
-            //margin-bottom: 180px;
+        &:first-child {
+            margin-top: 20px;
         }
 
         &-image-type {

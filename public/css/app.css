@@ -433,6 +433,9 @@ button:focus {
   margin-bottom: 50px;
   justify-content: center;
 }
+.f-cards:first-child {
+  margin-top: 20px;
+}
 .f-cards-image-type {
   width: 100%;
   height: 400px;
