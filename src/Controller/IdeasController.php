@@ -890,7 +890,8 @@ class IdeasController extends AbstractController
             $idea = $this->ideasRepository->findOneBy(["title" => substr($data["object_attributes"]["title"], 10, null)]);
             if (!empty($idea)) {
                 $newStatus = $this->statusRepository->findOneBy(["name" => "completed"]);
-                $idea->setStatus($newStatus);
+                $idea->setStatus($newStatus)
+                    ->setAllowComments(false);
                 $this->ideasRepository->save($idea);
             } else {
                 return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
