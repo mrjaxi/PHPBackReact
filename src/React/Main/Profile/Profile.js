@@ -191,7 +191,7 @@ const Profile = () => {
                                                     </div>
                                                 </div>
                                                 {
-                                                    global.layout === "admin" && roles[0] ?
+                                                    (global.layout === "admin" && roles[0]) && user.id !== global.user.id  ?
                                                         <Select
                                                             value={roles[0]}
                                                             size={'large'}
@@ -209,7 +209,12 @@ const Profile = () => {
                                                             <Option data={"Разработчик"}
                                                                     value={"ROLE_DEVELOPER"}>Разработчик</Option>
                                                         </Select>
-                                                        : <></>
+                                                        :
+                                                        <div>
+                                                            <p style={{
+                                                                whiteSpace: "nowrap",
+                                                            }} className={"f-cards-type-viewed"}>{user.role_name}</p>
+                                                        </div>
                                                 }
                                             </div>
                                         </div>

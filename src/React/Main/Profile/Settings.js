@@ -1,17 +1,15 @@
 import React, {useState} from "react";
 import Header from "../Components/Header";
-import {Col, Typography, Image, Form, Input, Button, Avatar, Upload, Spin, Tooltip, InputNumber} from "antd";
+import {Col, Typography, Image, Form, Input, Button, Avatar, Upload, Spin, Tooltip} from "antd";
 const { Title } = Typography;
 import Icon, {UserOutlined, LoadingOutlined} from '@ant-design/icons'
 import Camera from "../../../../public/i/camera.svg"
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
-import Like from "../../../../public/i/like.svg";
 
 const Settings = () => {
 
     const [sendLoading, setSendLoading] = useState(false);
-    const [loadImage, setLoadImage] = useState(false);
     const [file, setFile] = useState("");
     const [user, setUser] = useState(global.user)
 
@@ -24,11 +22,8 @@ const Settings = () => {
         axios.post(ApiRoutes.API_SET_PROFILE, value).then(response => {
             global.handleResponse(response,
                 function () {
-                    if (file) {
-                        global.user = response.data?.profile;
-                        setUser(response.data?.profile);
-                        console.log("global.user", global.user)
-                    }
+                    global.user = response.data?.profile;
+                    setUser(response.data?.profile);
                     global.openNotification("Успешно", "Данные сохранены", "success")
                 },
                 function () {
@@ -74,19 +69,18 @@ const Settings = () => {
                             <Title>Настройки</Title>
                             <div className={"t-settings"}>
                                 {
-                                    loadImage ? <Spin indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />} /> :
-                                        user?.image || file ?
-                                        <Image
-                                            width={260}
-                                            height={260}
-                                            style={{ borderRadius: 200, objectFit: 'cover',}}
-                                            src={file ? file : user?.image}
-                                            placeholder={
-                                                <div style={{ height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center'  }}>
-                                                    <Spin indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />} />
-                                                </div>
-                                            }
-                                        /> : <Avatar size={260} className={"t-avatar"} src={<UserOutlined style={{ fontSize: 60 }}/>} />
+                                    user?.image || file ?
+                                    <Image
+                                        width={260}
+                                        height={260}
+                                        style={{ borderRadius: 200, objectFit: 'cover',}}
+                                        src={file ? file : user?.image}
+                                        placeholder={
+                                            <div style={{ height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center'  }}>
+                                                <Spin indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />} />
+                                            </div>
+                                        }
+                                    /> : <Avatar size={260} className={"t-avatar"} src={<UserOutlined style={{ fontSize: 60 }}/>} />
                                 }
                                 <Upload {...props}>
                                     <button type={"button"} className={"t-upload-button"}>

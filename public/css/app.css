@@ -72,6 +72,7 @@ body {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .ant-modal-header {
   background: rgba(255, 255, 255, 0);
+  padding: 20px;
 }
 
 .ant-modal-content {
@@ -123,10 +124,9 @@ button:focus {
 }
 
 .f-input-search {
-  width: 99%;
+  width: 97%;
   border: none;
   font-size: 21px;
-  padding-left: 15px;
   color: #191919;
 }
 .f-text-tags-wrap {

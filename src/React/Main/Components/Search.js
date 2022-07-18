@@ -57,7 +57,7 @@ const Search = ({ visible, setVisible }) => {
             title={
                 <>
                     <form>
-                        <input autoFocus={true} value={searchText} style={{width: "97%",}} onChange={event => {
+                        <input autoFocus={true} value={searchText} onChange={event => {
                             searchIdeas(event.target.value)
                             setSearchText(event.target.value)
                         }} className={"f-input-search"} placeholder={"Поиск..."}/>
@@ -79,11 +79,12 @@ const Search = ({ visible, setVisible }) => {
             visible={visible}
             onOk={() => setVisible(false)}
             onCancel={() => setVisible(false)}
-            width={"90vw"}
+            width={"100%"}
             style={{
-                top: 30,
+                top: 40,
                 verticalAlign: "top",
                 minHeight: "90vh",
+                maxWidth: 1100,
                 paddingBottom: 30,
             }}
             footer={null}

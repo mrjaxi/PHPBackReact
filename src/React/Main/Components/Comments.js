@@ -334,8 +334,11 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                             ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => global?.user?.roles?.includes(el)) &&
                             <Form.Item
                                 name={"close"}
+                                style={{ display: 'flex', alignItems: 'center' }}
                             >
-                                <Checkbox onClick={() => setChecked(!checked)} style={{ color: '#1D1D1F', fontSize: 20, display: 'flex', alignItems: 'center' }}>Опубликовать и закрыть комментарии</Checkbox>
+                                <Checkbox onClick={() => setChecked(!checked)} style={{ color: '#1D1D1F', fontSize: 20 }}>
+                                    <span style={{ position: 'relative', top: 1 }}>Опубликовать и закрыть комментарии</span>
+                                </Checkbox>
                             </Form.Item>
                         }
                         <Form.Item>

@@ -78,6 +78,7 @@ body {
 
 .ant-modal-header {
     background: #ffffff00;
+    padding: 20px;
 }
 .ant-modal-content {
     height: 100%;
@@ -128,10 +129,9 @@ button:focus {
 
 .f {
     &-input-search {
-        width: 99%;
+        width: 97%;
         border: none;
         font-size: 21px;
-        padding-left: 15px;
         color: #191919;
     }
 
