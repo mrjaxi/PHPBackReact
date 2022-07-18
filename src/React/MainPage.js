@@ -279,7 +279,7 @@ const MainPage = (props) => {
                                     { statuses?.length > 0 ?
                                         statuses.map((status) => (
                                             <a key={status.id} className={"f-side-panel-button-section"}
-                                               href={"#start"}
+                                               // href={"#start"}
                                                onClick={() => {
                                                    selectStatus(status.id)
                                                    global._history.push({
@@ -310,7 +310,7 @@ const MainPage = (props) => {
                                     { global.types?.length > 0 ?
                                         global.types.map((type) => (
                                             <a key={type.id} className={"f-side-panel-button"}
-                                               href={"#start"}
+                                               // href={"#start"}
                                                onClick={() => {
                                                    selectType(type.id)
                                                    global._history.push({

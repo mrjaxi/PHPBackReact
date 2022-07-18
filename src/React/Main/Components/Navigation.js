@@ -16,7 +16,7 @@ const Navigation = ({ selectCategory, includedCategory }) => {
                                backgroundColor: "white",
                            } : {}}
                            key={category.id}
-                           href={"#start"}
+                           // href={"#start"}
                            onClick={() => {
                                selectCategory(category.id)
                                global._history.push({
