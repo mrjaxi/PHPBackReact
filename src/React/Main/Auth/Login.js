@@ -77,8 +77,8 @@ const Login = ({visible, setVisible}) => {
                 onOk={() => setVisible(false)}
                 onCancel={() => setVisible(false)}
                 destroyOnClose={true}
-                width={"90vw"}
-                height={"90vh"}
+                width={"50vw"}
+                height={"60vh"}
                 footer={null}
                 bodyStyle={{
                     width: '100%',
@@ -107,7 +107,7 @@ const Login = ({visible, setVisible}) => {
                             />
                         </div>
                          :
-                        <div className={"f-login"} style={{minHeight: "80vh"}}>
+                        <div className={"f-login"} style={{minHeight: "50vh"}}>
                             <a onClick={() => setVisible(!visible)}
                                style={{position: 'absolute', top: 30, right: 30, height: 25, width: 25}}>
                                 <img src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>
