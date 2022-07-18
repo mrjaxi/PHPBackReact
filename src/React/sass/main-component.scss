@@ -203,6 +203,7 @@ button:focus {
     &-new-idea {
         position: fixed;
         width: 60px;
+        height: 60px;
         left: 20px;
         bottom: 20px;
         background-color: #3D72ED;
@@ -220,9 +221,6 @@ button:focus {
         }
 
         &-text {
-            line-height: 20px;
-            padding: 20px;
-            height: 60px;
             white-space: nowrap;
             text-align: center;
             color: white;
