@@ -78,7 +78,7 @@ body {
 
 .ant-modal-header {
     background: #ffffff00;
-    padding: 20px;
+    padding: 24px 30px;
 }
 .ant-modal-content {
     height: 100%;
@@ -162,6 +162,7 @@ button:focus {
             -ms-overflow-style: none;
             scrollbar-width: none;
             height: 100%;
+            width: 100%;
 
             &::-webkit-scrollbar {
                 //display: none;

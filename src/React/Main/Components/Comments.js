@@ -341,7 +341,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                                 style={{ display: 'flex', alignItems: 'center' }}
                             >
                                 <Checkbox onClick={() => setChecked(!checked)} style={{ color: '#1D1D1F', fontSize: 20 }}>
-                                    <span style={{ position: 'relative', top: 1 }}>Опубликовать и закрыть комментарии</span>
+                                    <span style={{ position: 'relative', top: 2 }}>Опубликовать и закрыть комментарии</span>
                                 </Checkbox>
                             </Form.Item>
                         }

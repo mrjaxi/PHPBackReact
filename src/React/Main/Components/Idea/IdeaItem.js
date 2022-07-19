@@ -168,23 +168,32 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
     };
 
     const changeStatus = (idea_id, id, name) => {
+        let newIdea = {...idea};
+        let prevId = newIdea.status;
+        newIdea.status = id;
+        if (name.data === "declined" || name.data === "completed") {
+            newIdea.allowComments = false;
+        } else {
+            newIdea.allowComments = true;
+        }
+        setIdea(newIdea)
+        setIdeaStatus(id)
         axios.post(ApiRoutes.API_SET_STATUS, {idea_id: idea_id, status_id: id})
             .then(response => {
                 global.handleResponse(response,
                     function () {
                         global.openNotification("Сохранено", "Статус идеи изменен", "success")
-                        let newIdea = {...idea};
-                        newIdea.status = id;
+                    },
+                    function () {
+                        global.openNotification("Ошибка", response.data?.message, "error")
+                        newIdea.status = prevId;
                         if (name.data === "declined" || name.data === "completed") {
                             newIdea.allowComments = false;
                         } else {
                             newIdea.allowComments = true;
                         }
                         setIdea(newIdea)
-                        setIdeaStatus(response.data.idea[0].status)
-                    },
-                    function () {
-                        global.openNotification("Ошибка", response.data?.message, "error")
+                        setIdeaStatus(prevId)
                     },
                 )
             })

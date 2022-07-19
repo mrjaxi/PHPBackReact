@@ -73,7 +73,7 @@ const Search = ({ visible, setVisible }) => {
                         </a>
                         }
                     </form>
-                    <a onClick={() => setVisible(!visible)} style={{ position: 'absolute', right: -40, top: 5 }}>
+                    <a onClick={() => { setVisible(!visible) }} style={{ position: 'absolute', right: -40, top: 5 }}>
                         <img style={{ filter: 'brightness(10)' }} src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>
                     </a>
                 </>
@@ -85,7 +85,7 @@ const Search = ({ visible, setVisible }) => {
             onCancel={() => setVisible(false)}
             width={"100%"}
             style={{
-                top: 40,
+                top: 29,
                 verticalAlign: "top",
                 minHeight: "90vh",
                 maxWidth: 1100,
@@ -110,7 +110,7 @@ const Search = ({ visible, setVisible }) => {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        fontSize: 21,
+                        fontSize: 32,
                         fontWeight: 500
                     }}
                     >Ничего не найдено...</div> :
