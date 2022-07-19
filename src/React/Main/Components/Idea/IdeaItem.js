@@ -471,7 +471,12 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                             <div style={{width: '100%'}}>
                                                 <Form.Item
                                                     name={"title"}
-                                                    rules={[{required: true, message: "Заполните поле"}]}
+                                                    rules={[{
+                                                        required: true,
+                                                        message: 'Заголовок должен содержать от 5 до 255 символов',
+                                                        min: 5,
+                                                        max: 255,
+                                                    }]}
                                                 >
                                                     <Input style={{marginTop: 24, width: '100%', fontSize: 32}}/>
                                                 </Form.Item>
@@ -521,7 +526,13 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                             <div style={{width: '100%'}}>
                                                 <Form.Item
                                                     name={"text"}
-                                                    rules={[{required: true, message: "Заполните поле"}]}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Описание не может быть меньше 10 символов',
+                                                            min: 10
+                                                        },
+                                                    ]}
                                                 >
                                                     <TextArea autoSize={{minRows: 3}}
                                                               style={{width: '100%', fontSize: 17}}/>
