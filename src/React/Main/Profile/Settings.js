@@ -1,23 +1,43 @@
-import React, {useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import Header from "../Components/Header";
-import {Col, Typography, Image, Form, Input, Button, Avatar, Upload, Spin, Tooltip} from "antd";
-const { Title } = Typography;
-import Icon, {UserOutlined, LoadingOutlined} from '@ant-design/icons'
+import parsePhoneNumber, { isValidPhoneNumber } from 'libphonenumber-js'
+import { Col, Typography, Image, Form, Input, Button, Avatar, Upload, Spin, Tooltip } from "antd";
 import Camera from "../../../../public/i/camera.svg"
-import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
+import Icon, {UserOutlined, LoadingOutlined} from '@ant-design/icons'
+import axios from "axios";
+import InputTopTitle from "../Components/Custom/InputTopTitle";
+
+const { Title } = Typography;
 
 const Settings = () => {
 
     const [sendLoading, setSendLoading] = useState(false);
     const [file, setFile] = useState("");
-    const [user, setUser] = useState(global.user)
+    const [user, setUser] = useState(global.user?.phone ? {...global.user, phone: parsePhoneNumber(global.user.phone.trim(),"RU")?.formatInternational()} : global.user);
+    const [phone, setPhone] = useState(global.user?.phone ? parsePhoneNumber(global.user.phone.trim(),"RU") : "");
+    const [phoneText, setPhoneText] = useState("+7")
+    const [validatePhone, setValidatePhone] = useState(true);
+
+    useLayoutEffect(() => {
+        if (phone) {
+            try {
+                setPhoneText(phone.formatInternational());
+            } catch (e) {
+            }
+        }
+    })
 
     const onSend = (value) => {
+        if (!validatePhone) {
+            return
+        }
         setSendLoading(true);
-        if (file){
+        if (file) {
             value.image = file
         }
+        value.phone = phone ? phone?.countryCallingCode + phone?.nationalNumber : null
+        // return console.log(value)
 
         axios.post(ApiRoutes.API_SET_PROFILE, value).then(response => {
             global.handleResponse(response,
@@ -35,7 +55,7 @@ const Settings = () => {
         })
     };
 
-    const props = {
+    const uploadProps = {
         accept: ".jpeg, .png, .jpg",
         action: ApiRoutes.API_UPLOAD_IMAGE,
         showUploadList: false,
@@ -82,7 +102,7 @@ const Settings = () => {
                                         }
                                     /> : <Avatar size={260} className={"t-avatar"} src={<UserOutlined style={{ fontSize: 60 }}/>} />
                                 }
-                                <Upload {...props}>
+                                <Upload {...uploadProps}>
                                     <button type={"button"} className={"t-upload-button"}>
                                         <Icon component={Camera} style={{ fontSize: 23 }} />
                                     </button>
@@ -90,6 +110,7 @@ const Settings = () => {
                             </div>
                         </Form.Item>
                         <Form.Item
+                            id={1}
                             name={"first_name"}
                             rules={[
                                 {
@@ -98,19 +119,22 @@ const Settings = () => {
                                 },
                             ]}
                         >
-                            <Input size={"large"}  style={{ width: 550, padding: 12, marginTop: 15 }} placeholder={"Имя"} />
+                            <Input autoComplete="off" size={"large"}  style={{ width: 550, padding: 12, marginTop: 15 }} placeholder={"Имя"} />
                         </Form.Item>
                         <Form.Item
+                            id={2}
                             name={"middle_name"}
                         >
-                            <Input size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Фамилия"} />
+                            <Input autoComplete="off" size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Фамилия"} />
                         </Form.Item>
                         <Form.Item
+                            id={3}
                             name={"last_name"}
                         >
-                            <Input size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Отчество"} />
+                            <Input autoComplete="off" size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Отчество"} />
                         </Form.Item>
                         <Form.Item
+                            id={4}
                             name={"email"}
                         >
                             <Tooltip placement="topLeft" color={"black"} title="Редактирование почты запрещено">
@@ -120,28 +144,56 @@ const Settings = () => {
                                     alignItems: 'center',
                                     cursor: 'not-allowed',
                                 }}>
-                                    <Input size={"large"} disabled={true} style={{ width: 550, padding: 12 }} placeholder={user.email} />
+                                    <Input autoComplete="off" size={"large"} disabled={true} style={{ width: 550, padding: 12 }} placeholder={user.email} />
                                 </div>
                             </Tooltip>
                         </Form.Item>
                         <Form.Item
+                            id={5}
                             name={"phone"}
-                            rules={[
-                                {
-                                    validator(rule, value, callback) {
-                                        if (!Number.isInteger(Number(value))) {
-                                            callback('Введите номер телефона')
-                                        }
-                                        if (value.length > 11){
-                                            callback('Номер не должен превышать 11 цифр')
-                                        }
-
-                                        callback()
-                                    },
-                                },
-                            ]}
+                            validateStatus={validatePhone ? "success" : "error"}
+                            help={"В международном формате, например: +79XX XXX XX XX"}
                         >
-                            <Input size={"large"} style={{ width: 550, padding: 12 }} placeholder={"Номер телефона"} />
+                            <InputTopTitle
+                                setPhone={setPhone}
+                                updateInput={setPhoneText}
+                                setValidate={setValidatePhone}
+                                inputProps={{
+                                    value: phoneText,
+                                    placeholder: 'Телефон',
+                                    name: "phone",
+                                    size: "large",
+                                    style: {
+                                        width: 550,
+                                        padding: 12
+                                    },
+                                }}
+                            />
+                            {/*<Input*/}
+                            {/*    value={phoneText}*/}
+                            {/*    placeholder={"Телефон"}*/}
+                            {/*    name={"phone"}*/}
+                            {/*    size={"large"}*/}
+                            {/*    autoComplete="off"*/}
+                            {/*    style={{*/}
+                            {/*        width: 550,*/}
+                            {/*        padding: 12*/}
+                            {/*    }}*/}
+                            {/*    onChange={(event) => {*/}
+                            {/*        let text = event.target.value;*/}
+
+                            {/*        let parsePhone = parsePhoneNumber(text, 'RU');*/}
+                            {/*        setPhone(parsePhone)*/}
+
+                            {/*        try {*/}
+                            {/*            text = parsePhone.formatInternational();*/}
+                            {/*        } catch (e) {*/}
+                            {/*        }*/}
+                            {/*        text = '+' + text;*/}
+                            {/*        console.log("text:",text)*/}
+                            {/*        setPhoneText(text)*/}
+                            {/*    }}*/}
+                            {/*/>*/}
                         </Form.Item>
                         <Form.Item>
                             <Button
