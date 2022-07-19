@@ -549,6 +549,10 @@ button:focus {
             overflow: hidden;
             text-overflow: ellipsis;
             //display: inherit; inherit ломает LoadingIdeas не делать его
+
+            &:hover {
+                color: #1D1D1D;
+            }
         }
 
         &-div-wrap-text {

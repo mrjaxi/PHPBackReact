@@ -492,6 +492,9 @@ button:focus {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.f-cards-content-text:hover {
+  color: #1D1D1D;
+}
 .f-cards-div-wrap-text {
   margin-bottom: 20px;
   color: #1D1D1D;

@@ -499,12 +499,10 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                 }}>
                                                 { (showContent && showEditButton && !showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el)))) ?
                                                         <>
-                                                            <span className={"f-cards-content-text"}
-                                                                  onClick={() => {
-                                                                      global._history.push(global.lang + "/idea/" + idea.idea_id + "/")
-                                                                  }}>
+                                                            <Link className={"f-cards-content-text"}
+                                                                  to={global.lang + "/idea/" + idea.idea_id + "/"}>
                                                                 {idea.title}
-                                                            </span>
+                                                            </Link>
                                                             <span style={{zIndex: 100, fontSize: 32}} onClick={() => {
                                                                 setShowEditFields(!showEditFields)
                                                                 setShowEditButton(false)
@@ -513,11 +511,9 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                             </span>
                                                         </>
                                                         :
-                                                        <span className={"f-cards-content-text"}
-                                                            onClick={() => {
-                                                                global._history.push(global.lang + "/idea/" + idea.idea_id + "/")
-                                                            }}
-                                                        >{idea.title}</span>
+                                                        <Link className={"f-cards-content-text"}
+                                                            to={global.lang + "/idea/" + idea.idea_id + "/"}
+                                                        >{idea.title}</Link>
                                                 }
                                             </a>
                                     }
