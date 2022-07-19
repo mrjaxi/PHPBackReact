@@ -1128,10 +1128,12 @@ class IdeasController extends AbstractController
             $ideas[$i]["comments"] = $idea->get_CommentsArray();
 
             $ideas[$i]["notification"] = false;
-            foreach ($ideas[$i]["comments"] as &$comment){
-                if(!$comment["is_checked"] && $idea->get_User()->getId() === $user->getId()){
-                    $ideas[$i]["notification"] = true;
-                    break;
+            if(!empty($user)){
+                foreach ($ideas[$i]["comments"] as &$comment){
+                    if(!$comment["is_checked"] && $idea->get_User()->getId() === $user->getId()){
+                        $ideas[$i]["notification"] = true;
+                        break;
+                    }
                 }
             }
 
