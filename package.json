@@ -41,6 +41,7 @@
     "flatlist-react": "^1.5.0",
     "history": "^4.10.1",
     "less-loader": "6.0.0",
+    "libphonenumber-js": "^1.10.8",
     "mini-css-extract-plugin": "^1.4.1",
     "moment": "^2.29.2",
     "node-sass": "^6.0.0",
