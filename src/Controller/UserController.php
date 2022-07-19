@@ -416,10 +416,12 @@ class UserController extends AbstractController
             $ideasArr[$i]["comments"] = $idea->get_CommentsArray();
 
             $ideasArr[$i]["notification"] = false;
-            foreach ($ideasArr[$i]["comments"] as &$comment){
-                if(!$comment["is_checked"]){
-                    $ideasArr[$i]["notification"] = true;
-                    break;
+            if(!empty($user)){
+                foreach ($ideasArr[$i]["comments"] as &$comment){
+                    if(!$comment["is_checked"]){
+                        $ideasArr[$i]["notification"] = true;
+                        break;
+                    }
                 }
             }
 
@@ -459,10 +461,12 @@ class UserController extends AbstractController
             $ideas[$i]["comments"] = $idea->get_CommentsArray();
 
             $ideas[$i]["notification"] = false;
-            foreach ($ideas[$i]["comments"] as &$comment){
-                if(!$comment["is_checked"] && !empty($user) && $idea->get_User()->getId() === $user->getId()){
-                    $ideas[$i]["notification"] = true;
-                    break;
+            if(!empty($user)){
+                foreach ($ideas[$i]["comments"] as &$comment){
+                    if(!$comment["is_checked"] && !empty($user) && $idea->get_User()->getId() === $user->getId()){
+                        $ideas[$i]["notification"] = true;
+                        break;
+                    }
                 }
             }
 

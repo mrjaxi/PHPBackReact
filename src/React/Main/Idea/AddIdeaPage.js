@@ -145,7 +145,7 @@ const AddIdeaPage = () => {
     function getIdeaItem(idea) {
         return (
             <div className={"i-idea-card"} key={idea.id} style={{ marginBottom: 25 }}>
-                <Link to={global.lang + "/idea/" + idea.id + "/"} target="_blank">
+                <Link to={`${global.lang}/idea/${idea.id}/`} target="_blank">
                     <span style={{ fontSize: 19, fontWeight: 500, color: '#1D1D1D' }}>{idea.title}</span>
                     <div style={{ color: '#1D1D1D' }}>
                         {
