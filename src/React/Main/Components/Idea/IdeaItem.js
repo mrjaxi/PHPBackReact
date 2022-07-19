@@ -167,33 +167,30 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
         }
     };
 
-    const changeStatus = (idea_id, id, name) => {
+    const changeStatus = (statusObj) => {
+        let currentStatus = idea.status,
+            currentAllowComments = idea.allowComments;
         let newIdea = {...idea};
-        let prevId = newIdea.status;
-        newIdea.status = id;
-        if (name.data === "declined" || name.data === "completed") {
+        newIdea.status = statusObj;
+        if (statusObj.data === "declined" || statusObj.data === "completed") {
             newIdea.allowComments = false;
         } else {
             newIdea.allowComments = true;
         }
         setIdea(newIdea)
-        setIdeaStatus(id)
-        axios.post(ApiRoutes.API_SET_STATUS, {idea_id: idea_id, status_id: id})
+        setIdeaStatus(statusObj)
+        axios.post(ApiRoutes.API_SET_STATUS, {idea_id: idea.idea_id, status_id: statusObj.id})
             .then(response => {
                 global.handleResponse(response,
                     function () {
-                        global.openNotification("Сохранено", "Статус идеи изменен", "success")
+                        global.openNotification("Сохранено", "Статус идеи изменён", "success")
                     },
                     function () {
                         global.openNotification("Ошибка", response.data?.message, "error")
-                        newIdea.status = prevId;
-                        if (name.data === "declined" || name.data === "completed") {
-                            newIdea.allowComments = false;
-                        } else {
-                            newIdea.allowComments = true;
-                        }
+                        newIdea.status = currentStatus;
+                        newIdea.allowComments = currentAllowComments;
                         setIdea(newIdea)
-                        setIdeaStatus(prevId)
+                        setIdeaStatus(currentStatus)
                     },
                 )
             })
@@ -444,7 +441,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                         <Select
                                             size={'large'}
                                             onSelect={(id, data) => {
-                                                changeStatus(idea.idea_id, id, data)
+                                                changeStatus(data.data)
                                             }}
                                             style={{height: '100%'}}
                                             value={ideaStatus.translate}
@@ -452,8 +449,8 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                             dropdownMatchSelectWidth={false}
                                         >
                                             {
-                                                statuses.map(status => (
-                                                    <Option data={status.name}
+                                                statuses.map((status, index) => (
+                                                    <Option data={status}
                                                             value={status.id}>{status.translate}</Option>
                                                 ))
                                             }

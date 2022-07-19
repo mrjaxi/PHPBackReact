@@ -163,7 +163,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                                         }}
                                     >
                                         <div className={"f-cards-row-wrap"}>
-                                            <Link to={global.lang + `/profile/${comment.user.id}`}>
+                                            <Link to={global.lang + `/profile/${comment.user.id}/`}>
                                                 <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
                                                     src={comment.user.image
                                                         ? <img src={comment.user.image}/>
@@ -175,7 +175,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                                                     className={"f-cards-text"}
                                                     style={{justifyContent: "flex-start"}}
                                                 >
-                                                    <Link to={global.lang + `/profile/${comment.user.id}`}>
+                                                    <Link to={global.lang + `/profile/${comment.user.id}/`}>
                                                         <span style={{color: "black"}}>
                                                             {(comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")).trim()}
                                                             {

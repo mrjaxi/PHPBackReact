@@ -56,7 +56,7 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                             className={"f-cards-text"}
                             style={{justifyContent: "flex-start", marginBottom: 20}}
                         >
-                            <Link to={global.lang + `/profile/${comment.user.id}`}>
+                            <Link to={global.lang + `/profile/${comment.user.id}/`}>
                                 <div className={"f-cards-row-wrap"}>
                                     <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
                                             src={comment.user.image
