@@ -199,7 +199,7 @@ const MainPage = (props) => {
                     includedTypes={includedTypes}
                 />
                 <div key={3} style={{ minHeight: "100vh"}}>
-                    <section className={"max_width"} style={{marginTop: 150, marginBottom: 130, maxWidth: 1215, padding: '0 70px'}}>
+                    <section className={"max_width"} style={{marginTop: 150, marginBottom: 130, maxWidth: 1150, padding: '0 70px'}}>
                         <div className={"f-section"}>
                             <div>
                                 <p className={"f-section-wrap-p-text"} style={{
