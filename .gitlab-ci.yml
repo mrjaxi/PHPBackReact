@@ -48,7 +48,7 @@ Deploy to prod:
       url: https://feedback.atmaguru.online/
    when: manual
    tags:
-      - prod
+      - all
    only:
       - master
    script:
