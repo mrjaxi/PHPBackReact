@@ -5,7 +5,7 @@ const Navigation = ({ selectCategory, includedCategory }) => {
 
     return (
         <>
-            <navigation className={"f-nav max_width"} style={{maxWidth: 1070}}>
+            <navigation className={"f-nav max_width"} style={{maxWidth: 1070, paddingBottom: 100,}}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                 { global.categories?.length > 0 ?
                     global.categories.map((category) => (
@@ -14,7 +14,7 @@ const Navigation = ({ selectCategory, includedCategory }) => {
                                backgroundColor: "white",
                            } : {}}
                            key={category.id}
-                           // href={"#start"}
+                           href={global.isFireFox ? null : "#start"}
                            onClick={() => {
                                selectCategory(category.id)
                                global._history.push({

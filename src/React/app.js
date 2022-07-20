@@ -32,6 +32,7 @@ global.profile = null;
 global.app = null;
 global._history = createBrowserHistory();
 global.getProfile = null;
+global.isFireFox = "InstallTrigger" in window;
 
 String.prototype.format = String.prototype.f = function(){
     let args = arguments;

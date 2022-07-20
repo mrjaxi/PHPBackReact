@@ -227,10 +227,9 @@ const MainPage = (props) => {
                         <div style={{
                             display: "flex",
                             justifyContent: "center",
-                            width: "calc(100% - 320px)",
+                            width: "calc(100% - 250px)",
                             position: "relative",
                             left: 250,
-                            marginTop: 100,
                             marginBottom: 100,
                         }}>
                         <div style={{ width: "100%", maxWidth: 1000, }}>
@@ -275,6 +274,8 @@ const MainPage = (props) => {
                             }
                         </div>
                         <section style={{
+                            position: "relative",
+                            top: -100,
                             minWidth: 250,
                             maxWidth: 250,
                         }}>
@@ -283,7 +284,7 @@ const MainPage = (props) => {
                                     { statuses?.length > 0 ?
                                         statuses.map((status) => (
                                             <a key={status.id} className={"f-side-panel-button-section"}
-                                               // href={"#start"}
+                                               href={global.isFireFox ? null : "#start"}
                                                onClick={() => {
                                                    selectStatus(status.id)
                                                    global._history.push({
@@ -314,7 +315,7 @@ const MainPage = (props) => {
                                     { global.types?.length > 0 ?
                                         global.types.map((type) => (
                                             <a key={type.id} className={"f-side-panel-button"}
-                                               // href={"#start"}
+                                               href={global.isFireFox ? null : "#start"}
                                                onClick={() => {
                                                    selectType(type.id)
                                                    global._history.push({
