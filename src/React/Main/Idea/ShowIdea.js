@@ -23,10 +23,6 @@ const ShowIdea = (props) => {
     const params = useParams();
 
     useLayoutEffect(() => {
-        if (global.layout === "guest"){
-            global._history.replace(global.lang + "/")
-            return;
-        }
         getIdea();
         setIdeasInfinite([])
         setStopInfinity(false)
