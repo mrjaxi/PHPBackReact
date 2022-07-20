@@ -40,3 +40,24 @@ Deploy to dev:
       - vendor/
       - public/bundles/
       - public/js/
+
+Deploy to prod:
+   stage: deploy
+   environment:
+      name: prod
+      url: https://feedback.atmaguru.online/
+   when: manual
+   tags:
+      - prod
+   only:
+      - master
+   script:
+      - yarn install
+      - yarn build
+      - curl -sS https://getcomposer.org/installer | /usr/bin/php8.0
+      - mv env .env
+      - /usr/bin/php8.0 composer.phar install
+      - rsync --exclude '.git' --exclude '.env' --exclude '.gitlab-ci.yml' --exclude '.php-version' -avzh . /www/tip.atmaguru.online
+      - cd /www/tip.atmaguru.online
+      - /usr/bin/php8.0 bin/console doctrine:migrations:migrate --env=dev --no-interaction
+      - /usr/bin/php8.0 bin/console cache:clear
