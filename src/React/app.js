@@ -68,7 +68,7 @@ global.numWord = (number, words, returnNum=true) => {
     if(num > 19) {
         num = num % 10
     }
-    let out = (returnNum) ? `${number} ` : ""
+    let out = (returnNum) ? `${number === 0 ? "Нет" : number} ` : ""
     switch (num) {
         case 1:  out += words[0]; break;
         case 2:

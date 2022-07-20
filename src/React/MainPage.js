@@ -199,17 +199,13 @@ const MainPage = (props) => {
                     includedTypes={includedTypes}
                 />
                 <div key={3} style={{ minHeight: "100vh"}}>
-                    <section className={"max_width"} style={{marginTop: 150, marginBottom: 130}}>
+                    <section className={"max_width"} style={{marginTop: 150, marginBottom: 130, maxWidth: 1215, padding: '0 70px'}}>
                         <div className={"f-section"}>
                             <div>
                                 <p className={"f-section-wrap-p-text"} style={{
                                     marginBottom: 0,
                                     marginTop: "20px",
-                                }}>Мы ценим мнение<br/>
-                                    клиентов и рады,<br/>
-                                    когда вы делитесь<br/>
-                                    им с нами
-                                </p>
+                                }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами</p>
                             </div>
                         </div>
                     </section>

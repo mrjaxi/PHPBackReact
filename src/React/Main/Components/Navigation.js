@@ -5,10 +5,8 @@ const Navigation = ({ selectCategory, includedCategory }) => {
 
     return (
         <>
-            <navigation className={"f-nav max_width"} style={{
-                display: "inline-flex",
-                marginLeft: 80,
-            }}>
+            <navigation className={"f-nav max_width"} style={{maxWidth: 1070}}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                 { global.categories?.length > 0 ?
                     global.categories.map((category) => (
                         <a className={"f-nav-button"}
@@ -33,6 +31,7 @@ const Navigation = ({ selectCategory, includedCategory }) => {
                         </div>
                     ))
                 }
+                </div>
             </navigation>
         </>
     )

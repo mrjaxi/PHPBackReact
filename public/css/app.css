@@ -372,8 +372,8 @@ button:focus {
   white-space: nowrap;
   background: rgba(255, 255, 255, 0.48);
   box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.05);
-  -webkit-backdrop-filter: blur(56px);
-  backdrop-filter: blur(56px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: #1D1D1F;
   font-size: 24px;
   font-weight: 400;

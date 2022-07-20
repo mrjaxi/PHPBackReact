@@ -77,8 +77,6 @@ const Login = ({visible, setVisible}) => {
                 onOk={() => setVisible(false)}
                 onCancel={() => setVisible(false)}
                 destroyOnClose={true}
-                width={"50vw"}
-                height={"60vh"}
                 footer={null}
                 bodyStyle={{
                     width: '100%',
@@ -86,12 +84,12 @@ const Login = ({visible, setVisible}) => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    padding: "24px 24px 0",
+                    padding: "48px 48px 32px",
                 }}
             >
                 {
                     isSent ?
-                        <div style={{ minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                             <a onClick={() =>
                             {
                                 setIsSent(false)
@@ -107,7 +105,7 @@ const Login = ({visible, setVisible}) => {
                             />
                         </div>
                          :
-                        <div className={"f-login"} style={{minHeight: "50vh"}}>
+                        <div className={"f-login"}>
                             <a onClick={() => setVisible(!visible)}
                                style={{position: 'absolute', top: 30, right: 30, height: 25, width: 25}}>
                                 <img src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>
