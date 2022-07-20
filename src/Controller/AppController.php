@@ -90,7 +90,7 @@ class AppController extends AbstractController
             if ($file_preview) {
 
                 $ffmpeg = FFMpeg::create($paramsFfmpeg);
-                $video = $ffmpeg->open($project_dir  . $filename)
+                $video = $ffmpeg->open($project_dir . $filename)
                     ->frame(TimeCode::fromSeconds(1))
                     ->save($project_dir . $file_preview);
 
@@ -122,7 +122,7 @@ class AppController extends AbstractController
 //            ];
             $res = [
                 'state' => 'success',
-                'filename' => '/' . $_SERVER["APP_NAME"] . '/' . ($prefix ? $prefix . '/' : '' ) . $filename,
+                'filename' => '/' . $_SERVER["APP_NAME"] . '/' . ($prefix ? $prefix . '/' : '') . $filename,
                 'original_name' => $file->getClientOriginalName(),
                 'id' => uniqid()
             ];
@@ -137,11 +137,11 @@ class AppController extends AbstractController
         return $res;
     }
 
-    static public function sendEmail(MailerInterface $mailer, $message, $subject="Новый отзыв", $tomail="bumblebeelion@atma.company", $from_mail = "atmaguru@atmadev.ru", $bcc = "bumblebeelion@atma.company")
+    static public function sendEmail(MailerInterface $mailer, $message, $subject = "Новый отзыв", $tomail = "bumblebeelion@atma.company", $from_mail = "atmaguru@atmadev.ru", $bcc = "yakov@atmapro.ru")
     { // damedvedev@atmapro.ru  bumblebeelion@atma.company  atmaguru@atmadev.ru
         if (!empty($message)) {
             $email = (new Email())
-                ->from($from_mail)
+                ->from($_ENV['MAILER_FROM'])
                 ->to($tomail)
                 ->bcc($bcc)
                 ->subject($subject)
@@ -155,7 +155,7 @@ class AppController extends AbstractController
         return false;
     }
 
-    static public function array_sort($array, $on, $order=SORT_ASC)
+    static public function array_sort($array, $on, $order = SORT_ASC)
     {
         $new_array = array();
         $sortable_array = array();
@@ -211,7 +211,8 @@ class AppController extends AbstractController
         return $uuid;
     }
 
-    static public function curl($url, $method, $params=array()){
+    static public function curl($url, $method, $params = array())
+    {
         $api_key = "va1wkw9GXs4NhbzgQkGs";
 
         $curl = curl_init();
@@ -244,31 +245,41 @@ class AppController extends AbstractController
             $num = $num % 10;
         }
 
-        $out = ($show) ?  $value . ' ' : '';
+        $out = ($show) ? $value . ' ' : '';
         switch ($num) {
-            case 1:  $out .= $words[0]; break;
+            case 1:
+                $out .= $words[0];
+                break;
             case 2:
             case 3:
-            case 4:  $out .= $words[1]; break;
-            default: $out .= $words[2]; break;
+            case 4:
+                $out .= $words[1];
+                break;
+            default:
+                $out .= $words[2];
+                break;
         }
 
         return $out;
     }
 
-    static public function decodeBase64User($userBase64){
+    static public function decodeBase64User($userBase64)
+    {
         return explode(":", base64_decode(strtr($userBase64, '._-', '+/=')));
     }
 
-    static public function encodeBase64User($email, $pass){
+    static public function encodeBase64User($email, $pass)
+    {
         return strtr(base64_encode($email . ':' . $pass), '+/=', '._-');
     }
 
-    static public function getExpires(){
+    static public function getExpires()
+    {
         return time() + 3600 * 6;
     }
 
-    static public function checkExpires($expires){
+    static public function checkExpires($expires)
+    {
         return time() < $expires;
     }
 }
