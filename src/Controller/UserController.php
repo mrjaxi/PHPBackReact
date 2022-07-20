@@ -201,7 +201,7 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         if (empty($data['email']) or empty($data['first_name'])) {
-            return $this->json(['state' => 'error', 'message' => "Передайте email и Имя. Опционально Фамилию и Отчество"]);
+            return $this->json(['state' => 'error', 'message' => "Передайте email и Имя. Опционально Фамилию, Отчество, Номер телефона и Адрес фотографии "]);
         }
         /* @var User */
         $user = $this->userRepository->findOneBy(['email' => $data['email']]);
@@ -215,6 +215,12 @@ class UserController extends AbstractController
         }
         if (!empty($data['last_name'])) {
             $user->setLastName($data['last_name']);
+        }
+        if (!empty($data['phone'])) {
+            $user->setPhone($data['phone']);
+        }
+        if (!empty($data['image'])) {
+            $user->setImage($data['image']);
         }
         $this->userRepository->save($user);
 
