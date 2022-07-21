@@ -242,6 +242,10 @@ const Profile = () => {
                                                         </div>
                                                 }
                                             </div>
+                                            <div style={{ marginLeft: 58 }}>
+                                                <p style={{ fontSize: 17, color: "#1D1D1D" }}>Почта: {user.email}</p>
+                                                <p style={{ fontSize: 17, color: "#1D1D1D" }}>Номер телефона: +{user.phone}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -27,6 +27,7 @@ global.parseToIdeaItems = (ideas, data = [], showComments = false, allowComments
             photo: idea.photo,
             comments: idea.comments,
             like: Number(idea.likes),
+            href: idea.href,
             dislike: 0,
             user: idea.user,
             officialComment: idea.officialComment,
@@ -644,13 +645,6 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                         : <></>
                                     }
                                 </div>
-                                {/*<div>*/}
-                                {/*    <a className={"f-cards-under-block-like"} href={"#"}>*/}
-                                {/*        <i className="em em--1"*/}
-                                {/*           aria-label="THUMBS DOWN SIGN"></i>*/}
-                                {/*        <span className={"f-cards-under-block-like-text"}>Не нравится</span>*/}
-                                {/*    </a>*/}
-                                {/*</div>*/}
                                 {
                                     showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el))) &&
                                     <div>
@@ -686,7 +680,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                         </div>
                         {
                             idea.showComments &&
-                            <Comments onDeleteComment={onDeleteComment} allowComments={idea.allowComments} idea={idea}
+                            <Comments onDeleteComment={onDeleteComment} href={idea.href} allowComments={idea.allowComments} idea={idea}
                                       index={index} setStatus={setIdeaStatus}
                                       comments={idea.comments} setIdea={setIdea} setComments={setIdeaComments}/>
 

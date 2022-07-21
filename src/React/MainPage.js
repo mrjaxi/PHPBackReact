@@ -209,18 +209,13 @@ const MainPage = (props) => {
                 <div key={3} style={{ minHeight: "100vh"}}>
                     {
                         showWelcomeText !== true ?
-                        <section className={"max_width"} style={{marginTop: 150, marginBottom: 130, maxWidth: 1150, padding: '0 70px'}}>
+                        <section className={"max_width"} style={{marginTop: 150, marginBottom: 75, maxWidth: 1150, padding: '0 70px'}}>
                             <div className={"f-section"}>
                                 <div>
                                     <span className={"f-section-wrap-p-text"} style={{
                                         marginBottom: 0,
                                         marginTop: "20px",
                                     }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами
-                                        <Button
-                                            onClick={() => disableStartText()}
-                                            ghost shape={"round"}
-                                            style={{ position: 'relative', top: -20, left: 20, height: 60, color: "#1D1D1F",
-                                                fontSize: 17, borderColor: "#1D1D1F14" }}>Больше не показывать</Button>
                                     </span>
                                 </div>
                             </div>
@@ -248,7 +243,7 @@ const MainPage = (props) => {
                             position: "relative",
                             left: 250,
                             marginBottom: 100,
-                            marginTop: 100
+                            marginTop: 60
                         }}>
                         <div style={{ width: "100%", maxWidth: 1000, }}>
                             { loading ? <LoadingIdeas type={true}/>

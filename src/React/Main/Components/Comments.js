@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 const {Title} = Typography;
 const {TextArea} = Input;
 
-const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, setStatus=()=>{} }) => {
+const Comments = ({comments, setComments, href, idea, setIdea, allowComments, flag, setStatus=()=>{} }) => {
 
     const [form] = Form.useForm();
     const [showComments, setShowComments] = useState(true);
@@ -144,7 +144,13 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
     return (
         <div className={"f-comments"}>
             <Login visible={visible} setVisible={setVisible}/>
-            <span className={"f-comments-tip-text"} style={{paddingLeft: 40}}>Комментарии</span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {
+                    (["ROLE_ADMIN", "ROLE_DEV"].some(el => global.user?.roles?.includes(el)) && href) &&
+                    <span style={{ marginBottom: 20, paddingLeft: 40, fontSize: 17 }}>Отправлено из: <a style={{ fontSize: 17}} href={href}>{href}</a></span>
+                }
+                <span className={"f-comments-tip-text"} style={{paddingLeft: 40}}>Комментарии</span>
+            </div>
             {
                 rawCommentsData.length > 3 &&
                 <div className={"f-comments-under-text"} style={{paddingLeft: 40, paddingRight: 50}}>
