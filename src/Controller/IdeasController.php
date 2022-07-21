@@ -154,7 +154,7 @@ class IdeasController extends AbstractController
         }
         $category = $this->getCategoryOrCreate($data['category']);
         $type = $this->getTypeOrCreate($data['type']);
-        $photo = $data['photo'] ?: null;
+        $photo = isset($data['photo']) ? $data['photo'] : null;
         $status = $this->statusRepository->findOneBy(['name' => 'new']);
 
         $idea = new Ideas();
