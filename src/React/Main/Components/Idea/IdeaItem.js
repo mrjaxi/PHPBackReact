@@ -552,7 +552,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                                 </span>
                                                                 : <span>
                                                                     {idea.text}
-                                                                    <a style={{zIndex: 3}} onClick={() => showText(idea.showFullText)}>Скрыть</a>
+                                                                    <a style={{zIndex: 3}} onClick={() => showText(idea.showFullText)}>&nbsp;Скрыть</a>
                                                                 </span>
                                                     }
                                                 </Linkify>

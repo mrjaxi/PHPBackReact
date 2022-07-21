@@ -13,7 +13,7 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
 
     const [form] = Form.useForm();
     const [showComments, setShowComments] = useState(true);
-    const [commentsData, setCommentsData] = useState(comments.filter((item, index) => index < 3));
+    const [commentsData, setCommentsData] = useState(comments.filter((item, index) => index > (comments.length - 4)));
     const [rawCommentsData, setRawCommentsData] = useState(comments);
     const [visible, setVisible] = useState(false);
     const [editableId, setEditableId] = useState(false);
@@ -63,10 +63,9 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                                 form.resetFields()
                                 let data = [...rawCommentsData];
                                 data.push({...response.data?.comment, dateString: global.getDateString(new Date())});
-                                setCommentsData(data);
+                                setCommentsData(showComments ? data.filter((item, index) => index > (data.length - 4)) : data);
                                 setRawCommentsData(data);
                                 setComments(data)
-                                setShowComments(false)
                             },
                             function () {
                                 global.openNotification("Ошибка", response.data?.message, "error")
@@ -87,16 +86,22 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                     function () {
                         let newIdea = {...idea}
                         let newComments = [...rawCommentsData];
-                        newComments[index].content = newValue;
-                        newComments[index].updated = true;
-                        if(newIdea?.officialComment?.id === newComments[index]?.id) {
-                            newIdea.officialComment = newComments[index]
-                        }
-                        newIdea.comments = newComments
-                        setIdea(newIdea)
 
-                        setCommentsData(newComments);
-                        setRawCommentsData(newComments);
+                        let commentData = newComments.map(item => {
+                            if (item.id === Number(commentID)){
+                                item.content = newValue
+                                item.updated = true
+                            }
+                            return item;
+                        });
+
+                        if(newIdea?.officialComment?.id === commentData[index]?.id) {
+                            newIdea.officialComment = commentData[index]
+                        }
+                        newIdea.comments = commentData
+                        setIdea(newIdea)
+                        setCommentsData(showComments ? commentData.filter((item, index) => index > (commentData.length - 4)) : commentData);
+                        setRawCommentsData(commentData);
                         setEditableId(false);
                         global.openNotification("Успешно", "Комментарий отредактирован", "success")
                     },
@@ -118,12 +123,12 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                         newIdea.officialComment = null;
                         let dataComments = rawCommentsData.filter(item => item.id !== id);
                         newIdea.comments = dataComments
-                        setCommentsData(dataComments);
+                        setCommentsData(showComments ? dataComments.filter((item, index) => index > (dataComments.length - 4)) : dataComments);
                         setRawCommentsData(dataComments);
                         setIdea(newIdea);
                     } else {
                         let dataComments = rawCommentsData.filter(item => item.id !== id);
-                        setCommentsData(dataComments);
+                        setCommentsData(showComments ? dataComments.filter((item, index) => index > (dataComments.length - 4)) : dataComments);
                         setRawCommentsData(dataComments);
                         setComments(dataComments);
                     }
@@ -140,6 +145,21 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
         <div className={"f-comments"}>
             <Login visible={visible} setVisible={setVisible}/>
             <span className={"f-comments-tip-text"} style={{paddingLeft: 40}}>Комментарии</span>
+            {
+                rawCommentsData.length > 3 &&
+                <div className={"f-comments-under-text"} style={{paddingLeft: 40, paddingRight: 50}}>
+                    <a
+                        className={"f-comments-text-button"}
+                        onClick={() => {
+                            if (showComments) {
+                                setCommentsData(rawCommentsData), setShowComments(false)
+                            }
+                            if (!showComments) {
+                                setCommentsData(rawCommentsData.filter((item, index) => index > (comments.length - 4))), setShowComments(true)
+                            }
+                        }}>{(showComments) ? "Показать следующие комментарии" : "Скрыть"}</a>
+                </div>
+            }
             <div className={"f-comments-scroll"}>
                 {
                     flag ? <></> :
@@ -278,21 +298,6 @@ const Comments = ({comments, setComments, idea, setIdea, allowComments, flag, se
                                             </div>
                                         </div>
                                     </div>
-                                    {
-                                        (rawCommentsData.length > 3 && index === commentsData.length - 1) &&
-                                        <div className={"f-comments-under-text"} style={{paddingLeft: 40, paddingRight: 50}}>
-                                            <a
-                                                className={"f-comments-text-button"}
-                                                onClick={() => {
-                                                if (index === 2 && showComments) {
-                                                    setCommentsData(rawCommentsData), setShowComments(false)
-                                                }
-                                                if (index === rawCommentsData.length - 1 && !showComments) {
-                                                    setCommentsData(rawCommentsData.filter((item, index) => index < 3)), setShowComments(true)
-                                                }
-                                            }}>{(index === 2 && showComments) ? "Показать следующие комментарии" : "Скрыть"}</a>
-                                        </div>
-                                    }
                                 </>
                             ))
                 }

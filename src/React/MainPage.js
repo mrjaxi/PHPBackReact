@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import './sass/main-component.scss'
-import {Col, Skeleton} from "antd";
+import {Button, Col, Skeleton} from "antd";
 import axios from "axios";
 import Header from "./Main/Components/Header";
 import Navigation from "./Main/Components/Navigation";
@@ -12,7 +12,9 @@ import EmptyIdeas from "./Main/Components/Idea/EmptyIdeas";
 import Login from "./Main/Auth/Login";
 import InfiniteScroll from "react-infinite-scroll-component";
 const cancelTokenSource = axios.CancelToken;
+import Cookies from 'universal-cookie';
 let cancel = undefined;
+const cookies = new Cookies();
 
 global.handleResponse = function( response, success=()=>{}, error=()=>{}, trouble=()=>{}, defaultFunc=()=>{} ) {
     switch (response.data?.state) {
@@ -65,6 +67,7 @@ const MainPage = (props) => {
 
     const [loading, setLoading] = useState(true);
     const [loadingInfinite, setLoadingInfinite] = useState(true);
+    const [showWelcomeText, setShowWelcomeText] = useState(Boolean(cookies.get("welcomeText")));
 
     useEffect(() => {
         updateStatuses()
@@ -188,6 +191,11 @@ const MainPage = (props) => {
         updateStatuses()
     };
 
+    const disableStartText = () => {
+        cookies.set('welcomeText', true, { path: '/' });
+        setShowWelcomeText(true)
+    };
+
     return (
         <>
             <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
@@ -199,16 +207,25 @@ const MainPage = (props) => {
                     includedTypes={includedTypes}
                 />
                 <div key={3} style={{ minHeight: "100vh"}}>
-                    <section className={"max_width"} style={{marginTop: 150, marginBottom: 130, maxWidth: 1150, padding: '0 70px'}}>
-                        <div className={"f-section"}>
-                            <div>
-                                <p className={"f-section-wrap-p-text"} style={{
-                                    marginBottom: 0,
-                                    marginTop: "20px",
-                                }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами</p>
+                    {
+                        showWelcomeText !== true ?
+                        <section className={"max_width"} style={{marginTop: 150, marginBottom: 130, maxWidth: 1150, padding: '0 70px'}}>
+                            <div className={"f-section"}>
+                                <div>
+                                    <span className={"f-section-wrap-p-text"} style={{
+                                        marginBottom: 0,
+                                        marginTop: "20px",
+                                    }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами
+                                        <Button
+                                            onClick={() => disableStartText()}
+                                            ghost shape={"round"}
+                                            style={{ position: 'relative', top: -20, left: 20, height: 60, color: "#1D1D1F",
+                                                fontSize: 17, borderColor: "#1D1D1F14" }}>Больше не показывать</Button>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    </section>
+                        </section> : <></>
+                    }
                     <div id={"start"}/>
                     <Navigation
                         selectCategory={selectCategory}
@@ -231,6 +248,7 @@ const MainPage = (props) => {
                             position: "relative",
                             left: 250,
                             marginBottom: 100,
+                            marginTop: 100
                         }}>
                         <div style={{ width: "100%", maxWidth: 1000, }}>
                             { loading ? <LoadingIdeas type={true}/>
@@ -278,6 +296,7 @@ const MainPage = (props) => {
                             top: -100,
                             minWidth: 250,
                             maxWidth: 250,
+                            marginTop: 120
                         }}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"}>
