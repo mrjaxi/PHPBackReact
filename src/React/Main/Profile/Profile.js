@@ -243,7 +243,7 @@ const Profile = () => {
                                                 }
                                             </div>
                                             {
-                                                (user?.email || user?.phone) &&
+                                                ((user?.email || user?.phone) && ["ROLE_ADMIN", "ROLE_DEV"].some(el => global.user?.roles?.includes(el))) &&
                                                 <div style={{ marginLeft: 58 }}>
                                                     {
                                                         user?.email && <p style={{ fontSize: 17, color: "#1D1D1D" }}>Почта: {user.email}</p>
