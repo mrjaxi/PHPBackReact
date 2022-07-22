@@ -57,11 +57,17 @@ class Comments
      */
     private $is_checked = false;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $photo;
+
     public function get_Info($idea=false): ?array
     {
         $info = [
             "id" => $this->id,
             "content" => $this->content,
+            "photo" => $this->photo,
             "date" => $this->date->format('Y-m-d H:i:s'),
             "updated" => null,
             "is_checked" => $this->is_checked,
@@ -183,6 +189,18 @@ class Comments
     public function setIdea(?Ideas $idea): self
     {
         $this->idea = $idea;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }

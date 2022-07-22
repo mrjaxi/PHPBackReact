@@ -202,7 +202,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                                         <span style={{color: "black"}}>
                                                             {(comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")).trim()}
                                                             {
-                                                                ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles.includes(el)) &&
+                                                                ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles?.includes(el)) &&
                                                                 <img style={{marginBottom: 3, marginLeft: 5}} src={"/i/official.svg"}
                                                                      width={15} height={15}/>
                                                             }

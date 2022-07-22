@@ -501,11 +501,10 @@ class UserController extends AbstractController
     private function sendToMail(MailerInterface $mailer, string $message, string $subject, string $toMail): bool
     {
         // Берем почты из бд
-        $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
         $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
         try {
-            if (!empty($toMail) and !empty($from_mail) and !empty($bcc_mail)) {
-                AppController::sendEmail($mailer, $message, $subject, $toMail, $from_mail->getValue(), $bcc_mail->getValue());
+            if (!empty($toMail) and !empty($bcc_mail)) {
+                AppController::sendEmail($mailer, $message, $subject, $toMail, $bcc_mail->getValue());
                 return true;
             } else {
                 return false;

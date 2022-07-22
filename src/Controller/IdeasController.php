@@ -277,7 +277,7 @@ class IdeasController extends AbstractController
         $statuses = array();
         if (empty($request->get("status"))) {
             foreach ($data['status'] as $status) {
-                if ($status->getName() != "new") {
+                if ($status->getName() != "new" && $status->getName() != "declined") {
                     $statuses[] = $status->getId();
                 }
             }
@@ -285,7 +285,7 @@ class IdeasController extends AbstractController
             $statusGET = json_decode($request->get("status"));
             if (empty($statusGET) or gettype($statusGET[0]) != "integer") {
                 foreach ($data['status'] as $status) {
-                    if ($status->getName() != "new") {
+                    if ($status->getName() != "new" && $status->getName() != "declined") {
                         $statuses[] = $status->getId();
                     }
                 }
@@ -535,6 +535,9 @@ class IdeasController extends AbstractController
         $newComment->setIdea($idea)
             ->setUser($user)
             ->setContent($content);
+        if (!empty($data['photo'])) {
+            $newComment->setPhoto($data['photo']);
+        }
         if($idea->get_User()->getId() === $user->getId()){
             $newComment->setIsChecked(true);
         }
@@ -590,6 +593,9 @@ class IdeasController extends AbstractController
         $newComment->setIdea($idea)
             ->setUser($user)
             ->setContent($content);
+        if (!empty($data['photo'])) {
+            $newComment->setPhoto($data['photo']);
+        }
         if($idea->get_User()->getId() === $user->getId()){
             $newComment->setIsChecked(true);
         }
@@ -851,13 +857,15 @@ class IdeasController extends AbstractController
             if ($newStatus->getName() == $idea->get_Status()->getName()) {
                 return $this->json(['state' => 'error', 'message' => "Нельзя поменять статус на такой же как и прежде"]);
             }
-            if ($idea->get_Status()->getName() == "new" && $idea->getAllowComments()) {
-                if ($idea->get_Type()->getName() == "Ошибка") {
-                    $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
-                        "title" => "Feedback. " . $idea->getTitle(),
-                        "description" => $idea->getContent()
-                    ));
-//                    dd($response);
+            if ($idea->get_Type()->getName() == "Ошибка") {
+                if ($idea->get_Status()->getName() != "started" && $idea->get_Status()->getName() != "planned" && $idea->getAllowComments()) {
+                    if ($newStatus->getName() == "started" || $newStatus->getName() == "planned") {
+                        $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
+                            "title" => "Feedback. " . $idea->getTitle(),
+                            "description" => $idea->getContent()
+                        ));
+//                        dd($response);
+                    }
                 }
             }
             $idea->setStatus($newStatus);
@@ -906,6 +914,7 @@ class IdeasController extends AbstractController
      */
     public function importPhpBackData(Request $request): Response
     {
+        $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->getContent(), true);
         if (empty($data) || empty($data["pass"]) ) {
             return $this->json(['state' => 'error', 'message' => "Данные не получены"]);
@@ -917,6 +926,16 @@ class IdeasController extends AbstractController
         $ideas = $data["ideas"];
         $comments = $data["comments"];
         $votes = $data["votes"];
+
+        $allComments = $this->commentsRepository->findAll();
+        $allVotes = $this->votesRepository->findAll();
+
+        foreach ($allComments as &$allComment){
+            $this->commentsRepository->remove($allComment);
+        }
+        foreach ($allVotes as &$allVote){
+            $this->votesRepository->remove($allVote);
+        }
 
         $usersArr = array();
         foreach ($users as &$user) {
@@ -984,7 +1003,7 @@ class IdeasController extends AbstractController
                 ->setUser($usersArr[$comment["userid"]])
                 ->setIdea($ideasArr[$comment["ideaid"]])
                 ->setIsChecked(true);
-            $this->commentsRepository->save($Comment);
+            $this->commentsRepository->save($Comment, false);
 //            dd($Comment);
             $commentsArr[$comment["id"]] = $Comment;
         }
@@ -995,10 +1014,11 @@ class IdeasController extends AbstractController
                 ->setUser($usersArr[$vote["userid"]])
                 ->setIdea($ideasArr[$vote["ideaid"]])
                 ->setType("like");
-            $this->votesRepository->save($Vote);
+            $this->votesRepository->save($Vote, false);
             $votesArr[$vote["id"]] = $Vote;
 //            dd($Vote);
         }
+        $em->flush();
         return $this->json([ 'state' => 'success' ]);
     }
 
@@ -1083,7 +1103,7 @@ class IdeasController extends AbstractController
         $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
         try {
             if (!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail)) {
-                AppController::sendEmail($mailer, $message, $subject, $admin_mail->getValue(), $from_mail->getValue(), $bcc_mail->getValue());
+                AppController::sendEmail($mailer, $message, $subject, $admin_mail->getValue(), $bcc_mail->getValue());
                 return true;
             } else {
                 return false;
@@ -1100,7 +1120,7 @@ class IdeasController extends AbstractController
         $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
         try {
             if (!empty($toMail) and !empty($from_mail) and !empty($bcc_mail)) {
-                AppController::sendEmail($mailer, $message, $subject, $toMail, $from_mail->getValue(), $bcc_mail->getValue());
+                AppController::sendEmail($mailer, $message, $subject, $toMail, $bcc_mail->getValue());
                 return true;
             } else {
                 return false;

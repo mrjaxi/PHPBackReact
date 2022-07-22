@@ -73,7 +73,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
 
     useEffect(() => {
         if (editable) {
-            console.log("idea changed")
+            // console.log("idea changed")
             setItem(idea, index)
         } else {
             setEditable(true)
@@ -159,7 +159,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                         function () {
                             newIdea.notification = false
                             setIdea(newIdea)
-                            console.log("все комменты чекнулись:", newIdea)
+                            // console.log("все комменты чекнулись:", newIdea)
                         },
                     )
                 })
@@ -293,7 +293,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                 <div className={"f-text-tags-wrap"}
                      onMouseOver={() => {
                          if(showEditButton){
-                             console.log("OVER TAGS")
+                             // console.log("OVER TAGS")
                              setShowEditButton(false)
                          }
                      }}>
@@ -408,7 +408,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                             <div className={"f-cards-avatar"}
                                  onMouseOver={() => {
                                      if(showEditButton){
-                                         console.log("OVER PROFILE")
+                                         // console.log("OVER PROFILE")
                                          setShowEditButton(false)
                                      }
                                  }}>
@@ -491,7 +491,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                             :
                                             <a style={{ width: '100%', display: 'inherit' }} onMouseOver={() => {
                                                     if(!showEditButton){
-                                                        console.log("OVER")
+                                                        // console.log("OVER")
                                                         setShowEditButton(true)
                                                     }
                                                 }}>
@@ -520,7 +520,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                 <div className={"f-cards-div-wrap-text"}
                                      onMouseOver={() => {
                                          if(showEditButton){
-                                             console.log("OVER CONTENT")
+                                             // console.log("OVER CONTENT")
                                              setShowEditButton(false)
                                          }
                                      }}>
@@ -564,7 +564,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                             <div className={"f-cards-under-block"}
                                  onMouseOver={() => {
                                      if(showEditButton){
-                                         console.log("OVER UNDER")
+                                         // console.log("OVER UNDER")
                                          setShowEditButton(false)
                                      }
                                  }}>

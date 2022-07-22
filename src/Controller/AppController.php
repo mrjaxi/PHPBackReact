@@ -137,7 +137,7 @@ class AppController extends AbstractController
         return $res;
     }
 
-    static public function sendEmail(MailerInterface $mailer, $message, $subject = "Новый отзыв", $tomail = "bumblebeelion@atma.company", $from_mail = "atmaguru@atmadev.ru", $bcc = "yakov@atmapro.ru")
+    static public function sendEmail(MailerInterface $mailer, $message, $subject = "Новый отзыв", $tomail = "bumblebeelion@atma.company", $bcc = "yakov@atmapro.ru")
     { // damedvedev@atmapro.ru  bumblebeelion@atma.company  atmaguru@atmadev.ru
         if (!empty($message)) {
             $email = (new Email())
