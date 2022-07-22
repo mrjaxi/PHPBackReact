@@ -1,6 +1,6 @@
 const ApiRoutes = {
     // TODO: Изменить роут
-    BASE_URL: "https://pbr.atmadev.ru",
+    BASE_URL: "https://tips.atmaguru.online",
     // BASE_URL: "http://127.0.0.1:8000",
 
     API_DECODE_USER_DATA: "/api/web/decode/user/",
