@@ -149,7 +149,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                     (["ROLE_ADMIN", "ROLE_DEV"].some(el => global.user?.roles?.includes(el)) && href) &&
                     <span style={{ marginBottom: 20, paddingLeft: 40, fontSize: 17 }}>Отправлено из: <a style={{ fontSize: 17}} href={href}>{href}</a></span>
                 }
-                <span className={"f-comments-tip-text"} style={{paddingLeft: 40}}>Комментарии</span>
+                <span className={"f-comments-tip-text"}>Комментарии</span>
             </div>
             {
                 rawCommentsData.length > 3 &&
@@ -170,7 +170,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                 {
                     flag ? <></> :
                     commentsData.length === 0 ? (
-                            <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{marginTop: 20, paddingLeft: 40, paddingRight: 50}}>
+                            <div className={"f-cards-avatar f-cards-avatar-bottom-border"} style={{marginTop: 20, paddingRight: 50}}>
                                 <span className={"f-cards-content-description"}>{
                                     allowComments ? "Вы можете оставить первый комментарий" : "Комментариев нет"
                                 }</span>
@@ -180,11 +180,8 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                 <>
                                     <div
                                         key={index}
-                                        className={"f-cards-avatar f-cards-avatar-bottom-border"}
+                                        className={"f-cards-avatar f-cards-avatar-bottom-border f-addon-style"}
                                         style={{
-                                            display: "block",
-                                            marginBottom: 0,
-                                            padding: "40px 50px 20px 40px",
                                             backgroundColor: (!comment?.is_checked && idea?.user.id === global.user.id) ? "#42C82C50" : "#ffffff00"
                                         }}
                                     >
@@ -310,7 +307,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
             </div>
             {
                 allowComments &&
-                <div className={"f-write-comments"} key={2} style={{paddingLeft: 40, paddingRight: 50}}>
+                <div className={"f-write-comments"} key={2}>
                     <Title>Написать</Title>
                     <Form form={form}
                           onFinish={(values) => sendComment(values.comment)}

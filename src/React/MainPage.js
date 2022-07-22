@@ -209,7 +209,7 @@ const MainPage = (props) => {
                 <div key={3} style={{ minHeight: "100vh"}}>
                     {
                         showWelcomeText !== true ?
-                        <section className={"max_width"} style={{marginTop: 150, marginBottom: 75, maxWidth: 1150, padding: '0 70px'}}>
+                        <section className={"max_width f-wrap-elements"}>
                             <div className={"f-section"}>
                                 <div>
                                     <span className={"f-section-wrap-p-text"} style={{
@@ -235,15 +235,9 @@ const MainPage = (props) => {
                                 <p className={"f-new-idea-text"}></p>
                             </a>
                     }
-                    <div className={"max_width"}>
-                        <div style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            width: "calc(100% - 250px)",
-                            position: "relative",
-                            left: 250,
-                            marginBottom: 100,
-                            marginTop: 60
+                    <div className={"max_width f-cards-wrapper-pad"}>
+                        <div className={"f-cards-wrap"} style={{
+
                         }}>
                         <div style={{ width: "100%", maxWidth: 1000, }}>
                             { loading ? <LoadingIdeas type={true}/>
@@ -262,12 +256,7 @@ const MainPage = (props) => {
                                         dataLength={ideas.length}
                                         loader={loadingInfinite ? <LoadingIdeas type={true}/> : <></>}
                                     >
-                                        <div style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            flexDirection: "column",
-                                            maxWidth: 1000,
-                                        }}>
+                                        <div className={"f-ideas-scroll"}>
                                         {
                                             ideas.map((idea, index) => (
                                                 <IdeaItem
@@ -286,13 +275,7 @@ const MainPage = (props) => {
                                     </InfiniteScroll>
                             }
                         </div>
-                        <section style={{
-                            position: "relative",
-                            top: -100,
-                            minWidth: 250,
-                            maxWidth: 250,
-                            marginTop: 120
-                        }}>
+                        <section className={"f-side-block-items"}>
                             <div className={"f-side-block"}>
                                 <div className={"f-side-panel-wrap"}>
                                     { statuses?.length > 0 ?

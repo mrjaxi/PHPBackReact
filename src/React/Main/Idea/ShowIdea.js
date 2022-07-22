@@ -109,24 +109,15 @@ const ShowIdea = (props) => {
             <Col className={"f-main"} style={{ minHeight: '100vh' }}>
                 <div>
                     <Header />
-                    <div className={"max_width"} style={{paddingTop: 100}}>
+                    <div className={"max_width f-cards-wrapper-pad"}>
                         <div style={{
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: 'center',
                             alignItems: "flex-start",
                         }}>
-                            <div className={"max_width"}>
-                                <div style={{
-                                    display: "flex",
-                                    justifyContent: 'center',
-                                    flexDirection: "column",
-                                    alignItems: "flex-start",
-                                    width: '50vw',
-                                    minWidth: 550,
-                                    minHeight: '60vh',
-                                    maxWidth: 1000
-                                }}>
+                            <div className={"max_width f-cards-wrapper-pad"}>
+                                <div className={"f-single-idea-wrap"}>
                                     { loading ? <LoadingIdeas/> : (
                                         <>
                                             { ideas[0] ? <IdeaItem item={ideas[0]} index={ideas[0].idea_id} setItem={setIdea}/>

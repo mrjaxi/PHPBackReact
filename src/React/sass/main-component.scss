@@ -123,16 +123,109 @@ button:focus {
     }
 }
 
+.ant-modal-body {
+    padding: 48px 48px 32px;
+}
+
 .anb {
     border: none!important;
 }
 
 .f {
+    &-side-block-items {
+        position: relative;
+        top: -100px;
+        min-width: 250px;
+        max-width: 250px;
+        margin-top: 120px;
+    }
+
+    &-clode-button-login {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      height: 25px;
+      width: 25px
+    }
+
+    &-wrap-login {
+        display: flex;
+        position: fixed;
+        top: 38px;
+        right: 45px;
+        z-index: 10;
+    }
+
+    &-cards-under-wrap {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    &-addon-style {
+        display: block;
+        margin-bottom: 0;
+        padding: 40px 50px 20px 40px;
+    }
+
+    &-cards-wrap {
+        display: flex;
+        justify-content: center;
+        width: calc(100% - 250px);
+        position: relative;
+        left: 250px;
+        margin-bottom: 100px;
+        margin-top: 60px
+    }
+
+    &-cards-wrapper-pad {
+        margin-top: 70px;
+    }
+
+    &-single-idea-wrap {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 50vw;
+        min-width: 550px;
+        min-height: 60vh;
+        max-width: 1000px;
+    }
+
+    &-body-login {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 48px 48px 32px;
+    }
+
+    &-wrap-elements {
+        margin-top: 150px;
+        margin-bottom: 75px;
+        max-width: 1150px;
+        padding: 0 70px;
+    }
+
+    &-ideas-scroll {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        max-width: 1000px;
+    }
+
     &-input-search {
         width: 97%;
         border: none;
         font-size: 21px;
         color: #191919;
+    }
+
+    &-wrap-idea-text {
+        padding-left: 40px;
+        padding-right: 50px;
     }
 
     &-text-tags-wrap {
@@ -377,6 +470,7 @@ button:focus {
             color: #1D1D1F;
             font-size: 21px;
             margin-right: 50px;
+            padding-left: 20px;
         }
     }
 
@@ -437,6 +531,8 @@ button:focus {
         display: flex;
         flex-direction: column;
         margin-top: 45px;
+        padding-left: 40px;
+        padding-right: 50px;
 
         &-title {
             font-size: 48px;
@@ -596,6 +692,7 @@ button:focus {
                 border-bottom-color: #E6E9ED;
                 border-bottom-style: solid;
                 padding-bottom: 20px;
+                padding-left: 40px;
             }
         }
 

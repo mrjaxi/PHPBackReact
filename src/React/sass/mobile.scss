@@ -1,0 +1,173 @@
+@media (max-width: 800px) {
+  .f-nav-wrap {
+    position: fixed;
+    bottom: 25px;
+    left: 10px;
+    overflow-y: scroll;
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    scroll-behavior: unset;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .f-nav-wrap::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .f-cards-under-block {
+    margin-bottom: 10px;
+  }
+
+  .f-new-idea {
+    bottom: 100px;
+    left: 10px;
+  }
+
+  .f-nav-button {
+    height: 50px;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 11px 14px;
+  }
+
+  .f-search-click, .f-logo-click, .f-side-block-items, .f-wrap-elements {
+    display: none;
+  }
+
+  .f-cards-wrap {
+    display: flex;
+    justify-content: center;
+    width: auto;
+    position: unset;
+    margin-bottom: 100px;
+    margin-top: 120px;
+  }
+
+  .f-cards-wrapper-pad {
+    max-width: unset;
+    margin: unset;
+    margin-top: 70px;
+    width: 100%;
+  }
+
+  .f-single-idea-wrap {
+    width: unset;
+    min-width: unset;
+    min-height: unset;
+  }
+
+  .f-cards-under-wrap {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .f-ideas-scroll {
+    max-width: 100%;
+  }
+
+  .f-cards {
+    min-width: unset;
+  }
+
+  .f-cards-div-wrap-text {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    margin-top: 20px;
+  }
+
+  .f-wrap-idea-text {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .f-wrap-login {
+    right: 20px;
+  }
+
+  .f-cards-hashtag {
+     margin-left: 20px;
+  }
+
+  .f-cards-type-viewed {
+    display: none;
+  }
+
+  .f-comments {
+    margin-top: 20px;
+    padding-top: 20px;
+    margin-bottom: unset;
+  }
+
+  .f-addon-style {
+    padding: 40px 20px 20px 20px;
+  }
+
+  .f-cards-avatar-bottom-border {
+    padding-left: 20px;
+  }
+
+  .f-write-comments {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .disable {
+    right: 22px;
+    bottom: 25px;
+  }
+
+  .logo-circle {
+    display: none;
+  }
+
+  .f-header-wrap-logo {
+    background-color: #D9F94B;
+    padding: 3px;
+    border-radius: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .f-cards-content-text {
+    font-size: 28px;
+  }
+
+  .ant-modal-body {
+    padding: 20px;
+  }
+
+  .ant-form-horizontal {
+    width: 100%;
+  }
+
+  .f-body-login {
+    padding: unset;
+  }
+
+  .ant-input {
+    width: 100%;
+  }
+
+  .f-login {
+    margin-top: 24px;
+  }
+
+  .f-clode-button-login {
+    top: 55px;
+  }
+
+  .f-sublogin {
+    margin-top: unset;
+  }
+
+  .of-comment {
+    padding: 15px 20px 50px 20px;
+  }
+}

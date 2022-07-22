@@ -28,13 +28,7 @@ const Header = ({ search=true }) => {
                     <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
                 </Link>
             </div>
-            <div style={{
-                display: "flex",
-                position: "fixed",
-                top: 38,
-                right: 45,
-                zIndex: 10,
-            }}>
+            <div className={"f-wrap-login"}>
                 { search &&
                 <>
                     <Search
@@ -42,6 +36,7 @@ const Header = ({ search=true }) => {
                         setVisible={setVisibleSearch}
                     />
                     <a onClick={() => setVisibleSearch(!visibleSearch)}
+                       className={"f-search-click"}
                        style={{
                            marginTop: "auto",
                            marginBottom: "auto",
@@ -104,7 +99,7 @@ const Header = ({ search=true }) => {
                 }
             </div>
             <div className={"logo logo-circle"}/>
-            <Link to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
+            <Link className={"f-logo-click"}  to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
                 <div style={{ zIndex: 500 }} className={"logo logo-ag"}/>
             </Link>
         </header>

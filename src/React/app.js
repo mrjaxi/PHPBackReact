@@ -3,6 +3,7 @@ import './sass/main-component.scss'
 import './sass/add-idea.scss'
 import './sass/settings.scss'
 import './sass/official-comment.scss'
+import './sass/mobile.scss'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Layout, notification} from 'antd';

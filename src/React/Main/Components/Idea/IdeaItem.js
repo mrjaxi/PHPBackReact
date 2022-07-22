@@ -404,7 +404,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                         marginTop: idea?.photo !== null ? -40 : 0,
                         paddingBottom: (idea?.officialComment && !idea.showComments) && 60
                     }}>
-                        <div style={{paddingLeft: 40, paddingRight: 50}}>
+                        <div className={"f-wrap-idea-text"}>
                             <div className={"f-cards-avatar"}
                                  onMouseOver={() => {
                                      if(showEditButton){
@@ -568,7 +568,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                          setShowEditButton(false)
                                      }
                                  }}>
-                                <div style={{display: "flex", flexDirection: 'row', alignItems: 'center'}}>
+                                <div className={"f-cards-under-wrap"}>
                                     {(idea.notification === true) &&
                                     <div style={{
                                         width: 6,

@@ -176,7 +176,7 @@ const AddIdeaPage = () => {
 
     return (
         <>
-            <div className={"f-login"} style={{ paddingBottom: 95, paddingTop: 95 }}>
+            <div className={"f-login f-sublogin"} style={{ paddingBottom: 95, paddingTop: 95 }}>
                 <Form
                     name={"addIdea"}
                     onFinish={(values) => onSend(values)}
