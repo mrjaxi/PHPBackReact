@@ -84,7 +84,6 @@ const Login = ({visible, setVisible}) => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    padding: "48px 48px 32px",
                 }}
             >
                 {
@@ -106,8 +105,7 @@ const Login = ({visible, setVisible}) => {
                         </div>
                          :
                         <div className={"f-login"}>
-                            <a onClick={() => setVisible(!visible)}
-                               style={{position: 'absolute', top: 30, right: 30, height: 25, width: 25}}>
+                            <a onClick={() => setVisible(!visible)} className={"f-clode-button-login"}>
                                 <img src={"/i/close-login.svg"} alt={"Вернуться в главное меню"}/>
                             </a>
                             <Form
@@ -138,7 +136,7 @@ const Login = ({visible, setVisible}) => {
                                         },
                                     ]}
                                 >
-                                    <Input size={"large"} style={{padding: '10px 15px 10px 15px', width: '440px'}}
+                                    <Input size={"large"} style={{padding: '10px 15px 10px 15px'}}
                                            placeholder={"Электронная почта"}/>
                                 </Form.Item>
                                 {/*<Form.Item*/}
@@ -151,7 +149,7 @@ const Login = ({visible, setVisible}) => {
                                 {/*    ]}*/}
                                 {/*>*/}
                                 {/*    <Input.Password size={"large"}*/}
-                                {/*                    style={{padding: '10px 15px 10px 15px', width: '440px'}}*/}
+                                {/*                    style={{padding: '10px 15px 10px 15px'}}*/}
                                 {/*                    placeholder={"Пароль"}/>*/}
                                 {/*</Form.Item>*/}
                                 <Form.Item>
@@ -163,6 +161,7 @@ const Login = ({visible, setVisible}) => {
                                             borderRadius: 64,
                                             fontSize: 20,
                                             height: 60,
+                                            marginBottom: 0,
                                         }}
                                         disabled={blockButton} loading={loading} type="primary" htmlType="submit"
                                             shape="round">
