@@ -25,7 +25,7 @@ const Header = ({ search=true }) => {
                 left: 20,
                 zIndex: 10,
             }}>
-                <Link to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
+                <Link style={{ position: 'relative', top: '-1px' }} to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
                     <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
                 </Link>
             </div>
@@ -104,7 +104,7 @@ const Header = ({ search=true }) => {
                 <div className={"f-back-out-close"} onClick={() => setContentVisible(false)}/>
             }
             <div className={"logo logo-circle"}/>
-            <Link className={"f-logo-click"}  to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
+            <Link className={"f-logo-click"} to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
                 <div style={{ zIndex: 500 }} className={"logo logo-ag"}/>
             </Link>
         </header>

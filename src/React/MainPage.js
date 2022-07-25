@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import './sass/main-component.scss'
-import {Button, Col, Skeleton} from "antd";
+import {Button, Col, Drawer, Skeleton} from "antd";
 import axios from "axios";
 import Header from "./Main/Components/Header";
 import Navigation from "./Main/Components/Navigation";
@@ -65,6 +65,7 @@ const MainPage = (props) => {
 
     const [loading, setLoading] = useState(true);
     const [loadingInfinite, setLoadingInfinite] = useState(true);
+    const [showDrawer, setShowDrawer] = useState(false);
 
     useEffect(() => {
         updateStatuses()
@@ -213,6 +214,64 @@ const MainPage = (props) => {
                                 <p className={"f-new-idea-text"}></p>
                             </a>
                     }
+                    <div className={"f-hashtag-drawer"} onClick={() => setShowDrawer(!showDrawer)}>
+                        <p className={"f-text-drawer"}>#</p>
+                        <Drawer title="Статусы и типы" placement="bottom" visible={showDrawer}>
+                            <div className={"f-side-panel-wrap"}>
+                                { statuses?.length > 0 ?
+                                    statuses.map((status) => (
+                                        <a key={status.id} className={"f-side-panel-button-section"}
+                                           href={global.isFireFox ? null : "#start"}
+                                           onClick={() => {
+                                               selectStatus(status.id)
+                                               global._history.push({
+                                                   hash: "#start"
+                                               })
+                                           }}
+                                           style={{
+                                               color: includedStatuses.includes(status.id) && "#fff",
+                                               backgroundColor: includedStatuses.includes(status.id) && (status?.color ? status?.color : "#ffffff00"),
+                                               borderRadius: "65px",
+                                           }}
+                                        >{status.translate}
+                                            <span
+                                                className={"f-side-panel-count-subtext " + (includedStatuses.includes(status.id) && "f-block")}
+                                            >{status.ideasCount}</span>
+                                        </a>
+                                    ))
+                                    : [1,2,3,4,5].map((status) => (
+                                        <Skeleton style={{width: 200}} active paragraph={{ rows: 0 }}>
+                                            <a className={"f-side-panel-button-section"} style={{width: 260, height: 50}}>
+                                                <span className={"f-side-panel-count-subtext"}/>
+                                            </a>
+                                        </Skeleton>
+                                    ))
+                                }
+                            </div>
+                            <div className={"f-side-panel-wrap"}>
+                                { global.types?.length > 0 ?
+                                    global.types.map((type) => (
+                                        <a key={type.id} className={"f-side-panel-button"}
+                                           href={global.isFireFox ? null : "#start"}
+                                           onClick={() => {
+                                               selectType(type.id)
+                                               global._history.push({
+                                                   hash: "#start"
+                                               })
+                                           }}
+                                           style={{color: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED"),
+                                               borderColor: includedTypes.includes(type.id) && (type?.color ? type?.color : "#3D72ED") }}
+                                        >#{type.name}</a>
+                                    ))
+                                    : [1,2,3,4,5].map((type) => (
+                                        <Skeleton style={{width: 200}} active paragraph={{ rows: 0 }}>
+                                            <a className={"f-side-panel-button"} style={{width: 260, height: 50}}/>
+                                        </Skeleton>
+                                    ))
+                                }
+                            </div>
+                        </Drawer>
+                    </div>
                     <div className={"max_width f-cards-wrapper-pad"}>
                         <div className={"f-cards-wrap"} style={{
 

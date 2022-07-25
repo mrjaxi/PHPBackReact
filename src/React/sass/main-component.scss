@@ -145,7 +145,7 @@ button:focus {
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 3;
+        z-index: 5;
     }
 
     &-wrap-settings {
@@ -182,10 +182,18 @@ button:focus {
         align-items: center;
     }
 
+    &-hashtag-drawer {
+        visibility: hidden;
+    }
+
     &-addon-style {
         display: block;
         margin-bottom: 0;
         padding: 40px 50px 20px 40px;
+    }
+
+    &-header-wrap-logo-element {
+        top: -2px;
     }
 
     &-cards-wrap {

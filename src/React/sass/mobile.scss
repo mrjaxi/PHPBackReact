@@ -51,6 +51,11 @@
     padding: 11px 14px;
   }
 
+  .f-nav-button:hover {
+    background-color: #D9F94B;
+    color: #1D1D1F;
+  }
+
   .f-search-click, .f-logo-click, .f-side-block-items, .f-wrap-elements {
     display: none;
   }
@@ -107,7 +112,7 @@
   }
 
   .f-cards-hashtag {
-     margin-left: 20px;
+    margin-left: 20px;
   }
 
   .f-cards-type-viewed {
@@ -196,6 +201,7 @@
     margin-top: unset;
     width: 100%;
     padding: 20px;
+    min-height: 100vh;
   }
 
   .f-wrap-settings {
@@ -230,5 +236,51 @@
 
   .dropdown {
     top: -6px;
+  }
+
+  .f-hashtag-drawer {
+    visibility: visible;
+    position: fixed;
+    width: 60px;
+    height: 40px;
+    right: 0;
+    bottom: 110px;
+    background-color: #656D77;
+    box-shadow: 0 16px 32px 4px rgba(61, 114, 237, 0.24);
+    border-bottom-left-radius: 64px;
+    border-top-left-radius: 64px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: .4s;
+  }
+
+  .f-text-drawer {
+    white-space: nowrap;
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .f-side-panel-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .f-side-panel-button, .f-side-panel-button-section {
+    margin: 5px;
   }
 }
