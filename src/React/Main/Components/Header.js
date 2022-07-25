@@ -25,7 +25,7 @@ const Header = ({ search=true }) => {
                 left: 20,
                 zIndex: 10,
             }}>
-                <Link style={{ position: 'relative', top: '-1px' }} to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
+                <Link style={{ position: 'relative', top: 1 }} to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
                     <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
                 </Link>
             </div>
