@@ -569,6 +569,37 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                          setShowEditButton(false)
                                      }
                                  }}>
+                                {
+                                    showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el))) &&
+                                    <div className={"f-edit-mobile-style"}>
+                                        <Button style={{
+                                            paddingTop: 15,
+                                            paddingBottom: 15,
+                                            paddingRight: 20,
+                                            paddingLeft: 20,
+                                            borderRadius: 84,
+                                            fontSize: 17,
+                                            height: 60,
+                                        }} form={"edit-idea-"+index} loading={loadingEditChanges} type={"primary"}
+                                                htmlType={"submit"}>Сохранить</Button>
+                                        <Button onClick={() => {
+                                            setShowEditFields(false)
+                                        }} style={{
+                                            marginLeft: 10,
+                                            paddingTop: 15,
+                                            paddingBottom: 15,
+                                            paddingRight: 20,
+                                            paddingLeft: 20,
+                                            boxShadow: 'none',
+                                            color: '#1D1D1D',
+                                            borderRadius: 84,
+                                            backgroundColor: 'white',
+                                            border: "none",
+                                            fontSize: 17,
+                                            height: 60,
+                                        }} type={"button"}>Отмена</Button>
+                                    </div>
+                                }
                                 <div className={"f-cards-under-wrap"}>
                                     {(idea.notification === true) &&
                                     <div style={{
@@ -646,37 +677,6 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                         : <></>
                                     }
                                 </div>
-                                {
-                                    showEditFields && (idea.user.id === global.user?.id || ["ROLE_ADMIN"].some(el => global.user?.roles?.includes(el))) &&
-                                    <div>
-                                        <Button style={{
-                                            paddingTop: 15,
-                                            paddingBottom: 15,
-                                            paddingRight: 20,
-                                            paddingLeft: 20,
-                                            borderRadius: 84,
-                                            fontSize: 17,
-                                            height: 60,
-                                        }} form={"edit-idea-"+index} loading={loadingEditChanges} type={"primary"}
-                                                htmlType={"submit"}>Сохранить</Button>
-                                        <Button onClick={() => {
-                                            setShowEditFields(false)
-                                        }} style={{
-                                            marginLeft: 10,
-                                            paddingTop: 15,
-                                            paddingBottom: 15,
-                                            paddingRight: 20,
-                                            paddingLeft: 20,
-                                            boxShadow: 'none',
-                                            color: '#1D1D1D',
-                                            borderRadius: 84,
-                                            backgroundColor: 'white',
-                                            border: "none",
-                                            fontSize: 17,
-                                            height: 60,
-                                        }} type={"button"}>Отмена</Button>
-                                    </div>
-                                }
                             </div>
                         </div>
                         {
