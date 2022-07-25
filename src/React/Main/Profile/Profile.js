@@ -160,10 +160,10 @@ const Profile = () => {
                 {(notifications === false || notifications === true) && <Header/>}
                 {
                     global.layout !== "guest" ?
-                        <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea"}>
+                        <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea f-new-idea-profile"}>
                             <p className={"f-new-idea-text"}></p>
                         </NavLink> :
-                        <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea"}>
+                        <a onClick={() => setVisibleLogin(!visibleLogin)} className={"f-new-idea f-new-idea-profile"}>
                             <p className={"f-new-idea-text"}></p>
                         </a>
                 }
