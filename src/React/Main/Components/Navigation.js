@@ -9,10 +9,7 @@ const Navigation = ({ selectCategory, includedCategory }) => {
                 <div className={"f-nav-wrap"} style={{ display: 'flex', alignItems: 'center' }}>
                 { global.categories?.length > 0 ?
                     global.categories.map((category) => (
-                        <a className={"f-nav-button"}
-                           style={(includedCategory.includes(category.id)) ? {
-                               backgroundColor: "white",
-                           } : {}}
+                        <a className={"f-nav-button " + (includedCategory.includes(category.id) && "f-selected-nav-menu")}
                            key={category.id}
                            href={global.isFireFox ? null : "#start"}
                            onClick={() => {

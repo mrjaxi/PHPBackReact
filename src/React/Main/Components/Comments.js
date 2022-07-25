@@ -147,13 +147,13 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
             <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {
                     (["ROLE_ADMIN", "ROLE_DEV"].some(el => global.user?.roles?.includes(el)) && href) &&
-                    <span style={{ marginBottom: 20, paddingLeft: 40, fontSize: 17 }}>Отправлено из: <a style={{ fontSize: 17}} href={href}>{href}</a></span>
+                    <span className={"f-system-from"}>Отправлено из: <a style={{ fontSize: 17}} href={href}>{href}</a></span>
                 }
                 <span className={"f-comments-tip-text"}>Комментарии</span>
             </div>
             {
                 rawCommentsData.length > 3 &&
-                <div className={"f-comments-under-text"} style={{paddingLeft: 40, paddingRight: 50}}>
+                <div className={"f-comments-under-text"}>
                     <a
                         className={"f-comments-text-button"}
                         onClick={() => {

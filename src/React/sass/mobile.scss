@@ -1,20 +1,27 @@
-@media (max-width: 800px) {
+@media (max-width: 850px) {
   .f-nav-wrap {
     position: fixed;
-    bottom: 25px;
-    left: 10px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 13px 20px 16px 20px;
+    backdrop-filter: blur(8px);
     overflow-y: scroll;
     display: flex;
     align-items: center;
     width: 100vw;
-    scroll-behavior: unset;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    //scroll-behavior: unset;
+    //scrollbar-width: none;
+    //-ms-overflow-style: none;
   }
 
   .f-nav-wrap::-webkit-scrollbar {
     width: 0;
     height: 0;
+  }
+
+  .f-selected-nav-menu {
+    background-color: #D9F94B;
   }
 
   .f-cards-under-block {
@@ -23,7 +30,7 @@
 
   .f-new-idea {
     bottom: 100px;
-    left: 10px;
+    left: 20px;
   }
 
   .f-nav-button {
@@ -139,6 +146,19 @@
     font-size: 28px;
   }
 
+  .f-cards-wrap-text {
+    width: unset;
+  }
+
+  .f-padding-official {
+    padding-left: unset;
+    width: 100%;
+  }
+
+  .f-comments-tip-text {
+    padding-left: 20px;
+  }
+
   .ant-modal-body {
     padding: 20px;
   }
@@ -165,9 +185,37 @@
 
   .f-sublogin {
     margin-top: unset;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .f-wrap-settings {
+    width: 100%;
   }
 
   .of-comment {
-    padding: 15px 20px 50px 20px;
+    padding: 10px 20px 30px 20px;
+  }
+
+  .f-system-from {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .f-comments-under-text {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .f-select-mobile {
+    width: 34px;
+  }
+
+  .ant-select-selection-item {
+    visibility: hidden;
+  }
+
+  .backcolor {
+    background-color: #DFE7F8;
   }
 }

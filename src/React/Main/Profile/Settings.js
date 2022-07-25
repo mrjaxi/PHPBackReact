@@ -77,7 +77,7 @@ const Settings = () => {
         <Col style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
             { user?.id === global.user?.id && <Header/>}
             <div className={"f-login f-sublogin"} style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ marginTop: 100 }}>
+                <div className={"f-wrap-settings"}>
                     <Form
                         onFinish={(value) => onSend(value)}
                         name={"settings"}
@@ -119,19 +119,19 @@ const Settings = () => {
                                 },
                             ]}
                         >
-                            <Input autoComplete="off" size={"large"}  style={{ width: 550, padding: 12, marginTop: 15 }} placeholder={"Имя"} />
+                            <Input autoComplete="off" size={"large"} style={{ width: '100%', padding: 12, marginTop: 15 }} placeholder={"Имя"} />
                         </Form.Item>
                         <Form.Item
                             id={2}
                             name={"middle_name"}
                         >
-                            <Input autoComplete="off" size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Фамилия"} />
+                            <Input autoComplete="off" size={"large"}  style={{ width: '100%', padding: 12 }} placeholder={"Фамилия"} />
                         </Form.Item>
                         <Form.Item
                             id={3}
                             name={"last_name"}
                         >
-                            <Input autoComplete="off" size={"large"}  style={{ width: 550, padding: 12 }} placeholder={"Отчество"} />
+                            <Input autoComplete="off" size={"large"}  style={{ width: '100%', padding: 12 }} placeholder={"Отчество"} />
                         </Form.Item>
                         <Form.Item
                             id={4}
@@ -144,7 +144,7 @@ const Settings = () => {
                                     alignItems: 'center',
                                     cursor: 'not-allowed',
                                 }}>
-                                    <Input autoComplete="off" size={"large"} disabled={true} style={{ width: 550, padding: 12 }} placeholder={user.email} />
+                                    <Input autoComplete="off" size={"large"} disabled={true} style={{ width: '100%', padding: 12 }} placeholder={user.email} />
                                 </div>
                             </Tooltip>
                         </Form.Item>
@@ -164,7 +164,7 @@ const Settings = () => {
                                     name: "phone",
                                     size: "large",
                                     style: {
-                                        width: 550,
+                                        width: '100%',
                                         padding: 12
                                     },
                                 }}

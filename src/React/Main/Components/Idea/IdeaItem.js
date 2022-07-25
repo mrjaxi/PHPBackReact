@@ -293,7 +293,6 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                 <div className={"f-text-tags-wrap"}
                      onMouseOver={() => {
                          if(showEditButton){
-                             // console.log("OVER TAGS")
                              setShowEditButton(false)
                          }
                      }}>
@@ -445,6 +444,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                 changeStatus(data.data)
                                             }}
                                             style={{height: '100%'}}
+                                            className={"f-select-mobile"}
                                             value={ideaStatus.translate}
                                             defaultValue={ideaStatus.translate}
                                             dropdownMatchSelectWidth={false}
@@ -452,6 +452,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                             {
                                                 statuses.map((status, index) => (
                                                     <Option data={status}
+                                                            className={ideaStatus.id === status.id && "backcolor"}
                                                             value={status.id}>{status.translate}</Option>
                                                 ))
                                             }

@@ -51,7 +51,7 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                 style={{paddingTop: 30, display: "block",}}
             >
                 <div className={"f-cards-row-wrap"}>
-                    <div className={"f-cards-wrap-text"}>
+                    <div className={"f-cards-wrap-text f-padding-official"}>
                         <span
                             className={"f-cards-text"}
                             style={{justifyContent: "flex-start", marginBottom: 20}}
@@ -98,7 +98,7 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                                         name={"content"}
                                         rules={[{required: true, message: "Заполните поле"}]}
                                     >
-                                        <TextArea autoSize={{minRows: 3}} style={{ marginTop: 24 }}/>
+                                        <TextArea autoSize={{minRows: 3}} style={{ width: '100%' }}/>
                                     </Form.Item>
                                 </Form> :
                                 <span className={"f-cards-content-description"}>
@@ -107,7 +107,7 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                                     }
                                 </span>
                         }
-                        <div style={{color: '#AAB2BD'}}>
+                        <div style={{color: '#AAB2BD', marginTop: 10}}>
                             <span style={{fontSize: 15, fontWeight: 400}}>
                                 {
                                     global.getDateString(new Date(comment?.date))

@@ -134,6 +134,12 @@ button:focus {
   max-width: 250px;
   margin-top: 120px;
 }
+.f-wrap-settings {
+  margin-top: 100px;
+}
+.f-selected-nav-menu {
+  background-color: white;
+}
 .f-clode-button-login {
   position: absolute;
   top: 30px;
@@ -179,6 +185,11 @@ button:focus {
   min-width: 550px;
   min-height: 60vh;
   max-width: 1000px;
+}
+.f-system-from {
+  margin-bottom: 20px;
+  padding-left: 40px;
+  font-size: 17px;
 }
 .f-body-login {
   width: 100%;
@@ -416,12 +427,14 @@ button:focus {
   color: #3D72ED;
   margin-bottom: 15px;
   margin-top: 25px;
+  padding-left: 40px;
+  padding-right: 50px;
 }
 .f-comments-tip-text {
   color: #1D1D1F;
   font-size: 21px;
   margin-right: 50px;
-  padding-left: 20px;
+  padding-left: 40px;
 }
 .f-image-count {
   display: flex;
@@ -804,6 +817,10 @@ button:focus {
   box-shadow: 0 16px 32px 4px rgba(61, 114, 237, 0.24);
   height: 50px;
 }
+.f-padding-official {
+  padding-left: unset;
+  width: 100%;
+}
 
 @supports (-moz-appearance: none) {
   .f-nav-button {
@@ -898,23 +915,27 @@ button:focus {
   font-size: 21px;
   margin-right: 50px;
 }
-@media (max-width: 800px) {
+@media (max-width: 850px) {
   .f-nav-wrap {
     position: fixed;
-    bottom: 25px;
-    left: 10px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 13px 20px 16px 20px;
+    backdrop-filter: blur(8px);
     overflow-y: scroll;
     display: flex;
     align-items: center;
     width: 100vw;
-    scroll-behavior: unset;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
   }
 
   .f-nav-wrap::-webkit-scrollbar {
     width: 0;
     height: 0;
+  }
+
+  .f-selected-nav-menu {
+    background-color: #D9F94B;
   }
 
   .f-cards-under-block {
@@ -923,7 +944,7 @@ button:focus {
 
   .f-new-idea {
     bottom: 100px;
-    left: 10px;
+    left: 20px;
   }
 
   .f-nav-button {
@@ -1039,6 +1060,19 @@ button:focus {
     font-size: 28px;
   }
 
+  .f-cards-wrap-text {
+    width: unset;
+  }
+
+  .f-padding-official {
+    padding-left: unset;
+    width: 100%;
+  }
+
+  .f-comments-tip-text {
+    padding-left: 20px;
+  }
+
   .ant-modal-body {
     padding: 20px;
   }
@@ -1065,9 +1099,37 @@ button:focus {
 
   .f-sublogin {
     margin-top: unset;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .f-wrap-settings {
+    width: 100%;
   }
 
   .of-comment {
-    padding: 15px 20px 50px 20px;
+    padding: 10px 20px 30px 20px;
+  }
+
+  .f-system-from {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .f-comments-under-text {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .f-select-mobile {
+    width: 34px;
+  }
+
+  .ant-select-selection-item {
+    visibility: hidden;
+  }
+
+  .backcolor {
+    background-color: #DFE7F8;
   }
 }

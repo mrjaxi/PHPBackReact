@@ -12,9 +12,7 @@ import EmptyIdeas from "./Main/Components/Idea/EmptyIdeas";
 import Login from "./Main/Auth/Login";
 import InfiniteScroll from "react-infinite-scroll-component";
 const cancelTokenSource = axios.CancelToken;
-import Cookies from 'universal-cookie';
 let cancel = undefined;
-const cookies = new Cookies();
 
 global.handleResponse = function( response, success=()=>{}, error=()=>{}, trouble=()=>{}, defaultFunc=()=>{} ) {
     switch (response.data?.state) {
@@ -67,7 +65,6 @@ const MainPage = (props) => {
 
     const [loading, setLoading] = useState(true);
     const [loadingInfinite, setLoadingInfinite] = useState(true);
-    const [showWelcomeText, setShowWelcomeText] = useState(Boolean(cookies.get("welcomeText")));
 
     useEffect(() => {
         updateStatuses()
@@ -191,11 +188,6 @@ const MainPage = (props) => {
         updateStatuses()
     };
 
-    const disableStartText = () => {
-        cookies.set('welcomeText', true, { path: '/' });
-        setShowWelcomeText(true)
-    };
-
     return (
         <>
             <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
@@ -207,20 +199,6 @@ const MainPage = (props) => {
                     includedTypes={includedTypes}
                 />
                 <div key={3} style={{ minHeight: "100vh"}}>
-                    {
-                        showWelcomeText !== true ?
-                        <section className={"max_width f-wrap-elements"}>
-                            <div className={"f-section"}>
-                                <div>
-                                    <span className={"f-section-wrap-p-text"} style={{
-                                        marginBottom: 0,
-                                        marginTop: "20px",
-                                    }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами
-                                    </span>
-                                </div>
-                            </div>
-                        </section> : <></>
-                    }
                     <div id={"start"}/>
                     <Navigation
                         selectCategory={selectCategory}
