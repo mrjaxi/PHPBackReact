@@ -1100,16 +1100,8 @@ button:focus {
   }
 
   .logo-circle {
-    display: none;
-  }
-
-  .f-header-wrap-logo {
-    background-color: #D9F94B;
-    padding: 3px;
-    border-radius: 64px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: fixed;
+    z-index: 9;
   }
 
   .f-cards-content-text {
