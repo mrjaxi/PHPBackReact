@@ -1188,10 +1188,7 @@ button:focus {
 
   .f-select-mobile {
     width: 34px;
-  }
-
-  .ant-select-selection-item {
-    visibility: hidden;
+    color: #FFFFFF;
   }
 
   .backcolor {
