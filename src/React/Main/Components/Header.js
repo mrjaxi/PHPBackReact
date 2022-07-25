@@ -25,9 +25,9 @@ const Header = ({ search=true }) => {
                 left: 20,
                 zIndex: 10,
             }}>
-                <div to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
+                <Link to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
                     <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
-                </div>
+                </Link>
             </div>
             <div className={"f-wrap-login"}>
                 { search &&

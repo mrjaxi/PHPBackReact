@@ -1151,4 +1151,8 @@ button:focus {
   .backcolor {
     background-color: #DFE7F8;
   }
+
+  .dropdown {
+    top: -6px;
+  }
 }
