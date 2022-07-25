@@ -198,7 +198,7 @@ button:focus {
   flex-direction: column;
   align-items: center;
   width: 50vw;
-  min-width: 600px;
+  min-width: 100%;
 }
 .f-profile-wrapper-container-2 {
   display: flex;
@@ -991,6 +991,10 @@ button:focus {
     left: 20px;
   }
 
+  .f-new-idea-profile {
+    bottom: 50px;
+  }
+
   .f-edit-mobile-style {
     display: flex;
     width: 100%;
@@ -1262,5 +1266,9 @@ button:focus {
   .f-profile-wrapper-container-2 {
     width: 100%;
     min-width: unset;
+  }
+
+  .f-profile-header {
+    margin: 0 12px;
   }
 }

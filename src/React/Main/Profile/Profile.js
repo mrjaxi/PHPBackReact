@@ -212,6 +212,8 @@ const Profile = () => {
                                                         <Select
                                                             value={roles[0]}
                                                             size={'large'}
+                                                            className={"f-select-mobile"}
+                                                            dropdownMatchSelectWidth={false}
                                                             onSelect={(value, option) => {
                                                                 changeRole(value, option.data)
                                                             }}
@@ -230,7 +232,6 @@ const Profile = () => {
                                                         <div>
                                                             <p style={{
                                                                 whiteSpace: "nowrap",
-                                                                display: "inline"
                                                             }} className={"f-cards-type-viewed"}>{user.role_name}</p>
                                                         </div>
                                                 }
