@@ -193,7 +193,7 @@ const Profile = () => {
                                                                 ? <img src={user.image}/>
                                                                 : <UserOutlined/>
                                                             }/>
-                                                    <div className={"f-cards-wrap-text-style"}>
+                                                    <div className={"f-cards-wrap-text-style"} style={{ width: '70%' }}>
                                                         <div>
                                                         <span className={"f-cards-text"}>
                                                             {user.fio}

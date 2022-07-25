@@ -169,31 +169,6 @@ const Settings = () => {
                                     },
                                 }}
                             />
-                            {/*<Input*/}
-                            {/*    value={phoneText}*/}
-                            {/*    placeholder={"Телефон"}*/}
-                            {/*    name={"phone"}*/}
-                            {/*    size={"large"}*/}
-                            {/*    autoComplete="off"*/}
-                            {/*    style={{*/}
-                            {/*        width: 550,*/}
-                            {/*        padding: 12*/}
-                            {/*    }}*/}
-                            {/*    onChange={(event) => {*/}
-                            {/*        let text = event.target.value;*/}
-
-                            {/*        let parsePhone = parsePhoneNumber(text, 'RU');*/}
-                            {/*        setPhone(parsePhone)*/}
-
-                            {/*        try {*/}
-                            {/*            text = parsePhone.formatInternational();*/}
-                            {/*        } catch (e) {*/}
-                            {/*        }*/}
-                            {/*        text = '+' + text;*/}
-                            {/*        console.log("text:",text)*/}
-                            {/*        setPhoneText(text)*/}
-                            {/*    }}*/}
-                            {/*/>*/}
                         </Form.Item>
                         <Form.Item>
                             <Button
