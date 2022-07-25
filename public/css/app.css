@@ -40,7 +40,6 @@ body {
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
-  display: none;
   position: absolute;
   height: 210px;
   width: 240px;
@@ -133,6 +132,14 @@ button:focus {
   min-width: 250px;
   max-width: 250px;
   margin-top: 120px;
+}
+.f-back-out-close {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
 }
 .f-wrap-settings {
   margin-top: 100px;

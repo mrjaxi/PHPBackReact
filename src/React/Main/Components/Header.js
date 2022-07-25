@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import { HashLink as Link } from 'react-router-hash-link';
 import axios from "axios";
 import ProfileAvatar from "../Profile/ProfileAvatar";
@@ -8,6 +8,7 @@ import Login from "../Auth/Login";
 const Header = ({ search=true }) => {
     const [visibleSearch, setVisibleSearch] = useState(false)
     const [visibleLogin, setVisibleLogin] = useState();
+    const [contentVisible, setContentVisible] = useState(false)
 
     const logout = async () => {
         await axios.post("/ru/logout");
@@ -24,9 +25,9 @@ const Header = ({ search=true }) => {
                 left: 20,
                 zIndex: 10,
             }}>
-                <Link to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
+                <div to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
                     <img className={"f-header-wrap-logo-element"} src={'/i/logotype_sticky.svg'}/>
-                </Link>
+                </div>
             </div>
             <div className={"f-wrap-login"}>
                 { search &&
@@ -49,7 +50,7 @@ const Header = ({ search=true }) => {
                 {
                     (global.layout !== "guest" || !global.layout) ?
                         (<div className="dropdown">
-                            <button className="dropbtn">
+                            <button className="dropbtn" onClick={() => setContentVisible(!contentVisible)}>
                                 <div style={{
                                     display: 'flex',
                                     alignItems: 'center',
@@ -63,7 +64,7 @@ const Header = ({ search=true }) => {
                                     }}/>
                                 </div>
                             </button>
-                            <div className="dropdown-content">
+                            <div className="dropdown-content" style={{ display: !contentVisible && 'none' }}>
                                 <Link style={{
                                     display: 'flex',
                                     alignItems: 'center',
@@ -98,6 +99,10 @@ const Header = ({ search=true }) => {
                         </div>)
                 }
             </div>
+            {
+                contentVisible === true &&
+                <div className={"f-back-out-close"} onClick={() => setContentVisible(false)}/>
+            }
             <div className={"logo logo-circle"}/>
             <Link className={"f-logo-click"}  to={global.lang + "?order=id&type=desc&page=1&reset=1#start"}>
                 <div style={{ zIndex: 500 }} className={"logo logo-ag"}/>
