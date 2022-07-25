@@ -6,7 +6,7 @@ const LoadingIdeas = ({type = false}) => {
     return (
         <div className={"f-cards"}>
             { type &&
-                <Skeleton className={"f-cards-hashtag"} active paragraph={{rows: 0}}/>
+                <Skeleton className={"f-cards-hashtag sub-hashtag-style"} active paragraph={{rows: 0}}/>
             }
             <div className={"f-cards-card-wrap"}>
                 <div className={"f-cards-inner"}>

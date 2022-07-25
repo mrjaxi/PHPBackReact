@@ -606,9 +606,10 @@ button:focus {
   font-size: 17px;
   color: #AAB2BD;
   transition: 0.2s;
+  margin-right: 20px;
   border-radius: 32px;
+  padding: 12px 17px 13px;
   height: 48px;
-  width: 200px;
 }
 .f-cards-hashtag-hover:hover {
   color: #3D72ED;
@@ -1085,6 +1086,10 @@ button:focus {
 
   .f-active-mobile-tooltip {
     visibility: visible;
+  }
+
+  .sub-hashtag-style {
+    width: 200px;
   }
 
   .f-cards-avatar {
