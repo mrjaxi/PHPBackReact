@@ -168,20 +168,12 @@ const Profile = () => {
                         </a>
                 }
                 <div style={{display: "flex", flexDirection: "column"}}>
-                    <div className={"max_width"}>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: '50vw',
-                            minWidth: 600,
-                            paddingTop: 135,
-                        }}>
+                    <div className={"f-profile-wrapper-container"}>
+                        <div className={"f-profile-wrapper-container-2"}>
                             {loadingProfile && roles !== [] ?
                                 <div className={"f-cards"}>
                                     <div className={"f-cards-card-wrap"}>
-                                        <div className={"f-cards-inner"}>
+                                        <div className={"f-cards-inner sub-change-padding-mobile"}>
                                             <div className={"f-cards-div-wrap-text"}>
                                                 <span className={"f-cards-content-text"}>
                                                     <Skeleton active avatar paragraph={{rows: 1}}/>
@@ -193,7 +185,7 @@ const Profile = () => {
                                 :
                                 <div className={"f-cards"}>
                                     <div className={"f-cards-card-wrap"}>
-                                        <div className={"f-cards-inner"}>
+                                        <div className={"f-cards-inner sub-change-padding-mobile"}>
                                             <div className={"f-cards-avatar"} style={{marginBottom: 25}}>
                                                 <div className={"f-cards-row-wrap"}>
                                                     <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
@@ -238,6 +230,7 @@ const Profile = () => {
                                                         <div>
                                                             <p style={{
                                                                 whiteSpace: "nowrap",
+                                                                display: "inline"
                                                             }} className={"f-cards-type-viewed"}>{user.role_name}</p>
                                                         </div>
                                                 }
@@ -257,12 +250,7 @@ const Profile = () => {
                                     </div>
                                 </div>
                             }
-                            <div style={{
-                                display: 'flex',
-                                paddingLeft: "40px",
-                                width: "100%",
-                                maxWidth: 1000,
-                            }}>
+                            <div className={"f-select-in-profile"}>
                                 {notifications &&
                                 <div style={{
                                     width: 6,
@@ -294,15 +282,8 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={"max_width"} style={{marginTop: 50}}>
-                        <div style={{
-                            display: "flex",
-                            justifyContent: 'center',
-                            flexDirection: "column",
-                            alignItems: "center",
-                            width: '50vw',
-                            minWidth: 600,
-                        }}>
+                    <div className={"max_width disable-style"} style={{marginTop: 50}}>
+                        <div className={"f-profile-wrapper-container"}>
                             {
                                 !user || loadingProfile || !roles[0] ? <LoadingIdeas type={true}/>
                                     : selectedHeaderItem === 0 ?
