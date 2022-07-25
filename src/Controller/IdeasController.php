@@ -837,6 +837,7 @@ class IdeasController extends AbstractController
         } else {
             return $this->json(['state' => 'error', 'message' => "Передайте ID идеи"]);
         }
+        $urlIdea = $baseURL . "/idea/" . $idea->getId();
         // проверка и поиск статуса
         if (!empty($status_id)) {
             $newStatus = $this->statusRepository->find($status_id);
@@ -862,7 +863,7 @@ class IdeasController extends AbstractController
                     if ($newStatus->getName() == "started" || $newStatus->getName() == "planned") {
                         $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
                             "title" => "Feedback. " . $idea->getTitle(),
-                            "description" => $idea->getContent()
+                            "description" => $idea->getContent() . " Подробнее: " . $urlIdea
                         ));
 //                        dd($response);
                     }
@@ -871,7 +872,6 @@ class IdeasController extends AbstractController
             $idea->setStatus($newStatus);
             $this->ideasRepository->save($idea);
 
-            $urlIdea = $baseURL . "/idea/" . $idea->getId();
             $message = "Статус вашей записи изменён на '{$newStatus->getTranslate()}', проверьте его на сайте по ссылке:\n\n {$urlIdea}";
             $this->sendToMail($mailer, $message, "Статус вашей записи изменён", $idea->get_User()->getEmail());
 
