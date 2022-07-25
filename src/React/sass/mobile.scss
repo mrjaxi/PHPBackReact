@@ -120,7 +120,17 @@
   }
 
   .f-cards-type-viewed {
-    display: none;
+    font-size: 0;
+    padding: 10px;
+    border-radius: 64px;
+  }
+
+  .f-active-mobile-tooltip {
+    visibility: visible;
+  }
+
+  .f-cards-avatar {
+    align-items: center;
   }
 
   .f-comments {

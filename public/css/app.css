@@ -200,6 +200,9 @@ button:focus {
   width: 50vw;
   min-width: 100%;
 }
+.f .f-active-mobile-tooltip {
+  visibility: hidden;
+}
 .f-profile-wrapper-container-2 {
   display: flex;
   justify-content: center;
@@ -992,7 +995,7 @@ button:focus {
   }
 
   .f-new-idea-profile {
-    bottom: 50px;
+    bottom: 30px;
   }
 
   .f-edit-mobile-style {
@@ -1076,7 +1079,17 @@ button:focus {
   }
 
   .f-cards-type-viewed {
-    display: none;
+    font-size: 0;
+    padding: 10px;
+    border-radius: 64px;
+  }
+
+  .f-active-mobile-tooltip {
+    visibility: visible;
+  }
+
+  .f-cards-avatar {
+    align-items: center;
   }
 
   .f-comments {

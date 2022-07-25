@@ -458,11 +458,13 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                             }
                                         </Select> :
                                         <div>
-                                            <p className={"f-cards-type-viewed"} style={{
-                                                color: idea.status?.color ? idea.status?.color : "#000000",
-                                                backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",
-                                            }}
-                                            >{idea.status.translate}</p>
+                                            <Tooltip className={"f-active-mobile-tooltip"} placement="left" title={idea.status.translate}>
+                                                <p className={"f-cards-type-viewed"} style={{
+                                                    color: idea.status?.color ? idea.status?.color : "#000000",
+                                                    backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",
+                                                }}
+                                                >{idea.status.translate}</p>
+                                            </Tooltip>
                                         </div>
                                 }
                             </div>

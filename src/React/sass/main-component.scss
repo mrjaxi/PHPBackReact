@@ -219,6 +219,10 @@ button:focus {
         min-width: 100%;
     }
 
+    .f-active-mobile-tooltip {
+        visibility: hidden;
+    }
+
     &-profile-wrapper-container-2 {
         display: flex;
         justify-content: center;
