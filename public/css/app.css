@@ -140,6 +140,9 @@ button:focus {
 .f-selected-nav-menu {
   background-color: white;
 }
+.f-system-from {
+  padding-right: 50px;
+}
 .f-clode-button-login {
   position: absolute;
   top: 30px;
