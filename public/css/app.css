@@ -1213,4 +1213,8 @@ button:focus {
   .f-side-panel-button, .f-side-panel-button-section {
     margin: 5px;
   }
+
+  .f-cards-image-type {
+    height: 300px;
+  }
 }
