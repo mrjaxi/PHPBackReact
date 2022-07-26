@@ -374,7 +374,7 @@ const MainPage = (props) => {
                 {
                     searchItems === null
                         ? <div style={{
-                            height: '100%',
+                            height: '90%',
                             width: '100%',
                             display: 'flex',
                             justifyContent: 'center',
@@ -385,7 +385,7 @@ const MainPage = (props) => {
                         >Ничего не найдено...</div> :
                         searchItems.length === 0
                             ? <div style={{
-                                height: '100%',
+                                height: '90%',
                                 width: '100%',
                                 display: 'flex',
                                 justifyContent: 'center',
