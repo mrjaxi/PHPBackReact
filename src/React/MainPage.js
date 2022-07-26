@@ -250,6 +250,17 @@ const MainPage = (props) => {
                     includedTypes={includedTypes}
                 />
                 <div key={3} style={{ minHeight: "100vh"}}>
+                    <section className={"max_width f-wrap-elements"}>
+                        <div className={"f-section"}>
+                            <div>
+                            <span className={"f-section-wrap-p-text"} style={{
+                                marginBottom: 0,
+                                marginTop: "20px",
+                            }}>Мы ценим мнение клиентов и рады, когда вы делитесь им с нами
+                            </span>
+                            </div>
+                        </div>
+                    </section>
                     <div id={"start"}/>
                     <Navigation
                         selectCategory={selectCategory}
