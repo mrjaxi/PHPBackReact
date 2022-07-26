@@ -268,9 +268,7 @@ const MainPage = (props) => {
                         <p className={"f-text-drawer"}>#</p>
                     </div>
                     <div className={"max_width f-cards-wrapper-pad"}>
-                        <div className={"f-cards-wrap"} style={{
-
-                        }}>
+                        <div className={"f-cards-wrap"}>
                         <div style={{ width: "100%", maxWidth: 1000, }}>
                             { loading ? <LoadingIdeas type={true}/>
                                 : ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
@@ -409,9 +407,7 @@ const MainPage = (props) => {
                                                     }}>#{item?.category}</p>
                                                     <p style={{ marginLeft: 0, color: item?.typeColor }} className={"f-cards-hashtag"}>#{item?.type}</p>
                                                 </div>
-                                                <NavLink className={"f-cards-card-wrap"} to={global.lang + "/idea/" + item.idea_id} onClick={() => {
-                                                    setVisible(false)
-                                                }}>
+                                                <NavLink className={"f-cards-card-wrap"} to={global.lang + "/idea/" + item.idea_id}>
                                                     <div className={"f-cards-inner f-drawer-search-inner"}>
                                                         <div className={"f-cards-avatar"}>
                                                             <div className={"f-cards-row-wrap"}>
@@ -468,7 +464,7 @@ const MainPage = (props) => {
                 }
             </Drawer>
             <Drawer height={'60vh'} onClose={() => setShowDrawer(!showDrawer)} title="Статусы и типы" placement="bottom" visible={showDrawer}>
-                <span className={"f-search-drawer-button"} onClick={() => setShowSearchDrawer(!showSearchDrawer)}>Поиск</span>
+                <span style={{color: "#AAB2BD"}} className={"f-search-drawer-button"} onClick={() => setShowSearchDrawer(!showSearchDrawer)}>Поиск</span>
                 <div className={"f-side-panel-wrap"}>
                     { statuses?.length > 0 ?
                         statuses.map((status) => (
