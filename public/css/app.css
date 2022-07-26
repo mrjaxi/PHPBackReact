@@ -1287,3 +1287,14 @@ button:focus {
     margin: 0 12px;
   }
 }
+@media (max-width: 460px) {
+  .f-select-in-profile {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .f-profile-header {
+    margin-top: 20px;
+  }
+}
