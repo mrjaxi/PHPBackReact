@@ -644,6 +644,7 @@ button:focus {
   text-overflow: ellipsis;
   color: #1D1D1D;
   overflow: hidden;
+  word-break: break-word;
 }
 .f-cards-image {
   width: 48px;
