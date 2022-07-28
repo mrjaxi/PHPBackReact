@@ -1009,7 +1009,7 @@ button:focus {
     left: 170px;
   }
 }
-@media (max-width: 850px) {
+@media (orientation: portrait), (max-width: 850px) {
   .f-nav-wrap {
     position: fixed;
     bottom: 0;
@@ -1132,7 +1132,7 @@ button:focus {
 
   .f-cards-type-viewed {
     font-size: 0;
-    padding: 10px;
+    padding: 15px;
     border-radius: 64px;
   }
 
@@ -1353,7 +1353,7 @@ button:focus {
   }
 
   .f-drawer-search-inner {
-    padding: 20px 20px 20px 20px;
+    padding: 20px;
   }
 }
 @media (max-width: 460px) {

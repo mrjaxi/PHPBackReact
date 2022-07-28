@@ -45,6 +45,16 @@ class CommentsRepository extends ServiceEntityRepository
         }
     }
 
+    public function disableSoftDeleteable(): void
+    {
+        $this->_em->getFilters()->disable('soft-deleteable');
+    }
+
+    public function enableSoftDeleteable(): void
+    {
+        $this->_em->getFilters()->enable('soft-deleteable');
+    }
+
     // /**
     //  * @return Comments[] Returns an array of Comments objects
     //  */

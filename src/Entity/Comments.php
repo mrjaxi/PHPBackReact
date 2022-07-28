@@ -5,10 +5,14 @@ namespace App\Entity;
 use App\Repository\CommentsRepository;
 use DateTime;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  * @ORM\HasLifecycleCallbacks
  */
 #[ApiResource]
@@ -33,10 +37,16 @@ class Comments
     private $date;
 
     /**
-     * @var DateTimeInterface $updated
+     * @var DateTimeInterface|null $updated
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     protected $updatedAt;
+
+    /**
+     * @var DateTimeInterface|null
+     * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     /**
      * @var User|null
@@ -62,23 +72,92 @@ class Comments
      */
     private $photo;
 
+    /**
+     * @var Comments|null
+     * @ORM\ManyToOne(targetEntity=Comments::class, inversedBy="reply_comments")
+     */
+    private $replyComment;
+
+    /**
+     * @var ArrayCollection<int, Comments>
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="replyComment")
+     */
+    private $reply_comments;
+
+    public function __construct()
+    {
+        $this->reply_comments = new ArrayCollection();
+    }
+
     public function get_Info($idea=false): ?array
     {
-        $info = [
-            "id" => $this->id,
-            "content" => $this->content,
-            "photo" => $this->photo,
-            "date" => $this->date->format('Y-m-d H:i:s'),
-            "updated" => null,
-            "is_checked" => $this->is_checked,
-            "user" => $this->get_UserInfo(),
-        ];
-        if($idea){
+        if (!empty($this->getDeletedAt())) {
+            $info = [
+                "id" => $this->id,
+                "content" => "Комментарий удалён",
+                "photo" => null,
+                "date" => $this->getDateFormat(),
+                "is_checked" => true,
+                "user" => $this->get_UserInfo(),
+                "updated" => null,
+                "reply_comment" => null,
+                "replies" => $this->getReplyComments()->count(),
+            ];
+        } else {
+            $info = [
+                "id" => $this->id,
+                "content" => $this->content,
+                "photo" => $this->photo,
+                "date" => $this->date->format('Y-m-d H:i:s'),
+                "is_checked" => $this->is_checked,
+                "user" => $this->get_UserInfo(),
+                "updated" => null,
+                "reply_comment" => null,
+                "replies" => $this->reply_comments->count(),
+            ];
+        }
+        if ($idea) {
             $info['idea'] = $this->idea;
         }
-        if(!empty($this->updatedAt)){
+        if (!empty($this->updatedAt)) {
             $info['updated'] = $this->updatedAt->format('Y-m-d H:i:s');
         }
+        if (!empty($this->replyComment)) {
+//            dd("not empty");
+            try {
+                $isDeleted = !empty($this->replyComment->getDeletedAt());
+                if ($isDeleted) {
+//                    dd("not empty getDeletedAt");
+                    $info["reply_comment"] = array(
+                        "id" => $this->replyComment->getId(),
+                        "content" => "Комментарий удалён",
+                        "photo" => null,
+                        "date" => $this->replyComment->getDateFormat(),
+                        "is_checked" => true,
+                        "user" => $this->replyComment->get_UserInfo(),
+                        "updated" => null,
+                        "reply_comment" => null,
+                        "replies" => $this->replyComment->getReplyComments()->count(),
+                    );
+                } else {
+                    $info["reply_comment"] = $this->replyComment->get_Info();
+                }
+            } catch (\Exception $exception) {
+//                dd($this->replyComment);
+                $info["reply_comment"] = array(
+                    "id" => $this->replyComment->getId(),
+                    "content" => "Комментарий удалён",
+                    "photo" => null,
+                    "date" => null,
+                    "is_checked" => true,
+                    "user" => "Пользователь",
+                    "updated" => null,
+                    "reply_comment" => null,
+                    "replies" => 0,
+                );
+            }
+        }
+
         return $info;
     }
 
@@ -203,5 +282,57 @@ class Comments
         $this->photo = $photo;
 
         return $this;
+    }
+
+    public function getReplyComment(): ?self
+    {
+        return $this->replyComment;
+    }
+
+    public function setReplyComment(?self $replyComments): self
+    {
+        $this->replyComment = $replyComments;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getReplyComments(): Collection
+    {
+        return $this->reply_comments;
+    }
+
+    public function addReplyComments(self $replyComment): self
+    {
+        if (!$this->reply_comments->contains($replyComment)) {
+            $this->reply_comments[] = $replyComment;
+            $replyComment->setReplyComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReplyComments(self $replyComment): self
+    {
+        if ($this->reply_comments->removeElement($replyComment)) {
+            // set the owning side to null (unless already changed)
+            if ($replyComment->getReplyComments() === $this) {
+                $replyComment->setReplyComment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?DateTimeInterface $deletedAt): void
+    {
+        $this->deletedAt = $deletedAt;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Comments;
 use App\Entity\Ideas;
 use App\Repository\IdeasRepository;
 use App\Repository\SettingsRepository;
@@ -10,6 +9,7 @@ use App\Repository\UserRepository;
 use App\Repository\VotesRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -29,7 +29,7 @@
   }
 }
 
-@media (max-width: 850px) {
+@media (orientation: portrait), (max-width: 850px) {
   .f-nav-wrap {
     position: fixed;
     bottom: 0;
@@ -152,7 +152,7 @@
 
   .f-cards-type-viewed {
     font-size: 0;
-    padding: 10px;
+    padding: 15px;
     border-radius: 64px;
   }
 
@@ -277,6 +277,14 @@
     padding-right: 20px;
   }
 
+  //.f-select-mobile {
+  //  width: 34px;
+  //}
+
+  //.ant-select-selection-item {
+  //  visibility: hidden;
+  //}
+
   .f-select-mobile {
     width: 34px;
     color: #FFFFFF;
@@ -373,7 +381,7 @@
   }
 
   .f-drawer-search-inner {
-    padding: 20px 20px 20px 20px;
+    padding: 20px;
   }
 }
 

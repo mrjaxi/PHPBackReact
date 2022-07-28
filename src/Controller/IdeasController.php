@@ -538,6 +538,10 @@ class IdeasController extends AbstractController
         if (!empty($data['photo'])) {
             $newComment->setPhoto($data['photo']);
         }
+        if (!empty($data['reply_id'])) {
+            $replyComment = $this->commentsRepository->find($data['reply_id']);
+            $newComment->setReplyComment($replyComment);
+        }
         if($idea->get_User()->getId() === $user->getId()){
             $newComment->setIsChecked(true);
         }
