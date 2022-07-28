@@ -1066,11 +1066,6 @@ button:focus {
     padding: 11px 14px;
   }
 
-  .f-nav-button:hover {
-    background-color: #D9F94B;
-    color: #1D1D1F;
-  }
-
   .f-search-click, .f-logo-click, .f-side-block-items, .f-wrap-elements {
     display: none;
   }
