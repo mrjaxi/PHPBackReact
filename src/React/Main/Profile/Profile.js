@@ -157,7 +157,8 @@ const Profile = () => {
         <>
             <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
             <Col className={"f-main"} style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
-                {(notifications === false || notifications === true) && <Header/>}
+                {(notifications === false || notifications === true || notifications === undefined || notifications === null) && <Header/>}
+                {/*<Header/>*/}
                 {
                     global.layout !== "guest" ?
                         <NavLink to={global.lang + "/idea/add/"} className={"f-new-idea f-new-idea-profile"}>

@@ -21,6 +21,10 @@
     padding-bottom: 30px;
     width: 80% !important;
   }
+
+  .ant-drawer-body {
+    overflow: unset;
+  }
 }
 
 @media (max-width: 950px) {

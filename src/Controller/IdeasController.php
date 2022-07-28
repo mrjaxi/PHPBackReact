@@ -154,8 +154,13 @@ class IdeasController extends AbstractController
         }
         $category = $this->getCategoryOrCreate($data['category']);
         $type = $this->getTypeOrCreate($data['type']);
-        $photo = isset($data['photo']) ? $data['photo'] : null;
         $status = $this->statusRepository->findOneBy(['name' => 'new']);
+        $photo = isset($data['photo']) ? $data['photo'] : null;
+        if (!empty($photo) && $photo[strlen($photo)-1] == ";") {
+            // Если в конце строки есть ; то убирать его
+            $photo = substr($photo,0,-1);
+        }
+        dd("итоговая строка: ".$photo);
 
         $idea = new Ideas();
         $idea->setTitle($data['title'])
