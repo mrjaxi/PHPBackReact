@@ -1,7 +1,7 @@
 import React, {useLayoutEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {Avatar, Button, Form, Input, Popconfirm} from "antd";
-import {UserOutlined} from "@ant-design/icons";
+import {Avatar, Button, Form, Image, Input, Popconfirm, Spin} from "antd";
+import {LoadingOutlined, UserOutlined} from "@ant-design/icons";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 const {TextArea} = Input;
@@ -106,6 +106,26 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                                         comment?.content
                                     }
                                 </span>
+                        }
+                        {
+                            comment.photo &&
+                            <div className={"f-images-comment-wrap"}>
+                                {
+                                    comment.photo.split(";").map(item => (
+                                        <Image
+                                            wrapperClassName={"f-images-comment"}
+                                            style={{borderRadius: 16}}
+                                            height={'100%'}
+                                            src={item}
+                                            placeholder={
+                                                <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'  }}>
+                                                    <Spin indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />} />
+                                                </div>
+                                            }
+                                        />
+                                    ))
+                                }
+                            </div>
                         }
                         <div style={{color: '#AAB2BD', marginTop: 10}}>
                             <span style={{fontSize: 15, fontWeight: 400}}>
