@@ -83,14 +83,7 @@ const Search = ({ visible, setVisible }) => {
             visible={visible}
             onOk={() => setVisible(false)}
             onCancel={() => setVisible(false)}
-            width={"100%"}
-            style={{
-                top: 29,
-                verticalAlign: "top",
-                minHeight: "90vh",
-                maxWidth: 1100,
-                paddingBottom: 30,
-            }}
+            className={"f-search-style-wrap"}
             footer={null}
             bodyStyle={{
                 width: '100%',

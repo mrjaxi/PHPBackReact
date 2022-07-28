@@ -141,6 +141,14 @@ button:focus {
   bottom: 0;
   z-index: 5;
 }
+.f-search-style-wrap {
+  top: 29px;
+  vertical-align: top;
+  min-height: 90vh;
+  max-width: 1100px;
+  padding-bottom: 30px;
+  width: 100% !important;
+}
 .f-wrap-settings {
   margin-top: 100px;
 }
@@ -209,7 +217,7 @@ button:focus {
   flex-direction: column;
   align-items: center;
   width: 50vw;
-  min-width: 600px;
+  min-width: 500px;
   padding-top: 135px;
 }
 .f-select-in-profile {
@@ -291,6 +299,19 @@ button:focus {
 }
 .f-search-wrap::-webkit-scrollbar {
   width: 0;
+}
+.f-images-comment-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.f-images-comment {
+  width: 80px !important;
+  height: 80px !important;
+  margin-top: 10px;
+  border-radius: 24px;
+  margin-right: 5px;
 }
 .f-bottom-selected {
   width: 100%;
@@ -500,6 +521,7 @@ button:focus {
   /* Safari */
   top: 25px;
   z-index: 3;
+  max-width: 1000px;
 }
 .f-nav-button {
   padding: 23px 38px;
@@ -567,7 +589,7 @@ button:focus {
   display: flex;
   width: 100%;
   max-width: 1000px;
-  min-width: 550px;
+  min-width: 500px;
   flex-direction: column;
   margin-bottom: 50px;
   justify-content: center;
@@ -958,6 +980,35 @@ button:focus {
   font-size: 21px;
   margin-right: 50px;
 }
+@media (max-width: 1024px) {
+  .f-nav {
+    max-width: 880px;
+  }
+
+  .f-nav-button {
+    padding: 23px 36px;
+    margin-right: 10px;
+    font-size: 19px;
+  }
+
+  .f-cards-wrap {
+    left: 215px;
+  }
+
+  .f-search-style-wrap {
+    top: 29px;
+    vertical-align: top;
+    min-height: 90vh;
+    max-width: 1100px;
+    padding-bottom: 30px;
+    width: 80% !important;
+  }
+}
+@media (max-width: 950px) {
+  .f-cards-wrap {
+    left: 170px;
+  }
+}
 @media (max-width: 850px) {
   .f-nav-wrap {
     position: fixed;
@@ -1314,5 +1365,26 @@ button:focus {
 
   .f-profile-header {
     margin-top: 20px;
+  }
+
+  .f-cards-image-type {
+    height: 250px;
+  }
+}
+@media (max-width: 400px) {
+  .f-write-comments {
+    margin-top: 20px;
+  }
+
+  .f-title-comment {
+    font-size: 30px;
+  }
+
+  h1.ant-typography {
+    font-size: 30px;
+  }
+
+  .f-addon-style {
+    padding: 20px 20px 20px 20px;
   }
 }

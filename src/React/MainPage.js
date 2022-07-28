@@ -379,7 +379,7 @@ const MainPage = (props) => {
             </Col>
             <Drawer bodyStyle={{ padding: 15 }} height={'100vh'} onClose={() => setShowSearchDrawer(!showSearchDrawer)} placement="bottom" visible={showSearchDrawer}>
                 <input autoFocus={true} onChange={event => {searchIdeas(event.target.value)
-                           setSearchText(event.target.value)}} placeholder={"Поиск"} className={"f-search-drawer-button"}/>
+                    setSearchText(event.target.value)}} placeholder={"Поиск"} className={"f-search-drawer-button"}/>
                 {
                     searchItems === null
                         ? <div style={{

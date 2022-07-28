@@ -1,10 +1,15 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import {Avatar, Button, Checkbox, Form, Input, Popconfirm, Skeleton, Typography} from "antd";
+import {Avatar, Button, Checkbox, Form, Image, Input, Popconfirm, Skeleton, Spin, Typography, Upload} from "antd";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
-import {UserOutlined} from "@ant-design/icons";
+import {
+    CameraOutlined,
+    LoadingOutlined,
+    UserOutlined
+} from "@ant-design/icons";
 import Login from "../Auth/Login";
 import {Link} from "react-router-dom";
+import UploadOutlined from "@ant-design/icons/lib/icons/UploadOutlined";
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -18,17 +23,42 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
     const [visible, setVisible] = useState(false);
     const [editableId, setEditableId] = useState(false);
     const [checked, setChecked] = useState(false);
+    const [fileList, setFileList] = useState([]);
 
     const [loadingEdit, setLoadingEdit] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const beforeUpload = (file) => {
+        if (fileList.length < 3) {
+            const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+            if (!isJpgOrPng) {
+                global.openNotification("Предупреждение", "Поддерживаются только изображения в формате JPG / PNG", "warn");
+                return false
+            }
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isLt2M) {
+                global.openNotification("Предупреждение","Размер изображения не может превышать 2 МБ!", "warn");
+                return false
+            }
+            return isJpgOrPng && isLt2M;
+        } else {
+            global.openNotification("Предупреждение","Количество изображений должено быть не больше 3", "warn");
+            return false
+        }
+    };
+
+    const onChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+
     const sendComment = (text) => {
         setLoading(true);
-        if (text.trim() !== "") {
+        if (text.comment.trim() !== "") {
             if (checked) {
                 axios.post(ApiRoutes.API_NEW_OFFICIAL_COMMENT, {
                     idea_id: idea?.idea_id,
-                    content: text
+                    content: text.comment,
+                    photo: text?.photo !== undefined ? text.photo.fileList.map(item => item.response.filename).join(";") : ''
                 }).then(response => {
                     global.handleResponse(response,
                         function () {
@@ -48,6 +78,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                             newIdea.status = response.data?.status
                             setIdea(newIdea)
                             setStatus(response.data?.status)
+                            setFileList([])
                         },
                         function () {
                             global.openNotification("Ошибка", response.data?.message, "error")
@@ -56,7 +87,11 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                     setLoading(false)
                 })
             } else {
-                axios.post(ApiRoutes.API_NEW_COMMENT, {idea_id: idea?.idea_id, content: text.trim()})
+                axios.post(ApiRoutes.API_NEW_COMMENT, {
+                    idea_id: idea?.idea_id,
+                    content: text.comment.trim(),
+                    photo: text?.photo !== undefined ? text.photo.fileList.map(item => item.response.filename).join(";") : ''
+                })
                     .then(response => {
                         global.handleResponse(response,
                             function () {
@@ -66,6 +101,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                 setCommentsData(showComments ? data.filter((item, index) => index > (data.length - 4)) : data);
                                 setRawCommentsData(data);
                                 setComments(data)
+                                setFileList([])
                             },
                             function () {
                                 global.openNotification("Ошибка", response.data?.message, "error")
@@ -235,6 +271,26 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                                     }
                                                     </span>
                                                 }
+                                                {
+                                                    comment.photo &&
+                                                    <div className={"f-images-comment-wrap"}>
+                                                        {
+                                                            comment.photo.split(";").map(item => (
+                                                                <Image
+                                                                    wrapperClassName={"f-images-comment"}
+                                                                    style={{borderRadius: 16}}
+                                                                    height={'100%'}
+                                                                    src={item}
+                                                                    placeholder={
+                                                                        <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'  }}>
+                                                                            <Spin indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />} />
+                                                                        </div>
+                                                                    }
+                                                                />
+                                                            ))
+                                                        }
+                                                    </div>
+                                                }
                                                 <div style={{color: '#AAB2BD'}}>
                                                     <span style={{fontSize: 15, fontWeight: 400}}>
                                                         {
@@ -310,7 +366,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                 <div className={"f-write-comments"} key={2}>
                     <Title>Написать</Title>
                     <Form form={form}
-                          onFinish={(values) => sendComment(values.comment)}
+                          onFinish={(values) => sendComment(values)}
                     >
                         <Form.Item
                             name={"comment"}
@@ -341,6 +397,21 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                                   "Напишите что-нибудь..." : ""}
                                     />
                             }
+                        </Form.Item>
+                        <Form.Item
+                            name={"photo"}
+                        >
+                            <Upload
+                                accept=".jpeg, .png, .jpg"
+                                action={ApiRoutes.API_UPLOAD_IMAGE}
+                                fileList={fileList}
+                                onChange={onChange}
+                                listType="picture"
+                                beforeUpload={(file) => beforeUpload(file)}
+                                maxCount={3}
+                            >
+                                <Button style={{ border: 'none' }} icon={<CameraOutlined/>}></Button>
+                            </Upload>
                         </Form.Item>
                         {
                             ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => global?.user?.roles?.includes(el)) &&
