@@ -266,13 +266,17 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
 
     const sendEditedIdea = (value) => {
         setLoadingEditChanges(true);
-        axios.post(ApiRoutes.API_CHANGE_IDEA, {idea_id: idea.idea_id, title: value.title, content: value.text}).then(response => {
+        axios.post(ApiRoutes.API_CHANGE_IDEA, {
+            idea_id: idea.idea_id,
+            title: value.title.trim(),
+            content: value.text.trim()
+        }).then(response => {
             global.handleResponse(response,
                 function () {
                     let data = {...idea};
 
-                    data.title = value.title;
-                    data.text = value.text;
+                    data.title = value.title.trim();
+                    data.text = value.text.trim();
                     setIdea(data);
 
                     setShowEditFields(false);
@@ -490,6 +494,14 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                         message: 'Заголовок должен содержать от 5 до 255 символов',
                                                         min: 5,
                                                         max: 255,
+                                                        validator(rule, value, callback) {
+                                                            if (value.trim().length < 5) {
+                                                                callback("Заголовок должен содержать от 5 до 255 символов")
+                                                                return false;
+                                                            }
+
+                                                            callback()
+                                                        }
                                                     }]}
                                                 >
                                                     <Input style={{marginTop: 24, width: '100%', fontSize: 32}}/>
@@ -540,7 +552,15 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                         {
                                                             required: true,
                                                             message: 'Описание не может быть меньше 10 символов',
-                                                            min: 10
+                                                            min: 10,
+                                                            validator(rule, value, callback) {
+                                                                if (value.trim().length < 10) {
+                                                                    callback("Описание не может быть меньше 10 символов")
+                                                                    return false;
+                                                                }
+
+                                                                callback()
+                                                            }
                                                         },
                                                     ]}
                                                 >

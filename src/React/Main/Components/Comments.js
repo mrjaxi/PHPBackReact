@@ -260,7 +260,15 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
 
                                                         <Form.Item
                                                             name={"content"}
-                                                            rules={[{required: true, message: "Заполните поле"}]}
+                                                            rules={[{required: true, message: "Заполните поле",
+                                                                validator(rule, value, callback) {
+                                                                    if (value.trim().length < 1) {
+                                                                        callback("Заполните поле")
+                                                                        return false;
+                                                                    }
+
+                                                                    callback()
+                                                                }}]}
                                                         >
                                                             <TextArea autoSize={{minRows: 3}} style={{ marginTop: 24, fontSize: 17 }}/>
                                                         </Form.Item>
@@ -374,6 +382,14 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                 {
                                     required: true,
                                     message: 'Напишите комментарий',
+                                    validator(rule, value, callback) {
+                                        if (value.trim().length < 1) {
+                                            callback("Напишите комментарий")
+                                            return false;
+                                        }
+
+                                        callback()
+                                    }
                                 },
                             ]}
                         >
