@@ -45,6 +45,7 @@ const AddIdeaPage = () => {
                                     id: idea.id,
                                     title: idea.title,
                                     text: idea.content,
+                                    status: idea.status,
                                     comments: idea?.commentsCount,
                                     like: Number(idea?.likes),
                                     showFullText: false,
@@ -145,17 +146,29 @@ const AddIdeaPage = () => {
     function getIdeaItem(idea) {
         return (
             <div className={"i-idea-card"} key={idea.id} style={{ marginBottom: 25 }}>
-                <Link to={`${global.lang}/idea/${idea.id}/`} target="_blank">
-                    <span style={{ fontSize: 19, fontWeight: 500, color: '#1D1D1D' }}>{idea.title}</span>
-                    <div style={{ color: '#1D1D1D' }}>
-                        {
-                            idea.text.split(" ").length <= 25 ?
-                                <span>{idea.text}</span> :
-                                idea.text.split(" ").length > 25 && !idea.showFullText ?
-                                    <span>{idea.text.split(" ").filter((item, index) => index < 25).join(" ")}...</span> :
-                                    <span>{idea.text}</span>
-                        }
-                    </div>
+                <div>
+                    <Link to={`${global.lang}/idea/${idea.id}/`} target="_blank">
+                        <span style={{ fontSize: 19, fontWeight: 500, color: '#1D1D1D' }}>{idea.title}
+                            <Tooltip placement="left" title={idea.status.translate}>
+                                <p className={"f-cards-type-viewed f-active-tooltip-add"} style={{
+                                    marginTop: 'unset',
+                                    marginBottom: 'unset',
+                                    color: idea.status?.color ? idea.status?.color : "#000000",
+                                    backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",
+                                }}
+                                >{idea.status.translate}</p>
+                            </Tooltip>
+                        </span>
+                        <div style={{ color: '#1D1D1D', marginTop: 10 }}>
+                            {
+                                idea.text.split(" ").length <= 25 ?
+                                    <span>{idea.text}</span> :
+                                    idea.text.split(" ").length > 25 && !idea.showFullText ?
+                                        <span>{idea.text.split(" ").filter((item, index) => index < 25).join(" ")}...</span> :
+                                        <span>{idea.text}</span>
+                            }
+                        </div>
+                    </Link>
                     <div className={"i-idea-bottom"}>
                         <a style={{ color: '#AAB2BD', fontSize: 17 }}>
                             { global.numWord(idea.comments, ["комментарий", "комментария", "комментариев"]) }
@@ -168,7 +181,7 @@ const AddIdeaPage = () => {
                             </div>
                         </button>
                     </div>
-                </Link>
+                </div>
                 <div style={{width: '100%', height: 1, backgroundColor: '#E6E9ED', marginTop: 25}}/>
             </div>
         )
@@ -180,12 +193,7 @@ const AddIdeaPage = () => {
                 <Form
                     name={"addIdea"}
                     onFinish={(values) => onSend(values)}
-                    style={{
-                        width: "100%",
-                        minWidth: 300,
-                        maxWidth: 600,
-                        margin: "0 150px"
-                    }}
+                    className={"f-add-idea-page"}
                 >
                     <Title style={{marginBottom: 48}}>Есть идея?</Title>
                     <Form.Item

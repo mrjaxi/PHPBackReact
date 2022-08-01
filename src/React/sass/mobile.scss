@@ -57,6 +57,10 @@
     -ms-overflow-style: none;
   }
 
+  .f-add-idea-page {
+    margin: unset;
+  }
+
   .f-nav-wrap::-webkit-scrollbar {
     width: 0;
     height: 0;
@@ -180,6 +184,15 @@
 
   .f-active-mobile-tooltip {
     visibility: visible;
+  }
+
+  .f-active-tooltip-add {
+    visibility: visible;
+    display: inline;
+    position: relative;
+    bottom: 6px;
+    padding: 10px;
+    left: 7px;
   }
 
   .sub-hashtag-style {

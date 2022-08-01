@@ -228,8 +228,12 @@ button:focus {
         min-width: 100%;
     }
 
-    .f-active-mobile-tooltip {
-        visibility: hidden;
+    &-active-tooltip-add {
+        visibility: visible;
+        display: inline;
+        position: relative;
+        bottom: 2px;
+        left: 7px;
     }
 
     &-profile-wrapper-container-2 {
@@ -993,6 +997,13 @@ button:focus {
 
     &-planned:hover, &-completed:hover, &-viewed:hover, &-inwork:hover {
         color: #FFFFFF;
+    }
+
+    &-add-idea-page {
+        width: 100%;
+        min-width: 300px;
+        max-width: 600px;
+        margin: 0 150px;
     }
 
     &-login {

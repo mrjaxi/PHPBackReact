@@ -208,8 +208,12 @@ button:focus {
   width: 50vw;
   min-width: 100%;
 }
-.f .f-active-mobile-tooltip {
-  visibility: hidden;
+.f-active-tooltip-add {
+  visibility: visible;
+  display: inline;
+  position: relative;
+  bottom: 2px;
+  left: 7px;
 }
 .f-profile-wrapper-container-2 {
   display: flex;
@@ -870,6 +874,12 @@ button:focus {
 .f-planned:hover, .f-completed:hover, .f-viewed:hover, .f-inwork:hover {
   color: #FFFFFF;
 }
+.f-add-idea-page {
+  width: 100%;
+  min-width: 300px;
+  max-width: 600px;
+  margin: 0 150px;
+}
 .f-login {
   box-sizing: border-box;
   margin: 0;
@@ -1038,6 +1048,10 @@ button:focus {
     -ms-overflow-style: none;
   }
 
+  .f-add-idea-page {
+    margin: unset;
+  }
+
   .f-nav-wrap::-webkit-scrollbar {
     width: 0;
     height: 0;
@@ -1157,6 +1171,15 @@ button:focus {
 
   .f-active-mobile-tooltip {
     visibility: visible;
+  }
+
+  .f-active-tooltip-add {
+    visibility: visible;
+    display: inline;
+    position: relative;
+    bottom: 6px;
+    padding: 10px;
+    left: 7px;
   }
 
   .sub-hashtag-style {
