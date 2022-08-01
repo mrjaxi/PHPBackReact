@@ -428,13 +428,16 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                 }/>
                                         <div className={"f-cards-wrap-text-style"}>
                                             <div>
-                                                <span className={"f-cards-text"}>{idea.username}
-                                                    {
-                                                        ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => idea?.roles.includes(el)) &&
-                                                        <img style={{marginBottom: 3, marginLeft: 5}}
-                                                             src={"/i/official.svg"} width={15}
-                                                             height={15}/>
-                                                    }
+                                                <span className={"f-cards-text"}>
+                                                    <p className={"f-fio-text"}>
+                                                        {idea.username}
+                                                        {
+                                                            ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => idea?.roles.includes(el)) &&
+                                                            <img style={{marginBottom: 3, marginLeft: 5}}
+                                                                 src={"/i/official.svg"} width={15}
+                                                                 height={15}/>
+                                                        }
+                                                    </p>
                                                 </span>
                                             </div>
                                             <span className={"f-cards-text-bottom"}>{idea.role}

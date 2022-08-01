@@ -419,7 +419,7 @@ const MainPage = (props) => {
                                                     <div className={"f-cards-inner f-drawer-search-inner"}>
                                                         <div className={"f-cards-avatar"}>
                                                             <div className={"f-cards-row-wrap"}>
-                                                                <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                                                <Avatar size={48} style={{minWidth: 48, minHeight: 48,backgroundColor: '#AAB2BD'}}
                                                                         src={item.userImage
                                                                             ? <img src={item.userImage}/>
                                                                             : <UserOutlined/>

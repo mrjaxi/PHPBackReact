@@ -664,6 +664,10 @@ button:focus {
         }
     }
 
+    &-fio-text {
+        margin-bottom: unset;
+    }
+
     &-cards {
         display: flex;
         width: 100%;
