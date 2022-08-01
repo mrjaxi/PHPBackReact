@@ -398,21 +398,24 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                     />
                             }
                         </Form.Item>
-                        <Form.Item
-                            name={"photo"}
-                        >
-                            <Upload
-                                accept=".jpeg, .png, .jpg"
-                                action={ApiRoutes.API_UPLOAD_IMAGE}
-                                fileList={fileList}
-                                onChange={onChange}
-                                listType="picture"
-                                beforeUpload={(file) => beforeUpload(file)}
-                                maxCount={3}
+                        {
+                            global.layout !== 'guest' &&
+                            <Form.Item
+                                name={"photo"}
                             >
-                                <Button style={{ border: 'none' }} icon={<CameraOutlined/>}></Button>
-                            </Upload>
-                        </Form.Item>
+                                <Upload
+                                    accept=".jpeg, .png, .jpg"
+                                    action={ApiRoutes.API_UPLOAD_IMAGE}
+                                    fileList={fileList}
+                                    onChange={onChange}
+                                    listType="picture"
+                                    beforeUpload={(file) => beforeUpload(file)}
+                                    maxCount={3}
+                                >
+                                    <Button style={{border: 'none'}} icon={<CameraOutlined/>}></Button>
+                                </Upload>
+                            </Form.Item>
+                        }
                         {
                             ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => global?.user?.roles?.includes(el)) &&
                             <Form.Item
