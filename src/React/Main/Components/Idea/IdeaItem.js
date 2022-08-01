@@ -299,12 +299,16 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                     {
                         categories.length !== 0 && global.layout === "admin" ?
                             <Popover
+                                placement={"topLeft"}
                                 content={
                                     <Segmented
                                         value={idea?.categoryId}
                                         onChange={(value) => changeCategory(value)}
                                         options={categories.map((item) => {
-                                            return {label: item.name, value: item.id}
+                                            return {
+                                                label: item.name,
+                                                value: item.id,
+                                            }
                                         })}/>
                                 }>
                                 <div className={"f-cards-hashtag " + (selectType() && "f-cards-hashtag-hover")}
@@ -331,6 +335,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                     {
                         types.length !== 0 && global.layout === "admin" ?
                             <Popover
+                                placement={"topRight"}
                                 content={
                                     <Segmented
                                         value={idea?.typeId}

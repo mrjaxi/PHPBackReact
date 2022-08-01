@@ -1101,6 +1101,17 @@ button:focus {
     width: 100%;
   }
 
+  .ant-segmented-group {
+    flex-wrap: wrap;
+  }
+
+  .f-test {
+    background-color: #1D1D1D;
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+  }
+
   .f-ideas-scroll {
     max-width: 100%;
   }
@@ -1366,6 +1377,10 @@ button:focus {
     margin-top: 20px;
   }
 
+  .ant-segmented-group {
+    flex-wrap: wrap;
+  }
+
   .f-cards-image-type {
     height: 250px;
   }
@@ -1377,6 +1392,10 @@ button:focus {
 
   .f-title-comment {
     font-size: 30px;
+  }
+
+  .ant-segmented-group {
+    flex-wrap: wrap;
   }
 
   h1.ant-typography {

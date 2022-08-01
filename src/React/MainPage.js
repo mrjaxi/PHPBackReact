@@ -442,7 +442,6 @@ const MainPage = (props) => {
                                                             }}>
                                                                 <p className={"f-cards-type f-cards-type-viewed"} style={{
                                                                     flex: 1,
-                                                                    padding: "5px",
                                                                     color: item.status?.color ? item.status?.color : "#000000",
                                                                     backgroundColor: item.status?.color ? item.status?.color + "30" : "#AAB2BD",
                                                                 }}
