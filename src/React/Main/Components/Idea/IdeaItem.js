@@ -173,7 +173,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
             currentAllowComments = idea.allowComments;
         let newIdea = {...idea};
         newIdea.status = statusObj;
-        if (statusObj.data === "declined" || statusObj.data === "completed") {
+        if (statusObj.name === "declined" || statusObj.name === "completed") {
             newIdea.allowComments = false;
         } else {
             newIdea.allowComments = true;
