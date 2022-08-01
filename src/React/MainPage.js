@@ -285,9 +285,6 @@ const MainPage = (props) => {
                                 : ideas.length === 0 ? <EmptyIdeas text={"Пока нет записей..."}/>
                                     : <InfiniteScroll
                                         style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            flexDirection: "column",
                                             overflow: 'hidden'
                                         }}
                                         next={() => {
