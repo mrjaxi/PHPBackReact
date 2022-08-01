@@ -683,6 +683,9 @@ class IdeasController extends AbstractController
         // Удалять если админ или автор комментария
         if (in_array("ROLE_ADMIN", $user->getRoles())
             or $user->getId() == $comment->get_User()->getId()) {
+            $idea = $comment->get_Idea();
+            $idea->setOfficialComment(null);
+            $this->ideasRepository->save($idea);
             $this->commentsRepository->remove($comment);
             return $this->json(['state' => 'success', 'comment' => $comment->get_Info()]);
         } else {

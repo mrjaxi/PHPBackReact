@@ -261,6 +261,7 @@ button:focus {
     }
 
     &-system-from {
+        overflow-wrap: break-word;
         margin-bottom: 20px;
         padding-left: 40px;
         font-size: 17px;

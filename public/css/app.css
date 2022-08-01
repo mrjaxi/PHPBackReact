@@ -237,6 +237,7 @@ button:focus {
   max-width: 1000px;
 }
 .f-system-from {
+  overflow-wrap: break-word;
   margin-bottom: 20px;
   padding-left: 40px;
   font-size: 17px;
@@ -980,9 +981,9 @@ button:focus {
   font-size: 21px;
   margin-right: 50px;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .f-nav {
-    max-width: 880px;
+    margin-left: 70px;
   }
 
   .f-nav-button {
@@ -1006,6 +1007,13 @@ button:focus {
 
   .ant-drawer-body {
     overflow: unset;
+  }
+}
+@media (max-width: 1050px) {
+  .f-nav-button {
+    padding: 23px 23px;
+    margin-right: 10px;
+    font-size: 19px;
   }
 }
 @media (max-width: 950px) {
@@ -1118,6 +1126,7 @@ button:focus {
 
   .f-cards {
     min-width: unset;
+    max-width: unset;
   }
 
   .f-cards-div-wrap-text {
@@ -1347,7 +1356,6 @@ button:focus {
   .f-select-in-profile {
     padding-left: unset;
     padding-right: unset;
-    overflow-y: scroll;
     scroll-behavior: unset;
     scrollbar-width: none;
     -ms-overflow-style: none;

@@ -1,6 +1,6 @@
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .f-nav {
-    max-width: 880px;
+    margin-left: 70px;
   }
 
   .f-nav-button {
@@ -24,6 +24,13 @@
 
   .ant-drawer-body {
     overflow: unset;
+  }
+}
+@media (max-width: 1050px) {
+  .f-nav-button {
+    padding: 23px 23px;
+    margin-right: 10px;
+    font-size: 19px;
   }
 }
 
@@ -142,6 +149,7 @@
 
   .f-cards {
     min-width: unset;
+    max-width: unset;
   }
 
   .f-cards-div-wrap-text {
@@ -379,7 +387,6 @@
   .f-select-in-profile {
     padding-left: unset;
     padding-right: unset;
-    overflow-y: scroll;
     scroll-behavior: unset;
     scrollbar-width: none;
     -ms-overflow-style: none;

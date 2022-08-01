@@ -199,7 +199,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                             if (!showComments) {
                                 setCommentsData(rawCommentsData.filter((item, index) => index > (comments.length - 4))), setShowComments(true)
                             }
-                        }}>{(showComments) ? "Показать следующие комментарии" : "Скрыть"}</a>
+                        }}>{(showComments) ? "Показать предыдущие комментарии" : "Скрыть"}</a>
                 </div>
             }
             <div className={"f-comments-scroll"}>
