@@ -411,14 +411,13 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                         <div className={"f-wrap-idea-text"}>
                             <div className={"f-cards-avatar"}
                                  onMouseOver={() => {
-                                     if(showEditButton){
-                                         // console.log("OVER PROFILE")
+                                     if (showEditButton) {
                                          setShowEditButton(false)
                                      }
                                  }}>
                                 <Link to={`${global.lang}/profile/${idea.user.id}/`}>
                                     <div className={"f-cards-row-wrap"}>
-                                        <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                        <Avatar size={48} style={{minWidth: 48, minHeight: 48,backgroundColor: '#AAB2BD'}}
                                                 src={idea.userImage
                                                     ? <img src={idea.userImage}/>
                                                     : <UserOutlined/>
