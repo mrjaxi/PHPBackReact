@@ -58,7 +58,7 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                         >
                             <Link to={global.lang + `/profile/${comment.user.id}/`}>
                                 <div className={"f-cards-row-wrap"}>
-                                    <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                    <Avatar size={48} style={{minWidth: 48, minHeight: 48,backgroundColor: '#AAB2BD'}}
                                             src={comment.user.image
                                                 ? <img src={comment.user.image}/>
                                                 : <UserOutlined/>
@@ -66,17 +66,25 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                                     <div className={"f-cards-wrap-text-style"}>
                                         <div>
                                             <span className={"f-cards-text"}>
+                                                <p className={"f-fio-text"}>
                                                 {(comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")).trim()}
-                                                {
-                                                    ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles.includes(el)) &&
-                                                    <img style={{marginBottom: 3, marginLeft: 5}}
-                                                         src={"/i/official.svg"} width={15}
-                                                         height={15}/>
-                                                }
-                                                {
-                                                    comment.updated &&
-                                                    <span style={{ color: '#AAB2BD', fontSize: 15, marginLeft: 10, fontWeight: 400, marginBottom: 5 }}>ред.</span>
-                                                }
+                                                    {
+                                                        ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles.includes(el)) &&
+                                                        <img style={{marginBottom: 3, marginLeft: 5}}
+                                                             src={"/i/official.svg"} width={15}
+                                                             height={15}/>
+                                                    }
+                                                    {
+                                                        comment.updated &&
+                                                        <span style={{
+                                                            color: '#AAB2BD',
+                                                            fontSize: 15,
+                                                            marginLeft: 10,
+                                                            fontWeight: 400,
+                                                            marginBottom: 5
+                                                        }}>ред.</span>
+                                                    }
+                                                </p>
                                             </span>
                                         </div>
                                         <span className={"f-cards-text-bottom"}>{comment.user.role_name}

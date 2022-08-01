@@ -590,6 +590,9 @@ button:focus {
   font-size: 20px;
   height: 60px;
 }
+.f-fio-text {
+  margin-bottom: unset;
+}
 .f-cards {
   display: flex;
   width: 100%;

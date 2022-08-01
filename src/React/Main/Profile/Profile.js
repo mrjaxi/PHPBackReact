@@ -189,7 +189,7 @@ const Profile = () => {
                                         <div className={"f-cards-inner sub-change-padding-mobile"}>
                                             <div className={"f-cards-avatar"} style={{marginBottom: 25}}>
                                                 <div className={"f-cards-row-wrap"}>
-                                                    <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                                    <Avatar size={48} style={{minWidth: 48, minHeight: 48,backgroundColor: '#AAB2BD'}}
                                                             src={user.image
                                                                 ? <img src={user.image}/>
                                                                 : <UserOutlined/>
@@ -197,12 +197,14 @@ const Profile = () => {
                                                     <div className={"f-cards-wrap-text-style"} style={{ width: '70%' }}>
                                                         <div>
                                                         <span className={"f-cards-text"}>
-                                                            {user.fio}
-                                                            {roles && ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => roles?.includes(el)) &&
-                                                            <img style={{marginBottom: 3, marginLeft: 5}}
-                                                                 src={"/i/official.svg"} width={15}
-                                                                 height={15}/>
-                                                            }
+                                                            <p className={"f-fio-text"}>
+                                                                {user.fio}
+                                                                {roles && ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => roles?.includes(el)) &&
+                                                                <img style={{marginBottom: 3, marginLeft: 5}}
+                                                                     src={"/i/official.svg"} width={15}
+                                                                     height={15}/>
+                                                                }
+                                                            </p>
                                                         </span>
                                                         </div>
                                                         <span className={"f-cards-text-bottom"}>{user.role_name}</span>

@@ -223,7 +223,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                     >
                                         <div className={"f-cards-row-wrap"}>
                                             <Link to={global.lang + `/profile/${comment.user.id}/`}>
-                                                <Avatar size={48} style={{backgroundColor: '#AAB2BD'}}
+                                                <Avatar size={48} style={{minWidth: 48, minHeight: 48,backgroundColor: '#AAB2BD'}}
                                                     src={comment.user.image
                                                         ? <img src={comment.user.image}/>
                                                         : <UserOutlined/>
@@ -236,12 +236,15 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                                 >
                                                     <Link to={global.lang + `/profile/${comment.user.id}/`}>
                                                         <span style={{color: "black"}}>
-                                                            {(comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")).trim()}
-                                                            {
-                                                                ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles?.includes(el)) &&
-                                                                <img style={{marginBottom: 3, marginLeft: 5}} src={"/i/official.svg"}
-                                                                     width={15} height={15}/>
-                                                            }
+                                                            <p className={"f-fio-text"}>
+                                                                {(comment.user?.first_name + " " + (comment.user?.last_name ? comment.user?.last_name : "")).trim()}
+                                                                {
+                                                                    ["ROLE_ADMIN", "ROLE_DEVELOPER"].some(el => comment?.user.roles?.includes(el)) &&
+                                                                    <img style={{marginBottom: 3, marginLeft: 5}}
+                                                                         src={"/i/official.svg"}
+                                                                         width={15} height={15}/>
+                                                                }
+                                                            </p>
                                                         </span>
                                                     </Link>
                                                     {
