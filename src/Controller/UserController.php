@@ -361,9 +361,9 @@ class UserController extends AbstractController
             )
         );
         // Если неавторизованный или не админ или не его профиль
-        if (empty($User) or (!in_array("ROLE_ADMIN", $User->getRoles()) or $user->getId() !== $User->getId()))
+        if (empty($User) or !in_array("ROLE_ADMIN", $User->getRoles()) and $user->getId() !== $User->getId())
         {
-            $userIdeas = $userIdeas->filter(function ($idea){
+            $userIdeas = $userIdeas->filter(function ($idea) {
                 // Если не рассмотренные то удаляются
                 return !($idea->get_Status()->getName() === "new");
             });
