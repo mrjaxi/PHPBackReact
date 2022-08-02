@@ -365,7 +365,7 @@ class UserController extends AbstractController
         {
             $userIdeas = $userIdeas->filter(function ($idea){
                 // Если не рассмотренные то удаляются
-                return !$idea->get_Status()->getName() === "new";
+                return !($idea->get_Status()->getName() === "new");
             });
         }
         $response["count"]["ideas"] = $userIdeas->count();
