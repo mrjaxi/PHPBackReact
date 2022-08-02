@@ -426,9 +426,8 @@ class UserController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         $ideasArr = array();
-        for ($i = 0; $i < $ideas->count(); $i++) {
+        foreach ($ideas as $i => &$idea) {
             /** @var $idea Ideas */
-            $idea = $ideas[$i];
             $ideasArr[$i] = $idea->get_Info();
             $ideasArr[$i]["comments"] = $idea->get_CommentsArray();
 
