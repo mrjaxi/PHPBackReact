@@ -460,3 +460,10 @@
     padding: 20px 20px 20px 20px;
   }
 }
+
+@media (min-width: 2000px) {
+  .f-new-idea {
+    right: calc(50vw + 520px);
+    left: unset;
+  }
+}

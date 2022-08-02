@@ -386,6 +386,8 @@ class IdeasController extends AbstractController
      */
     public function search(Request $request): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
         if (!empty($data)) {
             $searchTitle = $data['title'];
@@ -403,6 +405,15 @@ class IdeasController extends AbstractController
                 $ideas = $this->ideasRepository->searchIdeas($searchTitle, "");
             } else if (!empty($searchContent)) {
                 $ideas = $this->ideasRepository->searchIdeas("", $searchContent);
+            }
+        }
+        // Если не авторизованный или не админ, то не рассмотренные идеи удаляются
+        if (empty($user) or !in_array("ROLE_ADMIN", $user->getRoles()) ) {
+            /* @var Ideas $idea */
+            foreach ($ideas as $key => &$idea) {
+                if($idea->get_Status()->getName() === "new"){
+                    unset($ideas[$key]);
+                }
             }
         }
         $ideas = $this->decorateIdeas($ideas);

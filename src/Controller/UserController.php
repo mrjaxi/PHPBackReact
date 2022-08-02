@@ -342,25 +342,36 @@ class UserController extends AbstractController
      */
     public function getUserProfile(Request $request, $id): Response
     {
-        /* @var User */
+        /** @var User $User */
+        $User = $this->getUser();
+        /* @var User $user */
         $user = $this->userRepository->find($id);
         if (empty($user)) {
             return $this->json(['state' => 'error', 'message' => "Такого пользователя нет"]);
         }
+        $userIdeas = $user->get_Ideas();
         $page = (int)$request->get("page");
         $response = array(
             'state' => 'success',
             'profile' => $user->get_Profile(),
             'count' => array(
-                'ideas' => $user->get_Ideas()->count(),
+                'ideas' => 0,
                 'comments' => count($user->get_CommentsArray()),
                 'likes' => count($user->get_VotesArray()),
             )
         );
+        // Если неавторизованный или не админ или не его профиль
+        if (empty($User) or (!in_array("ROLE_ADMIN", $User->getRoles()) or $user->getId() !== $User->getId()))
+        {
+            $userIdeas = $userIdeas->filter(function ($idea){
+                // Если не рассмотренные то удаляются
+                return !$idea->get_Status()->getName() === "new";
+            });
+        }
+        $response["count"]["ideas"] = $userIdeas->count();
         switch ($page) {
             case 1:
-                $ideas = $user->get_Ideas();
-                $ideas = $this->decorateCollectionIdeas($ideas);
+                $ideas = $this->decorateCollectionIdeas($userIdeas);
                 $ideas = AppController::array_sort($ideas, "id", SORT_DESC);
                 $response["ideas"] = $ideas;
                 break;
