@@ -289,7 +289,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                                             comment.photo.split(";").map(item => (
                                                                 <Image
                                                                     wrapperClassName={"f-images-comment"}
-                                                                    style={{borderRadius: 16}}
+                                                                    style={{borderRadius: 16, objectFit: 'contain'}}
                                                                     height={'100%'}
                                                                     src={item}
                                                                     placeholder={
