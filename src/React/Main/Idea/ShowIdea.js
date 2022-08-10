@@ -129,7 +129,7 @@ const ShowIdea = (props) => {
                                                 <MetaTags>
                                                     <meta property="og:site_name" content="tips.atmaguru.online"/>
                                                     <meta property="og:title" content={ideas[0].title} />
-                                                    <meta property="og:image" content={ideas[0].photo ? ideas[0].photo : "/i/logotype.svg"} />
+                                                    <meta property="og:image" content={ideas[0].photo ? ideas[0].photo.split(";")[0] : "/i/logotype.svg"} />
                                                     <meta property="og:description" content={ideas[0].text.split(" ").filter((idea, index) => index < 40).join(" ") + "..."} />
                                                 </MetaTags>
                                                 <span className={"f-cards-hashtag"} style={{
