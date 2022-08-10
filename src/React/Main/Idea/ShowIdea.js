@@ -8,6 +8,7 @@ import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Col } from "antd";
+import MetaTags from 'react-meta-tags';
 
 const ShowIdea = (props) => {
     const [ideas, setIdeas] = useState([]);
@@ -125,6 +126,12 @@ const ShowIdea = (props) => {
                                             }
                                             { ideasInfinite.length > 0 ?
                                                 <>
+                                                <MetaTags>
+                                                    <meta property="og:site_name" content="tips.atmaguru.online"/>
+                                                    <meta property="og:title" content={ideas[0].title} />
+                                                    <meta property="og:image" content={ideas[0].image ? ideas[0].image : "/i/logotype.svg"} />
+                                                    <meta property="og:description" content={ideas[0].text.split(" ").filter((idea, index) => index < 40).join(" ") + "..."} />
+                                                </MetaTags>
                                                 <span className={"f-cards-hashtag"} style={{
                                                     marginBottom: 33,
                                                     fontWeight: 500,
