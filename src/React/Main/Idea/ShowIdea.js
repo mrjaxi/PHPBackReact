@@ -8,7 +8,6 @@ import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Col } from "antd";
-import MetaTags from 'react-meta-tags'
 
 const ShowIdea = (props) => {
     const [ideas, setIdeas] = useState([]);
@@ -126,14 +125,6 @@ const ShowIdea = (props) => {
                                             }
                                             { ideasInfinite.length > 0 ?
                                                 <>
-                                                <MetaTags>
-                                                    <meta property="og:site_name" content="https://tips.atmaguru.online"/>
-                                                    <meta property="og:type" content="article" />
-	                                                <meta property="og:url" content={"https://tips.atmaguru.online" + window.location.pathname} />
-                                                    <meta property="og:title" content={ideas[0]?.title} />
-                                                    <meta property="og:image" content={ideas[0]?.photo ? "https://tips.atmaguru.online" + ideas[0].photo.split(";")[0] : "https://tips.atmaguru.online/i/logotype.png"} />
-                                                    <meta property="og:description" content={ideas[0]?.text.split(" ").filter((idea, index) => index < 40).join(" ") + "..."} />
-                                                </MetaTags>
                                                 <span className={"f-cards-hashtag"} style={{
                                                     marginBottom: 33,
                                                     fontWeight: 500,
