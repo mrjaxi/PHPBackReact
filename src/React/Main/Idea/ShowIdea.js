@@ -127,11 +127,12 @@ const ShowIdea = (props) => {
                                             { ideasInfinite.length > 0 ?
                                                 <>
                                                 <MetaTags>
-                                                    <meta property="og:site_name" content="pbr.atmadev.ru"/>
-	                                                <meta property="og:url" content={"pbr.atmadev.ru" + window.location.pathname} />
-                                                    <meta property="og:title" content={ideas[0].title} />
-                                                    <meta property="og:image" content={ideas[0].photo ? ideas[0].photo.split(";")[0] : "/i/logotype.svg"} />
-                                                    <meta property="og:description" content={ideas[0].text.split(" ").filter((idea, index) => index < 40).join(" ") + "..."} />
+                                                    <meta property="og:site_name" content="tips.atmaguru.online"/>
+                                                    <meta property="og:type" content="article" />
+	                                                <meta property="og:url" content={"tips.atmaguru.online" + window.location.pathname} />
+                                                    <meta property="og:title" content={ideas[0]?.title} />
+                                                    <meta property="og:image" content={ideas[0]?.photo ? ideas[0].photo.split(";")[0] : "/i/logotype.svg"} />
+                                                    <meta property="og:description" content={ideas[0]?.text.split(" ").filter((idea, index) => index < 40).join(" ") + "..."} />
                                                 </MetaTags>
                                                 <span className={"f-cards-hashtag"} style={{
                                                     marginBottom: 33,

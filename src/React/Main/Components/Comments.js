@@ -278,7 +278,13 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                                     </Form> :
                                                     <span className={"f-cards-content-description"}>
                                                     {
-                                                        comment?.content
+                                                        comment?.content.split("\n").map(item => {
+                                                            if (item) {
+                                                                return (
+                                                                    <p style={{marginBottom: 2}}>{item}</p>
+                                                                )
+                                                            }
+                                                        })
                                                     }
                                                     </span>
                                                 }

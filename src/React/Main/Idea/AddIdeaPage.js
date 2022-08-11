@@ -162,10 +162,28 @@ const AddIdeaPage = () => {
                         <div style={{ color: '#1D1D1D', marginTop: 10 }}>
                             {
                                 idea.text.split(" ").length <= 25 ?
-                                    <span>{idea.text}</span> :
+                                    <span>{idea.text.split("\n").map(item => {
+                                        if (item) {
+                                            return (
+                                                <p style={{marginBottom: 2}}>{item}</p>
+                                            )
+                                        }
+                                    })}</span> :
                                     idea.text.split(" ").length > 25 && !idea.showFullText ?
-                                        <span>{idea.text.split(" ").filter((item, index) => index < 25).join(" ")}...</span> :
-                                        <span>{idea.text}</span>
+                                        <span>{idea.text.split(" ").filter((item, index) => index < 25).join(" ").split("\n").map(item => {
+                                            if (item) {
+                                                return (
+                                                    <p style={{marginBottom: 2}}>{item}</p>
+                                                )
+                                            }
+                                        })}...</span> :
+                                        <span>{idea.text.split("\n").map(item => {
+                                            if (item) {
+                                                return (
+                                                    <p style={{marginBottom: 2}}>{item}</p>
+                                                )
+                                            }
+                                        })}</span>
                             }
                         </div>
                     </Link>
@@ -204,6 +222,13 @@ const AddIdeaPage = () => {
                                 message: 'Заголовок должен содержать от 5 до 255 символов',
                                 min: 5,
                                 max: 255,
+                                validator(rule, value, callback) {
+                                    if (value.trim().length < 5) {
+                                        callback("Заголовок должен содержать от 5 до 255 символов")
+                                        return false;
+                                    }
+                                    callback()
+                                }
                             },
                         ]}
                     >
@@ -249,7 +274,15 @@ const AddIdeaPage = () => {
                             {
                                 required: true,
                                 message: 'Описание не может быть меньше 10 символов',
-                                min: 10
+                                min: 10,
+                                validator(rule, value, callback) {
+                                    if (value.trim().length < 10) {
+                                        callback("Описание не может быть меньше 10 символов")
+                                        return false;
+                                    }
+
+                                    callback()
+                                }
                             },
                         ]}
                     >

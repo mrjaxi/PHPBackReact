@@ -111,7 +111,13 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                                 </Form> :
                                 <span className={"f-cards-content-description"}>
                                     {
-                                        comment?.content
+                                        comment?.content.split("\n").map(item => {
+                                            if (item) {
+                                                return (
+                                                    <p style={{marginBottom: 2}}>{item}</p>
+                                                )
+                                            }
+                                        })
                                     }
                                 </span>
                         }

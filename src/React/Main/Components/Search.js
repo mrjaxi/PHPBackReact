@@ -177,7 +177,9 @@ const Search = ({ visible, setVisible }) => {
                                                                         backgroundColor: "#FFFF66",
                                                                         color: "black"
                                                                     }}
-                                                                    textToHighlight={item.title}
+                                                                    textToHighlight={
+                                                                        item.title
+                                                                    }
                                                                 />
                                                             </span>
                                                         {/*</NavLink>*/}

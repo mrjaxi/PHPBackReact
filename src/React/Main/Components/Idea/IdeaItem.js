@@ -2,12 +2,13 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../Comments";
-import {Avatar, Image, Select, Tooltip, Button, Popover, Segmented, Form, Input} from "antd";
+import {Avatar, Image, Select, Tooltip, Button, Popover, Segmented, Form, Input, Typography} from "antd";
 import {Link} from "react-router-dom";
 import Icon, {UserOutlined, EditOutlined} from "@ant-design/icons";
 import Linkify from 'react-linkify';
 const {Option} = Select;
 const {TextArea} = Input;
+const { Text } = Typography;
 
 import Like from '/public/i/like.svg'
 import OfficialComment from "../OfficialComment";
@@ -533,7 +534,11 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                         :
                                                         <Link className={"f-cards-content-text"}
                                                             to={global.lang + "/idea/" + idea.idea_id + "/"}
-                                                        >{idea.title}</Link>
+                                                        >
+                                                            <Text>
+                                                                {idea.title}
+                                                            </Text>
+                                                        </Link>
                                                 }
                                             </a>
                                     }
@@ -576,13 +581,34 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                                 <Linkify>
                                                     {
                                                         idea.text.split(" ").length <= 40 ?
-                                                            <span>{idea.text}</span> :
+                                                                idea.text.split("\n").map(item => {
+                                                                    if (item) {
+                                                                        return (
+                                                                            <p style={{marginBottom: 2}}>{item}</p>
+                                                                        )
+                                                                    }
+                                                                })
+                                                             :
                                                             idea.text.split(" ").length > 40 && !idea.showFullText ?
-                                                                <span>{idea.text.split(" ").filter((idea, index) => index < 40).join(" ")}... <a
+                                                                <span>{idea.text.split(" ").filter((idea, index) => index < 40).join(" ").split("\n").map(item => {
+                                                                    if (item) {
+                                                                        return (
+                                                                            <p style={{marginBottom: 2}}>{item}</p>
+                                                                        )
+                                                                    }
+                                                                })}... <a
                                                                     onClick={() => showText(idea.showFullText)}>Еще</a>
                                                                 </span>
                                                                 : <span>
-                                                                    {idea.text}
+                                                                    {
+                                                                        idea.text.split("\n").map(item => {
+                                                                            if (item) {
+                                                                                return (
+                                                                                    <p style={{marginBottom: 2}}>{item}</p>
+                                                                                )
+                                                                            }
+                                                                        })
+                                                                    }
                                                                     <a style={{zIndex: 3}} onClick={() => showText(idea.showFullText)}>&nbsp;Скрыть</a>
                                                                 </span>
                                                     }
