@@ -40,11 +40,16 @@ class MainController extends AbstractController
             preg_match_all("/\d+/", $request->getPathInfo(), $number);
 
             $idea = $this->ideasRepository->find($number[0][0]);
-            return $this->render('main.html.twig', [
-                'meta' => $idea,
-                'image' => ($idea->getPhoto())[0] && strpos(explode(";", $idea->getPhoto())[0], "http") ? explode(";", $idea->getPhoto())[0] :  "https://".$request->getHost().explode(";", $idea->getPhoto())[0],
-                'host' => $request->getHost(),
-            ]);
+
+            if (empty($idea)) {
+                return $this->render('main.html.twig', ['meta' => '', 'image' => '', 'host' => $request->getHttpHost()]);
+            } else {
+                return $this->render('main.html.twig', [
+                    'meta' => $idea,
+                    'image' => ($idea->getPhoto())[0] && strpos(explode(";", $idea->getPhoto())[0], "http") ? explode(";", $idea->getPhoto())[0] :  "https://".$request->getHost().explode(";", $idea->getPhoto())[0],
+                    'host' => $request->getHost(),
+                ]);
+            }
         }
 
         return $this->render('main.html.twig', ['meta' => '', 'image' => '', 'host' => $request->getHttpHost()]);
