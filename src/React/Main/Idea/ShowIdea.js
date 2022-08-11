@@ -131,7 +131,7 @@ const ShowIdea = (props) => {
                                                     <meta property="og:type" content="article" />
 	                                                <meta property="og:url" content={"https://tips.atmaguru.online" + window.location.pathname} />
                                                     <meta property="og:title" content={ideas[0]?.title} />
-                                                    <meta property="og:image" content={ideas[0]?.photo ? ideas[0].photo.split(";")[0] : "/i/logotype.svg"} />
+                                                    <meta property="og:image" content={ideas[0]?.photo ? "https://tips.atmaguru.online" + ideas[0].photo.split(";")[0] : "https://tips.atmaguru.online/i/logotype.svg"} />
                                                     <meta property="og:description" content={ideas[0]?.text.split(" ").filter((idea, index) => index < 40).join(" ") + "..."} />
                                                 </Helmet>
                                                 <span className={"f-cards-hashtag"} style={{
