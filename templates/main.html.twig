@@ -6,12 +6,24 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="Добро пожаловать в систему обратной связи. Здесь вы можете предложить идеи по улучшению наших услуг или проголосовать за идеи других людей.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta property="og:site_name" content="https://tips.atmaguru.online"/>
         <meta property="og:type" content="article" />
-        <meta property="og:url" content="https://tips.atmaguru.online">
-        <meta property="og:title" content="Система обратной связи AtmaGuru">
-        <meta property="og:image" content="https://tips.atmaguru.online/i/logotype.png"/>
-        <meta property="og:description" content="Добро пожаловать в систему обратной связи. Здесь вы можете предложить идеи по улучшению наших услуг или проголосовать за идеи других людей."/>
+        {% if meta %}
+            <meta property="og:site_name" content="{{ host }}"/>
+            <meta property="og:url" content="{{ host }}/ru/idea/{{ meta.id }}">
+            <meta property="og:title" content="{{ meta.title }}">
+            {% if image %}
+                <meta property="og:image" content="{{ host }}{{ image }}"/>
+            {% else %}
+                <meta property="og:image" content="{{ host }}/i/logotype.png"/>
+            {% endif %}
+            <meta property="og:description" content="{{ meta.content }}"/>
+        {% else %}
+            <meta property="og:site_name" content="{{ host }}"/>
+            <meta property="og:url" content="{{ host }}">
+            <meta property="og:title" content="Система обратной связи AtmaGuru">
+            <meta property="og:image" content="{{ host }}/i/logotype.png"/>
+            <meta property="og:description" content="Добро пожаловать в систему обратной связи. Здесь вы можете предложить идеи по улучшению наших услуг или проголосовать за идеи других людей."/>
+        {% endif %}
         <title>FeedBack</title>
 
         <link rel="icon" type="image/x-icon" href="/i/favicon.ico">

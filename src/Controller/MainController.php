@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\IdeasRepository;
 use App\Repository\UserRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,12 +18,14 @@ class MainController extends AbstractController
     private UserRepository $userRepository;
     private UserPasswordEncoderInterface $encoder;
     private GuardAuthenticatorHandler $guardHandler;
+    private IdeasRepository $ideasRepository;
 
-    public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $encoder, GuardAuthenticatorHandler $guardHandler)
+    public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $encoder, GuardAuthenticatorHandler $guardHandler, IdeasRepository $ideasRepository)
     {
         $this->userRepository = $userRepository;
         $this->encoder = $encoder;
         $this->guardHandler = $guardHandler;
+        $this->ideasRepository =  $ideasRepository;
     }
 
     /**
@@ -30,10 +33,23 @@ class MainController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function index(Request  $request) : Response
+    public function index(Request $request) : Response
     {
-        return $this->render('main.html.twig');
+        if (strpos($request->getPathInfo(), '/idea/')){
+            $number = 0;
+            preg_match_all("/\d+/", $request->getPathInfo(), $number);
+
+            $idea = $this->ideasRepository->find($number[0][0]);
+            return $this->render('main.html.twig', [
+                'meta' => $idea,
+                'image' => explode(";", $idea->getPhoto())[0],
+                'host' => $request->getHttpHost(),
+            ]);
+        }
+
+        return $this->render('main.html.twig', ['meta' => '', 'image' => '', 'host' => $request->getHttpHost()]);
     }
+
     public function setLocale(Request $request) : Response
     {
         if (!$request->getLocale()) {
