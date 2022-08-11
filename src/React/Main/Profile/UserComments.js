@@ -3,10 +3,6 @@ import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
 import FlatList from "flatlist-react";
-import {NavLink} from "react-router-dom";
-import {Avatar} from "antd";
-import {UserOutlined} from "@ant-design/icons";
-import Linkify from "react-linkify";
 import IdeaItem from "../Components/Idea/IdeaItem";
 import EmptyIdeas from "../Components/Idea/EmptyIdeas";
 
