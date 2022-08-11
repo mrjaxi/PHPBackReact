@@ -12,13 +12,13 @@
             <meta property="og:url" content="https://{{ host }}/ru/idea/{{ meta.id }}">
             <meta property="og:title" content="{{ meta.title }}">
             {% if image %}
-                <meta property="og:image" content="https://{{ host }}{{ image }}"/>
+                <meta property="og:image" content="{{ image }}"/>
             {% else %}
                 <meta property="og:image" content="https://{{ host }}/i/logotype.png"/>
             {% endif %}
             <meta property="og:description" content="{{ meta.content }}"/>
         {% else %}
-            <meta property="og:site_name" content="https://"{{ host }}"/>
+            <meta property="og:site_name" content="https://{{ host }}"/>
             <meta property="og:url" content="https://{{ host }}">
             <meta property="og:title" content="Система обратной связи AtmaGuru">
             <meta property="og:image" content="https://{{ host }}/i/logotype.png"/>

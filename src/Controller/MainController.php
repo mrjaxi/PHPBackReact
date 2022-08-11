@@ -42,8 +42,8 @@ class MainController extends AbstractController
             $idea = $this->ideasRepository->find($number[0][0]);
             return $this->render('main.html.twig', [
                 'meta' => $idea,
-                'image' => explode(";", $idea->getPhoto())[0],
-                'host' => $request->getHttpHost(),
+                'image' => ($idea->getPhoto())[0] && strpos(explode(";", $idea->getPhoto())[0], "http") ? explode(";", $idea->getPhoto())[0] :  "https://".$request->getHost().explode(";", $idea->getPhoto())[0],
+                'host' => $request->getHost(),
             ]);
         }
 
