@@ -340,6 +340,11 @@ class IdeasController extends AbstractController
         if (empty($idea)) {
             return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
         }
+
+        if ($idea->get_Status()->getName() === 'new' && !$this->getUser() && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+        }
+
         $ideaInfo = $this->decorateIdeas(array($idea));
 
         return $this->json(['state' => 'success', 'idea' => $ideaInfo]);
