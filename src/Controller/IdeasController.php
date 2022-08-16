@@ -160,7 +160,6 @@ class IdeasController extends AbstractController
             // Если в конце строки есть ; то убирать его
             $photo = substr($photo,0,-1);
         }
-        dd("итоговая строка: ".$photo);
 
         $idea = new Ideas();
         $idea->setTitle($data['title'])
