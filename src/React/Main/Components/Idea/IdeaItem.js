@@ -379,7 +379,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                 </div>
                 <div className={"f-cards-card-wrap"} key={index}>
                     {
-                        idea?.photo !== null &&
+                        idea?.photo &&
                         <div className={"f-cards-image-type"}
                              onClick={() => setVisible(true)}
                              style={{ backgroundImage: 'url("' + idea?.photo.split(";")[0] + '")', cursor: 'pointer'}}>
