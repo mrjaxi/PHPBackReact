@@ -54,6 +54,9 @@ api_get_ideas:
 api_get_idea:
   path: /api/web/idea/{idea_id}/
   controller: App\Controller\IdeasController::getIdea
+api_delete_idea:
+  path: /api/web/delete/idea/
+  controller: App\Controller\IdeasController::deleteIdea
 
 # Роуты пользователей
 api_new_idea:

@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from "react";
+import React, {useCallback, useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import LoadingIdeas from "../Components/Idea/LoadingIdeas";
@@ -56,6 +56,21 @@ const UserComments = ({ user, setCount, updateCounts }) => {
         updateCounts()
     }
 
+    const deleteIdea = useCallback((id) => {
+        axios.post(ApiRoutes.API_DELETE_IDEA, {idea_id: id}).then(response => {
+            if (response.data.state === "success"){
+                let prevIdeas = [...ideas];
+                console.log("ID: ", id);
+                prevIdeas = prevIdeas.filter(item => Number(item.idea_id) !== Number(id));
+                setIdeas(prevIdeas);
+                updateCounts();
+                global.openNotification("Успешно", "Идея удалена", "success")
+            } else {
+                global.openNotification("Ошибка", "Невозможно удалить идею", "error")
+            }
+        })
+    }, [ideas]);
+
     return (
         <>
             {loading ? <LoadingIdeas type={true}/> :
@@ -63,7 +78,7 @@ const UserComments = ({ user, setCount, updateCounts }) => {
                     list={ideas}
                     renderItem={(idea, index) => {
                         return (
-                            <IdeaItem item={idea} index={index} setItem={setIdea}
+                            <IdeaItem deleteIdea={deleteIdea} item={idea} index={index} setItem={setIdea}
                                       showContent={false} showCommentsCount={false} showLikes={false}/>
                         )
                     }}

@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from "react";
+import React, {useCallback, useEffect, useLayoutEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import './sass/main-component.scss'
 import {Avatar, Button, Col, Drawer, Skeleton} from "antd";
@@ -239,6 +239,24 @@ const MainPage = (props) => {
         updateStatuses()
     };
 
+    const deleteIdea = useCallback((id) => {
+        axios.post(ApiRoutes.API_DELETE_IDEA, {idea_id: id}).then(response => {
+            if (response.data.state === "success"){
+                let prevIdeas = [...ideas];
+                prevIdeas.map((item, index) => {
+                    if (item.idea_id === id) {
+                        prevIdeas[index]['deleted'] = true;
+                    }
+                });
+                console.log(prevIdeas);
+                updateStatuses();
+                global.openNotification("Успешно", "Идея удалена", "success")
+            } else {
+                global.openNotification("Ошибка", "Невозможно удалить идею", "error")
+            }
+        })
+    }, [ideas]);
+
     return (
         <>
             <Login visible={visibleLogin} setVisible={setVisibleLogin}/>
@@ -296,18 +314,21 @@ const MainPage = (props) => {
                                     >
                                         <div className={"f-ideas-scroll"}>
                                         {
-                                            ideas.map((idea, index) => (
-                                                <IdeaItem
-                                                    key={index}
-                                                    item={idea}
-                                                    index={index}
-                                                    setItem={setIdea}
-                                                    includedCategory={includedCategories}
-                                                    selectType={selectType}
-                                                    selectCategory={selectCategory}
-                                                    includedTypes={includedTypes}
-                                                />
-                                            ))
+                                            ideas.map((idea, index) => {
+                                                return (
+                                                    <IdeaItem
+                                                        key={index}
+                                                        item={idea}
+                                                        index={idea.idea_id}
+                                                        deleteIdea={deleteIdea}
+                                                        setItem={setIdea}
+                                                        includedCategory={includedCategories}
+                                                        selectType={selectType}
+                                                        selectCategory={selectCategory}
+                                                        includedTypes={includedTypes}
+                                                    />
+                                                );
+                                        })
                                         }
                                         </div>
                                     </InfiniteScroll>

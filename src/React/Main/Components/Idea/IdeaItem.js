@@ -2,9 +2,9 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../../Routes/ApiRoutes";
 import Comments from "../Comments";
-import {Avatar, Image, Select, Tooltip, Button, Popover, Segmented, Form, Input, Typography} from "antd";
+import {Avatar, Image, Select, Tooltip, Button, Popover, Segmented, Form, Input, Typography, Popconfirm} from "antd";
 import {Link} from "react-router-dom";
-import Icon, {UserOutlined, EditOutlined} from "@ant-design/icons";
+import Icon, {UserOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
 import Linkify from 'react-linkify';
 const {Option} = Select;
 const {TextArea} = Input;
@@ -48,7 +48,7 @@ global.parseToIdeaItems = (ideas, data = [], showComments = false, allowComments
     return newData;
 }
 
-const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories = global.categories, types = global.types,
+const IdeaItem = ({ item, index, deleteIdea, setItem, statuses = global.statuses, categories = global.categories, types = global.types,
                       showContent = true, showCommentsCount = true, showLikes = true,
                       includedTypes = [], includedCategory = [],
                       selectType = () => false, selectCategory = () => false,
@@ -294,7 +294,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
 
     return (
         <>
-            <div className={"f-cards"} key={index} id={index}>
+            <div className={"f-cards"} style={{ filter: item.deleted && 'blur(5px) brightness(80%)', pointerEvents: item.deleted && 'none' }} key={index} id={index}>
                 <div className={"f-text-tags-wrap"}
                      onMouseOver={() => {
                          if(showEditButton){
@@ -448,37 +448,52 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                                         </div>
                                     </div>
                                 </Link>
-                                {
-                                    global.layout === "admin" ?
-                                        <Select
-                                            size={'large'}
-                                            onSelect={(id, data) => {
-                                                changeStatus(data.data)
-                                            }}
-                                            style={{height: '100%'}}
-                                            className={"f-select-mobile"}
-                                            value={ideaStatus.translate}
-                                            defaultValue={ideaStatus.translate}
-                                            dropdownMatchSelectWidth={false}
-                                        >
-                                            {
-                                                statuses.map((status, index) => (
-                                                    <Option data={status}
-                                                            className={ideaStatus.id === status.id && "backcolor"}
-                                                            value={status.id}>{status.translate}</Option>
-                                                ))
-                                            }
-                                        </Select> :
-                                        <div>
-                                            <Tooltip className={"f-active-mobile-tooltip"} placement="left" title={idea.status.translate}>
-                                                <p className={"f-cards-type-viewed"} style={{
-                                                    color: idea.status?.color ? idea.status?.color : "#000000",
-                                                    backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",
-                                                }}
-                                                >{idea.status.translate}</p>
-                                            </Tooltip>
-                                        </div>
-                                }
+                                <div style={{
+                                    display: 'flex',
+                                    flexWrap: 'nowrap'
+                                }}>
+                                    {
+                                        global.layout === "admin" ?
+                                                <Select
+                                                    size={'large'}
+                                                    onSelect={(id, data) => {
+                                                        changeStatus(data.data)
+                                                    }}
+                                                    style={{height: '100%'}}
+                                                    showArrow={false}
+                                                    className={"f-select-mobile"}
+                                                    value={ideaStatus.translate}
+                                                    defaultValue={ideaStatus.translate}
+                                                    dropdownMatchSelectWidth={false}
+                                                >
+                                                    {
+                                                        statuses.map((status, index) => (
+                                                            <Option data={status}
+                                                                    className={ideaStatus.id === status.id && "backcolor"}
+                                                                    value={status.id}>{status.translate}</Option>
+                                                        ))
+                                                    }
+                                                </Select>
+                                            :
+                                            <div>
+                                                <Tooltip className={"f-active-mobile-tooltip"} placement="left" title={idea.status.translate}>
+                                                    <p className={"f-cards-type-viewed"} style={{
+                                                        color: idea.status?.color ? idea.status?.color : "#000000",
+                                                        backgroundColor: idea.status?.color ? idea.status?.color + "30" : "#AAB2BD",
+                                                    }}
+                                                    >{idea.status.translate}</p>
+                                                </Tooltip>
+                                            </div>
+                                    }
+                                    <Popconfirm
+                                        title="Вы уверены что хотите удалить идею?"
+                                        onConfirm={() => deleteIdea(idea.idea_id)}
+                                        okText="Да"
+                                        cancelText="Нет"
+                                    >
+                                        <DeleteOutlined style={{fontSize: 24, marginLeft: 15, marginTop: 5, color: '#EC3323', display: 'inline'}}/>
+                                    </Popconfirm>
+                                </div>
                             </div>
                             <Form
                                 form={form}

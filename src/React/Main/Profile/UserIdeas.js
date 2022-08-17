@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from "react";
+import React, {useCallback, useEffect, useLayoutEffect, useState} from "react";
 import axios from "axios";
 import ApiRoutes from "../../Routes/ApiRoutes";
 import FlatList from "flatlist-react";
@@ -73,6 +73,20 @@ const UserIdeas = ({ user, setCount, setNotifications, updateCounts }) => {
         updateCounts()
     }
 
+    const deleteIdea = useCallback((id) => {
+        axios.post(ApiRoutes.API_DELETE_IDEA, {idea_id: id}).then(response => {
+            if (response.data.state === "success"){
+                let prevIdeas = [...ideas];
+                prevIdeas = prevIdeas.filter(item => Number(item.idea_id) !== Number(id));
+                setIdeas(prevIdeas);
+                updateCounts();
+                global.openNotification("Успешно", "Идея удалена", "success")
+            } else {
+                global.openNotification("Ошибка", "Невозможно удалить идею", "error")
+            }
+        })
+    }, [ideas]);
+
     return (
         <>
             {loading ? <LoadingIdeas type={true}/> :
@@ -80,7 +94,7 @@ const UserIdeas = ({ user, setCount, setNotifications, updateCounts }) => {
                     list={ideas}
                     renderItem={(idea, index) => {
                         return (
-                            <IdeaItem item={idea} index={index} setItem={setIdea}/>
+                            <IdeaItem deleteIdea={deleteIdea} item={idea} index={index} setItem={setIdea}/>
                         )
                     }}
                     renderWhenEmpty={() =>

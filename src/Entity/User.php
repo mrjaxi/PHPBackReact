@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -389,7 +390,13 @@ class User implements UserInterface
         $commentsArray = array();
         /** @var Comments $comment */
         foreach ($this->comments as $comment) {
-            $commentsArray[] = $comment->get_Info($getIdea);
+            try {
+                if (empty($comment->get_Idea()->getDeletedAt())){
+                    $commentsArray[] = $comment->get_Info($getIdea);
+                }
+            } catch (EntityNotFoundException $exception) {
+                continue;
+            }
         }
         return $commentsArray;
     }
@@ -431,7 +438,13 @@ class User implements UserInterface
         $votesArray = array();
         /** @var Votes $vote */
         foreach ($this->votes as $vote) {
-            $votesArray[] = $vote->get_Info($getIdea);
+            try {
+                if (empty($vote->get_Idea()->getDeletedAt())){
+                    $votesArray[] = $vote->get_Info($getIdea);
+                }
+            } catch (EntityNotFoundException $exception) {
+                continue;
+            }
         }
         return $votesArray;
     }

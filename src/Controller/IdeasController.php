@@ -328,6 +328,34 @@ class IdeasController extends AbstractController
     }
 
     /**
+     * @Route("/api/web/delete/idea/")
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteIdea(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data)) {
+            $idea_id = $data['idea_id'];
+        } else {
+            return $this->json(['state' => 'error', 'message' => "Передайте idea_id"]);
+        }
+
+        $idea = $this->ideasRepository->find($idea_id);
+
+        if (empty($idea)) {
+            return $this->json(['state' => 'error', 'message' => "Такой идеи не существует"]);
+        }
+
+        if ($this->getUser() && $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            $ideaInfo = $this->ideasRepository->remove($idea);
+            return $this->json(['state' => 'success', 'idea' => "Идея удалена"]);
+        } else {
+            return $this->json(['state' => 'success', 'idea' => "Ошибка удаления идеи"]);
+        }
+    }
+
+    /**
      * @Route("/api/web/idea/{idea_id}/")
      * @param Request $request
      * @param $idea_id

@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use App\Repository\VotesRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -379,6 +380,7 @@ class UserController extends AbstractController
                 $ideas = [];
                 $ideasIds = []; // in_array("ROLE_ADMIN", $user->getRoles())
                 $comments = $user->get_CommentsArray(true);
+
                 foreach ($comments as &$comment) {
                     /** @var Ideas $commentIdea */
                     $commentIdea = $comment["idea"];
@@ -387,7 +389,11 @@ class UserController extends AbstractController
                 $ideasIds = array_values(array_unique($ideasIds));
                 foreach ($ideasIds as &$idea_id) {
                     $idea = $this->ideasRepository->find($idea_id);
-                    $decorIdea = $this->decorateArrayIdeas(array($idea))[0];
+                    try {
+                        $decorIdea = $this->decorateArrayIdeas(array($idea))[0];
+                    } catch (EntityNotFoundException $exception) {
+                        continue;
+                    }
                     foreach ($decorIdea["comments"] as $key => $comment) {
                         if($comment["user"]["id"] !== $user->getId()){
                             unset($decorIdea["comments"][$key]);
@@ -401,11 +407,18 @@ class UserController extends AbstractController
                 break;
             case 3:
                 $likes = $user->get_VotesArray(true);
-                foreach ($likes as &$like) {
-                    $decorIdea = $this->decorateArrayIdeas(array($like['idea']));
 
-                    $like['idea'] = $decorIdea[0] ?: null;
+                foreach ($likes as $index => &$like) {
+                    try {
+                        if (!empty($like['idea']->getTitle())) {
+                            $decorIdea = $this->decorateArrayIdeas(array($like['idea']));
+                            $like['idea'] = $decorIdea[0] ?: null;
+                        }
+                    } catch (EntityNotFoundException $exception) {
+                        unset($likes[$index]);
+                    }
                 }
+
                 $likes = AppController::array_sort($likes, "id", SORT_DESC);
                 $response["likes"] = $likes;
                 break;

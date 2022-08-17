@@ -7,9 +7,11 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=IdeasRepository::class)
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  * @ORM\HasLifecycleCallbacks
  */
 #[ApiResource]
@@ -105,6 +107,12 @@ class Ideas
      * @ORM\OneToMany(targetEntity=Votes::class, mappedBy="idea")
      */
     private $votes;
+
+    /**
+     * @var DateTimeInterface|null
+     * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     public function __construct()
     {
@@ -417,5 +425,15 @@ class Ideas
         $this->official_comment = $official_comment;
 
         return $this;
+    }
+
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
     }
 }
