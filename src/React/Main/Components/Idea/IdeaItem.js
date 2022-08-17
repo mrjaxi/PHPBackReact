@@ -410,7 +410,7 @@ const IdeaItem = ({ item, index, setItem, statuses = global.statuses, categories
                     }
                     <div className={"f-cards-inner"} style={{
                         padding: "35px 0 10px 0  ",
-                        marginTop: idea?.photo !== null ? -40 : 0,
+                        marginTop: idea?.photo ? -40 : 0,
                         paddingBottom: (idea?.officialComment && !idea.showComments) && 60
                     }}>
                         <div className={"f-wrap-idea-text"}>
