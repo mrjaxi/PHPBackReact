@@ -128,7 +128,7 @@ const OfficialComment = ({commentData, onDeleteComment, idea, setIdea}) => {
                                     comment.photo.split(";").map(item => (
                                         <Image
                                             wrapperClassName={"f-images-comment"}
-                                            style={{borderRadius: 16}}
+                                            style={{borderRadius: 16, objectFit: 'contain'}}
                                             height={'100%'}
                                             src={item}
                                             placeholder={
