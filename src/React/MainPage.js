@@ -248,7 +248,6 @@ const MainPage = (props) => {
                         prevIdeas[index]['deleted'] = true;
                     }
                 });
-                console.log(prevIdeas);
                 updateStatuses();
                 global.openNotification("Успешно", "Идея удалена", "success")
             } else {
@@ -319,7 +318,7 @@ const MainPage = (props) => {
                                                     <IdeaItem
                                                         key={index}
                                                         item={idea}
-                                                        index={idea.idea_id}
+                                                        index={index}
                                                         deleteIdea={deleteIdea}
                                                         setItem={setIdea}
                                                         includedCategory={includedCategories}

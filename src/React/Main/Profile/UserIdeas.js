@@ -77,8 +77,11 @@ const UserIdeas = ({ user, setCount, setNotifications, updateCounts }) => {
         axios.post(ApiRoutes.API_DELETE_IDEA, {idea_id: id}).then(response => {
             if (response.data.state === "success"){
                 let prevIdeas = [...ideas];
-                prevIdeas = prevIdeas.filter(item => Number(item.idea_id) !== Number(id));
-                setIdeas(prevIdeas);
+                prevIdeas.map((item, index) => {
+                    if (item.idea_id === id) {
+                        prevIdeas[index]['deleted'] = true;
+                    }
+                });
                 updateCounts();
                 global.openNotification("Успешно", "Идея удалена", "success")
             } else {

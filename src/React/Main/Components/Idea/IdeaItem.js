@@ -97,6 +97,7 @@ const IdeaItem = ({ item, index, deleteIdea, setItem, statuses = global.statuses
                 newIdea.like -= 1;
                 newIdea.currentUserIsVote = !currentUserIsVote;
                 setIdea(newIdea);
+                console.log(idea.like);
                 axios.post(ApiRoutes.API_DELETE_VOTE, {idea_id: id})
                     .then(response => {
                         switch (response.data?.state) {
@@ -107,7 +108,7 @@ const IdeaItem = ({ item, index, deleteIdea, setItem, statuses = global.statuses
                                 let newIdea1 = {...newIdea};
                                 newIdea1.like += 1;
                                 newIdea1.currentUserIsVote = !newIdea1.currentUserIsVote;
-                                setIdea(newIdea1)
+                                setIdea(newIdea1);
                                 break;
                             default:
                                 global.openNotification("Ошибка", "Непредвиденная ошибка", "error")
