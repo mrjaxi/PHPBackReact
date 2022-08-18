@@ -485,14 +485,23 @@ const IdeaItem = ({ item, index, deleteIdea, setItem, statuses = global.statuses
                                                 </Tooltip>
                                             </div>
                                     }
-                                    <Popconfirm
-                                        title="Вы уверены что хотите удалить идею?"
-                                        onConfirm={() => deleteIdea(idea.idea_id)}
-                                        okText="Да"
-                                        cancelText="Нет"
-                                    >
-                                        <DeleteOutlined style={{fontSize: 24, marginLeft: 15, marginTop: 5, color: '#EC3323', display: 'inline'}}/>
-                                    </Popconfirm>
+                                    {
+                                        global.layout === "admin" &&
+                                            <Popconfirm
+                                                title="Вы уверены что хотите удалить идею?"
+                                                onConfirm={() => deleteIdea(idea.idea_id)}
+                                                okText="Да"
+                                                cancelText="Нет"
+                                            >
+                                                <DeleteOutlined style={{
+                                                    fontSize: 24,
+                                                    marginLeft: 15,
+                                                    marginTop: 5,
+                                                    color: '#EC3323',
+                                                    display: 'inline'
+                                                }}/>
+                                            </Popconfirm>
+                                    }
                                 </div>
                             </div>
                             <Form
