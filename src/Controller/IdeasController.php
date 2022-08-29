@@ -920,10 +920,20 @@ class IdeasController extends AbstractController
                             "title" => "Feedback. " . $idea->getTitle(),
                             "description" => $idea->getContent() . " Подробнее: " . $urlIdea
                         ));
-//                        dd($response);
                     }
                 }
             }
+            if ($idea->get_Type()->getName() == "Идея") {
+                if ($idea->get_Status()->getName() != "started" && $idea->getAllowComments()) {
+                    if ($newStatus->getName() == "started") {
+                        $response = AppController::curl("https://gitlab.atma.company/api/v4/projects/96/issues", "POST", array(
+                            "title" => "Feedback. " . $idea->getTitle(),
+                            "description" => $idea->getContent() . " Подробнее: " . $urlIdea
+                        ));
+                    }
+                }
+            }
+
             $idea->setStatus($newStatus);
             $this->ideasRepository->save($idea);
 
