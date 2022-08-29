@@ -436,6 +436,7 @@ const Comments = ({comments, setComments, href, idea, setIdea, allowComments, fl
                                     listType="picture"
                                     beforeUpload={(file) => beforeUpload(file)}
                                     maxCount={3}
+                                    multiple={true}
                                 >
                                     <Button style={{border: 'none'}} icon={<CameraOutlined/>}></Button>
                                 </Upload>
