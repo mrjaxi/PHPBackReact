@@ -583,7 +583,7 @@ class AppController extends AbstractController
                                                         <tr style=\"vertical-align: top; text-align: left; padding: 0;\" align=\"left\">
                                                             <td class=\"\" style=\"word-break: break-word; -webkit-hyphens: none; -moz-hyphens: none; hyphens: none; border-collapse: collapse !important; vertical-align: top; text-align: left; width: 100%; color: #1d1d1f; font-family: Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; background: transparent repeat center center; margin: 0; padding: 60px 0px 0px;\"
                                                                 align=\"left\" bgcolor=\"transparent\" valign=\"top\">
-                                                                <div style=\"display: flex; justify-content: flex-start; align-items: center; height: 128px; width: 100%; background: #E6E9ED50; border-radius: 24px;\">
+                                                                <div style=\"display:flex;width:100%;background:#E6E9ED50;border-radius:24px;padding-top:64px;padding-bottom:64px\">
                                                                                             <span style=\"margin-left: 18px; margin-right: 18px;font-weight: 400; font-size: 17px; line-height: 21px;\">
     Так же эти сообщения можно получать в <a href=\"https://t.me/atmagurubot?start=1\" style=\"color: #1790ff; text-decoration: none;\">Телеграм боте</a>
   </span>
