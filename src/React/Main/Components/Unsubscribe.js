@@ -12,6 +12,7 @@ const Unsubscribe = () => {
 		axios.post(ApiRoutes.API_UNSUBSCRIBE_USER, {type: "unsubscribe"}).then(response => {
 			console.log(response.data)
 			if (response.data.state === "success") {
+				global.user.unsubscribed = true;
 				setResp(true);
 			} else {
 				setResp(false);
