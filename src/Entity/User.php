@@ -511,7 +511,7 @@ class User implements UserInterface
 
     public function getUnsubscribe()
     {
-        if (!empty($unsubscribe)){
+        if ($this->unsubscribe !== null) {
             return $this->unsubscribe;
         } else {
             return false;
