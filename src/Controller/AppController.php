@@ -585,7 +585,7 @@ class AppController extends AbstractController
                                                                 align=\"left\" bgcolor=\"transparent\" valign=\"top\">
                                                                 <div style=\"display:flex;width:100%;background:#E6E9ED50;border-radius:24px;padding-top:48px;padding-bottom:48px\">
                                                                                             <span style=\"margin-left: 18px; margin-right: 18px;font-weight: 400; font-size: 17px; line-height: 21px;\">
-    Так же эти сообщения можно получать в <a href=\"https://t.me/atmagurubot?start=1\" style=\"color: #1790ff; text-decoration: none;\">Телеграм боте</a>
+    Также эти сообщения можно получать в <a href=\"https://t.me/atmagurubot?start=1\" style=\"color: #1790ff; text-decoration: none;\">Телеграм боте</a>
   </span>
                                                                 </div>
                                                             </td>
