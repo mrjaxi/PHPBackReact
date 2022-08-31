@@ -673,7 +673,7 @@ class AppController extends AbstractController
                                                         <tr style=\"vertical-align: top; text-align: left; padding: 0;\" align=\"left\">
                                                             <td class=\"\" style=\"word-break: break-word; -webkit-hyphens: none; -moz-hyphens: none; hyphens: none; border-collapse: collapse !important; vertical-align: top; text-align: left; width: 100%; color: #1d1d1f; font-family: Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; background: transparent repeat center center; margin: 0; padding: 18px 10px 40px;\"
                                                                 align=\"left\" bgcolor=\"transparent\" valign=\"top\">
-                                                                <a href=\"*|UNSUB|*\" style=\"color: #1790FF; font-weight: 500; font-size: 17px; line-height: 21px; text-decoration: underline;\">Отписаться</a>
+                                                                <a href=\"\" style=\"color: #1790FF; font-weight: 500; font-size: 17px; line-height: 21px; text-decoration: underline;\">Отписаться</a>
                                                             </td>
                                                         </tr>
                                                         </tbody>
