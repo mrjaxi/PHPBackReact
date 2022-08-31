@@ -107,6 +107,11 @@ class User implements UserInterface
      */
     private $votes;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $unsubscribe;
+
     public function __construct()
     {
         $this->ideas = new ArrayCollection();
@@ -501,5 +506,23 @@ class User implements UserInterface
     public function __call($name, $arguments)
     {
         // Implement @method string getUserIdentifier()
+    }
+
+    public function getUnsubscribe()
+    {
+        if (!empty($unsubscribe)){
+            return $this->unsubscribe;
+        } else {
+            return false;
+        }
+    }
+
+    public function setUnsubscribe($unsubscribe)
+    {
+        if (!empty($unsubscribe)){
+            $this->unsubscribe = $unsubscribe;
+        } else {
+            $this->unsubscribe = false;
+        }
     }
 }

@@ -80,6 +80,9 @@ api_change_comment:
 api_user_setProfile:
   path: /api/user/setProfile/
   controller: App\Controller\UserController::setProfile
+api_user_unsubscribe:
+  path: /api/user/unsubscribe/
+  controller: App\Controller\UserController::mailUnsubscribe
 
 # Как для админа так и для пользователя
 api_delete_comment:

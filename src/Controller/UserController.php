@@ -11,6 +11,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -74,7 +75,7 @@ class UserController extends AbstractController
         if (empty($last_auth)) {
             $user->setLastAuth($currentDateTime );
             $this->userRepository->save($user);
-            if ($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())) {
+            if ($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail(), true)) {
                 return $this->json(['state' => 'success', "seconds" => 120,]);
             } else {
                 return $this->json([
@@ -88,7 +89,7 @@ class UserController extends AbstractController
         if ($last_auth < $currentDateTime) {
             $user->setLastAuth($currentDateTime);
             $this->userRepository->save($user);
-            if ($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail())) {
+            if ($this->sendToMail($mailer, $message, "Вход в Atmaguru Feedback", $user->getEmail(), true)) {
                 return $this->json(['state' => 'success', "seconds" => 120,]);
             } else {
                 return $this->json([
@@ -336,6 +337,38 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/api/user/unsubscribe/")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function mailUnsubscribe(Request $request) : Response
+    {
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+
+        if (!empty($user) && !empty($data["type"])) {
+            $type = $data["type"];
+            $userItem = $this->userRepository->findOneBy(["id" => $user->getId()]);
+
+            if ($type == "unsubscribe") {
+                $userItem->setUnsubscribe(true);
+                $this->userRepository->save($userItem);
+
+                return $this->json(['state' => 'success', 'message' => $type]);
+            } else if ($type == "subscribe") {
+                $userItem->setUnsubscribe(false);
+                $this->userRepository->save($userItem);
+
+                return $this->json(['state' => 'success', 'message' => $type]);
+            }
+
+            return $this->json(['state' => 'error', 'message' => 'Ошибка отписки от рассылки']);
+        } else {
+            return $this->json(['state' => 'error', 'message' => 'Вы не зарегистрированы']);
+        }
+    }
+
+    /**
      * @Route("/api/web/user/{id}/")
      * @param Request $request
      * @param $id
@@ -521,13 +554,13 @@ class UserController extends AbstractController
         return $ideas;
     }
 
-    private function sendToMail(MailerInterface $mailer, string $message, string $subject, string $toMail): bool
+    private function sendToMail(MailerInterface $mailer, string $message, string $subject, string $toMail, $loginMail = false): bool
     {
         // Берем почты из бд
         $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
         try {
             if (!empty($toMail) and !empty($bcc_mail)) {
-                AppController::sendEmail($mailer, $message, $subject, $toMail, $bcc_mail->getValue());
+                AppController::sendEmail($mailer, $message, $subject, $toMail, $bcc_mail->getValue(), $loginMail);
                 return true;
             } else {
                 return false;

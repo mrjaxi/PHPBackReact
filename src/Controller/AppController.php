@@ -137,7 +137,7 @@ class AppController extends AbstractController
         return $res;
     }
 
-    static public function mailPattern($message){
+    static public function mailPattern($message, $loginMail = false){
         return "
         <!DOCTYPE html>
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
@@ -667,20 +667,18 @@ class AppController extends AbstractController
                                                         </tr>
                                                         </tbody>
                                                     </table>
-
-                                                    <table class=\"table-block\" width=\"100%\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0;\">
+                                                    " . (!$loginMail ?
+                                                     "<table class=\"table-block\" width=\"100%\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0;\">
                                                         <tbody>
                                                         <tr style=\"vertical-align: top; text-align: left; padding: 0;\" align=\"left\">
                                                             <td class=\"\" style=\"word-break: break-word; -webkit-hyphens: none; -moz-hyphens: none; hyphens: none; border-collapse: collapse !important; vertical-align: top; text-align: left; width: 100%; color: #1d1d1f; font-family: Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; background: transparent repeat center center; margin: 0; padding: 18px 10px 40px;\"
                                                                 align=\"left\" bgcolor=\"transparent\" valign=\"top\">
-                                                                <a href=\"\" style=\"color: #1790FF; font-weight: 500; font-size: 17px; line-height: 21px; text-decoration: underline;\">Отписаться</a>
+                                                                <a href=\"https://tips.atmaguru.online/user/unsubscribe/\" style=\"color: #1790FF; font-weight: 500; font-size: 17px; line-height: 21px; text-decoration: underline;\">Отписаться</a>
                                                             </td>
                                                         </tr>
                                                         </tbody>
-                                                    </table>
-
-
-                                                </td>
+                                                    </table>" : "") .
+                                                "</td>
                                                 <td class=\"expander\" style=\"word-break: break-word; -webkit-hyphens: none; -moz-hyphens: none; hyphens: none; border-collapse: collapse !important; vertical-align: top; text-align: left; width: 100%; visibility: hidden; color: #1d1d1f; font-family: Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; margin: 0; padding: 0;\"
                                                     align=\"left\" valign=\"top\"></td>
                                             </tr>
@@ -711,7 +709,7 @@ class AppController extends AbstractController
         ";
     }
 
-    static public function sendEmail(MailerInterface $mailer, $message, $subject = "Новый отзыв", $tomail = "bumblebeelion@atma.company", $bcc = "yakov@atmapro.ru")
+    static public function sendEmail(MailerInterface $mailer, $message, $subject = "Новый отзыв", $tomail = "bumblebeelion@atma.company", $bcc = "yakov@atmapro.ru", $loginMail = false)
     { // damedvedev@atmapro.ru  bumblebeelion@atma.company  atmaguru@atmadev.ru
         if (!empty($message)) {
             //Заменяет текст ссылки в тексте на <a href=""></a>
@@ -724,7 +722,7 @@ class AppController extends AbstractController
                 ->subject($subject)
 //                ->text($message);
 //                ->attachFromPath($filepath . $filename, 'qrcode')
-                ->html(AppController::mailPattern($text));
+                ->html(AppController::mailPattern($text, $loginMail));
 
             $mailer->send($email);
             return true;

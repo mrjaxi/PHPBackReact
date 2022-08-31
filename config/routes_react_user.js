@@ -4,6 +4,7 @@ import {default as ShowIdea} from "../src/React/Main/Idea/ShowIdea";
 import {default as Profile} from "../src/React/Main/Profile/Profile";
 import {default as Redirect} from "../src/React/Main/RedirectPage/Redirect";
 import Settings from "../src/React/Main/Profile/Settings";
+import Unsubscribe from "../src/React/Main/Components/Unsubscribe";
 
 /*
 params:
@@ -20,5 +21,6 @@ export default [
     { path: "/idea/add/", name: "Добавить идею", Component: AddIdeaPage },
     { path: "/idea/:id/", name: "Идея", Component: ShowIdea},
     { path: "/user/settings/", name: "Настройки пользователя", Component: Settings },
-    { path: "/redirect", name: "Редирект", Component: Redirect }
+    { path: "/redirect", name: "Редирект", Component: Redirect },
+    { path: "/user/unsubscribe", name: "Отписка", Component: Unsubscribe }
 ];
