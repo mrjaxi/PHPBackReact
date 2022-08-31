@@ -1163,12 +1163,19 @@ class IdeasController extends AbstractController
     private function sendMailToAdmin(MailerInterface $mailer, string $message, string $subject, $loginMail = false): bool
     {
         // Берем почты из бд
-        $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
         $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
         $admin_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-admin"]);
         $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+
+        $unsubscribed = false;
+
+        if (!empty($this->getUser())) {
+            $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
+            $unsubscribed = $user->getUnsubscribe();
+        }
+
         try {
-            if (!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail) and $user->getUnsubscribe() == false || $loginMail) {
+            if (!empty($admin_mail) and !empty($from_mail) and !empty($bcc_mail) and !$unsubscribed || $loginMail) {
                 AppController::sendEmail($mailer, $message, $subject, $admin_mail->getValue(), $bcc_mail->getValue());
                 return true;
             } else {
@@ -1182,11 +1189,18 @@ class IdeasController extends AbstractController
     private function sendToMail(MailerInterface $mailer, string $message, string $subject, string $toMail, $loginMail = false): bool
     {
         // Берем почты из бд
-        $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
         $from_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-main"]);
         $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
+
+        $unsubscribed = false;
+
+        if (!empty($this->getUser())) {
+            $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
+            $unsubscribed = $user->getUnsubscribe();
+        }
+
         try {
-            if (!empty($toMail) and !empty($from_mail) and !empty($bcc_mail) and $user->getUnsubscribe() == false || $loginMail) {
+            if (!empty($toMail) and !empty($from_mail) and !empty($bcc_mail) and !$unsubscribed || $loginMail) {
                 AppController::sendEmail($mailer, $message, $subject, $toMail, $bcc_mail->getValue(), $loginMail);
                 return true;
             } else {

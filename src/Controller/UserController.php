@@ -558,10 +558,16 @@ class UserController extends AbstractController
     {
         // Берем почты из бд
         $bcc_mail = $this->settingsRepository->findOneBy(["name" => "MAIL-bcc"]);
-        $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
+
+        $unsubscribed = false;
+
+        if (!empty($this->getUser())) {
+            $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
+            $unsubscribed = $user->getUnsubscribe();
+        }
 
         try {
-            if (!empty($toMail) and !empty($bcc_mail) and $user->getUnsubscribe() == false || $loginMail) {
+            if (!empty($toMail) and !empty($bcc_mail) and !$unsubscribed || $loginMail) {
                 AppController::sendEmail($mailer, $message, $subject, $toMail, $bcc_mail->getValue(), $loginMail);
                 return true;
             } else {
