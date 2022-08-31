@@ -6,7 +6,7 @@ import ApiRoutes from "../../Routes/ApiRoutes";
 
 const Unsubscribe = () => {
 
-	const [resp, setResp] = useState(false);
+	const [resp, setResp] = useState(null);
 
 	const unsubscribeData = () => {
 		axios.post(ApiRoutes.API_UNSUBSCRIBE_USER, {type: "unsubscribe"}).then(response => {
@@ -22,6 +22,10 @@ const Unsubscribe = () => {
 	useEffect(() => {
 		unsubscribeData()
 	});
+
+	if (resp === null) {
+		return <></>
+	}
 
 	return (
 		<Col className={"f-main"} style={{minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>

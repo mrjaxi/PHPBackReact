@@ -151,7 +151,8 @@ class User implements UserInterface
             "image" => $this->image,
             "is_active" => $this->is_active,
             "system_id" => $this->system_id,
-            "notifications" => $commentsNotifications
+            "notifications" => $commentsNotifications,
+            "unsubscribed" => !$this->unsubscribe ? "enable" : "disable"
         );
     }
 

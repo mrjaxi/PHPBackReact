@@ -1,12 +1,13 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import Header from "../Components/Header";
 import parsePhoneNumber, { isValidPhoneNumber } from 'libphonenumber-js'
-import { Col, Typography, Image, Form, Input, Button, Avatar, Upload, Spin, Tooltip } from "antd";
+import {Col, Typography, Image, Form, Input, Button, Avatar, Upload, Spin, Tooltip, Select} from "antd";
 import Camera from "../../../../public/i/camera.svg"
 import ApiRoutes from "../../Routes/ApiRoutes";
 import Icon, {UserOutlined, LoadingOutlined} from '@ant-design/icons'
 import axios from "axios";
 import InputTopTitle from "../Components/Custom/InputTopTitle";
+const {Option} = Select;
 
 const { Title } = Typography;
 
@@ -71,6 +72,26 @@ const Settings = () => {
         onChange: (info) => {
             setFile(info.file?.response?.filename);
         },
+    };
+
+    const handleSubscribe = (value) => {
+        if (value === "disable"){
+            axios.post(ApiRoutes.API_UNSUBSCRIBE_USER, {type: "unsubscribe"}).then(response => {
+                if (response.data.state === "success") {
+                    global.openNotification("Успешно", "Вы отписались от рассылки", "success")
+                } else {
+                    global.openNotification("Ошибка", "Ошибка отписки от рассылки", "error")
+                }
+            })
+        } else if (value === "enable") {
+            axios.post(ApiRoutes.API_UNSUBSCRIBE_USER, {type: "subscribe"}).then(response => {
+                if (response.data.state === "success") {
+                    global.openNotification("Успешно", "Вы подписались на рассылку", "success")
+                } else {
+                    global.openNotification("Ошибка", "Ошибка подписки на рассылку", "error")
+                }
+            })
+        }
     };
 
     return (
@@ -169,6 +190,12 @@ const Settings = () => {
                                     },
                                 }}
                             />
+                        </Form.Item>
+                        <Form.Item>
+                            <Select defaultValue={global.user.unsubscribed} style={{ marginTop: 24 }} onChange={(value) => handleSubscribe(value)}>
+                                <Option value="disable">Не присылать уведомления по почте</Option>
+                                <Option value="enable">Присылать уведомления по почте</Option>
+                            </Select>
                         </Form.Item>
                         <Form.Item>
                             <Button
