@@ -584,7 +584,7 @@ class AppController extends AbstractController
                                                             <td class=\"\" style=\"word-break: break-word; -webkit-hyphens: none; -moz-hyphens: none; hyphens: none; border-collapse: collapse !important; vertical-align: top; text-align: left; width: 100%; color: #1d1d1f; font-family: Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; background: transparent repeat center center; margin: 0; padding: 60px 0px 0px;\"
                                                                 align=\"left\" bgcolor=\"transparent\" valign=\"top\">
                                                                 <div style=\"display: flex; justify-content: flex-start; align-items: center; height: 128px; width: 100%; background: #E6E9ED50; border-radius: 24px;\">
-                                                                                            <span style=\"margin-left: 18px; font-weight: 400; font-size: 17px; line-height: 21px;\">
+                                                                                            <span style=\"margin-left: 18px; margin-right: 18px;font-weight: 400; font-size: 17px; line-height: 21px;\">
     Так же эти сообщения можно получать в <a href=\"https://t.me/atmagurubot?start=1\" style=\"color: #1790ff; text-decoration: none;\">Телеграм боте</a>
   </span>
                                                                 </div>
@@ -714,6 +714,9 @@ class AppController extends AbstractController
     static public function sendEmail(MailerInterface $mailer, $message, $subject = "Новый отзыв", $tomail = "bumblebeelion@atma.company", $bcc = "yakov@atmapro.ru")
     { // damedvedev@atmapro.ru  bumblebeelion@atma.company  atmaguru@atmadev.ru
         if (!empty($message)) {
+            //Заменяет текст ссылки в тексте на <a href=""></a>
+            $text = preg_replace('(https://[\w+?\.\w+]+[a-zA-Z0-9\~\!\@\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\:\;\'\.\/]+[\.]*[a-zA-Z0-9\/]+)', "<a href='$0' target='_blank'>$0</a>", $message);
+
             $email = (new Email())
                 ->from($_ENV['MAILER_FROM'])
                 ->to($tomail)
@@ -721,7 +724,7 @@ class AppController extends AbstractController
                 ->subject($subject)
 //                ->text($message);
 //                ->attachFromPath($filepath . $filename, 'qrcode')
-                ->html(AppController::mailPattern($message));
+                ->html(AppController::mailPattern($text));
 
             $mailer->send($email);
             return true;
