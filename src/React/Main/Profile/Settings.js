@@ -78,6 +78,7 @@ const Settings = () => {
         if (value === "disable"){
             axios.post(ApiRoutes.API_UNSUBSCRIBE_USER, {type: "unsubscribe"}).then(response => {
                 if (response.data.state === "success") {
+                    global.user.unsubscribed = 'disable';
                     global.openNotification("Успешно", "Вы отписались от рассылки", "success")
                 } else {
                     global.openNotification("Ошибка", "Ошибка отписки от рассылки", "error")
@@ -86,6 +87,7 @@ const Settings = () => {
         } else if (value === "enable") {
             axios.post(ApiRoutes.API_UNSUBSCRIBE_USER, {type: "subscribe"}).then(response => {
                 if (response.data.state === "success") {
+                    global.user.unsubscribed = 'enable';
                     global.openNotification("Успешно", "Вы подписались на рассылку", "success")
                 } else {
                     global.openNotification("Ошибка", "Ошибка подписки на рассылку", "error")
