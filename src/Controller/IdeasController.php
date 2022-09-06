@@ -1172,6 +1172,12 @@ class IdeasController extends AbstractController
         if (!empty($this->getUser())) {
             $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
             $unsubscribed = $user->getUnsubscribe();
+
+            $register_key = $user->getTelegramRegisterKey();
+
+            if (!$loginMail && !empty($register_key)) {
+                AppController::sendTelegramNotification($register_key, $message);
+            }
         }
 
         try {
@@ -1197,6 +1203,11 @@ class IdeasController extends AbstractController
         if (!empty($this->getUser())) {
             $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
             $unsubscribed = $user->getUnsubscribe();
+            $register_key = $user->getTelegramRegisterKey();
+
+            if (!$loginMail && !empty($register_key)) {
+                AppController::sendTelegramNotification($register_key, $message);
+            }
         }
 
         try {

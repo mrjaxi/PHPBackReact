@@ -337,6 +337,24 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/api/user/add/registration-key/")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addRegistrationToken(Request $request): Response
+    {
+        if (!empty($this->getUser())) {
+            $user = $this->userRepository->findOneBy(["id" => $this->getUser()->getId()]);
+            $user->setTelegramRegisterKey("feedback_key_" . $this->getUser()->getId());
+            $this->userRepository->save($user);
+
+            return $this->json(['state' => 'success', 'message' => 'Регистрационный ключ выпущен', "key" => "feedback_key_" . $this->getUser()->getId()]);
+        } else {
+            return $this->json(['state' => 'error', 'message' => 'Ошибка создания регистрационного ключа']);
+        }
+    }
+
+    /**
      * @Route("/api/user/unsubscribe/")
      * @param Request $request
      * @return JsonResponse
@@ -564,6 +582,11 @@ class UserController extends AbstractController
         if (!empty($this->getUser())) {
             $user = $this->userRepository->findOneBy(['id' => $this->getUser()->getId()]);
             $unsubscribed = $user->getUnsubscribe();
+            $register_key = $user->getTelegramRegisterKey();
+
+            if (!$loginMail && !empty($register_key)) {
+                AppController::sendTelegramNotification($register_key, $message);
+            }
         }
 
         try {

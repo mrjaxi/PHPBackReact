@@ -112,6 +112,11 @@ class User implements UserInterface
      */
     private $unsubscribe;
 
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true)
+     */
+    private $telegram_register_key;
+
     public function __construct()
     {
         $this->ideas = new ArrayCollection();
@@ -525,5 +530,15 @@ class User implements UserInterface
         } else {
             $this->unsubscribe = false;
         }
+    }
+
+    public function getTelegramRegisterKey()
+    {
+        return $this->telegram_register_key;
+    }
+
+    public function setTelegramRegisterKey($telegram_register_key)
+    {
+        $this->telegram_register_key = $telegram_register_key;
     }
 }

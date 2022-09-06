@@ -27,7 +27,8 @@ const ApiRoutes = {
     API_SIGN_IN: "/api/web/signIn/",
     API_SET_PROFILE: "/api/user/setProfile/",
     API_DELETE_IDEA: "/api/web/delete/idea/",
-    API_UNSUBSCRIBE_USER: "/api/user/unsubscribe/"
+    API_UNSUBSCRIBE_USER: "/api/user/unsubscribe/",
+    API_RELEASE_TELEGRAM_KEY: "/api/user/add/registration-key/"
 };
 
 export default ApiRoutes;

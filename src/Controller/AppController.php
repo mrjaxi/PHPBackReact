@@ -699,14 +699,8 @@ class AppController extends AbstractController
     </tr>
     </tbody>
 </table>
-
-
-
-
 </body>
-
-</html>
-        ";
+</html>";
     }
 
     static public function sendEmail(MailerInterface $mailer, $message, $subject = "Новый отзыв", $tomail = "bumblebeelion@atma.company", $bcc = "yakov@atmapro.ru", $loginMail = false)
@@ -728,6 +722,11 @@ class AppController extends AbstractController
             return true;
         }
         return false;
+    }
+
+    static public function sendTelegramNotification($register_key, $notify_message)
+    {
+        AppController::curl("https://rb19x.atma.company/atmaguru-notify/$register_key/?text=$notify_message", "POST");
     }
 
     static public function array_sort($array, $on, $order = SORT_ASC)

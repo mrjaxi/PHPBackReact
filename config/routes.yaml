@@ -83,6 +83,9 @@ api_user_setProfile:
 api_user_unsubscribe:
   path: /api/user/unsubscribe/
   controller: App\Controller\UserController::mailUnsubscribe
+api_user_registration_key:
+  path: /api/user/add/registration-key/
+  controller: App\Controller\UserController::addRegistrationToken
 
 # Как для админа так и для пользователя
 api_delete_comment:

@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import Header from "../Components/Header";
 import parsePhoneNumber, { isValidPhoneNumber } from 'libphonenumber-js'
-import {Col, Typography, Image, Form, Input, Button, Avatar, Upload, Spin, Tooltip, Select} from "antd";
+import {Col, Typography, Image, Form, Input, Button, Avatar, Upload, Spin, Tooltip, Select, Modal, Result} from "antd";
 import Camera from "../../../../public/i/camera.svg"
 import ApiRoutes from "../../Routes/ApiRoutes";
 import Icon, {UserOutlined, LoadingOutlined} from '@ant-design/icons'
@@ -19,6 +19,8 @@ const Settings = () => {
     const [phone, setPhone] = useState(global.user?.phone ? parsePhoneNumber(global.user.phone.trim(),"RU") : "");
     const [phoneText, setPhoneText] = useState("+7")
     const [validatePhone, setValidatePhone] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [registerKey, setRegisterKey] = useState("");
 
     useLayoutEffect(() => {
         if (phone) {
@@ -74,6 +76,10 @@ const Settings = () => {
         },
     };
 
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
     const handleSubscribe = (value) => {
         if (value === "disable"){
             axios.post(ApiRoutes.API_UNSUBSCRIBE_USER, {type: "unsubscribe"}).then(response => {
@@ -96,11 +102,39 @@ const Settings = () => {
         }
     };
 
+    const releaseTelegramKey = () => {
+        axios.post(ApiRoutes.API_RELEASE_TELEGRAM_KEY).then(response => {
+            if (response.data.state === "success") {
+                setRegisterKey(response.data.key);
+                setIsModalOpen(true);
+            } else {
+                global.openNotification("Ошибка", response.data.message, "error")
+            }
+        })
+    };
+
     return (
         <Col style={{minHeight: '100vh', display: 'flex', justifyContent: 'flex-start'}}>
             { user?.id === global.user?.id && <Header/>}
             <div className={"f-login f-sublogin"} style={{ display: 'flex', flexDirection: 'column' }}>
                 <div className={"f-wrap-settings"}>
+                    <div className={"HELLO"}>
+                        <Modal
+                            centered
+                            closable={true}
+                            destroyOnClose={true}
+                            style={{ zIndex: 999 }}
+                            visible={isModalOpen}
+                            onCancel={handleCancel}
+                            footer={null}
+                        >
+                            <Result
+                                status="success"
+                                title="Регистрационный ключ выпущен"
+                                subTitle={<p>Скопируйте ваш ключ <b style={{ fontSize: 15 }}>{registerKey}</b> и перейдите в <a target="_blank" rel="noopener noreferrer" href='https://t.me/atmagurubot?start=1'>бота</a> для регистрации</p>}
+                            />
+                        </Modal>
+                    </div>
                     <Form
                         onFinish={(value) => onSend(value)}
                         name={"settings"}
@@ -198,6 +232,9 @@ const Settings = () => {
                                 <Option value="disable">Не присылать уведомления по почте</Option>
                                 <Option value="enable">Присылать уведомления по почте</Option>
                             </Select>
+                        </Form.Item>
+                        <Form.Item>
+                            <a onClick={() => releaseTelegramKey()} style={{ fontSize: 16, marginLeft: 0 }}>Получать уведомления через телеграм</a>
                         </Form.Item>
                         <Form.Item>
                             <Button
